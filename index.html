@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet" />
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0e0e10;
+      --surface: #17171a;
+      --border: #2a2a30;
+      --text: #e8e6e0;
+      --muted: #6b6b72;
+      --accent-1: #e8c97a;
+      --accent-2: #7abfe8;
+      --accent-3: #b07ae8;
+      --accent-4: #7ae8b0;
+      --card-bg: #131316;
+      --shadow: rgba(0,0,0,0.5);
+      --toggle-bg: #2a2a30;
+    }
+    :root[data-theme="light"] {
+      --bg: #f5f2eb;
+      --surface: #ffffff;
+      --border: #ddd9ce;
+      --text: #1a1a1c;
+      --muted: #888880;
+      --accent-1: #c8900a;
+      --accent-2: #1a6fa0;
+      --accent-3: #6a2ab0;
+      --accent-4: #1a9050;
+      --card-bg: #fefcf7;
+      --shadow: rgba(0,0,0,0.1);
+      --toggle-bg: #e8e4dc;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+      transition: background 0.4s, color 0.4s;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .layout {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 4rem;
+    }
+
+    .brand h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .brand h1 span {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .brand p {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Toggle */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 0.3rem;
+    }
+
+    .toggle-icon { font-size: 0.9rem; }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--toggle-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      background: var(--accent-1);
+      border-radius: 50%;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    [data-theme="light"] .toggle::after {
+      transform: translateX(20px);
+    }
+
+    /* Divider rule */
+    .rule {
+      height: 1px;
+      background: linear-gradient(to right, var(--accent-1), transparent);
+      margin-bottom: 3rem;
+      opacity: 0.4;
+    }
+
+    /* Section label */
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* App grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--card-accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--card-accent);
+      box-shadow: 0 12px 40px var(--shadow);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-icon {
+      width: 42px; height: 42px;
+      border-radius: 3px;
+      background: var(--card-accent-bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .card-arrow {
+      font-size: 1rem;
+      color: var(--muted);
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .card:hover .card-arrow {
+      transform: translate(3px, -3px);
+      color: var(--card-accent);
+    }
+
+    .card-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: auto;
+    }
+
+    .tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+    }
+
+    /* Coming soon state */
+    .card.soon {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .card.soon .card-icon { filter: grayscale(1); }
+
+    .soon-badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      background: var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .footer-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-4);
+      display: inline-block;
+      margin-right: 0.4rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Entrance animation */
+    .card {
+      animation: fadeUp 0.5s both;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.19s; }
+    .card:nth-child(4) { animation-delay: 0.26s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .layout { padding: 2rem 1.25rem 4rem; }
+      header { flex-direction: column; gap: 1.5rem; }
+      .toggle-wrap { align-self: flex-end; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <header>
+    <div class="brand">
+      <h1>Mini<span>Apps</span></h1>
+      <p>Outils du quotidien — toujours disponibles</p>
+    </div>
+    <div class="toggle-wrap">
+      <span class="toggle-icon">🌙</span>
+      <div class="toggle" id="themeToggle" role="button" aria-label="Basculer le thème" tabindex="0"></div>
+      <span class="toggle-icon">☀️</span>
+    </div>
+  </header>
+
+  <div class="rule"></div>
+  <p class="section-label">Applications disponibles</p>
+
+  <div class="grid">
+
+    <!-- Pomodoro -->
+    <a class="card" href="apps/pomodoro/index.html" style="--card-accent: #e8c97a; --card-accent-bg: rgba(232,201,122,0.1);">
+      <div class="card-header">
+        <div class="card-icon">🍅</div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card-name">Pomodoro</div>
+      <div class="card-desc">Timer de focus avec cycles de travail et de pause. Son optionnel sur chaque tic et à la fin du cycle.</div>
+      <div class="card-tags">
+        <span class="tag">Focus</span>
+        <span class="tag">Timer</span>
+        <span class="tag">Son optionnel</span>
+      </div>
+    </a>
+
+    <!-- Breathing -->
+    <a class="card" href="apps/breathing/index.html" style="--card-accent: #7abfe8; --card-accent-bg: rgba(122,191,232,0.1);">
+      <div class="card-header">
+        <div class="card-icon">🌬️</div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card-name">Respiration</div>
+      <div class="card-desc">Guide de respiration rythmée avec 3 phases paramétrables (inspiration, rétention, expiration) sur 10 cycles configurables.</div>
+      <div class="card-tags">
+        <span class="tag">Bien-être</span>
+        <span class="tag">Rythme</span>
+        <span class="tag">Méditation</span>
+      </div>
+    </a>
+
+    <!-- Kitchen -->
+    <a class="card" href="apps/kitchen/index.html" style="--card-accent: #7ae8b0; --card-accent-bg: rgba(122,232,176,0.1);">
+      <div class="card-header">
+        <div class="card-icon">🍳</div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card-name">Cuisine</div>
+      <div class="card-desc">Répertoire de recettes avec timers multiples simultanés. Sauvegarde locale dans le navigateur.</div>
+      <div class="card-tags">
+        <span class="tag">Recettes</span>
+        <span class="tag">Timers</span>
+        <span class="tag">Local</span>
+      </div>
+    </a>
+
+    <!-- Placeholder future app -->
+    <div class="card soon" style="--card-accent: #b07ae8; --card-accent-bg: rgba(176,122,232,0.1);">
+      <div class="card-header">
+        <div class="card-icon">✦</div>
+        <span class="soon-badge">Bientôt</span>
+      </div>
+      <div class="card-name">À venir</div>
+      <div class="card-desc">D'autres outils rejoindront cette page au fil du temps.</div>
+      <div class="card-tags">
+        <span class="tag">—</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div><span class="footer-dot"></span>GitHub Pages — statique, sans serveur</div>
+    <div id="appCount">3 apps disponibles</div>
+  </footer>
+</div>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+
+  // Restore preference
+  const saved = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+
+  toggle.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  toggle.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') toggle.click();
+  });
+</script>
+</body>
+</html>
