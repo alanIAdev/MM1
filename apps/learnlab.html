@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnLab — Apprends n'importe quoi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c26;
+      --border: #2a2a3a;
+      --accent: #7c6af7;
+      --accent2: #f76a8f;
+      --accent3: #6af7c4;
+      --text: #e8e8f0;
+      --text-dim: #8888aa;
+      --text-faint: #44445a;
+      --gold: #f7c96a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── LAYOUT ── */
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 2rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    header h1 span {
+      color: var(--accent);
+    }
+
+    header p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.15rem;
+    }
+
+    /* ── SKILL PICKER ── */
+    .skill-picker {
+      display: none;
+    }
+
+    .skill-picker.active {
+      display: block;
+    }
+
+    .skill-picker h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-picker > p {
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 2rem;
+      background: var(--surface);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--accent);
+      background: rgba(124, 106, 247, 0.05);
+    }
+
+    .upload-zone .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .upload-zone p { color: var(--text-dim); font-size: 0.9rem; }
+    .upload-zone strong { color: var(--accent); }
+    #file-input { display: none; }
+
+    /* Skills grid */
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-faint);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .skill-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .skill-card:hover::before { opacity: 0.06; }
+
+    .skill-card .icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .skill-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+    .skill-card p { font-size: 0.78rem; color: var(--text-dim); line-height: 1.4; }
+
+    .skill-card .tag {
+      display: inline-block;
+      margin-top: 0.6rem;
+      padding: 0.15rem 0.5rem;
+      background: rgba(124, 106, 247, 0.15);
+      color: var(--accent);
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    /* ── SKILL VIEW ── */
+    .skill-view { display: none; }
+    .skill-view.active { display: block; }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .breadcrumb button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0;
+    }
+
+    .breadcrumb button:hover { text-decoration: underline; }
+
+    /* Skill hero */
+    .skill-hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-hero::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(124,106,247,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .skill-hero .hero-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    .skill-hero h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .skill-hero .desc { color: var(--text-dim); line-height: 1.7; max-width: 600px; }
+
+    .hero-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-tags span {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    /* Difficulty badge */
+    .difficulty-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .difficulty-badge.intermédiaire {
+      background: rgba(247, 201, 106, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(247, 201, 106, 0.3);
+    }
+
+    .difficulty-badge.débutant {
+      background: rgba(106, 247, 196, 0.15);
+      color: var(--accent3);
+      border: 1px solid rgba(106, 247, 196, 0.3);
+    }
+
+    .difficulty-badge.avancé {
+      background: rgba(247, 106, 143, 0.15);
+      color: var(--accent2);
+      border: 1px solid rgba(247, 106, 143, 0.3);
+    }
+
+    /* Section nav */
+    .section-nav {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 2rem;
+      scrollbar-width: none;
+    }
+
+    .section-nav::-webkit-scrollbar { display: none; }
+
+    .section-btn {
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .section-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .section-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* Content sections */
+    .content-section { display: none; }
+    .content-section.active { display: block; }
+
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-card p {
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-size: 0.9rem;
+    }
+
+    /* Items list */
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    .item-row {
+      display: flex;
+      gap: 1rem;
+      padding: 0.9rem 1rem;
+      background: var(--surface2);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .item-row .item-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      min-width: 140px;
+      color: var(--accent);
+    }
+
+    .item-row .item-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* Tricks */
+    .tricks-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .trick-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .trick-header {
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.15s;
+    }
+
+    .trick-header:hover { background: var(--surface2); }
+
+    .trick-header-left { display: flex; align-items: center; gap: 1rem; }
+
+    .trick-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .trick-diff {
+      display: flex;
+      gap: 3px;
+    }
+
+    .diff-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .diff-dot.filled { background: var(--accent); }
+
+    .trick-toggle {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      transition: transform 0.2s;
+    }
+
+    .trick-card.open .trick-toggle { transform: rotate(180deg); }
+
+    .trick-body {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .trick-card.open .trick-body { display: block; }
+
+    .trick-desc {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-top: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .steps-list {
+      counter-reset: step;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      counter-increment: step;
+      min-width: 24px;
+      height: 24px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 0.86rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      padding-top: 0.15rem;
+    }
+
+    .tip-box {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      background: rgba(124, 106, 247, 0.08);
+      border: 1px solid rgba(124, 106, 247, 0.25);
+      border-radius: 10px;
+      font-size: 0.84rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .tip-box .tip-icon { font-size: 1rem; flex-shrink: 0; }
+
+    /* Training plan */
+    .plan-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .plan-item {
+      display: flex;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .plan-item::before {
+      content: '';
+      position: absolute;
+      left: 17px;
+      top: 28px;
+      width: 2px;
+      bottom: -8px;
+      background: var(--border);
+    }
+
+    .plan-item:last-child::before { display: none; }
+
+    .plan-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    .plan-content {
+      padding: 0.4rem 0 2rem;
+    }
+
+    .plan-phase {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.2rem;
+    }
+
+    .plan-focus {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .plan-obj {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+
+    /* Resources */
+    .resources-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .resource-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+    }
+
+    .resource-link:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .resource-link .rl-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .resource-link .rl-desc {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .resource-link .rl-arrow {
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      gap: 1rem;
+      color: var(--text-dim);
+    }
+
+    .loading.active { display: flex; }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── PROGRESS BAR ── */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      z-index: 100;
+      background: var(--border);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .item-row { flex-direction: column; gap: 0.25rem; }
+      .item-row .item-name { min-width: unset; }
+      header h1 { font-size: 1.2rem; }
+    }
+
+    /* Fade in animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .skill-card { animation: fadeUp 0.3s ease both; }
+    .skill-card:nth-child(2) { animation-delay: 0.05s; }
+    .skill-card:nth-child(3) { animation-delay: 0.1s; }
+    .skill-card:nth-child(4) { animation-delay: 0.15s; }
+  </style>
+</head>
+<body>
+
+<div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+
+<div id="app">
+  <header>
+    <div class="logo-mark">🧠</div>
+    <div>
+      <h1>Learn<span>Lab</span></h1>
+      <p>Apprends n'importe quoi depuis tes propres documents</p>
+    </div>
+  </header>
+
+  <!-- SKILL PICKER -->
+  <div class="skill-picker active" id="picker-view">
+    <h2>Que veux-tu apprendre ?</h2>
+    <p>Sélectionne un skill existant ou charge ton propre document JSON pour en créer un nouveau.</p>
+
+    <!-- Upload zone -->
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div class="icon">📄</div>
+      <p><strong>Dépose ou clique</strong> pour charger un document JSON de skill</p>
+      <p style="margin-top:0.3rem;font-size:0.75rem;opacity:0.6">Format attendu : skill JSON avec sections, tricks, plan…</p>
+      <input type="file" id="file-input" accept=".json" />
+    </div>
+
+    <div class="section-label">Skills disponibles</div>
+    <div class="skills-grid" id="skills-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading-view">
+    <div class="spinner"></div>
+    <p>Chargement du skill…</p>
+  </div>
+
+  <!-- SKILL VIEW -->
+  <div class="skill-view" id="skill-view">
+    <div class="breadcrumb">
+      <button onclick="goBack()">← Tous les skills</button>
+      <span>/</span>
+      <span id="breadcrumb-name">—</span>
+    </div>
+
+    <div class="skill-hero" id="skill-hero">
+      <!-- Filled dynamically -->
+    </div>
+
+    <div class="section-nav" id="section-nav"></div>
+    <div id="sections-container"></div>
+  </div>
+</div>
+
+<script>
+// ────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────
+const builtinSkills = [
+  { id: 'pen-spinning', name: 'Pen Spinning', icon: '✏️', desc: 'L\'art de faire tourner un stylo avec dextérité', tag: 'dextérité', file: 'pen-spinning.json' }
+];
+
+let loadedSkills = [...builtinSkills];
+let currentSkill = null;
+let currentSection = 0;
+
+// ────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderSkillGrid();
+  setupUpload();
+});
+
+function renderSkillGrid() {
+  const grid = document.getElementById('skills-grid');
+  grid.innerHTML = loadedSkills.map((s, i) => `
+    <div class="skill-card" onclick="loadSkill(${i})" style="animation-delay:${i*0.05}s">
+      <div class="icon">${s.icon}</div>
+      <h3>${s.name}</h3>
+      <p>${s.desc}</p>
+      ${s.tag ? `<span class="tag">${s.tag}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+// ────────────────────────────────────────
+// LOAD SKILL
+// ────────────────────────────────────────
+async function loadSkill(index) {
+  const skill = loadedSkills[index];
+  showView('loading');
+
+  try {
+    let data;
+    if (skill.data) {
+      data = skill.data;
+    } else {
+      const res = await fetch(skill.file);
+      if (!res.ok) throw new Error('File not found');
+      data = await res.json();
+    }
+    currentSkill = data;
+    renderSkillView(data);
+    showView('skill');
+  } catch (e) {
+    alert(`Impossible de charger "${skill.name}".\n\nSi tu es en local, lance un serveur HTTP.\nErreur : ${e.message}`);
+    showView('picker');
+  }
+}
+
+// ────────────────────────────────────────
+// RENDER SKILL
+// ────────────────────────────────────────
+function renderSkillView(data) {
+  document.getElementById('breadcrumb-name').textContent = data.skill;
+
+  // Hero
+  const hero = document.getElementById('skill-hero');
+  const firstSection = data.sections[0];
+  hero.innerHTML = `
+    <div class="hero-icon">${firstSection?.icon || '📚'}</div>
+    <h2>${data.skill}</h2>
+    <p class="desc">${data.description}</p>
+    ${data.difficulty ? `<div class="difficulty-badge ${data.difficulty}">● Niveau ${data.difficulty}</div>` : ''}
+    ${data.tags ? `<div class="hero-tags">${data.tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
+  `;
+
+  // Section nav
+  const nav = document.getElementById('section-nav');
+  nav.innerHTML = data.sections.map((s, i) => `
+    <button class="section-btn ${i===0?'active':''}" onclick="switchSection(${i})">${s.icon || ''} ${s.title}</button>
+  `).join('');
+
+  // Sections
+  const container = document.getElementById('sections-container');
+  container.innerHTML = data.sections.map((s, i) => `
+    <div class="content-section ${i===0?'active':''}" id="section-${i}">
+      ${renderSection(s)}
+    </div>
+  `).join('');
+
+  updateProgress(0, data.sections.length);
+}
+
+function switchSection(i) {
+  document.querySelectorAll('.section-btn').forEach((b,j) => b.classList.toggle('active', j===i));
+  document.querySelectorAll('.content-section').forEach((s,j) => s.classList.toggle('active', j===i));
+  currentSection = i;
+  updateProgress(i, currentSkill.sections.length);
+}
+
+function updateProgress(i, total) {
+  const pct = total > 1 ? ((i / (total-1)) * 100) : 100;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+// ────────────────────────────────────────
+// SECTION RENDERERS
+// ────────────────────────────────────────
+function renderSection(s) {
+  let html = '';
+
+  // Intro / content text
+  if (s.content && !s.tricks && !s.plan && !s.links) {
+    html += `<div class="section-card">
+      <h3>${s.icon || ''} ${s.title}</h3>
+      <p>${s.content}</p>
+      ${s.items ? renderItems(s.items) : ''}
+    </div>`;
+  }
+
+  // Items only sections
+  if (s.items && !s.tricks && !s.plan && !s.links) {
+    html = `<div class="section-card">
+      <h3>${s.icon || ''} ${s.title}</h3>
+      ${s.content ? `<p>${s.content}</p>` : ''}
+      ${renderItems(s.items)}
+    </div>`;
+  }
+
+  // Tricks section
+  if (s.tricks) {
+    html = `<div>
+      ${s.content ? `<div class="section-card" style="margin-bottom:1rem"><p>${s.content}</p></div>` : ''}
+      <div class="tricks-grid">
+        ${s.tricks.map(renderTrick).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Training plan
+  if (s.plan) {
+    html = `<div class="section-card">
+      <h3>${s.icon || ''} ${s.title}</h3>
+      ${s.content ? `<p style="margin-bottom:1.5rem">${s.content}</p>` : ''}
+      <div class="plan-timeline">
+        ${s.plan.map((p, i) => `
+          <div class="plan-item">
+            <div class="plan-dot">${i+1}</div>
+            <div class="plan-content">
+              <div class="plan-phase">${p.phase}</div>
+              <div class="plan-focus">${p.focus}</div>
+              <div class="plan-obj">🎯 ${p.objectif}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Resources / links
+  if (s.links) {
+    html = `<div class="section-card">
+      <h3>${s.icon || ''} ${s.title}</h3>
+      ${s.content ? `<p style="margin-bottom:0">${s.content}</p>` : ''}
+      <div class="resources-list">
+        ${s.links.map(l => `
+          <a class="resource-link" href="${l.url}" target="_blank" rel="noopener">
+            <div>
+              <div class="rl-name">${l.name}</div>
+              <div class="rl-desc">${l.description}</div>
+            </div>
+            <div class="rl-arrow">→</div>
+          </a>
+        `).join('')}
+      </div>
+    </div>`;
+  }
+
+  return html || `<div class="section-card"><h3>${s.icon||''} ${s.title}</h3><p>${s.content||'Contenu à venir.'}</p></div>`;
+}
+
+function renderItems(items) {
+  return `<div class="items-list">
+    ${items.map(it => `
+      <div class="item-row">
+        <div class="item-name">${it.name}</div>
+        <div class="item-desc">${it.description}</div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function renderTrick(t) {
+  const dots = Array.from({length:10}, (_,i) => `<div class="diff-dot ${i < t.difficulty ? 'filled' : ''}"></div>`).join('');
+  return `
+    <div class="trick-card" onclick="toggleTrick(this)">
+      <div class="trick-header">
+        <div class="trick-header-left">
+          <span class="trick-name">${t.name}</span>
+          <div class="trick-diff">${dots}</div>
+        </div>
+        <span class="trick-toggle">▾</span>
+      </div>
+      <div class="trick-body">
+        <p class="trick-desc">${t.description}</p>
+        ${t.steps ? `<div class="steps-list">${t.steps.map(st => `
+          <div class="step-item">
+            <div class="step-num">●</div>
+            <div class="step-text">${st}</div>
+          </div>
+        `).join('')}</div>` : ''}
+        ${t.tips ? `<div class="tip-box"><span class="tip-icon">💡</span><span>${t.tips}</span></div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function toggleTrick(card) {
+  card.classList.toggle('open');
+}
+
+// ────────────────────────────────────────
+// UPLOAD
+// ────────────────────────────────────────
+function setupUpload() {
+  const input = document.getElementById('file-input');
+  const zone = document.getElementById('upload-zone');
+
+  input.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    readSkillFile(file);
+  });
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--accent)'; });
+  zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.style.borderColor = '';
+    const file = e.dataTransfer.files[0];
+    if (file) readSkillFile(file);
+  });
+}
+
+function readSkillFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.skill || !data.sections) throw new Error('Format invalide');
+      const newSkill = {
+        id: 'custom-' + Date.now(),
+        name: data.skill,
+        icon: data.sections[0]?.icon || '📚',
+        desc: data.description || '',
+        tag: data.tags?.[0] || 'custom',
+        data: data
+      };
+      loadedSkills.push(newSkill);
+      renderSkillGrid();
+      // Auto-load
+      loadedSkills[loadedSkills.length - 1].data = data;
+      currentSkill = data;
+      renderSkillView(data);
+      showView('skill');
+    } catch (err) {
+      alert('Fichier JSON invalide : ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ────────────────────────────────────────
+// NAVIGATION
+// ────────────────────────────────────────
+function showView(name) {
+  document.getElementById('picker-view').classList.toggle('active', name === 'picker');
+  document.getElementById('loading-view').classList.toggle('active', name === 'loading');
+  document.getElementById('skill-view').classList.toggle('active', name === 'skill');
+}
+
+function goBack() {
+  currentSkill = null;
+  document.getElementById('progress').style.width = '0%';
+  showView('picker');
+}
+</script>
+</body>
+</html>

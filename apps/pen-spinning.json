@@ -1,0 +1,209 @@
+{
+  "skill": "Pen Spinning",
+  "description": "L'art de faire tourner un stylo avec les doigts, originaire du Japon dans les années 80. Aujourd'hui pratiqué mondialement avec une communauté compétitive internationale.",
+  "difficulty": "intermédiaire",
+  "tags": ["dextérité", "coordination", "japonais", "sport de doigts"],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Introduction",
+      "icon": "✏️",
+      "content": "Le pen spinning (aussi appelé penspinning) est la pratique de manipuler un stylo ou tout autre objet similaire entre les doigts de manière acrobatique. Né au Japon dans les années 1980, il s'est rapidement répandu dans le monde entier grâce à internet. Aujourd'hui, la communauté mondiale se regroupe sur des forums comme le UPSB (Universal Pen Spinning Board) et organise des tournois internationaux."
+    },
+    {
+      "id": "materiel",
+      "title": "Matériel",
+      "icon": "🖊️",
+      "content": "Tu peux commencer avec n'importe quel stylo BIC, mais les pros utilisent des stylos modifiés (Mod) faits maison. Le concept du Mod : alourdir les extrémités pour créer un meilleur équilibre et de l'inertie. Le poids idéal est entre 15g et 20g pour débuter.",
+      "items": [
+        {
+          "name": "Pour débuter",
+          "description": "Stylo BIC classique, stylo fin type Pilot G2. Simple et accessible."
+        },
+        {
+          "name": "Stylos recommandés",
+          "description": "Pentel Vicuna, Zebra Airfit, Pilot Acroball. Bonne inertie naturelle."
+        },
+        {
+          "name": "Mods (avancé)",
+          "description": "Assemblage de deux stylos pour créer un double-end équilibré. Combiner corps + capuchons de différentes marques."
+        },
+        {
+          "name": "Critères importants",
+          "description": "Longueur ~15cm, poids 15-20g, bonne prise en main, extrémités symétriques pour les mods."
+        }
+      ]
+    },
+    {
+      "id": "positions",
+      "title": "Positions des doigts",
+      "icon": "🤚",
+      "content": "Les positions sont numérotées selon une convention internationale. Les doigts sont numérotés de 1 (pouce) à 5 (auriculaire). Une position '12' signifie que le stylo est entre le pouce (1) et l'index (2).",
+      "items": [
+        { "name": "Position 12", "description": "Entre pouce et index — position de départ la plus commune." },
+        { "name": "Position 23", "description": "Entre index et majeur — très utilisée dans les combos." },
+        { "name": "Position 34", "description": "Entre majeur et annulaire." },
+        { "name": "Position 45", "description": "Entre annulaire et auriculaire — position difficile." }
+      ]
+    },
+    {
+      "id": "tricks_debutant",
+      "title": "Tricks pour débutants",
+      "icon": "⭐",
+      "level": "débutant",
+      "tricks": [
+        {
+          "name": "ThumbAround (TA)",
+          "difficulty": 2,
+          "description": "Le trick le plus emblématique. Le stylo tourne autour du pouce depuis la position 12 vers 23 (normal) ou inversement (reverse).",
+          "steps": [
+            "Tiens le stylo en position 12, extrémité avant pointant vers le bas",
+            "Pousse légèrement avec l'index pour donner une impulsion",
+            "Le stylo pivote autour du pouce",
+            "Rattrape-le avec le majeur en position 23",
+            "Pratique d'abord en laissant tomber — c'est normal !"
+          ],
+          "tips": "C'est LE trick fondamental. Maîtrise-le avant tout autre chose. 30 min par jour pendant 2 semaines."
+        },
+        {
+          "name": "FingerPass (FP)",
+          "difficulty": 1,
+          "description": "Le stylo 'marche' d'un espace entre les doigts vers le suivant, de l'index vers l'auriculaire ou inversement.",
+          "steps": [
+            "Commence en position 12",
+            "Roule le stylo entre tes doigts vers la position 23",
+            "Continue vers 34, puis 45",
+            "Essaie dans l'autre sens (45 → 12)"
+          ],
+          "tips": "Bon exercice de coordination. Commence lentement, la vitesse vient naturellement."
+        },
+        {
+          "name": "Sonic",
+          "difficulty": 3,
+          "description": "Le stylo tourne de 360° autour du majeur, en passant de la position 23 à 34.",
+          "steps": [
+            "Stylo en position 23, tenu par l'index et le majeur",
+            "L'annulaire pousse l'arrière du stylo vers le haut",
+            "Le stylo tourne autour du majeur",
+            "Rattrape en position 34 avec majeur et annulaire"
+          ],
+          "tips": "Deuxième trick à apprendre après le ThumbAround. La clé est le mouvement de l'annulaire."
+        }
+      ]
+    },
+    {
+      "id": "tricks_intermediaire",
+      "title": "Tricks intermédiaires",
+      "icon": "🌟",
+      "level": "intermédiaire",
+      "tricks": [
+        {
+          "name": "Charge",
+          "difficulty": 4,
+          "description": "Rotation de 360° du stylo autour de l'index, de la position 12 à la position 12 dans l'autre sens.",
+          "steps": [
+            "Stylo en position 12",
+            "L'index fait pivoter le stylo vers l'extérieur",
+            "360° autour de l'index",
+            "Rattraper en position 12 inversée"
+          ],
+          "tips": "Nécessite un bon poignet. Travaille la fluidité du poignet séparément."
+        },
+        {
+          "name": "Twisted Sonic (TS)",
+          "difficulty": 5,
+          "description": "Variante du Sonic où le stylo fait une rotation plus complexe avec un twist supplémentaire.",
+          "steps": [
+            "Commence comme un Sonic normal en 23",
+            "Ajoute une rotation du poignet au moment du passage",
+            "Le stylo effectue une trajectoire hélicoïdale",
+            "Rattrape en 34"
+          ],
+          "tips": "Maîtrise le Sonic normal parfaitement avant d'aborder cette variante."
+        },
+        {
+          "name": "Backaround",
+          "difficulty": 5,
+          "description": "Le stylo tourne autour de la main entière, passant derrière les doigts.",
+          "steps": [
+            "Stylo en position 12 ou 23",
+            "Lance le stylo pour qu'il tourne derrière la main",
+            "Il passe derrière l'annulaire et l'auriculaire",
+            "Rattrape devant en position 45 ou 34"
+          ],
+          "tips": "Un des tricks les plus impressionnants visuellement. Demande de la pratique intensive."
+        }
+      ]
+    },
+    {
+      "id": "tricks_avance",
+      "title": "Tricks avancés",
+      "icon": "💫",
+      "level": "avancé",
+      "tricks": [
+        {
+          "name": "Infinity",
+          "difficulty": 7,
+          "description": "Le stylo dessine un symbole infini (∞) dans l'air en passant d'un côté à l'autre de la main.",
+          "tips": "Combo de tricks enchaînés. Nécessite une maîtrise solide des basics."
+        },
+        {
+          "name": "Shadow",
+          "difficulty": 8,
+          "description": "Trick très complexe où le stylo effectue des rotations multiples entre les doigts avec des passages croisés.",
+          "tips": "Trick signature de nombreux pros. Plusieurs mois de pratique nécessaires."
+        },
+        {
+          "name": "Bust",
+          "difficulty": 9,
+          "description": "Enchaînement ultra-rapide de tricks variés formant un 'burst' visuel impressionnant.",
+          "tips": "Niveau compétitif. Nécessite une base solide dans tous les tricks précédents."
+        }
+      ]
+    },
+    {
+      "id": "entrainement",
+      "title": "Plan d'entraînement",
+      "icon": "📅",
+      "content": "La régularité est plus importante que l'intensité. 20 minutes par jour vaut mieux que 3h le week-end.",
+      "plan": [
+        {
+          "phase": "Semaine 1-2",
+          "focus": "ThumbAround Normal",
+          "objectif": "Réussir 3 fois de suite sans lâcher le stylo"
+        },
+        {
+          "phase": "Semaine 3-4",
+          "focus": "FingerPass + ThumbAround Reverse",
+          "objectif": "FingerPass fluide dans les deux sens"
+        },
+        {
+          "phase": "Mois 2",
+          "focus": "Sonic + premiers combos",
+          "objectif": "Enchaîner ThumbAround → Sonic"
+        },
+        {
+          "phase": "Mois 3-4",
+          "focus": "Charge + Backaround",
+          "objectif": "Combo de 5 tricks enchaînés"
+        },
+        {
+          "phase": "Mois 5+",
+          "focus": "Tricks avancés + style personnel",
+          "objectif": "Créer sa propre combo signature"
+        }
+      ]
+    },
+    {
+      "id": "ressources",
+      "title": "Ressources",
+      "icon": "🔗",
+      "content": "La communauté pen spinning est très active et accueillante pour les débutants.",
+      "links": [
+        { "name": "UPSB (Universal Pen Spinning Board)", "url": "https://upsb.info", "description": "Le forum mondial de référence" },
+        { "name": "r/penspinning", "url": "https://reddit.com/r/penspinning", "description": "Communauté Reddit très active" },
+        { "name": "YouTube - Pentrix", "url": "https://youtube.com", "description": "Chaîne de tutoriels de référence" }
+      ]
+    }
+  ]
+}
