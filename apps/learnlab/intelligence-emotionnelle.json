@@ -1,0 +1,297 @@
+{
+  "skill": "Intelligence Émotionnelle",
+  "description": "L'intelligence émotionnelle (IE) est la capacité à reconnaître, comprendre et gérer ses propres émotions — et celles des autres. Elle prédit mieux la réussite personnelle et professionnelle que le QI.",
+  "difficulty": "intermédiaire",
+  "tags": ["émotions", "empathie", "relations", "leadership", "soi"],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Qu'est-ce que l'IE ?",
+      "icon": "❤️",
+      "content": "Daniel Goleman a popularisé le concept dans les années 90 : l'IE serait responsable de 80% du succès personnel et professionnel, contre 20% pour le QI. Ce n'est pas d'être 'gentil' ou de ne pas ressentir de colère — c'est d'avoir un rapport conscient et habile à ses émotions et à celles des autres.",
+      "items": [
+        {
+          "name": "Les 5 piliers de Goleman",
+          "description": "1) Conscience de soi — reconnaître ses émotions. 2) Maîtrise de soi — les réguler. 3) Motivation intrinsèque — se dépasser par sens, pas par peur. 4) Empathie — ressentir ce que l'autre ressent. 5) Compétences sociales — gérer les relations habilement."
+        },
+        {
+          "name": "Les émotions ne sont pas l'ennemi",
+          "description": "Les émotions sont de l'information. La peur signale un danger, la colère signale une violation, la tristesse signale une perte. Les réprimer n'élimine pas l'information — ça la fait exploser ailleurs, plus tard."
+        },
+        {
+          "name": "IE vs QI",
+          "description": "Le QI détermine le plafond théorique. L'IE détermine si tu l'atteins. Des études sur des cadres supérieurs montrent que l'IE distingue les performers exceptionnels des bons performers — là où le QI ne fait plus la différence."
+        },
+        {
+          "name": "La bonne nouvelle",
+          "description": "Contrairement au QI, l'IE se développe tout au long de la vie. Elle n'est pas fixe. Les expériences, la thérapie, la méditation et la pratique intentionnelle la font grandir."
+        }
+      ]
+    },
+    {
+      "id": "conscience",
+      "title": "Conscience de soi",
+      "icon": "🔍",
+      "content": "Tu ne peux pas gérer ce que tu ne vois pas. La conscience de soi est la fondation de toute l'IE — sans elle, les autres piliers s'effondrent.",
+      "tricks": [
+        {
+          "name": "Nommer ses émotions",
+          "difficulty": 2,
+          "description": "La recherche en neurosciences (Matthew Lieberman, UCLA) montre que mettre un mot sur une émotion réduit son intensité neurologique de manière mesurable. 'Affect labeling' — nommer, c'est déjà réguler.",
+          "steps": [
+            "Quand tu ressens quelque chose d'intense, pause",
+            "Demande : 'Qu'est-ce que je ressens exactement ?'",
+            "Sois précis : pas juste 'stressé', mais 'anxieux face à l'incertitude' ou 'frustré par le manque de contrôle'",
+            "Le vocabulaire émotionnel s'élargit avec la pratique — cherche des nuances"
+          ],
+          "tips": "La roue des émotions de Robert Plutchik ou la liste des émotions de Marc Brackett (Permission to Feel) sont d'excellents outils pour élargir ton vocabulaire émotionnel."
+        },
+        {
+          "name": "Le scan corporel",
+          "difficulty": 2,
+          "description": "Les émotions se logent dans le corps avant d'atteindre la conscience. La colère : tension dans la mâchoire et les épaules. L'anxiété : nœud dans le ventre. La tristesse : poids dans la poitrine. Apprends à lire ces signaux.",
+          "steps": [
+            "Plusieurs fois par jour, fais une pause de 30 secondes",
+            "Parcours mentalement ton corps de la tête aux pieds",
+            "Où y a-t-il tension, chaleur, pression, légèreté ?",
+            "Associe ces sensations physiques à un état émotionnel"
+          ],
+          "tips": "Le corps dit la vérité avant que le mental rationalise. Développer cette lecture corporelle, c'est avoir un accès direct à ton état émotionnel réel."
+        },
+        {
+          "name": "Le journal émotionnel",
+          "difficulty": 2,
+          "description": "5 minutes d'écriture quotidienne sur ses émotions développe la conscience de soi plus rapidement que n'importe quelle autre pratique. James Pennebaker (UT Austin) a montré ses effets sur la santé physique et mentale.",
+          "steps": [
+            "Chaque soir, note : 'Aujourd'hui j'ai ressenti… '",
+            "Identifie le déclencheur : 'Ça a été déclenché par…'",
+            "Note la réaction : 'J'ai réagi en…'",
+            "Réflexion : 'Ce que ça me dit sur moi…'"
+          ],
+          "tips": "Pas besoin d'être littéraire — même 5 phrases suffisent. La régularité compte plus que la profondeur."
+        },
+        {
+          "name": "Identifier ses déclencheurs",
+          "difficulty": 3,
+          "description": "Les déclencheurs émotionnels sont des situations spécifiques qui activent des réactions disproportionnées. Les connaître, c'est reprendre le pouvoir sur ses réactions.",
+          "steps": [
+            "Cartographie tes réactions fortes des 3 derniers mois",
+            "Cherche le pattern : quelle situation, quel type de personne, quelle dynamique revient ?",
+            "Creuse la blessure sous-jacente : 'Pourquoi ça m'affecte autant ?'",
+            "Prépare mentalement une réponse choisie (pas réactive) pour la prochaine fois"
+          ],
+          "tips": "Les déclencheurs les plus puissants pointent souvent vers des blessures d'enfance ou des besoins fondamentaux non satisfaits (besoin de respect, de sécurité, de reconnaissance)."
+        }
+      ]
+    },
+    {
+      "id": "regulation",
+      "title": "Maîtrise de soi",
+      "icon": "🧘",
+      "content": "La maîtrise de soi n'est pas la suppression des émotions — c'est l'espace entre le stimulus et la réponse. Créer cet espace, c'est la liberté.",
+      "tricks": [
+        {
+          "name": "La pause physiologique",
+          "difficulty": 1,
+          "description": "Quand une émotion forte monte, le cerveau limbique prend le dessus sur le cortex préfrontal (la raison). Il faut 6 à 9 secondes pour retrouver l'accès à la pensée rationnelle. Cette pause s'appelle 'ne pas réagir à chaud'.",
+          "steps": [
+            "Ressens la montée émotionnelle (chaleur, accélération cardiaque)",
+            "Ne parle pas, n'agis pas pendant 6 secondes minimum",
+            "Respiration lente : 4 secondes d'inspiration, 6 d'expiration",
+            "Demande-toi : 'Quelle réponse je veux donner, pas quelle réaction je veux avoir ?'"
+          ],
+          "tips": "'Entre le stimulus et la réponse, il y a un espace. Dans cet espace réside notre liberté.' — Viktor Frankl."
+        },
+        {
+          "name": "La recadrage cognitif",
+          "difficulty": 3,
+          "description": "Une émotion est générée par l'interprétation d'un événement, pas par l'événement lui-même. Changer l'interprétation change l'émotion.",
+          "steps": [
+            "Identifie l'histoire que tu te racontes sur la situation",
+            "Demande : 'Est-ce que c'est la seule interprétation possible ?'",
+            "Génère 3 interprétations alternatives (pas fausses, juste différentes)",
+            "Choisis l'interprétation la plus utile — pas nécessairement la plus positive, mais la plus juste"
+          ],
+          "tips": "Ex : 'Mon chef ne m'a pas dit bonjour' (fait) → 'Il m'en veut' (interprétation) → Alternative : 'Il est préoccupé par sa réunion de 9h'. Quelle interprétation choisir ?"
+        },
+        {
+          "name": "Exprimer sans exploser",
+          "difficulty": 4,
+          "description": "Réprimer une émotion coûte de l'énergie et finit par exploser. L'exprimer impulsivement abîme les relations. La troisième voie : l'expression consciente et non-violente.",
+          "steps": [
+            "Attends d'être calme (pas la même seconde)",
+            "Utilise le 'Je' : 'Je me suis senti mis à l'écart' — pas 'Tu m'as ignoré'",
+            "Décris le comportement, pas la personne",
+            "Exprime le besoin sous-jacent : 'J'ai besoin de me sentir inclus dans les décisions'"
+          ],
+          "tips": "La colère exprimée avec précision (sur le comportement + besoin) est bien plus efficace que la colère explosée — et préserve la relation."
+        },
+        {
+          "name": "La distanciation psychologique",
+          "difficulty": 3,
+          "description": "Parler de soi à la troisième personne ('Que devrait faire [ton prénom] dans cette situation ?') active une plus grande objectivité et réduit le stress émotionnel. Technique validée par Ethan Kross (Michigan).",
+          "steps": [
+            "Face à une situation émotionnellement chargée",
+            "Reformule en te parlant à la troisième personne ou en tutoyant un ami fictif dans ta situation",
+            "'Si c'était un ami qui vivait ça, que lui dirais-je ?'",
+            "Observe comment la réponse change en qualité et en clarté"
+          ],
+          "tips": "Cette technique explique pourquoi on donne souvent de meilleurs conseils aux autres qu'à soi-même : on se distancie naturellement de leur problème."
+        }
+      ]
+    },
+    {
+      "id": "empathie",
+      "title": "Empathie",
+      "icon": "🤝",
+      "content": "L'empathie n'est pas 'se mettre à la place de l'autre' (souvent une projection). C'est ressentir la réalité émotionnelle de l'autre sans la confondre avec la sienne.",
+      "tricks": [
+        {
+          "name": "Empathie cognitive vs affective",
+          "difficulty": 2,
+          "description": "Empathie cognitive : comprendre intellectuellement ce que l'autre ressent. Empathie affective : le ressentir avec lui. Les deux sont importantes, mais seule la cognitive est vraiment entraînable volontairement.",
+          "steps": [
+            "Dans chaque interaction importante, pose-toi : 'Quelle est l'expérience intérieure de cette personne en ce moment ?'",
+            "Sépare les faits (ce qu'elle dit) des états émotionnels (ce qu'elle ressent)",
+            "Résiste à l'envie de passer directement en mode 'solution'"
+          ],
+          "tips": "La plupart des gens veulent être compris avant d'être aidés. L'empathie précède le conseil."
+        },
+        {
+          "name": "La validation émotionnelle",
+          "difficulty": 3,
+          "description": "Valider, c'est reconnaître que l'émotion de l'autre est réelle et compréhensible — même si tu n'es pas d'accord avec sa réaction ou ses conclusions.",
+          "steps": [
+            "Écoute sans interrompre",
+            "Nomme ce que tu perçois : 'J'entends que tu es épuisé par cette situation'",
+            "Valide : 'C'est compréhensible vu ce que tu traverses'",
+            "Ne pas invalider : évite 'C'est pas si grave', 'Relativise', 'T'inquiète pas'"
+          ],
+          "tips": "Valider ne signifie pas approuver. Tu peux valider l'émotion ('je comprends ta colère') sans approuver le comportement ('mais frapper le bureau, ce n'était pas la bonne réaction')."
+        },
+        {
+          "name": "La curiosité radicale",
+          "difficulty": 2,
+          "description": "L'empathie profonde vient de la curiosité sincère sur l'expérience intérieure de l'autre — pas de la projection de ce que toi tu ressentirais dans sa situation.",
+          "steps": [
+            "'Comment tu vis ça, toi ?'",
+            "'Qu'est-ce qui est le plus difficile dans cette situation pour toi ?'",
+            "'Qu'est-ce dont tu as le plus besoin là ?'",
+            "Écoute vraiment — ne prépare pas ta réponse pendant qu'il parle"
+          ],
+          "tips": "Le plus grand cadeau que tu puisses faire à quelqu'un : lui poser une vraie question sur lui, et l'écouter vraiment jusqu'au bout."
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "title": "Compétences sociales",
+      "icon": "🌐",
+      "content": "L'IE ne reste pas intérieure — elle se manifeste dans la qualité des relations qu'on construit et des situations qu'on sait naviguer.",
+      "items": [
+        {
+          "name": "Lire l'émotion dans l'espace",
+          "description": "Dans un groupe ou une réunion, l'atmosphère émotionnelle est palpable avant même que quelqu'un parle. Entraîne-toi à entrer dans une pièce en mode observateur : qui est tendu, qui est enthousiaste, quelle dynamique est en jeu ?"
+        },
+        {
+          "name": "Adapter son ton selon l'état de l'autre",
+          "description": "Quelqu'un en état de stress a besoin d'être calmé avant d'être challengé. Quelqu'un de découragé a besoin d'être reconnu avant d'être motivé. Évaluer l'état émotionnel de l'autre et adapter son approche en conséquence."
+        },
+        {
+          "name": "Désamorcer les conflits",
+          "description": "Dans un conflit, la première étape n'est jamais argumenter — c'est abaisser le niveau d'activation émotionnelle des deux côtés. Commencer par nommer le conflit : 'Je sens qu'on n'est pas sur la même longueur d'onde, j'aimerqu'on prenne le temps de se comprendre.'"
+        },
+        {
+          "name": "Donner un feedback qui atterrit",
+          "description": "Un feedback efficace : 1) dans un moment de calme, pas de tension. 2) Centré sur le comportement observable, pas la personnalité. 3) Impact concret décrit. 4) Ouvert au dialogue — 'Comment tu vois les choses de ton côté ?'"
+        }
+      ]
+    },
+    {
+      "id": "motivation",
+      "title": "Motivation intrinsèque",
+      "icon": "🔥",
+      "content": "Les personnes à haute IE ne se motivent pas par la peur ou la pression externe — elles trouvent le carburant à l'intérieur. C'est le pilier le plus puissant pour la durée.",
+      "items": [
+        {
+          "name": "Identifier ses valeurs profondes",
+          "description": "La motivation intrinsèque est ancrée dans l'alignement avec ses valeurs. Demande-toi : 'Quand est-ce que je me sens le plus vivant ? Qu'est-ce qui aurait du sens même sans récompense externe ?' Ces réponses pointent vers tes valeurs."
+        },
+        {
+          "name": "Le sens comme carburant",
+          "description": "Connecter une tâche difficile à un sens plus grand la rend supportable. 'Je fais ce rapport fastidieux' → 'Je construis ma réputation professionnelle et mon expertise'. Même tâche, motivation différente."
+        },
+        {
+          "name": "L'auto-compassion vs l'autocritique",
+          "description": "Kristin Neff (UT Austin) a démontré que l'auto-compassion produit de meilleures performances que l'autocritique sévère — et moins d'anxiété. Se traiter comme on traiterait un ami après une erreur n'est pas de la complaisance : c'est de l'efficacité."
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "L'IE se développe dans l'expérience, pas dans les livres. Chaque interaction est une opportunité d'entraînement.",
+      "plan": [
+        {
+          "phase": "Semaine 1",
+          "focus": "Conscience émotionnelle basique",
+          "objectif": "Commencer le journal émotionnel (5 min/soir). Nommer 3 émotions précises par jour avec leurs déclencheurs."
+        },
+        {
+          "phase": "Semaine 2",
+          "focus": "Scan corporel & pause",
+          "objectif": "3 scans corporels par jour. Pratiquer la pause de 6 secondes dans une situation chargée."
+        },
+        {
+          "phase": "Semaine 3",
+          "focus": "Écoute empathique",
+          "objectif": "Dans chaque conversation importante, écouter sans préparer sa réponse. Valider l'émotion de l'autre avant de répondre."
+        },
+        {
+          "phase": "Semaine 4",
+          "focus": "Expression émotionnelle",
+          "objectif": "Utiliser le langage 'Je ressens' dans une conversation difficile. Exprimer un besoin sans accusation."
+        },
+        {
+          "phase": "Mois 2",
+          "focus": "Régulation avancée",
+          "objectif": "Identifier 3 déclencheurs personnels et préparer des réponses choisies. Pratiquer le recadrage cognitif sur une situation récente."
+        },
+        {
+          "phase": "Mois 3+",
+          "focus": "Style de vie émotionnel",
+          "objectif": "L'IE est intégrée dans tes relations, ta prise de décision et ta gestion du stress. Les autres se sentent compris avec toi."
+        }
+      ]
+    },
+    {
+      "id": "ressources",
+      "title": "Ressources",
+      "icon": "🔗",
+      "content": "Ces ressources sont des références de fond, pas des lectures rapides. Choisissez-en une et allez au fond.",
+      "links": [
+        {
+          "name": "Permission to Feel — Marc Brackett",
+          "url": "https://www.amazon.fr",
+          "description": "Le livre de référence sur l'intelligence émotionnelle, par le directeur du Yale Center for Emotional Intelligence."
+        },
+        {
+          "name": "Emotional Intelligence — Daniel Goleman",
+          "url": "https://www.amazon.fr",
+          "description": "Le livre qui a popularisé le concept. Fondamental pour comprendre les bases."
+        },
+        {
+          "name": "Atlas of the Heart — Brené Brown",
+          "url": "https://www.amazon.fr",
+          "description": "Cartographie de 87 émotions humaines. Outil extraordinaire pour élargir le vocabulaire émotionnel."
+        },
+        {
+          "name": "Self-Compassion — Kristin Neff",
+          "url": "https://self-compassion.org",
+          "description": "Site de référence avec exercices guidés gratuits sur l'auto-compassion."
+        }
+      ]
+    }
+  ]
+}

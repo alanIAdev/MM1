@@ -325,14 +325,12 @@
     /* Section nav */
     .section-nav {
       display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
       margin-bottom: 2rem;
-      scrollbar-width: none;
     }
 
-    .section-nav::-webkit-scrollbar { display: none; }
+    
 
     .section-btn {
       padding: 0.5rem 1rem;
@@ -718,7 +716,7 @@
       <p>Apprends n'importe quoi depuis tes propres documents</p>
     </div>
     <!-- PLACEHOLDER : remplace le href par l'URL de ton gestionnaire d'apps -->
-    <a class="back-home" href="https://alaniadev.github.io/MM1/">← Accueil</a>
+    <a class="back-home" href="LIEN_GESTIONNAIRE_ICI">← Accueil</a>
   </header>
 
   <!-- SKILL PICKER -->
@@ -768,10 +766,12 @@
 // STATE
 // ────────────────────────────────────────
 const builtinSkills = [
-  { id: 'pen-spinning',         name: 'Pen Spinning',           icon: '✏️', desc: 'L\'art de faire tourner un stylo avec dextérité',                   tag: 'dextérité',    file: 'pen-spinning.json' },
-  { id: 'ia-quotidien',         name: 'Maîtriser l\'IA',         icon: '🤖', desc: 'Rédiger, apprendre, automatiser et créer avec l\'IA au quotidien', tag: 'productivité', file: 'ia-quotidien.json' },
-  { id: 'communication-claire', name: 'Communication Claire',    icon: '💬', desc: 'Exprimer ses idées, poser de bonnes questions et écouter vraiment', tag: 'relations',    file: 'communication-claire.json' },
-  { id: 'apprendre-a-apprendre',name: 'Apprendre à Apprendre',  icon: '🧠', desc: 'Les techniques prouvées pour mémoriser mieux et plus vite',        tag: 'mindset',      file: 'apprendre-a-apprendre.json' }
+  { id: 'pen-spinning',            name: 'Pen Spinning',             icon: '✏️', desc: 'L\'art de faire tourner un stylo avec dextérité',                   tag: 'dextérité',    file: 'pen-spinning.json' },
+  { id: 'ia-quotidien',            name: 'Maîtriser l\'IA',           icon: '🤖', desc: 'Rédiger, apprendre, automatiser et créer avec l\'IA au quotidien', tag: 'productivité', file: 'ia-quotidien.json' },
+  { id: 'communication-claire',    name: 'Communication Claire',      icon: '💬', desc: 'Exprimer ses idées, poser de bonnes questions et écouter vraiment', tag: 'relations',    file: 'communication-claire.json' },
+  { id: 'apprendre-a-apprendre',   name: 'Apprendre à Apprendre',    icon: '🧠', desc: 'Les techniques prouvées pour mémoriser mieux et plus vite',        tag: 'mindset',      file: 'apprendre-a-apprendre.json' },
+  { id: 'maitrise-attention',      name: 'Maîtrise de l\'Attention',  icon: '🎯', desc: 'Développer concentration, focus profond et résistance aux distractions', tag: 'focus',     file: 'maitrise-attention.json' },
+  { id: 'intelligence-emotionnelle',name: 'Intelligence Émotionnelle',icon: '❤️', desc: 'Comprendre et réguler ses émotions, développer l\'empathie',       tag: 'émotions',     file: 'intelligence-emotionnelle.json' }
 ];
 
 let loadedSkills = [...builtinSkills];

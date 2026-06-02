@@ -1,0 +1,245 @@
+{
+  "skill": "Maîtrise de l'Attention",
+  "description": "Dans un monde conçu pour te distraire, savoir diriger et maintenir ton attention est un avantage décisif. Développe ta concentration, ta présence et ta capacité à entrer dans des états de flow profond.",
+  "difficulty": "intermédiaire",
+  "tags": ["concentration", "focus", "flow", "mindfulness", "productivité"],
+  "sections": [
+    {
+      "id": "comprendre",
+      "title": "Comprendre l'attention",
+      "icon": "🔬",
+      "content": "L'attention n'est pas une ressource infinie — c'est un muscle qui se fatigue, se renforce et peut être entraîné. Comprendre comment elle fonctionne est la première étape pour la maîtriser.",
+      "items": [
+        {
+          "name": "L'attention comme ressource limitée",
+          "description": "Le cerveau traite environ 11 millions de bits d'information par seconde, mais le conscient n'en capte que 50. Chaque décision, notification et interruption consomme cette ressource — même inconsciemment."
+        },
+        {
+          "name": "Les 3 types d'attention",
+          "description": "Focalisée : concentration sur un point précis. Diffuse : état ouvert et créatif (la douche, la marche). Méta-attention : conscience de l'état de ton attention. Les trois sont utiles — mais il faut savoir lequel activer."
+        },
+        {
+          "name": "Le coût du multitâche",
+          "description": "Le cerveau ne fait pas vraiment plusieurs choses en même temps — il switche très rapidement. Chaque switch coûte 20 à 40% de productivité et laisse une 'dette attentionnelle' qui prend jusqu'à 23 minutes à se résorber."
+        },
+        {
+          "name": "L'économie de l'attention",
+          "description": "Les réseaux sociaux, notifications et apps sont conçus par des ingénieurs spécialisés en 'captologie' pour capter ton attention le plus longtemps possible. Comprendre ce système te permet de ne plus en être la victime."
+        }
+      ]
+    },
+    {
+      "id": "ennemis",
+      "title": "Les ennemis de l'attention",
+      "icon": "⚠️",
+      "content": "Avant de renforcer ton attention, identifie ce qui la sabote. La plupart des problèmes de concentration viennent de l'environnement, pas du cerveau.",
+      "tricks": [
+        {
+          "name": "Les notifications — l'ennemi n°1",
+          "difficulty": 2,
+          "description": "Chaque notification déclenche une micro-libération de dopamine qui brise le fil de concentration. Une seule notification peut détruire 20 minutes de travail profond.",
+          "steps": [
+            "Coupe TOUTES les notifications non essentielles (réseaux, emails, news)",
+            "Mode 'Ne pas déranger' systématique pendant les sessions de travail",
+            "Consulte emails et messages à heures fixes (ex : 9h, 13h, 17h)",
+            "Le monde ne s'arrête pas si tu réponds avec 2h de délai"
+          ],
+          "tips": "Test : passe 48h avec les notifications coupées. Note ta production et ton niveau de stress."
+        },
+        {
+          "name": "Le téléphone dans la même pièce",
+          "difficulty": 3,
+          "description": "Des études montrent que la simple présence d'un téléphone sur le bureau (même retourné, même éteint) réduit les capacités cognitives disponibles — le cerveau consacre des ressources à résister à la tentation.",
+          "steps": [
+            "Pendant les sessions importantes : téléphone dans une autre pièce",
+            "Ou dans un tiroir fermé — 'hors de vue, hors d'esprit' est littéralement vrai neurologiquement",
+            "App Forest ou Focus@Will pour créer une contrainte gamifiée"
+          ],
+          "tips": "Ce n'est pas une question de volonté — c'est de l'architecture comportementale. Supprimer la friction mentale en supprimant la tentation physique."
+        },
+        {
+          "name": "L'environnement de travail chaotique",
+          "difficulty": 2,
+          "description": "Le désordre visuel crée une charge cognitive constante en arrière-plan. Le cerveau traite tout ce qu'il voit — même ce qui n'est pas au centre de l'attention.",
+          "steps": [
+            "Bureau physique : une seule tâche visible à la fois",
+            "Bureau numérique : un seul onglet ouvert par tâche",
+            "Éclairage : la lumière naturelle ou une lumière froide améliore le focus",
+            "Son : silence ou bruit blanc / musique sans paroles (Lo-fi, musique classique)"
+          ],
+          "tips": "Avant chaque session : 2 minutes pour nettoyer l'espace physique et fermer les onglets inutiles. C'est un rituel qui prépare le cerveau."
+        },
+        {
+          "name": "La fatigue décisionnelle",
+          "difficulty": 3,
+          "description": "Chaque décision, même petite (quoi manger, quoi porter), épuise le même réservoir que la concentration. Les décisions triviales sabotent le focus cognitif.",
+          "steps": [
+            "Automatise les micro-décisions récurrentes (repas, tenue, routine matinale)",
+            "Planifie la journée du lendemain le soir — ne décide pas le matin",
+            "Règle des 2 minutes : si ça prend moins de 2 min, fais-le maintenant plutôt que d'y penser",
+            "Place tes tâches les plus difficiles le matin, quand le réservoir est plein"
+          ],
+          "tips": "Barack Obama portait toujours des costumes bleus ou gris : 'Je ne veux pas prendre de décisions sur ce que je mange ou ce que je porte. Je veux me concentrer sur les vraies décisions.'"
+        }
+      ]
+    },
+    {
+      "id": "techniques",
+      "title": "Techniques de concentration",
+      "icon": "🎯",
+      "content": "Ces techniques s'entraînent comme un muscle. Les premières semaines sont inconfortables — c'est normal, et c'est le signe que ça fonctionne.",
+      "tricks": [
+        {
+          "name": "La session de travail profond",
+          "difficulty": 3,
+          "description": "Le travail profond (Deep Work, Cal Newport) : sessions de concentration intense sans interruption sur une tâche cognitive exigeante. C'est là que se créent les résultats extraordinaires.",
+          "steps": [
+            "Début : rituel de démarrage fixe (même lieu, même musique, même durée)",
+            "Durée : commence à 25 min (Pomodoro), vise progressivement 90 min",
+            "Règle unique : une seule tâche. Pas de vérification email, pas de SMS",
+            "Fin : noter où tu en es pour reprendre facilement la prochaine session"
+          ],
+          "tips": "La profondeur du travail ne s'improvise pas — elle se programme. Bloque des créneaux dans ton agenda comme des réunions inviolables."
+        },
+        {
+          "name": "La respiration 4-7-8",
+          "difficulty": 1,
+          "description": "Technique de respiration qui active le système nerveux parasympathique, réduit le cortisol et prépare le cerveau à un état de concentration optimale en moins de 2 minutes.",
+          "steps": [
+            "Inspire par le nez pendant 4 secondes",
+            "Retiens ton souffle pendant 7 secondes",
+            "Expire lentement par la bouche pendant 8 secondes",
+            "Répète 4 cycles",
+            "Utilise avant une session de travail ou quand tu sens le mind-wandering"
+          ],
+          "tips": "À combiner avec un rituel d'entrée en session. Après quelques semaines, ton cerveau associe ce pattern respiratoire à l'état de focus."
+        },
+        {
+          "name": "La méditation de concentration",
+          "difficulty": 4,
+          "description": "La méditation n'est pas de la relaxation — c'est un entraînement de l'attention. Chaque fois que tu ramènes ton esprit qui divague, tu fais une répétition musculaire de concentration.",
+          "steps": [
+            "Assieds-toi confortablement, dos droit",
+            "Fixe ton attention sur la sensation de la respiration (pas sa visualisation)",
+            "Quand l'esprit divague (et il va divaguer), note 'pensée' sans te juger",
+            "Ramène doucement l'attention sur la respiration",
+            "Commence : 5 minutes par jour. Augmente progressivement jusqu'à 20 min"
+          ],
+          "tips": "L'esprit qui divague n'est pas un échec — c'est la rep. Plus tu le remarques et reviens, plus tu entraînes le muscle attentionnel. L'app Waking Up (Sam Harris) ou Headspace sont excellentes."
+        },
+        {
+          "name": "L'ancrage attentionnel",
+          "difficulty": 2,
+          "description": "Technique rapide pour ramener l'attention dans le présent à n'importe quel moment de la journée. Utile quand l'esprit part dans tous les sens.",
+          "steps": [
+            "Nomme mentalement 5 choses que tu vois",
+            "4 choses que tu entends",
+            "3 sensations physiques que tu ressens",
+            "2 choses que tu peux sentir ou goûter",
+            "1 pensée présente"
+          ],
+          "tips": "Variante ultra-rapide : pose les deux pieds à plat sur le sol, sens leur contact. 3 respirations lentes. Tu es revenu."
+        },
+        {
+          "name": "La règle des 10 minutes",
+          "difficulty": 2,
+          "description": "Quand tu as envie de te lever, vérifier ton téléphone ou changer de tâche : impose-toi 10 minutes supplémentaires avant de céder. Souvent, l'envie passe.",
+          "steps": [
+            "Ressens l'impulsion de distracion",
+            "Note-la sur un papier ('vérifier Instagram', 'envoyer ce message')",
+            "Dis-toi : 'Je le ferai dans 10 minutes'",
+            "Continue à travailler",
+            "Après 10 min : souvent, l'urgence a disparu"
+          ],
+          "tips": "Cette technique entraîne la tolérance à l'inconfort — compétence clé du focus. Nir Eyal appelle ça 'surfer l'impulsion' dans son livre Indistractable."
+        }
+      ]
+    },
+    {
+      "id": "flow",
+      "title": "Atteindre le Flow",
+      "icon": "🌊",
+      "content": "Le flow (Mihaly Csikszentmihalyi) est l'état de concentration totale où le temps disparaît, l'effort devient plaisir et la performance atteint son pic. Ce n'est pas de la chance — c'est une science.",
+      "items": [
+        {
+          "name": "Les conditions du flow",
+          "description": "3 ingrédients nécessaires : 1) La tâche doit être légèrement au-delà de tes capacités actuelles (ni trop facile = ennui, ni trop difficile = anxiété). 2) Un objectif clair et immédiat. 3) Un feedback quasi-instantané sur ta progression."
+        },
+        {
+          "name": "Le déclencheur : l'objectif micro",
+          "description": "Le cerveau entre en flow sur des objectifs précis, pas vagues. 'Travailler sur mon projet' → ennui. 'Écrire les 300 premiers mots de la section 2 avant midi' → potentiel de flow."
+        },
+        {
+          "name": "La durée d'entrée",
+          "description": "Il faut environ 15-20 minutes de concentration soutenue pour entrer dans le flow. Les premières minutes sont toujours les plus inconfortables — c'est le 'tunnel d'entrée'. Ne jamais interrompre avant d'avoir passé ce tunnel."
+        },
+        {
+          "name": "Après le flow : la récupération",
+          "description": "Une session de flow profond (90-120 min) épuise significativement les ressources cognitives. Une vraie récupération s'impose : marche, sieste, activité physique — pas les réseaux sociaux, qui consomment encore de l'attention."
+        }
+      ]
+    },
+    {
+      "id": "numerique",
+      "title": "Hygiène numérique",
+      "icon": "📱",
+      "content": "L'ennemi de l'attention moderne est numérique. Une hygiène numérique intentionnelle n'est pas un luxe — c'est une nécessité pour quiconque veut accomplir un travail profond.",
+      "items": [
+        {
+          "name": "L'audit de ton attention numérique",
+          "description": "Installe Screen Time (iOS) ou Digital Wellbeing (Android) et regarde honnêtement le rapport hebdomadaire. La plupart des gens passent 4-6h par jour sur leur téléphone sans le savoir."
+        },
+        {
+          "name": "La règle de la première heure",
+          "description": "Ne touche pas à ton téléphone dans la première heure de la journée. Le matin, le cerveau est en état de réflexion profonde (ondes alpha-thêta). Ouvrir les réseaux détruit cet état pour des heures."
+        },
+        {
+          "name": "Les applications en niveaux de gris",
+          "description": "Mettre l'écran en noir et blanc (accessibilité > filtre couleur) réduit l'attrait dopaminergique des apps colorées. Simple et efficacement contre-intuitif."
+        },
+        {
+          "name": "Le téléphone à distance physique",
+          "description": "Charge ton téléphone dans une autre pièce la nuit. Utilise un réveil classique. La chambre est un sanctuaire de récupération — pas un relais de notifications."
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "L'attention est un muscle. Comme à la salle, la progression vient de la régularité et de la surcharge progressive — pas des sprints occasionnels.",
+      "plan": [
+        {
+          "phase": "Semaine 1",
+          "focus": "Audit & couper les fuites",
+          "objectif": "Installer Screen Time, couper toutes les notifications non essentielles, téléphone hors de la pièce de travail"
+        },
+        {
+          "phase": "Semaine 2",
+          "focus": "Premières sessions focalisées",
+          "objectif": "3 sessions Pomodoro (25 min) par jour sans interruption. Tenir un journal des distractions."
+        },
+        {
+          "phase": "Semaine 3",
+          "focus": "Méditation quotidienne",
+          "objectif": "5 minutes de méditation de concentration chaque matin avant de regarder un écran"
+        },
+        {
+          "phase": "Semaine 4",
+          "focus": "Allonger les sessions",
+          "objectif": "Passer de 25 min à 45 min de travail profond continu. Identifier l'heure de pic personnel."
+        },
+        {
+          "phase": "Mois 2",
+          "focus": "Le flow intentionnel",
+          "objectif": "2 sessions de 90 min par jour. Conditions de flow réunies systématiquement. Méditation portée à 15 min."
+        },
+        {
+          "phase": "Mois 3+",
+          "focus": "Style de vie attentionnel",
+          "objectif": "L'attention profonde est une habitude, pas un effort. Tu choisis consciemment où tu la diriges."
+        }
+      ]
+    }
+  ]
+}
