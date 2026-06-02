@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma Cuisine — Recettes pour débutants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #e59834;
+    --gold-light: rgba(229,152,52,0.15);
+    --bg: #0d0d1a;
+    --bg2: #1a1a2e;
+    --bg3: #0f2744;
+    --text: #f0e6d3;
+    --text-muted: #aaa;
+    --text-dim: #888;
+    --border: rgba(255,255,255,0.1);
+    --teal: #4ecdc4;
+    --red: #ff6b6b;
+    --yellow: #ffe66d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 40%, var(--bg3) 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 16px;
+    min-height: 100vh;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+  ::-webkit-scrollbar-thumb { background: rgba(229,152,52,0.3); border-radius: 3px; }
+
+  /* ── TIMER BAR ─────────────────────────────── */
+  #timer-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    height: 56px;
+    background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-bottom: 2px solid rgba(229,152,52,0.4);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .timer-brand { display: flex; align-items: center; gap: 8px; }
+  .timer-brand span { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; letter-spacing: 0.5px; }
+  .timers-wrap { display: flex; gap: 12px; }
+  .timer-widget {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 4px 12px;
+    transition: all 0.3s;
+  }
+  .timer-widget.running {
+    background: rgba(229,152,52,0.15);
+    border-color: rgba(229,152,52,0.6);
+  }
+  .timer-icon { font-size: 14px; color: var(--text-muted); }
+  .timer-widget.running .timer-icon { color: var(--gold); }
+  .timer-display {
+    font-family: 'Courier New', monospace; font-weight: 700; font-size: 17px;
+    color: #ccc; min-width: 60px; letter-spacing: 2px;
+  }
+  .timer-widget.running .timer-display { color: var(--gold); }
+  .btn-timer {
+    background: rgba(255,255,255,0.1); border: none; border-radius: 6px;
+    color: #ccc; font-weight: 700; cursor: pointer; padding: 3px 10px; font-size: 13px;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .timer-widget.running .btn-timer { background: var(--gold); color: #1a1a2e; }
+  .btn-reset {
+    background: transparent; border: none; color: #888; cursor: pointer;
+    padding: 3px 6px; font-size: 14px; font-family: inherit;
+    transition: color 0.2s;
+  }
+  .btn-reset:hover { color: var(--red); }
+
+  /* ── LAYOUT ────────────────────────────────── */
+  #app { padding-top: 56px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HOME PAGE ─────────────────────────────── */
+  .home-wrapper { max-width: 1100px; margin: 0 auto; padding: 48px 24px 60px; }
+  .home-header { text-align: center; margin-bottom: 40px; }
+  .home-label {
+    color: var(--gold); font-family: monospace; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 4px; margin-bottom: 12px; display: block;
+  }
+  .home-title {
+    font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 58px);
+    font-weight: 900; line-height: 1.1; margin-bottom: 14px;
+  }
+  .home-sub { color: var(--text-dim); font-size: 16px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
+
+  /* ── FILTERS ───────────────────────────────── */
+  .filters { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; justify-content: center; }
+  .filter-sep { width: 1px; background: rgba(255,255,255,0.12); margin: 4px; }
+  .btn-filter {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+    color: var(--text-muted); border-radius: 20px; padding: 7px 18px;
+    cursor: pointer; font-size: 14px; font-family: inherit; transition: all 0.2s;
+  }
+  .btn-filter.active {
+    background: rgba(229,152,52,0.2); border-color: var(--gold); color: var(--gold); font-weight: 600;
+  }
+  .recipe-count { color: #666; font-size: 13px; text-align: center; margin-bottom: 20px; }
+
+  /* ── RECIPE GRID ───────────────────────────── */
+  .recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .recipe-card {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 16px; padding: 22px; cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .recipe-card:hover {
+    background: rgba(229,152,52,0.08);
+    border-color: rgba(229,152,52,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  }
+  .card-emoji { font-size: 42px; margin-bottom: 12px; display: block; }
+  .card-meta { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-family: monospace; }
+  .card-name { color: var(--text); font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+  .card-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 14px; line-height: 1.6; }
+  .card-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    background: rgba(255,255,255,0.07); border-radius: 6px;
+    padding: 3px 9px; color: #bbb; font-size: 12px;
+  }
+
+  /* ── RECIPE PAGE ───────────────────────────── */
+  .recipe-header {
+    background: linear-gradient(180deg, rgba(229,152,52,0.07) 0%, transparent 100%);
+    padding: 24px 32px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .btn-back {
+    background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-muted);
+    border-radius: 8px; padding: 6px 14px; cursor: pointer; font-size: 13px;
+    margin-bottom: 18px; font-family: inherit; transition: all 0.2s; display: inline-block;
+  }
+  .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+  .recipe-header-inner { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+  .recipe-header-left { flex: 1; min-width: 280px; }
+  .recipe-category-badge { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; margin-bottom: 8px; }
+  .recipe-title { font-family: 'Playfair Display', serif; font-size: clamp(22px, 4vw, 34px); font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
+  .recipe-tagline { color: var(--text-muted); font-size: 14px; margin-bottom: 14px; line-height: 1.6; }
+  .recipe-times { display: flex; gap: 10px; flex-wrap: wrap; }
+  .time-badge {
+    background: rgba(255,255,255,0.06); border-radius: 8px; padding: 5px 12px;
+    color: #ccc; font-size: 13px;
+  }
+  .time-badge.total { background: rgba(229,152,52,0.15); color: var(--gold); font-weight: 600; }
+
+  /* Nutrition panel */
+  .nutrition-panel {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px; min-width: 210px; max-width: 250px;
+  }
+  .nutrition-title { color: var(--gold); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .servings-control { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .btn-serving {
+    background: rgba(229,152,52,0.2); border: 1px solid var(--gold); color: var(--gold);
+    border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 20px;
+    font-weight: 700; display: flex; align-items: center; justify-content: center;
+    font-family: inherit; line-height: 1; transition: background 0.2s;
+  }
+  .btn-serving:hover { background: rgba(229,152,52,0.35); }
+  .servings-num { color: var(--text); font-size: 22px; font-weight: 700; font-family: 'Playfair Display', serif; min-width: 28px; text-align: center; }
+  .servings-label { color: var(--text-dim); font-size: 13px; }
+  .kcal-box { background: rgba(229,152,52,0.1); border-radius: 8px; padding: 7px 12px; margin-bottom: 12px; text-align: center; }
+  .kcal-num { color: var(--gold); font-weight: 700; font-size: 20px; }
+  .kcal-label { color: var(--text-muted); font-size: 12px; margin-left: 5px; }
+  .macro-row { margin-bottom: 10px; }
+  .macro-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .macro-name { color: var(--text-muted); font-size: 12px; }
+  .macro-val { color: var(--text); font-size: 12px; font-weight: 600; }
+  .macro-track { background: rgba(255,255,255,0.08); border-radius: 4px; height: 6px; overflow: hidden; }
+  .macro-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+
+  /* ── RECIPE BODY ───────────────────────────── */
+  .recipe-body { display: flex; align-items: flex-start; }
+  .steps-panel { flex: 1; padding: 24px 28px; min-width: 0; }
+  .step-nav { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .btn-step {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+    color: var(--text-muted); border-radius: 8px; padding: 6px 14px;
+    cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s;
+  }
+  .btn-step.active {
+    background: var(--gold); border-color: var(--gold); color: #1a1a2e; font-weight: 700;
+  }
+  .step-card {
+    background: rgba(229,152,52,0.05); border: 1px solid rgba(229,152,52,0.25);
+    border-radius: 16px; padding: 24px;
+  }
+  .step-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
+  .step-label { color: var(--gold); font-family: monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+  .step-title { color: var(--text); font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.2; }
+  .step-duration {
+    background: rgba(229,152,52,0.15); border: 1px solid rgba(229,152,52,0.3);
+    border-radius: 10px; padding: 6px 14px; text-align: center; flex-shrink: 0;
+  }
+  .step-duration-num { color: var(--gold); font-weight: 700; font-size: 18px; display: block; }
+  .step-duration-unit { color: var(--text-muted); font-size: 11px; }
+  .step-text { color: #d4c5b0; font-size: 15px; line-height: 1.85; margin-bottom: 16px; }
+  .step-tip {
+    background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.25);
+    border-radius: 10px; padding: 12px 16px;
+  }
+  .step-tip p { color: var(--teal); font-size: 14px; line-height: 1.7; }
+  .step-footer { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
+  .btn-nav {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: #ccc; border-radius: 10px; padding: 10px 20px; cursor: pointer;
+    font-size: 14px; font-family: inherit; transition: all 0.2s;
+  }
+  .btn-nav:hover:not(:disabled) { background: rgba(255,255,255,0.14); }
+  .btn-nav:disabled { opacity: 0.35; cursor: default; }
+  .btn-nav.next {
+    background: rgba(229,152,52,0.2); border-color: var(--gold); color: var(--gold); font-weight: 600;
+  }
+  .btn-nav.next:hover:not(:disabled) { background: rgba(229,152,52,0.35); }
+
+  /* ── INGREDIENTS SIDEBAR ───────────────────── */
+  .ingredients-sidebar {
+    width: 270px; flex-shrink: 0;
+    padding: 24px 20px 24px 0;
+    position: sticky; top: 56px;
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .ing-panel {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px;
+  }
+  .ing-panel-title { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+  .ing-item {
+    padding: 8px 10px; border-radius: 8px; margin-bottom: 4px;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+  }
+  .ing-item.active {
+    background: rgba(229,152,52,0.12);
+    border-color: rgba(229,152,52,0.35);
+  }
+  .ing-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
+  .ing-name { color: #888; font-size: 13px; line-height: 1.4; flex: 1; }
+  .ing-item.active .ing-name { color: var(--text); font-weight: 600; }
+  .ing-active-dot { color: var(--gold); margin-right: 4px; font-size: 10px; }
+  .ing-qty { color: #666; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .ing-item.active .ing-qty { color: var(--gold); }
+  .ing-tip { color: var(--teal); font-size: 11px; margin-top: 4px; line-height: 1.5; font-style: italic; }
+
+  /* ── RESPONSIVE ────────────────────────────── */
+  @media (max-width: 768px) {
+    .recipe-header { padding: 16px; }
+    .recipe-header-inner { flex-direction: column; }
+    .nutrition-panel { max-width: 100%; width: 100%; }
+    .recipe-body { flex-direction: column-reverse; }
+    .ingredients-sidebar { width: 100%; position: static; max-height: none; padding: 0 16px 0; }
+    .steps-panel { padding: 16px; }
+    .timers-wrap { gap: 8px; }
+    .timer-widget { padding: 4px 8px; gap: 5px; }
+    .timer-display { font-size: 14px; min-width: 50px; }
+    .home-wrapper { padding: 32px 16px 48px; }
+  }
+  @media (max-width: 480px) {
+    .timer-brand span { display: none; }
+    .recipe-header { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="timer-bar">
+  <div class="timer-brand">
+    <span>👨‍🍳</span>
+    <span>Ma Cuisine</span>
+  </div>
+  <div class="timers-wrap">
+    <div class="timer-widget" id="tw1">
+      <span class="timer-icon">⏱</span>
+      <span class="timer-display" id="td1">00:00</span>
+      <button class="btn-timer" onclick="timerToggle(1)">▶</button>
+      <button class="btn-reset" onclick="timerReset(1)" title="Reset">↺</button>
+    </div>
+    <div class="timer-widget" id="tw2">
+      <span class="timer-icon">⏱</span>
+      <span class="timer-display" id="td2">00:00</span>
+      <button class="btn-timer" onclick="timerToggle(2)">▶</button>
+      <button class="btn-reset" onclick="timerReset(2)" title="Reset">↺</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+    <div class="home-wrapper">
+      <div class="home-header">
+        <span class="home-label">Recettes pour débutants</span>
+        <h1 class="home-title">Ma Cuisine 🍳</h1>
+        <p class="home-sub">Toutes les recettes expliquées pas à pas, avec conseils et astuces pour apprendre à cuisiner facilement.</p>
+      </div>
+
+      <div class="filters">
+        <button class="btn-filter active" data-cat="all" onclick="setFilter('cat','all',this)">Toutes les recettes</button>
+        <button class="btn-filter" data-cat="plat" onclick="setFilter('cat','plat',this)">🍽️ Plats</button>
+        <button class="btn-filter" data-cat="dessert" onclick="setFilter('cat','dessert',this)">🍰 Desserts</button>
+        <div class="filter-sep"></div>
+        <button class="btn-filter active" data-oven="all" onclick="setFilter('oven','all',this)">Toutes cuissons</button>
+        <button class="btn-filter" data-oven="noOven" onclick="setFilter('oven','noOven',this)">🚫 Sans four</button>
+        <button class="btn-filter" data-oven="oven" onclick="setFilter('oven','oven',this)">🔥 Avec four</button>
+      </div>
+      <p class="recipe-count" id="recipe-count"></p>
+      <div class="recipe-grid" id="recipe-grid"></div>
+    </div>
+  </div>
+
+  <!-- RECIPE PAGE -->
+  <div id="page-recipe" class="page">
+    <div class="recipe-header">
+      <button class="btn-back" onclick="showHome()">← Retour aux recettes</button>
+      <div class="recipe-header-inner">
+        <div class="recipe-header-left">
+          <div class="recipe-category-badge" id="r-badge"></div>
+          <h2 class="recipe-title" id="r-title"></h2>
+          <p class="recipe-tagline" id="r-tagline"></p>
+          <div class="recipe-times">
+            <span class="time-badge" id="r-prep"></span>
+            <span class="time-badge" id="r-cook"></span>
+            <span class="time-badge total" id="r-total"></span>
+          </div>
+        </div>
+        <div class="nutrition-panel">
+          <div class="nutrition-title">Portions &amp; Nutrition</div>
+          <div class="servings-control">
+            <button class="btn-serving" onclick="changeServings(-1)">−</button>
+            <span class="servings-num" id="servings-num">4</span>
+            <button class="btn-serving" onclick="changeServings(1)">+</button>
+            <span class="servings-label">personnes</span>
+          </div>
+          <div class="kcal-box">
+            <span class="kcal-num" id="kcal-val">—</span>
+            <span class="kcal-label">kcal total</span>
+          </div>
+          <div id="macros-panel"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recipe-body">
+      <div class="steps-panel">
+        <div class="step-nav" id="step-nav"></div>
+        <div class="step-card" id="step-card"></div>
+        <div class="step-footer">
+          <button class="btn-nav" id="btn-prev" onclick="changeStep(-1)">← Étape précédente</button>
+          <button class="btn-nav next" id="btn-next" onclick="changeStep(1)">Étape suivante →</button>
+        </div>
+      </div>
+      <div class="ingredients-sidebar">
+        <div class="ing-panel">
+          <div class="ing-panel-title">🧺 Ingrédients</div>
+          <div id="ing-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────
+
+const RECIPES = [
+  {
+    id: 1,
+    name: "Émincé de porc aux légumes façon wok",
+    emoji: "🥢",
+    category: "plat",
+    needsOven: false,
+    prepTime: 15,
+    cookTime: 15,
+    baseServings: 4,
+    kcalPerServing: 380,
+    macros: { proteines: 32, lipides: 14, glucides: 18, fibres: 4 },
+    description: "Un plat asiatique savoureux, coloré et rapide à préparer. Parfait pour un repas équilibré en semaine.",
+    tips: "Le secret du wok : feu très vif et ingrédients coupés en petits morceaux pour une cuisson rapide et homogène.",
+    ingredients: [
+      { id:"i1", name:"Filet de porc", qty:600, unit:"g", tip:"Coupez-le en fines lamelles dans le sens contraire des fibres pour qu'il soit plus tendre." },
+      { id:"i2", name:"Poivron rouge", qty:1, unit:"pièce", tip:"Lavez-le, coupez le haut et le bas, retirez les graines blanches, puis tranchez en lanières." },
+      { id:"i3", name:"Poivron jaune", qty:1, unit:"pièce", tip:"Même technique que le rouge." },
+      { id:"i4", name:"Courgette", qty:1, unit:"pièce", tip:"Lavez-la, pas besoin d'éplucher. Coupez en rondelles de 5mm." },
+      { id:"i5", name:"Carotte", qty:2, unit:"pièces", tip:"Épluchez avec un économe, taillez en fins bâtonnets pour qu'elles cuisent vite." },
+      { id:"i6", name:"Oignon", qty:1, unit:"pièce", tip:"Épluchez et émincez finement. Pour ne pas pleurer, réfrigérez-le 15 min avant." },
+      { id:"i7", name:"Gousses d'ail", qty:3, unit:"pièces", tip:"Écrasez avec le plat du couteau pour retirer la peau, puis hachez finement." },
+      { id:"i8", name:"Sauce soja", qty:4, unit:"c.à.s", tip:"Utilisez de la sauce soja claire pour saler." },
+      { id:"i9", name:"Huile de sésame", qty:1, unit:"c.à.s", tip:"Ajoutez-la en fin de cuisson, jamais au début : elle brûle et perd son arôme." },
+      { id:"i10", name:"Huile neutre", qty:2, unit:"c.à.s", tip:"Pour la cuisson au wok." },
+      { id:"i11", name:"Gingembre frais", qty:1, unit:"cm", tip:"Épluchez avec une cuillère et râpez finement." },
+      { id:"i12", name:"Maïzena", qty:1, unit:"c.à.s", tip:"Servira à épaissir légèrement la sauce." },
+      { id:"i13", name:"Sel, poivre", qty:0, unit:"", tip:"" },
+    ],
+    steps: [
+      { id:"s1", title:"Préparer la viande", duration:10, ingredientIds:["i1","i8","i12"],
+        text:"Coupez le filet de porc en fines lamelles (environ 5mm d'épaisseur). Dans un bol, mélangez les lamelles avec 2 c.à.s de sauce soja et la maïzena. Mélangez bien pour enrober chaque morceau. Cette étape s'appelle la marinade et elle va attendrir la viande et lui donner du goût.",
+        tip:"✨ Astuce débutant : plus les lamelles sont fines, plus elles cuisent vite et restent tendres. Utilisez un couteau bien aiguisé ou mettez la viande 20 min au congélateur avant de couper." },
+      { id:"s2", title:"Préparer les légumes", duration:10, ingredientIds:["i2","i3","i4","i5","i6","i7","i11"],
+        text:"Lavez tous les légumes. Coupez les poivrons en lanières, la courgette en demi-rondelles, les carottes en fins bâtonnets. Émincez l'oignon finement. Hachez l'ail et le gingembre. Rangez chaque légume dans un petit bol séparé — au wok, tout va très vite et vous n'aurez pas le temps de couper pendant la cuisson !",
+        tip:"✨ Astuce : Préparez tout AVANT de commencer à cuire. Au wok, on ne quitte pas la casserole des yeux !" },
+      { id:"s3", title:"Saisir la viande", duration:5, ingredientIds:["i1","i10"],
+        text:"Chauffez votre wok (ou grande poêle) à feu très vif jusqu'à ce qu'il fume légèrement. Ajoutez l'huile neutre. Versez les lamelles de porc en une seule couche. Ne touchez pas pendant 1 minute pour qu'elles colorent bien. Puis remuez et continuez 2-3 minutes. Réservez la viande dans une assiette.",
+        tip:"✨ Astuce : Si votre wok est trop petit, faites la viande en 2 fois. Si vous entassez tout, les aliments cuisent à la vapeur au lieu de dorer." },
+      { id:"s4", title:"Cuire les légumes", duration:8, ingredientIds:["i6","i7","i11","i5","i2","i3","i4","i10"],
+        text:"Dans le même wok chaud, ajoutez un filet d'huile si nécessaire. Faites revenir l'oignon, l'ail et le gingembre 1 minute. Ajoutez les carottes 2 minutes, puis les poivrons 2 minutes, et enfin la courgette 2 minutes. Les légumes doivent rester légèrement croquants — c'est le secret du wok !",
+        tip:"✨ Astuce : On ajoute les légumes les plus durs en premier (carotte) et les plus tendres en dernier (courgette)." },
+      { id:"s5", title:"Finir et assaisonner", duration:3, ingredientIds:["i1","i8","i9","i13"],
+        text:"Remettez la viande dans le wok avec les légumes. Versez le reste de sauce soja (2 c.à.s). Mélangez bien pendant 1 minute sur feu vif. Hors du feu, ajoutez l'huile de sésame et mélangez. Goûtez et ajustez le sel et le poivre. Servez immédiatement avec du riz blanc.",
+        tip:"✨ Astuce : L'huile de sésame s'ajoute toujours hors du feu. C'est une huile aromatique, pas une huile de cuisson !" }
+    ]
+  },
+  {
+    id: 2,
+    name: "Émincé de bœuf au poivron",
+    emoji: "🥩",
+    category: "plat",
+    needsOven: false,
+    prepTime: 10,
+    cookTime: 15,
+    baseServings: 4,
+    kcalPerServing: 420,
+    macros: { proteines: 38, lipides: 18, glucides: 12, fibres: 3 },
+    description: "Un classique de la cuisine du quotidien, savoureux et nourrissant. La tendresse du bœuf avec le sucré des poivrons.",
+    tips: "La clé : une poêle très chaude pour bien saisir la viande et garder son jus à l'intérieur.",
+    ingredients: [
+      { id:"i1", name:"Steak ou rumsteck", qty:600, unit:"g", tip:"Demandez à votre boucher de la viande à fondue. Sinon, mettez 20 min au congélateur et coupez en lamelles fines." },
+      { id:"i2", name:"Poivron rouge", qty:2, unit:"pièces", tip:"Lavez, épépinez, coupez en lanières de 1cm." },
+      { id:"i3", name:"Poivron vert", qty:1, unit:"pièce", tip:"Plus amer que le rouge, il apporte du caractère au plat." },
+      { id:"i4", name:"Oignon", qty:2, unit:"pièces", tip:"Épluchez et coupez en demi-rondelles." },
+      { id:"i5", name:"Gousses d'ail", qty:3, unit:"pièces", tip:"Hachez finement après avoir retiré la peau." },
+      { id:"i6", name:"Concentré de tomate", qty:2, unit:"c.à.s", tip:"Donne de la profondeur et de la couleur à la sauce." },
+      { id:"i7", name:"Fond de veau ou de bœuf", qty:200, unit:"ml", tip:"En brick au supermarché. À défaut, eau chaude + cube de bouillon." },
+      { id:"i8", name:"Huile d'olive", qty:2, unit:"c.à.s", tip:"" },
+      { id:"i9", name:"Thym, laurier", qty:0, unit:"", tip:"Les herbes de Provence fonctionnent très bien aussi." },
+      { id:"i10", name:"Sel, poivre", qty:0, unit:"", tip:"" },
+      { id:"i11", name:"Maïzena (optionnel)", qty:1, unit:"c.à.c", tip:"Pour épaissir la sauce si elle est trop liquide." },
+    ],
+    steps: [
+      { id:"s1", title:"Préparer les ingrédients", duration:10, ingredientIds:["i1","i2","i3","i4","i5"],
+        text:"Coupez la viande en lamelles fines. Lavez et épépinez les poivrons, taillez-les en lanières. Épluchez et émincez les oignons en demi-rondelles. Hachez l'ail finement. Salez et poivrez la viande.",
+        tip:"✨ Astuce : Sortez la viande du réfrigérateur 15 minutes avant de cuire. Une viande à température ambiante saisit mieux qu'une viande froide." },
+      { id:"s2", title:"Saisir le bœuf", duration:5, ingredientIds:["i1","i8"],
+        text:"Chauffez une grande poêle à feu vif avec l'huile d'olive. Quand l'huile est bien chaude, ajoutez les lamelles de bœuf. Étalez-les bien et ne les bougez pas pendant 1 minute. Retournez et cuisez encore 1 minute. Le but est de les colorer, pas de les cuire à cœur. Réservez sur une assiette.",
+        tip:"✨ Astuce débutant : Si vous voyez de l'eau se former dans la poêle, la température n'est pas assez élevée. Augmentez le feu et faites la viande en 2 fois si nécessaire." },
+      { id:"s3", title:"Faire revenir les légumes", duration:8, ingredientIds:["i4","i5","i2","i3","i6","i9"],
+        text:"Dans la même poêle (sans nettoyer), baissez un peu le feu. Faites revenir les oignons 3 minutes jusqu'à ce qu'ils soient translucides. Ajoutez l'ail et les poivrons, cuisez 5 minutes en mélangeant régulièrement. Ajoutez le concentré de tomate et le thym/laurier, mélangez 1 minute.",
+        tip:"✨ Astuce : Un oignon est 'translucide' quand il devient presque transparent et doux. C'est le signe qu'il a perdu son âcreté." },
+      { id:"s4", title:"Préparer la sauce", duration:7, ingredientIds:["i7","i11","i1","i10"],
+        text:"Versez le fond de veau dans la poêle. Grattez bien le fond avec une cuillère en bois pour décoller tous les sucs caramélisés. Laissez mijoter 5 minutes. Si la sauce est trop liquide, délayez la maïzena dans 2 c.à.s d'eau froide et versez dans la sauce. Remettez la viande, mélangez et goûtez.",
+        tip:"✨ Astuce : Cette technique s'appelle 'déglacer'. Les petits morceaux collés au fond sont concentrés en goût. Ne les gâchez jamais !" }
+    ]
+  },
+  {
+    id: 3,
+    name: "Bœuf Stroganoff",
+    emoji: "🍲",
+    category: "plat",
+    needsOven: false,
+    prepTime: 15,
+    cookTime: 25,
+    baseServings: 4,
+    kcalPerServing: 520,
+    macros: { proteines: 35, lipides: 28, glucides: 15, fibres: 2 },
+    description: "Un grand classique russe crémeux et réconfortant. La crème fraîche et les champignons font toute la magie.",
+    tips: "Ne faites jamais bouillir la crème fraîche trop longtemps, elle risque de tourner. Feu doux en fin de cuisson.",
+    ingredients: [
+      { id:"i1", name:"Bœuf (faux-filet ou rumsteck)", qty:600, unit:"g", tip:"Coupez en lamelles de 1cm de large et 5cm de long. Des morceaux réguliers cuisent de façon homogène." },
+      { id:"i2", name:"Champignons de Paris", qty:300, unit:"g", tip:"Ne les lavez PAS sous l'eau. Essuyez-les avec un papier absorbant humide. Tranchez en 5mm." },
+      { id:"i3", name:"Oignon", qty:2, unit:"pièces", tip:"Émincez finement en demi-rondelles." },
+      { id:"i4", name:"Gousses d'ail", qty:2, unit:"pièces", tip:"Hachez finement." },
+      { id:"i5", name:"Crème fraîche épaisse", qty:200, unit:"ml", tip:"Sortez-la 30 min avant pour qu'elle soit à température ambiante." },
+      { id:"i6", name:"Moutarde de Dijon", qty:1, unit:"c.à.s", tip:"Apporte du caractère et lie la sauce." },
+      { id:"i7", name:"Bouillon de bœuf", qty:150, unit:"ml", tip:"Un demi-cube dilué dans 150ml d'eau chaude convient." },
+      { id:"i8", name:"Beurre", qty:30, unit:"g", tip:"Le beurre donne plus de richesse que l'huile pour ce plat." },
+      { id:"i9", name:"Huile", qty:1, unit:"c.à.s", tip:"Mélanger beurre + huile évite que le beurre brûle." },
+      { id:"i10", name:"Paprika doux", qty:1, unit:"c.à.c", tip:"La signature du stroganoff ! Donne couleur et douceur." },
+      { id:"i11", name:"Sel, poivre", qty:0, unit:"", tip:"" },
+      { id:"i12", name:"Persil frais", qty:1, unit:"bouquet", tip:"Hachez les feuilles finement, jetez les tiges." },
+    ],
+    steps: [
+      { id:"s1", title:"Préparer et assaisonner la viande", duration:10, ingredientIds:["i1","i10","i11"],
+        text:"Coupez le bœuf en lamelles régulières. Dans un bol, saupoudrez de paprika, sel et poivre. Mélangez pour bien enrober chaque morceau.",
+        tip:"✨ Astuce : Le paprika brûle facilement. On l'ajoute d'abord sur la viande crue plutôt que directement dans la poêle très chaude." },
+      { id:"s2", title:"Saisir la viande", duration:5, ingredientIds:["i1","i8","i9"],
+        text:"Chauffez 1 c.à.s d'huile + 15g de beurre dans une grande poêle à feu vif. Quand le beurre mousse, ajoutez les lamelles. Cuisez 2-3 minutes en les retournant. Elles doivent être dorées à l'extérieur mais légèrement rosées à l'intérieur. Réservez sur une assiette.",
+        tip:"✨ Astuce : 'Réserver' = mettre de côté dans une assiette. La viande va continuer à cuire légèrement avec sa propre chaleur." },
+      { id:"s3", title:"Faire revenir oignons et champignons", duration:10, ingredientIds:["i3","i4","i2","i8"],
+        text:"Dans la même poêle avec le reste de beurre, faites revenir les oignons à feu moyen 3-4 minutes. Ajoutez l'ail et cuisez 1 minute. Ajoutez les champignons — ils vont d'abord rejeter de l'eau (c'est normal), attendez qu'elle s'évapore complètement (3-4 min) pour que les champignons dorent.",
+        tip:"✨ Astuce champignons : Ils contiennent beaucoup d'eau. Au début ils 'mouillent' la poêle. C'est normal ! Continuez à cuire jusqu'à ce que l'eau disparaisse et qu'ils dorent." },
+      { id:"s4", title:"Faire la sauce crémeuse", duration:8, ingredientIds:["i7","i5","i6","i11"],
+        text:"Versez le bouillon dans la poêle et grattez le fond. Laissez réduire 3 minutes. Baissez le feu à doux. Incorporez la moutarde et mélangez. Ajoutez la crème fraîche et mélangez doucement. NE PAS faire bouillir à gros bouillons. Laissez frémir 3-4 minutes. Goûtez et rectifiez.",
+        tip:"✨ Astuce : La crème 'tranche' quand elle se sépare sous l'effet d'une chaleur trop forte. Feu doux et patience !" },
+      { id:"s5", title:"Finition", duration:3, ingredientIds:["i1","i12"],
+        text:"Remettez les lamelles de bœuf dans la sauce. Mélangez délicatement et réchauffez 2-3 minutes à feu doux. Ne cuisez plus longtemps pour ne pas durcir la viande. Parsemez de persil haché. Servez avec des tagliatelles, du riz ou des pommes de terre vapeur.",
+        tip:"✨ Astuce : Le persil frais haché apporte de la fraîcheur et de la couleur. Évitez le persil séché qui n'a presque aucun goût." }
+    ]
+  },
+  {
+    id: 4,
+    name: "Poulet Curry",
+    emoji: "🍛",
+    category: "plat",
+    needsOven: false,
+    prepTime: 15,
+    cookTime: 30,
+    baseServings: 4,
+    kcalPerServing: 460,
+    macros: { proteines: 40, lipides: 20, glucides: 22, fibres: 5 },
+    description: "Un curry de poulet onctueux et parfumé, inspiré de la cuisine indienne. Doux ou épicé selon votre goût.",
+    tips: "Toastez toujours vos épices en début de cuisson pour révéler tous leurs arômes. C'est le secret des bons currys.",
+    ingredients: [
+      { id:"i1", name:"Cuisses ou blancs de poulet", qty:800, unit:"g", tip:"Les cuisses sont plus moelleuses. Coupez en gros cubes de 3-4cm." },
+      { id:"i2", name:"Lait de coco", qty:400, unit:"ml (1 boîte)", tip:"Agitez la boîte avant d'ouvrir. Utilisez tout le contenu." },
+      { id:"i3", name:"Tomates concassées", qty:400, unit:"ml (1 boîte)", tip:"En boîte, c'est pratique et tout aussi bon." },
+      { id:"i4", name:"Oignon", qty:2, unit:"pièces", tip:"Hachez finement. Plus ils sont fins, plus ils fondront dans la sauce." },
+      { id:"i5", name:"Gousses d'ail", qty:4, unit:"pièces", tip:"Hachez ou pressez. L'ail est la base du curry." },
+      { id:"i6", name:"Gingembre frais", qty:3, unit:"cm", tip:"Épluchez avec une cuillère et râpez finement. Essentiel pour le curry !" },
+      { id:"i7", name:"Poudre de curry", qty:2, unit:"c.à.s", tip:"Commencez par 1 c.à.s si vous aimez doux." },
+      { id:"i8", name:"Curcuma", qty:1, unit:"c.à.c", tip:"Donne la belle couleur jaune. Attention, ça tache !" },
+      { id:"i9", name:"Cumin", qty:1, unit:"c.à.c", tip:"Apporte une note chaude et légèrement fumée." },
+      { id:"i10", name:"Huile neutre", qty:2, unit:"c.à.s", tip:"" },
+      { id:"i11", name:"Sel, poivre", qty:0, unit:"", tip:"" },
+      { id:"i12", name:"Coriandre fraîche", qty:1, unit:"bouquet", tip:"Optionnel. Si vous n'aimez pas, du persil frais fonctionne aussi." },
+      { id:"i13", name:"Jus de citron", qty:0.5, unit:"pièce", tip:"Un filet en fin de cuisson pour équilibrer la richesse du plat." },
+    ],
+    steps: [
+      { id:"s1", title:"Préparer le poulet", duration:10, ingredientIds:["i1","i7","i8","i11"],
+        text:"Coupez le poulet en cubes de 3-4cm. Saupoudrez avec la moitié du curry et le curcuma, salez et poivrez. Mélangez pour enrober. Ce pré-assaisonnement est une mini-marinade express qui commence à aromatiser la viande.",
+        tip:"✨ Astuce : Le curcuma tache tout (vêtements, plan de travail, ongles !). Mettez un torchon sur votre plan de travail." },
+      { id:"s2", title:"Toaster les épices", duration:8, ingredientIds:["i10","i4","i5","i6","i7","i9"],
+        text:"Chauffez l'huile dans une grande casserole à feu moyen. Faites revenir les oignons hachés 5 minutes jusqu'à ce qu'ils soient bien dorés. Ajoutez l'ail, le gingembre et le reste des épices (curry, cumin). Mélangez 2 minutes — vous devez sentir les épices se réveiller.",
+        tip:"✨ Astuce crucial : Faire revenir les épices dans la matière grasse libère leurs arômes. Ne sautez jamais cette étape !" },
+      { id:"s3", title:"Saisir le poulet", duration:5, ingredientIds:["i1"],
+        text:"Montez le feu à vif. Ajoutez les cubes de poulet assaisonnés dans la casserole. Faites-les dorer sur toutes leurs faces, environ 3-4 minutes. Ne couvrez pas, le but est de colorer, pas de cuire à la vapeur.",
+        tip:"✨ Astuce : La coloration développe des dizaines de nouvelles saveurs. Un poulet bien doré est infiniment plus savoureux !" },
+      { id:"s4", title:"Mijotage", duration:25, ingredientIds:["i3","i2","i11"],
+        text:"Ajoutez les tomates concassées et le lait de coco. Mélangez bien. Portez à légère ébullition, puis baissez le feu au minimum. Couvrez et laissez mijoter 20-25 minutes. Le poulet est cuit quand il n'est plus rosé à l'intérieur. Goûtez et ajustez.",
+        tip:"✨ Astuce : Mijoter = cuire à petits bouillons très doux. C'est ce qui permet à la viande de s'attendrir et aux saveurs de se mélanger." },
+      { id:"s5", title:"Finition et dressage", duration:2, ingredientIds:["i12","i13"],
+        text:"Pressez un demi-citron dans le curry et mélangez. Parsemez de coriandre (ou persil) frais haché. Servez avec du riz basmati. Pour le riz : rincez 3 fois, cuisez dans 2 volumes d'eau salée pendant 12 minutes à feu doux.",
+        tip:"✨ Astuce : Le citron en fin de cuisson 'réveille' toutes les saveurs du plat. Essayez de goûter avant et après — la différence est spectaculaire !" }
+    ]
+  },
+  {
+    id: 5,
+    name: "Pain Perdu",
+    emoji: "🍞",
+    category: "dessert",
+    needsOven: false,
+    prepTime: 10,
+    cookTime: 10,
+    baseServings: 4,
+    kcalPerServing: 340,
+    macros: { proteines: 12, lipides: 14, glucides: 42, fibres: 2 },
+    description: "La recette anti-gaspi parfaite pour finir le vieux pain. Croustillant dehors, fondant dedans.",
+    tips: "Le secret : bien tremper le pain pour qu'il s'imbibe mais ne s'effondre pas. Un pain légèrement rassis est idéal.",
+    ingredients: [
+      { id:"i1", name:"Pain (baguette ou pain de mie)", qty:8, unit:"tranches épaisses", tip:"Un pain rassis d'1-2 jours est idéal : il absorbe mieux sans se désintégrer. Tranches de 2cm." },
+      { id:"i2", name:"Œufs", qty:3, unit:"pièces", tip:"Cassez chaque œuf dans un petit bol avant d'ajouter au mélange." },
+      { id:"i3", name:"Lait", qty:200, unit:"ml", tip:"Entier de préférence pour plus d'onctuosité." },
+      { id:"i4", name:"Sucre", qty:3, unit:"c.à.s", tip:"Vanillé si vous en avez." },
+      { id:"i5", name:"Extrait de vanille", qty:1, unit:"c.à.c", tip:"Optionnel mais transforme complètement le plat." },
+      { id:"i6", name:"Cannelle (optionnel)", qty:0.5, unit:"c.à.c", tip:"Se marie parfaitement avec la vanille." },
+      { id:"i7", name:"Beurre", qty:40, unit:"g", tip:"Le beurre donne cette belle couleur dorée et ce goût inimitable." },
+      { id:"i8", name:"Sucre glace ou confiture", qty:0, unit:"pour servir", tip:"Pour la décoration finale." },
+    ],
+    steps: [
+      { id:"s1", title:"Préparer l'appareil", duration:5, ingredientIds:["i2","i3","i4","i5","i6"],
+        text:"Dans un plat creux (assiette à soupe), cassez les œufs et battez-les à la fourchette. Ajoutez le lait, le sucre, la vanille et la cannelle. Fouettez jusqu'à obtenir un mélange homogène. Ce mélange s'appelle un 'appareil' en cuisine.",
+        tip:"✨ Astuce : Un plat assez grand pour tremper une tranche à plat est idéal." },
+      { id:"s2", title:"Tremper le pain", duration:5, ingredientIds:["i1"],
+        text:"Déposez les tranches de pain dans l'appareil. Attendez 1-2 minutes, puis retournez-les délicatement. Le pain doit être bien imbibé mais encore se tenir.",
+        tip:"✨ Astuce : Trop trempé = le pain se désintègre. Pas assez = le cœur reste sec. Cherchez le juste milieu !" },
+      { id:"s3", title:"Cuisson à la poêle", duration:8, ingredientIds:["i7","i1"],
+        text:"Faites fondre le beurre dans une grande poêle à feu moyen. Quand il mousse et sent la noisette, déposez les tranches imbibées. Cuisez 2-3 minutes de chaque côté jusqu'à ce qu'elles soient bien dorées.",
+        tip:"✨ Astuce : Le beurre 'noisette' donne une saveur extraordinaire. Mais entre noisette et brûlé, c'est très rapide !" },
+      { id:"s4", title:"Service", duration:2, ingredientIds:["i8"],
+        text:"Déposez les tranches dorées dans une assiette. Saupoudrez de sucre glace à travers une passoire fine. Accompagnez de confiture, fruits frais, miel, ou glace vanille.",
+        tip:"✨ Astuce : Le pain perdu se mange chaud, immédiatement. Il perd de sa magie en refroidissant !" }
+    ]
+  },
+  {
+    id: 6,
+    name: "Crêpes",
+    emoji: "🥞",
+    category: "dessert",
+    needsOven: false,
+    prepTime: 10,
+    cookTime: 20,
+    baseServings: 4,
+    kcalPerServing: 280,
+    macros: { proteines: 9, lipides: 10, glucides: 38, fibres: 1 },
+    description: "La recette traditionnelle des crêpes bretonnes. Fines, dorées, délicieuses.",
+    tips: "La pâte doit reposer au moins 30 minutes au réfrigérateur — c'est le secret d'une pâte sans grumeaux.",
+    ingredients: [
+      { id:"i1", name:"Farine", qty:250, unit:"g", tip:"Farine T45 ou T55. Tamisez-la pour éviter les grumeaux." },
+      { id:"i2", name:"Œufs", qty:3, unit:"pièces", tip:"À température ambiante. Ils s'incorporent mieux que des œufs froids." },
+      { id:"i3", name:"Lait", qty:500, unit:"ml", tip:"Entier pour des crêpes riches. Versez-le progressivement." },
+      { id:"i4", name:"Beurre fondu", qty:50, unit:"g", tip:"Faites fondre au micro-ondes 30 sec. Laissez refroidir avant d'incorporer." },
+      { id:"i5", name:"Sucre", qty:1, unit:"c.à.s", tip:"Pour les crêpes sucrées. Omettez pour des galettes." },
+      { id:"i6", name:"Sel", qty:1, unit:"pincée", tip:"Même pour les crêpes sucrées — rehausse tous les arômes." },
+      { id:"i7", name:"Extrait de vanille", qty:1, unit:"c.à.c", tip:"Optionnel mais très bon." },
+      { id:"i8", name:"Rhum ou fleur d'oranger", qty:1, unit:"c.à.s", tip:"Optionnel, pour parfumer comme en Bretagne." },
+      { id:"i9", name:"Huile pour la poêle", qty:1, unit:"c.à.s", tip:"Pour graisser la poêle entre chaque crêpe." },
+    ],
+    steps: [
+      { id:"s1", title:"Préparer la pâte", duration:10, ingredientIds:["i1","i2","i3","i4","i5","i6","i7","i8"],
+        text:"Dans un grand saladier, mettez la farine tamisée, le sucre et le sel. Faites un puits (un trou) au centre. Cassez les œufs dans le puits et commencez à mélanger avec un fouet, en incorporant la farine depuis les bords vers le centre. Ajoutez le lait petit à petit tout en fouettant. Terminez par le beurre fondu refroidi, la vanille et le rhum.",
+        tip:"✨ Astuce débutant : La méthode du puits évite les grumeaux. Si vous en avez quand même, mixez la pâte 30 secondes !" },
+      { id:"s2", title:"Repos de la pâte", duration:30, ingredientIds:[],
+        text:"Couvrez le saladier d'un film plastique et laissez reposer au réfrigérateur au minimum 30 minutes (idéalement 1 heure). Le gluten se détend et la pâte devient plus lisse. La crêpe sera plus fine et souple.",
+        tip:"✨ Astuce : Le repos n'est pas optionnel ! Profitez de ce temps pour préparer vos garnitures." },
+      { id:"s3", title:"Cuire les crêpes", duration:20, ingredientIds:["i9"],
+        text:"Sortez la pâte du réfrigérateur. Chauffez une poêle à crêpes à feu moyen-vif. Huilez légèrement avec un papier absorbant. Versez une petite louche de pâte et inclinez immédiatement la poêle en rond pour étaler finement. Cuisez 1 minute jusqu'à ce que les bords se décollent, puis retournez et cuisez 30 secondes.",
+        tip:"✨ Astuce : La première crêpe est souvent ratée — c'est normal ! Elle sert à calibrer la poêle. Mangez-la en cuisine, c'est le privilège du cuisinier !" },
+      { id:"s4", title:"Garnitures et service", duration:5, ingredientIds:[],
+        text:"Empilez les crêpes cuites sur une assiette. Garnissez selon vos envies : beurre + sucre, confiture, Nutella, ou jus de citron + sucre pour la version bretonne classique. Les crêpes se conservent 2-3 jours au réfrigérateur.",
+        tip:"✨ Astuce : Vous pouvez congeler les crêpes en séparant chaque crêpe avec du papier cuisson." }
+    ]
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+
+let state = {
+  catFilter: 'all',
+  ovenFilter: 'all',
+  currentRecipe: null,
+  currentStep: 0,
+  servings: 4,
+};
+
+// ─── TIMERS ───────────────────────────────────────────────────────────────
+
+const timers = {
+  1: { seconds: 0, running: false, interval: null },
+  2: { seconds: 0, running: false, interval: null },
+};
+
+function formatTime(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  const pad = n => String(n).padStart(2, '0');
+  return h > 0 ? `${pad(h)}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`;
+}
+
+function timerToggle(id) {
+  const t = timers[id];
+  const w = document.getElementById('tw' + id);
+  const d = document.getElementById('td' + id);
+  const btn = w.querySelector('.btn-timer');
+  if (t.running) {
+    clearInterval(t.interval);
+    t.running = false;
+    w.classList.remove('running');
+    btn.textContent = '▶';
+  } else {
+    t.interval = setInterval(() => {
+      t.seconds++;
+      d.textContent = formatTime(t.seconds);
+    }, 1000);
+    t.running = true;
+    w.classList.add('running');
+    btn.textContent = '⏸';
+  }
+}
+
+function timerReset(id) {
+  const t = timers[id];
+  clearInterval(t.interval);
+  t.running = false;
+  t.seconds = 0;
+  const w = document.getElementById('tw' + id);
+  w.classList.remove('running');
+  w.querySelector('.btn-timer').textContent = '▶';
+  document.getElementById('td' + id).textContent = '00:00';
+}
+
+// ─── FILTERS ─────────────────────────────────────────────────────────────
+
+function setFilter(type, value, btn) {
+  if (type === 'cat') {
+    state.catFilter = value;
+    document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active'));
+  } else {
+    state.ovenFilter = value;
+    document.querySelectorAll('[data-oven]').forEach(b => b.classList.remove('active'));
+  }
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function getFiltered() {
+  return RECIPES.filter(r => {
+    if (state.catFilter !== 'all' && r.category !== state.catFilter) return false;
+    if (state.ovenFilter === 'noOven' && r.needsOven) return false;
+    if (state.ovenFilter === 'oven' && !r.needsOven) return false;
+    return true;
+  });
+}
+
+// ─── RENDER HOME ──────────────────────────────────────────────────────────
+
+function renderGrid() {
+  const filtered = getFiltered();
+  const grid = document.getElementById('recipe-grid');
+  const count = document.getElementById('recipe-count');
+  count.textContent = `${filtered.length} recette${filtered.length !== 1 ? 's' : ''} disponible${filtered.length !== 1 ? 's' : ''}`;
+  grid.innerHTML = filtered.map(r => `
+    <div class="recipe-card" onclick="openRecipe(${r.id})">
+      <span class="card-emoji">${r.emoji}</span>
+      <div class="card-meta">${r.category === 'dessert' ? '🍰 Dessert' : '🍽️ Plat'} · ${r.needsOven ? '🔥 Four' : '🚫 Sans four'}</div>
+      <div class="card-name">${r.name}</div>
+      <div class="card-desc">${r.description}</div>
+      <div class="card-tags">
+        <span class="tag">⏱ ${r.prepTime + r.cookTime} min</span>
+        <span class="tag">🔥 ${r.kcalPerServing} kcal</span>
+        <span class="tag">👥 ${r.baseServings} pers.</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── OPEN RECIPE ──────────────────────────────────────────────────────────
+
+function openRecipe(id) {
+  const r = RECIPES.find(x => x.id === id);
+  state.currentRecipe = r;
+  state.currentStep = 0;
+  state.servings = r.baseServings;
+  renderRecipe();
+  document.getElementById('page-home').classList.remove('active');
+  document.getElementById('page-recipe').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showHome() {
+  document.getElementById('page-recipe').classList.remove('active');
+  document.getElementById('page-home').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ─── RENDER RECIPE ────────────────────────────────────────────────────────
+
+function renderRecipe() {
+  const r = state.currentRecipe;
+  const ratio = state.servings / r.baseServings;
+
+  // Header
+  document.getElementById('r-badge').textContent =
+    (r.category === 'dessert' ? '🍰 Dessert' : '🍽️ Plat principal') +
+    ' · ' + (r.needsOven ? '🔥 Nécessite un four' : '🚫 Sans four');
+  document.getElementById('r-title').textContent = r.emoji + ' ' + r.name;
+  document.getElementById('r-tagline').textContent = r.tips;
+  document.getElementById('r-prep').textContent = '⏱ Prép : ' + r.prepTime + ' min';
+  document.getElementById('r-cook').textContent = '🔥 Cuisson : ' + r.cookTime + ' min';
+  document.getElementById('r-total').textContent = 'Total : ' + (r.prepTime + r.cookTime) + ' min';
+
+  // Nutrition
+  renderNutrition();
+
+  // Step nav
+  const nav = document.getElementById('step-nav');
+  nav.innerHTML = r.steps.map((s, i) => `
+    <button class="btn-step${i === state.currentStep ? ' active' : ''}" onclick="goToStep(${i})">${i+1}. ${s.title}</button>
+  `).join('');
+
+  // Step card
+  renderStep();
+
+  // Ingredients
+  renderIngredients();
+}
+
+function renderNutrition() {
+  const r = state.currentRecipe;
+  const ratio = state.servings / r.baseServings;
+  document.getElementById('servings-num').textContent = state.servings;
+  document.getElementById('kcal-val').textContent = Math.round(r.kcalPerServing * ratio);
+
+  const macroColors = {
+    proteines: '#4ecdc4',
+    glucides: '#ffe66d',
+    lipides: '#ff6b6b',
+    fibres: '#a8e6cf'
+  };
+  const macroMax = { proteines: 60, glucides: 80, lipides: 50, fibres: 20 };
+  const macroLabels = { proteines: 'Protéines', glucides: 'Glucides', lipides: 'Lipides', fibres: 'Fibres' };
+
+  document.getElementById('macros-panel').innerHTML = Object.keys(r.macros).map(k => {
+    const val = Math.round(r.macros[k] * ratio);
+    const pct = Math.min((val / macroMax[k]) * 100, 100);
+    return `
+      <div class="macro-row">
+        <div class="macro-header">
+          <span class="macro-name">${macroLabels[k]}</span>
+          <span class="macro-val">${val}g</span>
+        </div>
+        <div class="macro-track"><div class="macro-fill" style="width:${pct}%;background:${macroColors[k]}"></div></div>
+      </div>`;
+  }).join('');
+}
+
+function renderStep() {
+  const r = state.currentRecipe;
+  const step = r.steps[state.currentStep];
+
+  document.getElementById('step-card').innerHTML = `
+    <div class="step-card-header">
+      <div>
+        <div class="step-label">Étape ${state.currentStep + 1} / ${r.steps.length}</div>
+        <div class="step-title">${step.title}</div>
+      </div>
+      ${step.duration > 0 ? `
+        <div class="step-duration">
+          <span class="step-duration-num">${step.duration}</span>
+          <span class="step-duration-unit">min</span>
+        </div>` : ''}
+    </div>
+    <p class="step-text">${step.text}</p>
+    ${step.tip ? `<div class="step-tip"><p>${step.tip}</p></div>` : ''}
+  `;
+
+  document.getElementById('btn-prev').disabled = state.currentStep === 0;
+  document.getElementById('btn-next').disabled = state.currentStep === r.steps.length - 1;
+
+  // Update step nav buttons
+  document.querySelectorAll('.btn-step').forEach((btn, i) => {
+    btn.classList.toggle('active', i === state.currentStep);
+  });
+
+  // Update ingredients highlights
+  renderIngredients();
+}
+
+function renderIngredients() {
+  const r = state.currentRecipe;
+  const ratio = state.servings / r.baseServings;
+  const activeIds = r.steps[state.currentStep].ingredientIds;
+
+  document.getElementById('ing-list').innerHTML = r.ingredients.map(ing => {
+    const isActive = activeIds.includes(ing.id);
+    const scaledQty = ing.qty > 0
+      ? (() => { const v = ing.qty * ratio; return Number.isInteger(v) ? v : Math.round(v * 10) / 10; })()
+      : null;
+    return `
+      <div class="ing-item${isActive ? ' active' : ''}">
+        <div class="ing-row">
+          <span class="ing-name">${isActive ? '<span class="ing-active-dot">●</span>' : ''}${ing.name}</span>
+          ${scaledQty !== null ? `<span class="ing-qty">${scaledQty}${ing.unit ? ' ' + ing.unit : ''}</span>` : ''}
+        </div>
+        ${isActive && ing.tip ? `<div class="ing-tip">${ing.tip}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function goToStep(i) {
+  state.currentStep = i;
+  renderStep();
+}
+
+function changeStep(dir) {
+  const r = state.currentRecipe;
+  const next = state.currentStep + dir;
+  if (next >= 0 && next < r.steps.length) {
+    state.currentStep = next;
+    renderStep();
+    document.querySelector('.steps-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function changeServings(dir) {
+  const next = state.servings + dir;
+  if (next < 1) return;
+  state.servings = next;
+  renderNutrition();
+  renderIngredients();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+
+renderGrid();
+</script>
+</body>
+</html>
