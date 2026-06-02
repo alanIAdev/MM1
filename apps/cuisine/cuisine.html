@@ -83,7 +83,7 @@
   #app { padding-top: 56px; }
   .page { display: none; }
   .page.active { display: block; }
-
+  
   /* ── HOME PAGE ─────────────────────────────── */
   .home-wrapper { max-width: 1100px; margin: 0 auto; padding: 48px 24px 60px; }
   .home-header { text-align: center; margin-bottom: 40px; }
@@ -157,6 +157,16 @@
   }
   .time-badge.total { background: rgba(229,152,52,0.15); color: var(--gold); font-weight: 600; }
 
+  <nav class="top-nav">
+  <a class="back-link" href="../../index.html">← Accueil</a>
+  <div class="nav-title">Reci<span>Pe</span></div>
+  <div class="toggle-wrap">
+    <span class="toggle-icon">🌙</span>
+    <div class="toggle" id="themeToggle" role="button" tabindex="0"></div>
+    <span class="toggle-icon">☀️</span>
+  </div>
+  </nav>
+  
   /* Nutrition panel */
   .nutrition-panel {
     background: rgba(255,255,255,0.04); border: 1px solid var(--border);
