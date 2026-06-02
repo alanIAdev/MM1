@@ -42,9 +42,6 @@
     }
 
     /* ── LAYOUT ── */
-
-
-    
     #app {
       max-width: 900px;
       margin: 0 auto;
@@ -59,6 +56,28 @@
       padding: 2rem 0 2.5rem;
       border-bottom: 1px solid var(--border);
       margin-bottom: 2.5rem;
+    }
+
+    .back-home {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .back-home:hover {
+      border-color: var(--accent);
+      color: var(--text);
     }
 
     .logo-mark {
@@ -691,7 +710,6 @@
 
 <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
 
-  
 <div id="app">
   <header>
     <div class="logo-mark">🧠</div>
@@ -699,14 +717,10 @@
       <h1>Learn<span>Lab</span></h1>
       <p>Apprends n'importe quoi depuis tes propres documents</p>
     </div>
+    <!-- PLACEHOLDER : remplace le href par l'URL de ton gestionnaire d'apps -->
+    <a class="back-home" href="LIEN_GESTIONNAIRE_ICI">← Accueil</a>
   </header>
-  
-<div class="layout" id="return-home">
-  <nav>
-    <a class="back-link" href="../../index.html">← Accueil</a>
-  </nav>
-</div>
-  
+
   <!-- SKILL PICKER -->
   <div class="skill-picker active" id="picker-view">
     <h2>Que veux-tu apprendre ?</h2>
@@ -754,7 +768,10 @@
 // STATE
 // ────────────────────────────────────────
 const builtinSkills = [
-  { id: 'pen-spinning', name: 'Pen Spinning', icon: '✏️', desc: 'L\'art de faire tourner un stylo avec dextérité', tag: 'dextérité', file: 'pen-spinning.json' }
+  { id: 'pen-spinning',         name: 'Pen Spinning',           icon: '✏️', desc: 'L\'art de faire tourner un stylo avec dextérité',                   tag: 'dextérité',    file: 'pen-spinning.json' },
+  { id: 'ia-quotidien',         name: 'Maîtriser l\'IA',         icon: '🤖', desc: 'Rédiger, apprendre, automatiser et créer avec l\'IA au quotidien', tag: 'productivité', file: 'ia-quotidien.json' },
+  { id: 'communication-claire', name: 'Communication Claire',    icon: '💬', desc: 'Exprimer ses idées, poser de bonnes questions et écouter vraiment', tag: 'relations',    file: 'communication-claire.json' },
+  { id: 'apprendre-a-apprendre',name: 'Apprendre à Apprendre',  icon: '🧠', desc: 'Les techniques prouvées pour mémoriser mieux et plus vite',        tag: 'mindset',      file: 'apprendre-a-apprendre.json' }
 ];
 
 let loadedSkills = [...builtinSkills];

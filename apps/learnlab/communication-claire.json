@@ -1,0 +1,273 @@
+{
+  "skill": "Communication Claire",
+  "description": "Apprends à exprimer tes idées simplement, à poser des questions qui font avancer, et à écouter avec une vraie présence. La clarté est un respect — pour toi et pour les autres.",
+  "difficulty": "débutant",
+  "tags": ["communication", "écoute", "questions", "expression", "relations"],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Pourquoi la clarté change tout",
+      "icon": "💬",
+      "content": "La plupart des conflits, des malentendus et des projets ratés viennent non pas d'un manque d'intelligence, mais d'un manque de clarté. Parler clairement, ce n'est pas simplifier — c'est respecter le temps et l'énergie de l'autre. Et écouter vraiment, c'est le cadeau le plus rare qu'on puisse faire à quelqu'un.",
+      "items": [
+        { "name": "Le paradoxe de la complexité", "description": "Plus on maîtrise un sujet, plus on a tendance à s'exprimer avec du jargon. La vraie expertise se reconnaît à la capacité à expliquer simplement." },
+        { "name": "La clarté comme compétence", "description": "La communication claire s'apprend. Ce n'est pas une question de talent ou d'aisance naturelle, mais d'habitudes et de pratique consciente." },
+        { "name": "L'impact concret", "description": "Les personnes perçues comme claires et à l'écoute obtiennent plus facilement ce qu'elles veulent, créent des relations plus profondes, et progressent plus vite professionnellement." }
+      ]
+    },
+    {
+      "id": "exprimer",
+      "title": "Exprimer ses idées simplement",
+      "icon": "🎯",
+      "content": "Une bonne idée mal exprimée meurt. La structure, le vocabulaire et le rythme de ta communication déterminent si ton message passe — ou si l'autre décroche.",
+      "tricks": [
+        {
+          "name": "La règle des 3 niveaux",
+          "difficulty": 2,
+          "description": "Avant de parler, demande-toi : à qui je parle ? Adapte ton niveau de détail et ton vocabulaire en conséquence. Un expert, un novice et un décideur ont besoin de versions différentes du même message.",
+          "steps": [
+            "Niveau 1 (novice) : contexte + analogie simple + une seule idée clé",
+            "Niveau 2 (intermédiaire) : structure logique + exemples concrets + nuances importantes",
+            "Niveau 3 (expert) : hypothèses de travail + limites + détails techniques"
+          ],
+          "tips": "Teste : peux-tu expliquer ton idée à un enfant de 12 ans ? Si oui, tu la maîtrises vraiment."
+        },
+        {
+          "name": "La pyramide inversée",
+          "difficulty": 2,
+          "description": "Commence par la conclusion, puis explique pourquoi. La majorité des gens font l'inverse : ils racontent tout le chemin avant d'arriver au but — et l'interlocuteur perd le fil.",
+          "steps": [
+            "Ouvre avec ta conclusion ou ton point principal en une phrase",
+            "Donne les 2-3 arguments clés qui la soutiennent",
+            "Fournis les détails seulement si l'autre en a besoin"
+          ],
+          "tips": "Exercice : enregistre une de tes présentations. Combien de secondes avant d'arriver à ton point principal ?"
+        },
+        {
+          "name": "Bannir les mots flous",
+          "difficulty": 3,
+          "description": "Certains mots donnent l'illusion de communiquer sans rien dire : 'intéressant', 'pas mal', 'un peu', 'potentiellement', 'dans un certain sens'… Remplace-les par du concret.",
+          "steps": [
+            "Identifie tes mots flous habituels (écoute-toi parler pendant 1 semaine)",
+            "Pour chaque mot vague, demande-toi : qu'est-ce que ça veut dire concrètement ?",
+            "Remplace par des chiffres, des exemples ou des faits observables"
+          ],
+          "tips": "\"C'est bien\" → \"J'ai particulièrement aimé ta façon de structurer la partie 2.\""
+        },
+        {
+          "name": "L'analogie comme pont",
+          "difficulty": 2,
+          "description": "Une bonne analogie fait comprendre en 5 secondes ce qu'une explication de 5 minutes ne parvient pas à transmettre. C'est le meilleur outil de clarté.",
+          "steps": [
+            "Identifie le concept difficile à expliquer",
+            "Trouve quelque chose de familier qui fonctionne de la même façon",
+            "Formule : 'C'est comme [analogie], sauf que [différence clé]'"
+          ],
+          "tips": "Constitue un carnet d'analogies : note chaque fois qu'une comparaison t'aide à comprendre quelque chose."
+        },
+        {
+          "name": "La phrase de 15 mots",
+          "difficulty": 4,
+          "description": "Entraîne-toi à résumer n'importe quelle idée en 15 mots maximum. Cet exercice force la clarté et révèle si tu comprends vraiment ce dont tu parles.",
+          "steps": [
+            "Prends une idée complexe que tu dois communiquer",
+            "Écris-la en 15 mots ou moins sans jargon",
+            "Si tu n'y arrives pas, c'est que tu ne la maîtrises pas encore assez"
+          ],
+          "tips": "Exercice quotidien : résume ta journée en une phrase de 15 mots. Puis résume chaque réunion de la même façon."
+        }
+      ]
+    },
+    {
+      "id": "questions",
+      "title": "Poser de bonnes questions",
+      "icon": "❓",
+      "content": "Poser une bonne question est plus précieux que donner une bonne réponse. Les meilleures questions créent de la réflexion, ouvrent des perspectives et montrent une vraie présence.",
+      "tricks": [
+        {
+          "name": "Questions ouvertes vs fermées",
+          "difficulty": 1,
+          "description": "Les questions fermées (oui/non) coupent la conversation. Les questions ouvertes (comment, pourquoi, qu'est-ce que…) la font avancer. Apprends à basculer d'un mode à l'autre selon l'objectif.",
+          "steps": [
+            "Fermée pour clarifier : 'Est-ce que tu veux dire que X ?' (confirmation rapide)",
+            "Ouverte pour explorer : 'Qu'est-ce qui t'a amené à cette conclusion ?'",
+            "Ouverte pour approfondir : 'Comment tu te sentirais si ça n'aboutissait pas ?'"
+          ],
+          "tips": "Règle simple : si tu veux comprendre, ouvre. Si tu veux confirmer, ferme."
+        },
+        {
+          "name": "La question de clarification",
+          "difficulty": 1,
+          "description": "Face à quelque chose d'ambigu, ne fais pas semblant de comprendre. Clarifie. Ce n'est pas un aveu de faiblesse — c'est un signe d'intelligence et de respect.",
+          "steps": [
+            "'Quand tu dis [mot/expression], tu veux dire quoi exactement ?'",
+            "'Pour être sûr de comprendre : tu parles de [reformulation] ?'",
+            "'Est-ce que tu peux me donner un exemple concret ?'"
+          ],
+          "tips": "La plupart des désaccords se résolvent à l'étape de clarification, avant même d'argumenter."
+        },
+        {
+          "name": "La question Socratique",
+          "difficulty": 4,
+          "description": "Au lieu de contredire, pose des questions qui amènent l'autre à remettre lui-même en question ses certitudes. Plus puissant que n'importe quel argument.",
+          "steps": [
+            "'Sur quoi bases-tu cette conclusion ?'",
+            "'Qu'est-ce qui se passerait si l'inverse était vrai ?'",
+            "'As-tu un exemple où cette règle ne s'applique pas ?'",
+            "'Qu'est-ce qui te ferait changer d'avis ?'"
+          ],
+          "tips": "Attention : à utiliser pour explorer, pas pour manipuler. L'intention se sent toujours."
+        },
+        {
+          "name": "La question d'intention",
+          "difficulty": 3,
+          "description": "Avant de répondre à une demande, comprends l'intention derrière. Souvent, ce qu'on demande n'est pas ce dont on a vraiment besoin.",
+          "steps": [
+            "'Qu'est-ce que tu espères obtenir avec ça ?'",
+            "'Quel est le vrai problème que tu cherches à résoudre ?'",
+            "'Si tu avais déjà la réponse, à quoi ça ressemblerait ?'"
+          ],
+          "tips": "Cas classique : quelqu'un demande \"comment faire X\" alors que la vraie question est \"est-ce que je dois faire X ?\"."
+        },
+        {
+          "name": "La question de synthèse",
+          "difficulty": 2,
+          "description": "En fin d'échange, une bonne question de synthèse permet de s'assurer que tout le monde repart avec la même compréhension.",
+          "steps": [
+            "'Qu'est-ce que tu retiens de cette conversation ?'",
+            "'Quelle est la prochaine étape pour toi ?'",
+            "'Y a-t-il quelque chose qu'on n'a pas abordé et qui te semble important ?'"
+          ],
+          "tips": "Idéal en fin de réunion, d'entretien ou de conversation importante pour éviter les malentendus."
+        }
+      ]
+    },
+    {
+      "id": "ecouter",
+      "title": "Écouter attentivement",
+      "icon": "👂",
+      "content": "Écouter vraiment est rare. La plupart des gens n'écoutent pas — ils attendent leur tour de parler. L'écoute active est l'une des compétences les plus transformatrices dans les relations humaines.",
+      "tricks": [
+        {
+          "name": "Les niveaux d'écoute",
+          "difficulty": 1,
+          "description": "Il existe 3 niveaux d'écoute. La plupart des gens restent au niveau 1 toute leur vie.",
+          "steps": [
+            "Niveau 1 (interne) : tu filtres à travers tes propres pensées, jugements, attentes. Tu prépares ta réponse pendant que l'autre parle.",
+            "Niveau 2 (active) : toute ton attention est sur l'autre. Tu remarques les mots, le ton, l'émotion.",
+            "Niveau 3 (globale) : tu perçois aussi ce qui n'est pas dit — le silence, le langage corporel, l'énergie."
+          ],
+          "tips": "Objectif réaliste : viser le niveau 2 dans tes conversations importantes, le niveau 3 dans les moments critiques."
+        },
+        {
+          "name": "Écoute sans interruption",
+          "difficulty": 3,
+          "description": "Laisse l'autre finir complètement avant de répondre. Pas de 'oui mais', pas de completion de ses phrases, pas de détournement vers ta propre expérience.",
+          "steps": [
+            "Compte mentalement 2 secondes après que l'autre a fini avant de parler",
+            "Si tu as envie d'interrompre, note mentalement ton idée et attends",
+            "Ne commence pas une phrase par 'Moi aussi' ou 'Pareil pour moi'"
+          ],
+          "tips": "Le silence après une réponse est inconfortable — mais il invite souvent l'autre à aller plus loin et à partager l'essentiel."
+        },
+        {
+          "name": "La reformulation",
+          "difficulty": 2,
+          "description": "Reformuler ce que l'autre vient de dire montre que tu as vraiment écouté — et te permet de vérifier ta compréhension.",
+          "steps": [
+            "Attends que l'autre ait fini",
+            "'Si je comprends bien, tu dis que [reformulation en tes mots]… c'est ça ?'",
+            "Laisse-le corriger ou confirmer avant de répondre"
+          ],
+          "tips": "La reformulation réduit les conflits de 80% dans les conversations difficiles. C'est une technique de médiation professionnelle accessible à tous."
+        },
+        {
+          "name": "Écouter les émotions",
+          "difficulty": 4,
+          "description": "Derrière les mots, il y a toujours une émotion. Nommer l'émotion de l'autre (avec bienveillance) crée une connexion immédiate.",
+          "steps": [
+            "Repère les signaux émotionnels dans le ton, le vocabulaire, le débit",
+            "'J'entends que tu es frustré par cette situation.'",
+            "'Ça semble important pour toi, non ?'",
+            "Ne minimise pas : évite 'c'est pas grave' ou 'tu t'inquiètes trop'"
+          ],
+          "tips": "Tu n'as pas besoin d'avoir une solution. Parfois, se sentir écouté est déjà la solution."
+        },
+        {
+          "name": "Supprimer les distractions",
+          "difficulty": 2,
+          "description": "L'ennemi de l'écoute, c'est le téléphone, les notifications, et nos propres pensées parasites. Créer les conditions physiques de l'écoute est un acte intentionnel.",
+          "steps": [
+            "Téléphone retourné ou rangé lors de conversations importantes",
+            "Contact visuel régulier (pas fixe — ça intimide)",
+            "Corps tourné vers l'interlocuteur, posture ouverte",
+            "Acquiescements non-verbaux : hochements de tête, 'mmh', 'je vois'"
+          ],
+          "tips": "Exercice : passe une journée entière sans regarder ton téléphone pendant qu'on te parle. Note la différence dans la qualité des échanges."
+        }
+      ]
+    },
+    {
+      "id": "conflits",
+      "title": "Communiquer en situation difficile",
+      "icon": "🌊",
+      "content": "Les compétences de communication se testent vraiment sous pression. Voici les outils pour rester clair et constructif quand les émotions montent.",
+      "items": [
+        {
+          "name": "La méthode CNV (résumée)",
+          "description": "Communication Non Violente : Observation (les faits) → Sentiment (ton émotion) → Besoin (ce dont tu as besoin) → Demande (concrète et positive). Ex : 'Quand tu arrives en retard (fait), je me sens pas respecté (sentiment), parce que j'ai besoin de fiabilité (besoin). Peux-tu me prévenir quand tu seras en retard ? (demande)'"
+        },
+        {
+          "name": "La pause intentionnelle",
+          "description": "Quand tu sens la montée émotionnelle : 'J'ai besoin d'un moment pour réfléchir avant de répondre.' Ce n'est pas de la faiblesse — c'est de la maîtrise."
+        },
+        {
+          "name": "Distinguer faits et interprétations",
+          "description": "'Il ne m'a pas répondu' (fait) ≠ 'Il m'ignore' (interprétation). Toujours partir des faits dans une conversation difficile, pas de tes histoires sur les faits."
+        },
+        {
+          "name": "Désaccord sans attaque",
+          "description": "'Je ne suis pas d'accord avec cette approche' ≠ 'Tu as tort'. Attaque l'idée, jamais la personne. Remplace 'tu' par 'je' dans les moments de tension."
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "La communication s'améliore dans la pratique quotidienne, pas dans les livres. Chaque conversation est un entraînement.",
+      "plan": [
+        {
+          "phase": "Semaine 1",
+          "focus": "Observer sans juger",
+          "objectif": "Identifier tes habitudes de communication actuelles : tu interromps ? Tu parles trop vite ? Tu utilises des mots flous ?"
+        },
+        {
+          "phase": "Semaine 2",
+          "focus": "La pyramide inversée",
+          "objectif": "Dans chaque email et chaque prise de parole, commencer par la conclusion"
+        },
+        {
+          "phase": "Semaine 3",
+          "focus": "Écoute active",
+          "objectif": "Dans 3 conversations par jour, écouter sans préparer ta réponse. Reformuler avant de répondre."
+        },
+        {
+          "phase": "Semaine 4",
+          "focus": "Questions ouvertes",
+          "objectif": "Remplacer les affirmations par des questions dans 5 conversations. Observer ce qui change."
+        },
+        {
+          "phase": "Mois 2",
+          "focus": "Situations difficiles",
+          "objectif": "Appliquer la CNV dans un conflit ou désaccord. Distinguer faits et interprétations."
+        },
+        {
+          "phase": "Mois 3+",
+          "focus": "Style personnel",
+          "objectif": "Tu as développé un style propre : clair, présent, curieux. Les autres te font confiance naturellement."
+        }
+      ]
+    }
+  ]
+}

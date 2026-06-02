@@ -1,0 +1,238 @@
+{
+  "skill": "Maîtriser l'IA au quotidien",
+  "description": "Apprends à utiliser l'intelligence artificielle comme un super-pouvoir : rédiger plus vite, générer des idées, automatiser tes tâches, écrire un livre et créer des applications — sans être développeur.",
+  "difficulty": "débutant",
+  "tags": ["IA", "productivité", "rédaction", "automatisation", "no-code"],
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Pourquoi l'IA change tout",
+      "icon": "🤖",
+      "content": "L'IA générative (ChatGPT, Claude, Gemini…) n'est pas un gadget : c'est un assistant disponible 24h/24, capable de rédiger, analyser, coder, brainstormer et expliquer. La vraie compétence du 21e siècle n'est pas de tout savoir — c'est de savoir quoi demander. Celui qui maîtrise l'IA travaille 3x plus vite, produit de meilleure qualité, et reste dans la zone créative plutôt que dans l'exécution répétitive.",
+      "items": [
+        { "name": "Le bon état d'esprit", "description": "L'IA est un collaborateur, pas un oracle. Elle se trompe, invente, et a besoin d'être guidée. Ton rôle : donner le contexte, évaluer le résultat, affiner." },
+        { "name": "Les meilleurs outils", "description": "Claude (rédaction, analyse, code), ChatGPT (polyvalent), Perplexity (recherche web), Midjourney (images), Cursor (code assisté)." },
+        { "name": "Le principe du prompt", "description": "Un prompt = contexte + tâche + contraintes + format attendu. Plus tu es précis, plus le résultat est utile." }
+      ]
+    },
+    {
+      "id": "apprendre",
+      "title": "Apprendre plus vite",
+      "icon": "⚡",
+      "content": "L'IA compresse des années d'apprentissage en semaines. Elle explique n'importe quel concept à ton niveau, crée des exercices sur mesure, et joue le rôle d'un professeur privé disponible en permanence.",
+      "items": [
+        {
+          "name": "Explique-moi comme si j'avais 10 ans",
+          "description": "Prompt magique : \"Explique-moi [concept] simplement, avec une analogie de la vie quotidienne, puis donne-moi un exemple concret.\""
+        },
+        {
+          "name": "Le professeur socratique",
+          "description": "\"Ne me donne pas la réponse directement. Pose-moi des questions pour m'aider à trouver par moi-même.\" — Force la compréhension profonde."
+        },
+        {
+          "name": "Créer ses propres quiz",
+          "description": "\"Génère 10 questions à choix multiples sur [sujet], avec les réponses et des explications détaillées pour chaque erreur possible.\""
+        },
+        {
+          "name": "Résumer des livres",
+          "description": "\"Résume les idées clés de [livre] en 10 points actionnables. Pour chaque idée, donne un exemple d'application concrète dans ma vie.\""
+        },
+        {
+          "name": "Le plan d'apprentissage",
+          "description": "\"Je veux apprendre [compétence] en [durée]. Je suis [niveau actuel]. Crée-moi un plan d'apprentissage semaine par semaine avec des ressources et des exercices.\""
+        }
+      ]
+    },
+    {
+      "id": "rediger",
+      "title": "Rédiger 10x plus vite",
+      "icon": "✍️",
+      "content": "La rédaction est l'une des tâches les plus chronophages. L'IA ne remplace pas ta voix — elle supprime le temps de mise en forme, de correction et de reformulation.",
+      "items": [
+        {
+          "name": "La structure d'abord",
+          "description": "Commence toujours par : \"Génère un plan pour [type de document] sur [sujet]. Public cible : [qui]. Objectif : [quoi].\" Valide la structure avant de rédiger."
+        },
+        {
+          "name": "Rédiger section par section",
+          "description": "Soumets chaque partie séparément. \"Rédige la section 2 du plan ci-dessus en [ton : professionnel/décontracté/inspirant], [nombre] mots max.\""
+        },
+        {
+          "name": "Corriger et améliorer",
+          "description": "\"Améliore ce texte : rends-le plus direct, supprime les répétitions, renforce les verbes d'action. Garde mon style.\""
+        },
+        {
+          "name": "Adapter le ton",
+          "description": "\"Réécris ce texte pour [LinkedIn / un email professionnel / un SMS / une newsletter] en gardant le message principal.\""
+        },
+        {
+          "name": "Reformuler sans perdre le fond",
+          "description": "\"Reformule cette phrase de 3 façons différentes : une directe, une narrative, une chiffrée/factuelle.\""
+        }
+      ]
+    },
+    {
+      "id": "idees",
+      "title": "Générer des idées",
+      "icon": "💡",
+      "content": "La page blanche est le pire ennemi de la créativité. L'IA est un brainstormeur infatigable qui ne juge pas et n'a jamais peur du ridicule.",
+      "items": [
+        {
+          "name": "Le dump créatif",
+          "description": "\"Génère 20 idées pour [projet/problème]. Les 10 premières doivent être classiques, les 10 suivantes doivent être insolites ou contre-intuitives.\""
+        },
+        {
+          "name": "La technique des opposés",
+          "description": "\"Comment [objectif] pourrait-il échouer ? Maintenant, retourne chaque cause d'échec en stratégie de succès.\""
+        },
+        {
+          "name": "Le combinateur",
+          "description": "\"Combine ces deux idées apparemment incompatibles : [A] et [B]. Génère 5 concepts hybrides.\""
+        },
+        {
+          "name": "Trouver un angle unique",
+          "description": "\"J'écris sur [sujet]. Tout le monde aborde l'angle [angle classique]. Donne-moi 10 angles inédits que personne n'explore.\""
+        },
+        {
+          "name": "Le \"Et si ?\"",
+          "description": "\"Et si [contrainte absurde] ? Comment résoudrais-tu [problème] dans ce cas ?\" — Les contraintes forcent la créativité."
+        }
+      ]
+    },
+    {
+      "id": "automatiser",
+      "title": "Automatiser ses tâches",
+      "icon": "⚙️",
+      "content": "Automatiser, c'est faire faire par des outils ce qui ne nécessite pas ton cerveau. L'IA + des outils no-code peut remplacer des heures de travail répétitif.",
+      "items": [
+        {
+          "name": "Identifier ce qui mérite d'être automatisé",
+          "description": "Règle des 2 minutes : si tu fais une tâche plus de 3x par semaine et qu'elle dure plus de 2 min, automatise-la. Demande à l'IA : \"Voici ma routine quotidienne : [liste]. Quoi automatiser en priorité ?\""
+        },
+        {
+          "name": "Zapier / Make (no-code)",
+          "description": "Connecte tes apps entre elles sans coder. Ex : \"Quand je reçois un email avec la pièce jointe X → sauvegarde dans Google Drive → envoie un résumé Slack.\""
+        },
+        {
+          "name": "Créer ses propres prompts systèmes",
+          "description": "Sauvegarde tes meilleurs prompts dans un document. Ex : ton prompt de correction d'email, de résumé de réunion, de reformulation. Réutilise-les en 1 clic."
+        },
+        {
+          "name": "L'IA comme secrétaire",
+          "description": "\"Voici les notes brutes de ma réunion : [notes]. Génère : 1) un résumé en 5 points 2) les actions à faire avec responsables 3) un email de compte-rendu.\""
+        },
+        {
+          "name": "Traitement de données",
+          "description": "\"Voici un tableau CSV. Nettoie-le, identifie les anomalies et génère un résumé des insights principaux.\" — Valable avec Code Interpreter (ChatGPT/Claude)."
+        }
+      ]
+    },
+    {
+      "id": "livre",
+      "title": "Écrire un livre avec l'IA",
+      "icon": "📚",
+      "content": "Écrire un livre en solo prend des années. Avec l'IA comme co-auteur structurant, tu peux produire un premier jet solide en quelques semaines. L'IA structure, toi tu donnes la substance et la vision.",
+      "items": [
+        {
+          "name": "Étape 1 — Clarifier l'idée",
+          "description": "\"Mon livre parle de [sujet]. Le lecteur cible est [qui]. La transformation que je veux lui apporter est [quoi]. Aide-moi à affiner le positionnement unique de ce livre.\""
+        },
+        {
+          "name": "Étape 2 — Générer le plan",
+          "description": "\"Génère un plan de livre en [X] chapitres sur [sujet]. Chaque chapitre doit avoir un titre accrocheur, 3 sous-parties, et une promesse claire au lecteur.\""
+        },
+        {
+          "name": "Étape 3 — Rédiger chapitre par chapitre",
+          "description": "\"Voici le plan du chapitre 3 : [plan]. Voici mes notes brutes : [notes]. Rédige ce chapitre en [ton] d'environ [X] mots. Commence par une anecdote.\""
+        },
+        {
+          "name": "Étape 4 — Cohérence et relecture",
+          "description": "\"Voici deux chapitres consécutifs. Identifie les redondances, les transitions manquantes et les incohérences de ton.\""
+        },
+        {
+          "name": "Étape 5 — Titres et accroches",
+          "description": "\"Génère 15 titres alternatifs pour mon livre, en variant entre direct, mystérieux, question, chiffré et métaphore. Puis fais de même pour les titres de chaque chapitre.\""
+        }
+      ]
+    },
+    {
+      "id": "applications",
+      "title": "Développer des applications",
+      "icon": "🛠️",
+      "content": "Tu n'as pas besoin de savoir coder pour créer des outils. Avec l'IA, tu peux créer des scripts, des pages web, des automatisations et des petites applications fonctionnelles en décrivant ce que tu veux.",
+      "items": [
+        {
+          "name": "Le bon prompt de code",
+          "description": "\"Crée [description de l'outil]. Technologie : [HTML/Python/React]. Exigences : [liste]. Le résultat doit être un fichier unique prêt à l'emploi, avec des commentaires.\""
+        },
+        {
+          "name": "Déboguer avec l'IA",
+          "description": "\"Ce code ne fonctionne pas. Voici l'erreur : [erreur]. Voici le code : [code]. Explique pourquoi ça bug et corrige-le.\""
+        },
+        {
+          "name": "Les outils à créer en premier",
+          "description": "Tracker d'habitudes HTML, générateur de templates d'emails, script Python pour renommer des fichiers en masse, tableau de bord personnel, formulaire de capture d'idées."
+        },
+        {
+          "name": "Claude Artifacts",
+          "description": "Dans Claude, tu peux demander directement de créer des applications React/HTML interactives qui tournent directement dans le navigateur, sans rien installer."
+        },
+        {
+          "name": "Itérer rapidement",
+          "description": "\"Améliore cet outil en ajoutant [fonctionnalité]. Garde le code existant, modifie seulement ce qui est nécessaire.\" — L'itération est plus efficace que recommencer."
+        }
+      ]
+    },
+    {
+      "id": "prompts",
+      "title": "Prompts essentiels",
+      "icon": "🗝️",
+      "content": "Ces prompts universels fonctionnent dans presque toutes les situations. Copie-les, adapte-les, sauvegarde-les.",
+      "items": [
+        { "name": "Le prompt universel", "description": "\"Tu es [expert]. J'ai besoin de [résultat]. Contexte : [situation]. Contraintes : [limites]. Format souhaité : [structure]." },
+        { "name": "Améliorer ma demande", "description": "\"Améliore ce prompt pour obtenir un meilleur résultat : [ton prompt]. Explique tes changements.\"" },
+        { "name": "Jouer l'avocat du diable", "description": "\"Voici mon idée : [idée]. Joue l'avocat du diable. Quels sont les 5 meilleurs arguments contre ?\"" },
+        { "name": "Le résumé actionnable", "description": "\"Résume [contenu] en 5 bullets points actionnables. Chaque point doit commencer par un verbe.\"" },
+        { "name": "La checklist", "description": "\"Crée une checklist exhaustive pour [tâche]. Groupe les items par phase. Ajoute une case à cocher pour chaque item.\"" }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "Commence petit, progresse systématiquement. L'objectif est d'intégrer l'IA dans ta routine, pas de tout apprendre d'un coup.",
+      "plan": [
+        {
+          "phase": "Semaine 1",
+          "focus": "Apprivoiser l'IA",
+          "objectif": "Faire 10 conversations sur des sujets variés, noter ce qui marche ou non"
+        },
+        {
+          "phase": "Semaine 2",
+          "focus": "Rédaction & reformulation",
+          "objectif": "Réécrire 3 emails ou textes existants avec l'aide de l'IA"
+        },
+        {
+          "phase": "Semaine 3",
+          "focus": "Apprendre avec l'IA",
+          "objectif": "Choisir un sujet à apprendre et créer un plan + quiz personnalisé"
+        },
+        {
+          "phase": "Semaine 4",
+          "focus": "Automatisation simple",
+          "objectif": "Identifier 2 tâches répétitives et créer un prompt réutilisable pour chacune"
+        },
+        {
+          "phase": "Mois 2",
+          "focus": "Premier outil ou mini-projet",
+          "objectif": "Créer une petite application ou débuter la structure d'un livre/contenu long"
+        },
+        {
+          "phase": "Mois 3+",
+          "focus": "Intégration complète",
+          "objectif": "L'IA est intégrée dans ta journée type. Tu crées ta bibliothèque de prompts personnels"
+        }
+      ]
+    }
+  ]
+}
