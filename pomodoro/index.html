@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pomodoro — Mini Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet" />
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0e0e10; --surface: #17171a; --border: #2a2a30;
+      --text: #e8e6e0; --muted: #6b6b72;
+      --accent: #e8c97a; --accent-dim: rgba(232,201,122,0.12); --accent-dimmer: rgba(232,201,122,0.06);
+      --danger: #e87a7a; --success: #7ae8b0;
+      --card-bg: #131316; --shadow: rgba(0,0,0,0.5); --toggle-bg: #2a2a30;
+      --todo-done: #3a3a40; --info-bg: #0f1014;
+    }
+    :root[data-theme="light"] {
+      --bg: #f5f2eb; --surface: #fff; --border: #ddd9ce;
+      --text: #1a1a1c; --muted: #888880;
+      --accent: #c8900a; --accent-dim: rgba(200,144,10,0.1); --accent-dimmer: rgba(200,144,10,0.05);
+      --danger: #c02020; --success: #1a9050;
+      --card-bg: #fefcf7; --shadow: rgba(0,0,0,0.1); --toggle-bg: #e8e4dc;
+      --todo-done: #ede9df; --info-bg: #f0ede5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh; display: flex; flex-direction: column;
+      transition: background 0.4s, color 0.4s;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.6;
+    }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .back-link {
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .nav-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em;
+    }
+    .nav-title span { font-style: italic; font-weight: 300; }
+    .toggle-wrap { display: flex; align-items: center; gap: 0.5rem; }
+    .toggle-icon { font-size: 0.85rem; }
+    .toggle {
+      position: relative; width: 40px; height: 22px;
+      background: var(--toggle-bg); border-radius: 11px;
+      border: 1px solid var(--border); cursor: pointer; transition: background 0.3s;
+    }
+    .toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; background: var(--accent); border-radius: 50%;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    [data-theme="light"] .toggle::after { transform: translateX(18px); }
+
+    /* ── 3-COLUMN GRID ── */
+    .page-grid {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 280px 1fr 280px;
+      gap: 1.5rem;
+      padding: 1.5rem 2rem 3rem;
+      align-items: start;
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── LEFT: TODO ── */
+    .todo-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      position: sticky; top: 1.5rem;
+    }
+    .panel-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-title {
+      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    }
+    .todo-count {
+      font-size: 0.62rem; color: var(--accent);
+      background: var(--accent-dim); padding: 0.15rem 0.4rem; border-radius: 10px;
+    }
+
+    /* Todo input */
+    .todo-input-row {
+      display: flex; gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .todo-input {
+      flex: 1; min-width: 0;
+      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 3px; color: var(--text);
+      padding: 0.45rem 0.6rem; transition: border-color 0.2s;
+    }
+    .todo-input:focus { outline: none; border-color: var(--accent); }
+    .todo-add-btn {
+      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      padding: 0.45rem 0.7rem;
+      background: var(--accent); color: #111; border: none;
+      border-radius: 3px; cursor: pointer; font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .todo-add-btn:hover { opacity: 0.85; }
+
+    /* Todo list */
+    .todo-list {
+      list-style: none;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+    .todo-list::-webkit-scrollbar { width: 4px; }
+    .todo-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .todo-item {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+      animation: slideIn 0.2s ease;
+    }
+    .todo-item:last-child { border-bottom: none; }
+    .todo-item:hover { background: var(--accent-dimmer); }
+    .todo-item.done { background: var(--todo-done); }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .todo-check {
+      width: 16px; height: 16px; flex-shrink: 0;
+      border: 1.5px solid var(--border); border-radius: 3px;
+      margin-top: 2px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .todo-check.checked {
+      background: var(--accent); border-color: var(--accent);
+    }
+    .todo-check.checked::after { content: '✓'; font-size: 0.6rem; color: #111; }
+
+    .todo-text {
+      flex: 1; min-width: 0;
+      font-size: 0.72rem; line-height: 1.5;
+      word-break: break-word;
+      transition: color 0.2s, text-decoration 0.2s;
+    }
+    .todo-item.done .todo-text { color: var(--muted); text-decoration: line-through; }
+
+    .todo-edit-input {
+      flex: 1; min-width: 0;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      background: var(--bg); border: 1px solid var(--accent);
+      border-radius: 2px; color: var(--text); padding: 0.1rem 0.3rem;
+    }
+    .todo-edit-input:focus { outline: none; }
+
+    .todo-actions {
+      display: flex; gap: 0.25rem; flex-shrink: 0;
+      opacity: 0; transition: opacity 0.15s;
+    }
+    .todo-item:hover .todo-actions { opacity: 1; }
+
+    .todo-action {
+      font-size: 0.65rem; padding: 0.2rem 0.35rem;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 2px; color: var(--muted);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .todo-action:hover { border-color: var(--accent); color: var(--accent); }
+    .todo-action.del:hover { border-color: var(--danger); color: var(--danger); }
+
+    .todo-empty {
+      padding: 1.5rem 1rem; text-align: center;
+      font-size: 0.68rem; color: var(--muted); line-height: 1.8;
+    }
+
+    /* ── CENTER: TIMER ── */
+    .timer-col { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    /* Preset tabs */
+    .preset-tabs {
+      display: flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+    }
+    .preset-tab {
+      flex: 1; padding: 0.6rem 0.5rem; text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      background: transparent; border: none; color: var(--muted);
+      cursor: pointer; transition: background 0.2s, color 0.2s;
+      border-right: 1px solid var(--border); line-height: 1.6;
+    }
+    .preset-tab:last-child { border-right: none; }
+    .preset-tab strong { display: block; font-size: 0.78rem; }
+    .preset-tab.active { background: var(--accent-dim); color: var(--accent); }
+    .preset-tab:hover:not(.active) { background: var(--accent-dimmer); }
+
+    /* Mode tabs */
+    .mode-tabs {
+      display: flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+    }
+    .tab {
+      flex: 1; padding: 0.6rem 0.5rem; text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      background: transparent; border: none; color: var(--muted);
+      cursor: pointer; transition: background 0.2s, color 0.2s;
+      border-right: 1px solid var(--border);
+    }
+    .tab:last-child { border-right: none; }
+    .tab.active { background: var(--accent-dim); color: var(--accent); }
+    .tab:hover:not(.active) { background: var(--accent-dimmer); }
+
+    /* Timer face */
+    .timer-face {
+      text-align: center; padding: 2.5rem 2rem;
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px;
+      position: relative;
+    }
+    .ring-wrap { position: relative; width: 200px; height: 200px; margin: 0 auto 1.2rem; }
+    .ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring-track { fill: none; stroke: var(--border); stroke-width: 3; }
+    .ring-progress {
+      fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear, stroke 0.5s;
+    }
+    .ring-progress.break { stroke: #7abfe8; }
+    .ring-progress.long-break { stroke: #7ae8b0; }
+    .timer-display {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.2rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1;
+    }
+    .phase-label { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .cycle-dots { display: flex; justify-content: center; gap: 0.4rem; margin-top: 0.8rem; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+    .dot.done { background: var(--accent); }
+
+    /* Controls */
+    .controls { display: flex; justify-content: center; gap: 0.75rem; }
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.7rem 1.6rem;
+      border-radius: 3px; border: 1px solid var(--border);
+      background: transparent; color: var(--text); cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #111; border-color: var(--accent); font-weight: 500; }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn:hover:not(.btn-primary) { border-color: var(--accent); color: var(--accent); }
+
+    /* Settings */
+    .settings-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .settings-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .settings-title { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .settings-chevron { color: var(--muted); font-size: 0.8rem; transition: transform 0.3s; }
+    .settings-panel.open .settings-chevron { transform: rotate(180deg); }
+    .settings-body { display: none; padding: 1.25rem; gap: 1rem; flex-direction: column; }
+    .settings-panel.open .settings-body { display: flex; }
+    .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .setting-label { font-size: 0.7rem; color: var(--muted); flex-shrink: 0; }
+    .setting-label strong { color: var(--text); display: block; font-weight: 500; }
+    .setting-control { display: flex; align-items: center; gap: 0.5rem; }
+    input[type="number"] {
+      width: 54px; text-align: center;
+      font-family: 'DM Mono', monospace; font-size: 0.82rem;
+      padding: 0.35rem 0.4rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 3px; color: var(--text); transition: border-color 0.2s;
+    }
+    input[type="number"]:focus { outline: none; border-color: var(--accent); }
+    .unit { font-size: 0.62rem; color: var(--muted); }
+    .sound-row { border-top: 1px solid var(--border); padding-top: 1rem; }
+    .sound-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .sound-options { display: flex; flex-direction: column; gap: 0.5rem; }
+    .sound-item { display: flex; align-items: center; justify-content: space-between; }
+    .sound-item-label { font-size: 0.7rem; color: var(--text); }
+    .pill {
+      width: 36px; height: 20px; background: var(--border); border-radius: 10px;
+      cursor: pointer; transition: background 0.25s; position: relative; border: none; flex-shrink: 0;
+    }
+    .pill::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; background: var(--surface); border-radius: 50%;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .pill.on { background: var(--accent); }
+    .pill.on::after { transform: translateX(16px); }
+
+    /* ── RIGHT: INFO ── */
+    .info-panel {
+      background: var(--info-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      position: sticky; top: 1.5rem;
+    }
+    .info-panel .panel-header { border-bottom: 1px solid var(--border); }
+    .info-body { padding: 1.25rem; }
+
+    .info-section { margin-bottom: 1.25rem; }
+    .info-section:last-child { margin-bottom: 0; }
+
+    .info-lead {
+      font-size: 0.72rem; line-height: 1.75; color: var(--text); margin-bottom: 1rem;
+    }
+
+    .info-heading {
+      font-family: 'Fraunces', serif; font-size: 0.9rem; font-style: italic;
+      font-weight: 300; color: var(--accent); margin-bottom: 0.6rem;
+    }
+
+    .info-list {
+      list-style: none; display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .info-list li {
+      font-size: 0.69rem; line-height: 1.6; color: var(--muted);
+      display: flex; gap: 0.5rem;
+    }
+    .info-list li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+    .info-steps {
+      list-style: none; display: flex; flex-direction: column; gap: 0.5rem; counter-reset: step;
+    }
+    .info-steps li {
+      font-size: 0.69rem; line-height: 1.6; color: var(--muted);
+      display: flex; gap: 0.5rem; counter-increment: step;
+    }
+    .info-steps li::before {
+      content: counter(step) '.'; color: var(--accent);
+      flex-shrink: 0; font-weight: 500; min-width: 14px;
+    }
+
+    .info-rule { height: 1px; background: var(--border); margin: 1rem 0; }
+
+    .info-footer {
+      font-size: 0.62rem; color: var(--muted); font-style: italic;
+      line-height: 1.6; border-top: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .page-grid { grid-template-columns: 240px 1fr 240px; gap: 1rem; padding: 1rem; }
+    }
+    @media (max-width: 860px) {
+      .page-grid { grid-template-columns: 1fr; }
+      .todo-panel, .info-panel { position: static; }
+    }
+    @media (max-width: 500px) {
+      .top-nav { padding: 1rem; }
+      .page-grid { padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <a class="back-link" href="../../index.html">← Accueil</a>
+  <div class="nav-title">Pomo<span>doro</span></div>
+  <div class="toggle-wrap">
+    <span class="toggle-icon">🌙</span>
+    <div class="toggle" id="themeToggle" role="button" tabindex="0"></div>
+    <span class="toggle-icon">☀️</span>
+  </div>
+</nav>
+
+<!-- 3-COLUMN GRID -->
+<div class="page-grid">
+
+  <!-- ══ LEFT: TODO ══ -->
+  <aside class="todo-panel">
+    <div class="panel-header">
+      <span class="panel-title">📋 To-do list</span>
+      <span class="todo-count" id="todoCount">0 tâche</span>
+    </div>
+    <div class="todo-input-row">
+      <input class="todo-input" id="todoInput" type="text" placeholder="Nouvelle tâche…" maxlength="120" />
+      <button class="todo-add-btn" id="todoAddBtn">+</button>
+    </div>
+    <ul class="todo-list" id="todoList">
+      <li class="todo-empty" id="todoEmpty">Aucune tâche pour l'instant.<br/>Ajoute-en une ci-dessus ↑</li>
+    </ul>
+  </aside>
+
+  <!-- ══ CENTER: TIMER ══ -->
+  <main class="timer-col">
+
+    <!-- Preset cycles -->
+    <div class="preset-tabs">
+      <button class="preset-tab active" data-preset="classic">
+        <strong>25 / 5</strong>classique
+      </button>
+      <button class="preset-tab" data-preset="deep">
+        <strong>50 / 10</strong>approfondi
+      </button>
+      <button class="preset-tab" data-preset="ultradian">
+        <strong>90 / 20</strong>naturel
+      </button>
+    </div>
+
+    <!-- Work / Break / Long tabs -->
+    <div class="mode-tabs">
+      <button class="tab active" data-mode="work">Travail</button>
+      <button class="tab" data-mode="break">Pause courte</button>
+      <button class="tab" data-mode="long">Pause longue</button>
+    </div>
+
+    <!-- Timer face -->
+    <div class="timer-face">
+      <div class="phase-label" id="phaseLabel">Travail · cycle 1/4</div>
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 200 200">
+          <circle class="ring-track" cx="100" cy="100" r="88"/>
+          <circle class="ring-progress" id="ring" cx="100" cy="100" r="88"/>
+        </svg>
+        <div class="timer-display" id="timerDisplay">25:00</div>
+      </div>
+      <div class="cycle-dots" id="cycleDots"></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn" id="resetBtn">↺ Reset</button>
+      <button class="btn btn-primary" id="startBtn">▶ Démarrer</button>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header" id="settingsHeader">
+        <span class="settings-title">⚙ Paramètres</span>
+        <span class="settings-chevron">▾</span>
+      </div>
+      <div class="settings-body">
+        <div class="setting-row">
+          <div class="setting-label"><strong>Travail</strong></div>
+          <div class="setting-control">
+            <input type="number" id="workMin" value="25" min="1" max="180" />
+            <span class="unit">min</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label"><strong>Pause courte</strong></div>
+          <div class="setting-control">
+            <input type="number" id="breakMin" value="5" min="1" max="60" />
+            <span class="unit">min</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label"><strong>Pause longue</strong></div>
+          <div class="setting-control">
+            <input type="number" id="longMin" value="15" min="1" max="60" />
+            <span class="unit">min</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label"><strong>Cycles avant pause longue</strong></div>
+          <div class="setting-control">
+            <input type="number" id="cycleCount" value="4" min="1" max="8" />
+          </div>
+        </div>
+        <div class="sound-row">
+          <div class="sound-label">Sons</div>
+          <div class="sound-options">
+            <div class="sound-item">
+              <span class="sound-item-label">🔕 Muet par défaut</span>
+            </div>
+            <div class="sound-item">
+              <span class="sound-item-label">Tic à chaque seconde</span>
+              <button class="pill" id="tickToggle"></button>
+            </div>
+            <div class="sound-item">
+              <span class="sound-item-label">Sonnerie de fin</span>
+              <button class="pill" id="bellToggle"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══ RIGHT: INFO ══ -->
+  <aside class="info-panel">
+    <div class="panel-header">
+      <span class="panel-title">🍅 La technique Pomodoro</span>
+    </div>
+    <div class="info-body">
+
+      <div class="info-section">
+        <p class="info-lead">Méthode de gestion du temps créée à la fin des années 1980 par <strong>Francesco Cirillo</strong>. Son principe est simple :</p>
+        <ol class="info-steps">
+          <li>Choisir une tâche à réaliser.</li>
+          <li>Travailler de façon concentrée pendant 25 minutes (un « Pomodoro »).</li>
+          <li>Faire une pause courte de 5 minutes.</li>
+          <li>Répéter le cycle.</li>
+          <li>Après 4 Pomodoros, prendre une pause plus longue de 15 à 30 minutes.</li>
+        </ol>
+      </div>
+
+      <div class="info-rule"></div>
+
+      <div class="info-section">
+        <div class="info-heading">Pourquoi ça marche ?</div>
+        <ul class="info-list">
+          <li>Réduit la procrastination.</li>
+          <li>Maintient une concentration élevée.</li>
+          <li>Découpe les tâches en blocs gérables.</li>
+          <li>Limite la fatigue mentale grâce aux pauses.</li>
+          <li>Améliore l'estimation du temps nécessaire.</li>
+        </ul>
+      </div>
+
+      <div class="info-rule"></div>
+
+      <div class="info-section">
+        <div class="info-heading">Les 3 cycles proposés</div>
+        <ul class="info-list">
+          <li><strong style="color:var(--text)">25/5</strong> — Le classique. Idéal pour démarrer ou gérer des tâches variées.</li>
+          <li><strong style="color:var(--text)">50/10</strong> — Pour un travail approfondi nécessitant une longue mise en route cognitive.</li>
+          <li><strong style="color:var(--text)">90/20</strong> — Suit les cycles ultradiens naturels du cerveau (rythme BRAC).</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="info-footer">
+      Le nom vient d'un minuteur de cuisine en forme de tomate — « pomodoro » signifie tomate en italien 🍅
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  // ── Theme ────────────────────────────────────────────────────────────────────
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  html.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+  themeToggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next); localStorage.setItem('theme', next);
+  });
+  themeToggle.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') themeToggle.click(); });
+
+  // ── Settings panel ───────────────────────────────────────────────────────────
+  document.getElementById('settingsHeader').addEventListener('click', () => {
+    document.getElementById('settingsPanel').classList.toggle('open');
+  });
+
+  // ── Presets ──────────────────────────────────────────────────────────────────
+  const PRESETS = {
+    classic:   { work: 25,  brk: 5,  lng: 15 },
+    deep:      { work: 50,  brk: 10, lng: 20 },
+    ultradian: { work: 90,  brk: 20, lng: 30 },
+  };
+
+  document.querySelectorAll('.preset-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.preset-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const p = PRESETS[tab.dataset.preset];
+      document.getElementById('workMin').value  = p.work;
+      document.getElementById('breakMin').value = p.brk;
+      document.getElementById('longMin').value  = p.lng;
+      stopTimer(); cyclesDone = 0; mode = 'work';
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === 'work'));
+      initTimer();
+    });
+  });
+
+  // ── Audio ────────────────────────────────────────────────────────────────────
+  let audioCtx = null;
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+  function playTick() {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.04);
+  }
+  function playBell() {
+    const ctx = getAudioCtx();
+    [523, 659, 784, 1047].forEach((f, i) => {
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine'; osc.frequency.setValueAtTime(f, ctx.currentTime + i * 0.18);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.18);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 1.2);
+      osc.start(ctx.currentTime + i * 0.18); osc.stop(ctx.currentTime + i * 0.18 + 1.2);
+    });
+  }
+
+  // ── Sound toggles ────────────────────────────────────────────────────────────
+  let tickOn = false, bellOn = false;
+  const tickToggle = document.getElementById('tickToggle');
+  const bellToggle = document.getElementById('bellToggle');
+  tickToggle.addEventListener('click', () => { tickOn = !tickOn; tickToggle.classList.toggle('on', tickOn); });
+  bellToggle.addEventListener('click', () => { bellOn = !bellOn; bellToggle.classList.toggle('on', bellOn); });
+
+  // ── Timer state ──────────────────────────────────────────────────────────────
+  let mode = 'work', running = false, intervalId = null;
+  let secondsLeft = 0, totalSeconds = 0, cyclesDone = 0;
+  const CIRCUMFERENCE = 2 * Math.PI * 88;
+
+  const display    = document.getElementById('timerDisplay');
+  const ring       = document.getElementById('ring');
+  const phaseLabel = document.getElementById('phaseLabel');
+  const cycleDots  = document.getElementById('cycleDots');
+  const startBtn   = document.getElementById('startBtn');
+  const resetBtn   = document.getElementById('resetBtn');
+
+  ring.style.strokeDasharray = CIRCUMFERENCE;
+  ring.style.strokeDashoffset = 0;
+
+  function getMin(id) { return parseInt(document.getElementById(id).value) || 1; }
+  function getDuration() {
+    if (mode === 'work')  return getMin('workMin') * 60;
+    if (mode === 'break') return getMin('breakMin') * 60;
+    return getMin('longMin') * 60;
+  }
+  function getCycles() { return parseInt(document.getElementById('cycleCount').value) || 4; }
+  function formatTime(s) { return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+  function updateRing() { ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - (totalSeconds > 0 ? secondsLeft / totalSeconds : 1)); }
+  function updateDisplay() { display.textContent = formatTime(secondsLeft); updateRing(); }
+  function updatePhaseLabel() {
+    const c = getCycles();
+    if (mode === 'work') phaseLabel.textContent = `Travail · cycle ${cyclesDone + 1}/${c}`;
+    else if (mode === 'break') phaseLabel.textContent = 'Pause courte';
+    else phaseLabel.textContent = 'Pause longue 🎉';
+  }
+  function buildDots() {
+    const c = getCycles(); cycleDots.innerHTML = '';
+    for (let i = 0; i < c; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i < cyclesDone ? ' done' : '');
+      cycleDots.appendChild(d);
+    }
+  }
+  function applyRingMode() {
+    ring.className = 'ring-progress';
+    if (mode === 'break') ring.classList.add('break');
+    if (mode === 'long')  ring.classList.add('long-break');
+  }
+  function initTimer() {
+    totalSeconds = getDuration(); secondsLeft = totalSeconds;
+    updateDisplay(); updatePhaseLabel(); buildDots(); applyRingMode();
+  }
+
+  // ── Mode tabs ────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      stopTimer(); mode = tab.dataset.mode;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active'); initTimer();
+    });
+  });
+
+  function startTimer() {
+    if (running) return; running = true;
+    startBtn.textContent = '⏸ Pause';
+    intervalId = setInterval(tick, 1000);
+  }
+  function pauseTimer() {
+    running = false; clearInterval(intervalId);
+    startBtn.textContent = '▶ Reprendre';
+  }
+  function stopTimer() {
+    running = false; clearInterval(intervalId);
+    startBtn.textContent = '▶ Démarrer';
+  }
+  function tick() {
+    if (tickOn) playTick();
+    secondsLeft--; updateDisplay();
+    if (secondsLeft <= 0) {
+      clearInterval(intervalId); running = false;
+      if (bellOn) playBell();
+      onCycleEnd();
+    }
+  }
+  function onCycleEnd() {
+    const c = getCycles();
+    if (mode === 'work') {
+      cyclesDone++; buildDots();
+      if (cyclesDone >= c) { cyclesDone = 0; setMode('long'); }
+      else { setMode('break'); }
+    } else { setMode('work'); }
+  }
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
+    initTimer(); startBtn.textContent = '▶ Démarrer';
+  }
+
+  startBtn.addEventListener('click', () => { if (running) pauseTimer(); else startTimer(); });
+  resetBtn.addEventListener('click', () => { stopTimer(); cyclesDone = 0; initTimer(); });
+  ['workMin','breakMin','longMin','cycleCount'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => { stopTimer(); initTimer(); });
+  });
+
+  // ── TO-DO LIST ───────────────────────────────────────────────────────────────
+  let todos = JSON.parse(localStorage.getItem('pomo-todos') || '[]');
+  // todos = [{id, text, done}]
+
+  const todoList  = document.getElementById('todoList');
+  const todoEmpty = document.getElementById('todoEmpty');
+  const todoInput = document.getElementById('todoInput');
+  const todoCount = document.getElementById('todoCount');
+
+  function saveTodos() { localStorage.setItem('pomo-todos', JSON.stringify(todos)); }
+
+  function renderTodos() {
+    // Remove all except empty placeholder
+    todoList.querySelectorAll('.todo-item').forEach(el => el.remove());
+    const done   = todos.filter(t => t.done).length;
+    const total  = todos.length;
+    todoCount.textContent = total === 0 ? '0 tâche' : `${done}/${total}`;
+    todoEmpty.style.display = total === 0 ? '' : 'none';
+
+    todos.forEach(todo => {
+      const li = document.createElement('li');
+      li.className = 'todo-item' + (todo.done ? ' done' : '');
+      li.dataset.id = todo.id;
+
+      // Checkbox
+      const check = document.createElement('div');
+      check.className = 'todo-check' + (todo.done ? ' checked' : '');
+      check.addEventListener('click', () => toggleTodo(todo.id));
+
+      // Text
+      const span = document.createElement('span');
+      span.className = 'todo-text';
+      span.textContent = todo.text;
+
+      // Actions
+      const actions = document.createElement('div');
+      actions.className = 'todo-actions';
+
+      const editBtn = document.createElement('button');
+      editBtn.className = 'todo-action'; editBtn.textContent = '✎';
+      editBtn.title = 'Modifier';
+      editBtn.addEventListener('click', () => editTodo(todo.id, li, span));
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'todo-action del'; delBtn.textContent = '✕';
+      delBtn.title = 'Supprimer';
+      delBtn.addEventListener('click', () => deleteTodo(todo.id));
+
+      actions.appendChild(editBtn); actions.appendChild(delBtn);
+      li.appendChild(check); li.appendChild(span); li.appendChild(actions);
+      todoList.appendChild(li);
+    });
+  }
+
+  function addTodo(text) {
+    text = text.trim(); if (!text) return;
+    todos.push({ id: Date.now(), text, done: false });
+    saveTodos(); renderTodos();
+    todoInput.value = '';
+  }
+
+  function toggleTodo(id) {
+    const t = todos.find(t => t.id === id);
+    if (t) { t.done = !t.done; saveTodos(); renderTodos(); }
+  }
+
+  function deleteTodo(id) {
+    todos = todos.filter(t => t.id !== id);
+    saveTodos(); renderTodos();
+  }
+
+  function editTodo(id, li, span) {
+    const todo = todos.find(t => t.id === id);
+    if (!todo) return;
+
+    const inp = document.createElement('input');
+    inp.className = 'todo-edit-input'; inp.value = todo.text; inp.maxLength = 120;
+
+    span.replaceWith(inp); inp.focus(); inp.select();
+
+    function save() {
+      const val = inp.value.trim();
+      if (val) { todo.text = val; saveTodos(); }
+      renderTodos();
+    }
+    inp.addEventListener('blur', save);
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') save();
+      if (e.key === 'Escape') renderTodos();
+    });
+  }
+
+  document.getElementById('todoAddBtn').addEventListener('click', () => addTodo(todoInput.value));
+  todoInput.addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(todoInput.value); });
+
+  // ── Init ─────────────────────────────────────────────────────────────────────
+  initTimer();
+  renderTodos();
+</script>
+</body>
+</html>
