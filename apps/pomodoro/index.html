@@ -13,7 +13,9 @@
       --accent: #e8c97a; --accent-dim: rgba(232,201,122,0.12); --accent-dimmer: rgba(232,201,122,0.06);
       --danger: #e87a7a; --success: #7ae8b0;
       --card-bg: #131316; --shadow: rgba(0,0,0,0.5); --toggle-bg: #2a2a30;
-      --todo-done: #3a3a40; --info-bg: #0f1014;
+      --todo-done: #1e1e22; --info-bg: #0f1014;
+      --bar-track: #1e1e24; --bar-fill: #e8c97a; --bar-fill-break: #7abfe8; --bar-fill-long: #7ae8b0;
+      --bar-tick: #3a3a44;
     }
     :root[data-theme="light"] {
       --bg: #f5f2eb; --surface: #fff; --border: #ddd9ce;
@@ -22,6 +24,8 @@
       --danger: #c02020; --success: #1a9050;
       --card-bg: #fefcf7; --shadow: rgba(0,0,0,0.1); --toggle-bg: #e8e4dc;
       --todo-done: #ede9df; --info-bg: #f0ede5;
+      --bar-track: #e8e4dc; --bar-fill: #c8900a; --bar-fill-break: #1a70b0; --bar-fill-long: #1a9050;
+      --bar-tick: #ccc8be;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,8 +46,7 @@
     .top-nav {
       position: relative; z-index: 1;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.5rem 2rem;
-      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
     }
     .back-link {
       font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
@@ -51,10 +54,7 @@
       display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;
     }
     .back-link:hover { color: var(--accent); }
-    .nav-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em;
-    }
+    .nav-title { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; }
     .nav-title span { font-style: italic; font-weight: 300; }
     .toggle-wrap { display: flex; align-items: center; gap: 0.5rem; }
     .toggle-icon { font-size: 0.85rem; }
@@ -73,144 +73,112 @@
     /* ── 3-COLUMN GRID ── */
     .page-grid {
       position: relative; z-index: 1;
-      display: grid;
-      grid-template-columns: 280px 1fr 280px;
-      gap: 1.5rem;
-      padding: 1.5rem 2rem 3rem;
-      align-items: start;
-      max-width: 1300px;
-      margin: 0 auto;
-      width: 100%;
+      display: grid; grid-template-columns: 280px 1fr 280px;
+      gap: 1.5rem; padding: 1.5rem 2rem 3rem;
+      align-items: start; max-width: 1300px; margin: 0 auto; width: 100%;
     }
 
     /* ── LEFT: TODO ── */
     .todo-panel {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      position: sticky; top: 1.5rem;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 4px; position: sticky; top: 1.5rem;
+      /* No overflow:hidden — grows freely */
     }
     .panel-header {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
+      border-radius: 4px 4px 0 0;
     }
-    .panel-title {
-      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
-    }
-    .todo-count {
-      font-size: 0.62rem; color: var(--accent);
-      background: var(--accent-dim); padding: 0.15rem 0.4rem; border-radius: 10px;
-    }
+    .panel-title { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .todo-count { font-size: 0.62rem; color: var(--accent); background: var(--accent-dim); padding: 0.15rem 0.4rem; border-radius: 10px; }
 
-    /* Todo input */
     .todo-input-row {
-      display: flex; gap: 0.5rem;
-      padding: 0.75rem 1rem;
+      display: flex; gap: 0.5rem; padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--border);
     }
     .todo-input {
-      flex: 1; min-width: 0;
-      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      flex: 1; min-width: 0; font-family: 'DM Mono', monospace; font-size: 0.75rem;
       background: var(--bg); border: 1px solid var(--border);
-      border-radius: 3px; color: var(--text);
-      padding: 0.45rem 0.6rem; transition: border-color 0.2s;
+      border-radius: 3px; color: var(--text); padding: 0.45rem 0.6rem; transition: border-color 0.2s;
     }
     .todo-input:focus { outline: none; border-color: var(--accent); }
     .todo-add-btn {
-      font-family: 'DM Mono', monospace; font-size: 0.75rem;
-      padding: 0.45rem 0.7rem;
+      font-family: 'DM Mono', monospace; font-size: 0.75rem; padding: 0.45rem 0.7rem;
       background: var(--accent); color: #111; border: none;
-      border-radius: 3px; cursor: pointer; font-weight: 500;
-      transition: opacity 0.2s;
+      border-radius: 3px; cursor: pointer; font-weight: 500; transition: opacity 0.2s;
     }
     .todo-add-btn:hover { opacity: 0.85; }
 
-    /* Todo list */
-    .todo-list {
-      list-style: none;
-      max-height: 420px;
-      overflow-y: auto;
-    }
-    .todo-list::-webkit-scrollbar { width: 4px; }
-    .todo-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    /* List grows — no scroll, no max-height */
+    .todo-list { list-style: none; }
 
     .todo-item {
       display: flex; align-items: flex-start; gap: 0.5rem;
-      padding: 0.7rem 1rem;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-      animation: slideIn 0.2s ease;
+      padding: 0.7rem 1rem; border-bottom: 1px solid var(--border);
+      transition: background 0.2s, opacity 0.3s;
     }
     .todo-item:last-child { border-bottom: none; }
     .todo-item:hover { background: var(--accent-dimmer); }
+
+    /* Done items: muted but visible */
     .todo-item.done { background: var(--todo-done); }
 
+    /* Slide-down when newly added */
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-6px); }
+      from { opacity: 0; transform: translateY(-8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    .todo-item.new { animation: slideIn 0.22s ease; }
+
+    /* Slide-to-bottom animation for done items */
+    @keyframes fadeReorder {
+      0%   { opacity: 1; }
+      40%  { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+    .todo-item.reordering { animation: fadeReorder 0.35s ease; }
 
     .todo-check {
       width: 16px; height: 16px; flex-shrink: 0;
-      border: 1.5px solid var(--border); border-radius: 3px;
-      margin-top: 2px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid var(--border); border-radius: 3px; margin-top: 2px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
       transition: background 0.2s, border-color 0.2s;
     }
-    .todo-check.checked {
-      background: var(--accent); border-color: var(--accent);
-    }
+    .todo-check.checked { background: var(--accent); border-color: var(--accent); }
     .todo-check.checked::after { content: '✓'; font-size: 0.6rem; color: #111; }
 
     .todo-text {
-      flex: 1; min-width: 0;
-      font-size: 0.72rem; line-height: 1.5;
-      word-break: break-word;
+      flex: 1; min-width: 0; font-size: 0.72rem; line-height: 1.5; word-break: break-word;
       transition: color 0.2s, text-decoration 0.2s;
     }
     .todo-item.done .todo-text { color: var(--muted); text-decoration: line-through; }
 
     .todo-edit-input {
-      flex: 1; min-width: 0;
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      flex: 1; min-width: 0; font-family: 'DM Mono', monospace; font-size: 0.72rem;
       background: var(--bg); border: 1px solid var(--accent);
       border-radius: 2px; color: var(--text); padding: 0.1rem 0.3rem;
     }
     .todo-edit-input:focus { outline: none; }
 
-    .todo-actions {
-      display: flex; gap: 0.25rem; flex-shrink: 0;
-      opacity: 0; transition: opacity 0.15s;
-    }
+    .todo-actions { display: flex; gap: 0.25rem; flex-shrink: 0; opacity: 0; transition: opacity 0.15s; }
     .todo-item:hover .todo-actions { opacity: 1; }
-
     .todo-action {
       font-size: 0.65rem; padding: 0.2rem 0.35rem;
       background: transparent; border: 1px solid var(--border);
-      border-radius: 2px; color: var(--muted);
-      cursor: pointer; transition: all 0.15s;
+      border-radius: 2px; color: var(--muted); cursor: pointer; transition: all 0.15s;
     }
     .todo-action:hover { border-color: var(--accent); color: var(--accent); }
     .todo-action.del:hover { border-color: var(--danger); color: var(--danger); }
-
-    .todo-empty {
-      padding: 1.5rem 1rem; text-align: center;
-      font-size: 0.68rem; color: var(--muted); line-height: 1.8;
-    }
+    .todo-empty { padding: 1.5rem 1rem; text-align: center; font-size: 0.68rem; color: var(--muted); line-height: 1.8; }
 
     /* ── CENTER: TIMER ── */
     .timer-col { display: flex; flex-direction: column; gap: 1.25rem; }
 
     /* Preset tabs */
-    .preset-tabs {
-      display: flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
-    }
+    .preset-tabs { display: flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
     .preset-tab {
       flex: 1; padding: 0.6rem 0.5rem; text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
       background: transparent; border: none; color: var(--muted);
       cursor: pointer; transition: background 0.2s, color 0.2s;
       border-right: 1px solid var(--border); line-height: 1.6;
@@ -221,16 +189,12 @@
     .preset-tab:hover:not(.active) { background: var(--accent-dimmer); }
 
     /* Mode tabs */
-    .mode-tabs {
-      display: flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
-    }
+    .mode-tabs { display: flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
     .tab {
       flex: 1; padding: 0.6rem 0.5rem; text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
       background: transparent; border: none; color: var(--muted);
-      cursor: pointer; transition: background 0.2s, color 0.2s;
-      border-right: 1px solid var(--border);
+      cursor: pointer; transition: background 0.2s, color 0.2s; border-right: 1px solid var(--border);
     }
     .tab:last-child { border-right: none; }
     .tab.active { background: var(--accent-dim); color: var(--accent); }
@@ -238,11 +202,10 @@
 
     /* Timer face */
     .timer-face {
-      text-align: center; padding: 2.5rem 2rem;
+      text-align: center; padding: 2rem 2rem 1.5rem;
       background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px;
-      position: relative;
     }
-    .ring-wrap { position: relative; width: 200px; height: 200px; margin: 0 auto 1.2rem; }
+    .ring-wrap { position: relative; width: 180px; height: 180px; margin: 0 auto 1rem; }
     .ring-svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
     .ring-track { fill: none; stroke: var(--border); stroke-width: 3; }
     .ring-progress {
@@ -254,25 +217,98 @@
     .timer-display {
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 3.2rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1;
+      font-size: 2.8rem; font-weight: 500; letter-spacing: -0.03em; line-height: 1;
     }
-    .phase-label { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
-    .cycle-dots { display: flex; justify-content: center; gap: 0.4rem; margin-top: 0.8rem; }
+    .phase-label { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+    .cycle-dots { display: flex; justify-content: center; gap: 0.4rem; margin-bottom: 1.25rem; }
     .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
     .dot.done { background: var(--accent); }
+
+    /* ── BAR VISUALIZER ── */
+    .bar-viz {
+      display: flex; align-items: flex-end; justify-content: center;
+      gap: 3px; padding: 0 1rem 0.25rem;
+      height: 52px; /* fixed container height */
+    }
+
+    .bar-group {
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+      position: relative;
+    }
+
+    /* Each 5-min bar */
+    .bar-col {
+      width: 18px;
+      background: var(--bar-track);
+      border-radius: 2px 2px 0 0;
+      position: relative;
+      overflow: hidden;
+      /* height set by JS */
+    }
+
+    /* Fill inside the bar — shrinks from top as time passes */
+    .bar-fill {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: var(--bar-fill);
+      transition: height 1s linear;
+      border-radius: 2px 2px 0 0;
+    }
+    .bar-fill.break { background: var(--bar-fill-break); }
+    .bar-fill.long-break { background: var(--bar-fill-long); }
+
+    /* Minute tick marks inside each bar */
+    .bar-ticks {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: space-between;
+      pointer-events: none; padding: 2px 0;
+    }
+    .bar-tick {
+      width: 100%; height: 1px;
+      background: var(--bar-tick);
+    }
+    .bar-tick:first-child, .bar-tick:last-child { background: transparent; }
+
+    /* Label under each bar: minute value */
+    .bar-label {
+      font-size: 0.42rem; color: var(--muted); margin-top: 3px;
+      letter-spacing: 0;
+    }
+
+    /* Separator between bars: faint line */
+    .bar-sep {
+      width: 1px; height: 100%; background: transparent;
+    }
+
+    /* ── AUTO TRANSITION flash overlay ── */
+    .flash-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: var(--accent);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .flash-overlay.active { opacity: 0.06; }
 
     /* Controls */
     .controls { display: flex; justify-content: center; gap: 0.75rem; }
     .btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 0.7rem 1.6rem;
-      border-radius: 3px; border: 1px solid var(--border);
+      font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.7rem 1.6rem; border-radius: 3px; border: 1px solid var(--border);
       background: transparent; color: var(--text); cursor: pointer; transition: all 0.2s;
     }
     .btn-primary { background: var(--accent); color: #111; border-color: var(--accent); font-weight: 500; }
     .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
     .btn:hover:not(.btn-primary) { border-color: var(--accent); color: var(--accent); }
+
+    /* Auto-launch badge */
+    .auto-badge {
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+      font-size: 0.62rem; color: var(--muted); padding: 0.4rem;
+    }
+    .auto-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--success);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
     /* Settings */
     .settings-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
@@ -290,10 +326,8 @@
     .setting-label strong { color: var(--text); display: block; font-weight: 500; }
     .setting-control { display: flex; align-items: center; gap: 0.5rem; }
     input[type="number"] {
-      width: 54px; text-align: center;
-      font-family: 'DM Mono', monospace; font-size: 0.82rem;
-      padding: 0.35rem 0.4rem;
-      background: var(--bg); border: 1px solid var(--border);
+      width: 54px; text-align: center; font-family: 'DM Mono', monospace; font-size: 0.82rem;
+      padding: 0.35rem 0.4rem; background: var(--bg); border: 1px solid var(--border);
       border-radius: 3px; color: var(--text); transition: border-color 0.2s;
     }
     input[type="number"]:focus { outline: none; border-color: var(--accent); }
@@ -317,71 +351,33 @@
 
     /* ── RIGHT: INFO ── */
     .info-panel {
-      background: var(--info-bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      position: sticky; top: 1.5rem;
+      background: var(--info-bg); border: 1px solid var(--border);
+      border-radius: 4px; overflow: hidden; position: sticky; top: 1.5rem;
     }
     .info-panel .panel-header { border-bottom: 1px solid var(--border); }
     .info-body { padding: 1.25rem; }
-
     .info-section { margin-bottom: 1.25rem; }
     .info-section:last-child { margin-bottom: 0; }
-
-    .info-lead {
-      font-size: 0.72rem; line-height: 1.75; color: var(--text); margin-bottom: 1rem;
-    }
-
-    .info-heading {
-      font-family: 'Fraunces', serif; font-size: 0.9rem; font-style: italic;
-      font-weight: 300; color: var(--accent); margin-bottom: 0.6rem;
-    }
-
-    .info-list {
-      list-style: none; display: flex; flex-direction: column; gap: 0.4rem;
-    }
-    .info-list li {
-      font-size: 0.69rem; line-height: 1.6; color: var(--muted);
-      display: flex; gap: 0.5rem;
-    }
+    .info-lead { font-size: 0.72rem; line-height: 1.75; color: var(--text); margin-bottom: 1rem; }
+    .info-heading { font-family: 'Fraunces', serif; font-size: 0.9rem; font-style: italic; font-weight: 300; color: var(--accent); margin-bottom: 0.6rem; }
+    .info-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .info-list li { font-size: 0.69rem; line-height: 1.6; color: var(--muted); display: flex; gap: 0.5rem; }
     .info-list li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
-
-    .info-steps {
-      list-style: none; display: flex; flex-direction: column; gap: 0.5rem; counter-reset: step;
-    }
-    .info-steps li {
-      font-size: 0.69rem; line-height: 1.6; color: var(--muted);
-      display: flex; gap: 0.5rem; counter-increment: step;
-    }
-    .info-steps li::before {
-      content: counter(step) '.'; color: var(--accent);
-      flex-shrink: 0; font-weight: 500; min-width: 14px;
-    }
-
+    .info-steps { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; counter-reset: step; }
+    .info-steps li { font-size: 0.69rem; line-height: 1.6; color: var(--muted); display: flex; gap: 0.5rem; counter-increment: step; }
+    .info-steps li::before { content: counter(step) '.'; color: var(--accent); flex-shrink: 0; font-weight: 500; min-width: 14px; }
     .info-rule { height: 1px; background: var(--border); margin: 1rem 0; }
-
-    .info-footer {
-      font-size: 0.62rem; color: var(--muted); font-style: italic;
-      line-height: 1.6; border-top: 1px solid var(--border);
-      padding: 0.75rem 1.25rem;
-    }
+    .info-footer { font-size: 0.62rem; color: var(--muted); font-style: italic; line-height: 1.6; border-top: 1px solid var(--border); padding: 0.75rem 1.25rem; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 1100px) {
-      .page-grid { grid-template-columns: 240px 1fr 240px; gap: 1rem; padding: 1rem; }
-    }
-    @media (max-width: 860px) {
-      .page-grid { grid-template-columns: 1fr; }
-      .todo-panel, .info-panel { position: static; }
-    }
-    @media (max-width: 500px) {
-      .top-nav { padding: 1rem; }
-      .page-grid { padding: 0.75rem; }
-    }
+    @media (max-width: 1100px) { .page-grid { grid-template-columns: 240px 1fr 240px; gap: 1rem; padding: 1rem; } }
+    @media (max-width: 860px)  { .page-grid { grid-template-columns: 1fr; } .todo-panel, .info-panel { position: static; } }
+    @media (max-width: 500px)  { .top-nav { padding: 1rem; } .page-grid { padding: 0.75rem; } }
   </style>
 </head>
 <body>
+
+<div class="flash-overlay" id="flashOverlay"></div>
 
 <!-- TOP NAV -->
 <nav class="top-nav">
@@ -417,15 +413,9 @@
 
     <!-- Preset cycles -->
     <div class="preset-tabs">
-      <button class="preset-tab active" data-preset="classic">
-        <strong>25 / 5</strong>classique
-      </button>
-      <button class="preset-tab" data-preset="deep">
-        <strong>50 / 10</strong>approfondi
-      </button>
-      <button class="preset-tab" data-preset="ultradian">
-        <strong>90 / 20</strong>naturel
-      </button>
+      <button class="preset-tab active" data-preset="classic"><strong>25 / 5</strong>classique</button>
+      <button class="preset-tab" data-preset="deep"><strong>50 / 10</strong>approfondi</button>
+      <button class="preset-tab" data-preset="ultradian"><strong>90 / 20</strong>naturel</button>
     </div>
 
     <!-- Work / Break / Long tabs -->
@@ -446,6 +436,15 @@
         <div class="timer-display" id="timerDisplay">25:00</div>
       </div>
       <div class="cycle-dots" id="cycleDots"></div>
+
+      <!-- Bar visualizer -->
+      <div class="bar-viz" id="barViz"></div>
+    </div>
+
+    <!-- Auto-launch indicator -->
+    <div class="auto-badge">
+      <span class="auto-dot"></span>
+      Enchaînement automatique actif
     </div>
 
     <!-- Controls -->
@@ -491,9 +490,7 @@
         <div class="sound-row">
           <div class="sound-label">Sons</div>
           <div class="sound-options">
-            <div class="sound-item">
-              <span class="sound-item-label">🔕 Muet par défaut</span>
-            </div>
+            <div class="sound-item"><span class="sound-item-label">🔕 Muet par défaut</span></div>
             <div class="sound-item">
               <span class="sound-item-label">Tic à chaque seconde</span>
               <button class="pill" id="tickToggle"></button>
@@ -515,7 +512,6 @@
       <span class="panel-title">🍅 La technique Pomodoro</span>
     </div>
     <div class="info-body">
-
       <div class="info-section">
         <p class="info-lead">Méthode de gestion du temps créée à la fin des années 1980 par <strong>Francesco Cirillo</strong>. Son principe est simple :</p>
         <ol class="info-steps">
@@ -526,9 +522,7 @@
           <li>Après 4 Pomodoros, prendre une pause plus longue de 15 à 30 minutes.</li>
         </ol>
       </div>
-
       <div class="info-rule"></div>
-
       <div class="info-section">
         <div class="info-heading">Pourquoi ça marche ?</div>
         <ul class="info-list">
@@ -539,9 +533,7 @@
           <li>Améliore l'estimation du temps nécessaire.</li>
         </ul>
       </div>
-
       <div class="info-rule"></div>
-
       <div class="info-section">
         <div class="info-heading">Les 3 cycles proposés</div>
         <ul class="info-list">
@@ -550,11 +542,8 @@
           <li><strong style="color:var(--text)">90/20</strong> — Suit les cycles ultradiens naturels du cerveau (rythme BRAC).</li>
         </ul>
       </div>
-
     </div>
-    <div class="info-footer">
-      Le nom vient d'un minuteur de cuisine en forme de tomate — « pomodoro » signifie tomate en italien 🍅
-    </div>
+    <div class="info-footer">Le nom vient d'un minuteur de cuisine en forme de tomate — « pomodoro » signifie tomate en italien 🍅</div>
   </aside>
 
 </div>
@@ -568,9 +557,6 @@
     const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     html.setAttribute('data-theme', next); localStorage.setItem('theme', next);
   });
-  themeToggle.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') themeToggle.click(); });
-
-  // ── Settings panel ───────────────────────────────────────────────────────────
   document.getElementById('settingsHeader').addEventListener('click', () => {
     document.getElementById('settingsPanel').classList.toggle('open');
   });
@@ -581,7 +567,6 @@
     deep:      { work: 50,  brk: 10, lng: 20 },
     ultradian: { work: 90,  brk: 20, lng: 30 },
   };
-
   document.querySelectorAll('.preset-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.preset-tab').forEach(t => t.classList.remove('active'));
@@ -617,13 +602,12 @@
       const osc = ctx.createOscillator(); const gain = ctx.createGain();
       osc.connect(gain); gain.connect(ctx.destination);
       osc.type = 'sine'; osc.frequency.setValueAtTime(f, ctx.currentTime + i * 0.18);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.18);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 1.2);
-      osc.start(ctx.currentTime + i * 0.18); osc.stop(ctx.currentTime + i * 0.18 + 1.2);
+      gain.gain.setValueAtTime(0.28, ctx.currentTime + i * 0.18);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 1.4);
+      osc.start(ctx.currentTime + i * 0.18); osc.stop(ctx.currentTime + i * 0.18 + 1.4);
     });
   }
 
-  // ── Sound toggles ────────────────────────────────────────────────────────────
   let tickOn = false, bellOn = false;
   const tickToggle = document.getElementById('tickToggle');
   const bellToggle = document.getElementById('bellToggle');
@@ -641,6 +625,7 @@
   const cycleDots  = document.getElementById('cycleDots');
   const startBtn   = document.getElementById('startBtn');
   const resetBtn   = document.getElementById('resetBtn');
+  const flashEl    = document.getElementById('flashOverlay');
 
   ring.style.strokeDasharray = CIRCUMFERENCE;
   ring.style.strokeDashoffset = 0;
@@ -654,7 +639,8 @@
   function getCycles() { return parseInt(document.getElementById('cycleCount').value) || 4; }
   function formatTime(s) { return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
   function updateRing() { ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - (totalSeconds > 0 ? secondsLeft / totalSeconds : 1)); }
-  function updateDisplay() { display.textContent = formatTime(secondsLeft); updateRing(); }
+  function updateDisplay() { display.textContent = formatTime(secondsLeft); updateRing(); updateBars(); }
+
   function updatePhaseLabel() {
     const c = getCycles();
     if (mode === 'work') phaseLabel.textContent = `Travail · cycle ${cyclesDone + 1}/${c}`;
@@ -674,12 +660,102 @@
     if (mode === 'break') ring.classList.add('break');
     if (mode === 'long')  ring.classList.add('long-break');
   }
+
+  // ── BAR VISUALIZER ───────────────────────────────────────────────────────────
+  // Each bar = 5 min. Bars represent the TOTAL duration of the current period.
+  // They shrink from top as time passes. Minute tick marks inside each bar.
+  const barViz = document.getElementById('barViz');
+  const BAR_HEIGHT = 44; // px — max height of a bar (5 min = full)
+  const MINS_PER_BAR = 5;
+
+  function buildBars() {
+    barViz.innerHTML = '';
+    const totalMins = Math.ceil(totalSeconds / 60);
+    const numBars = Math.ceil(totalMins / MINS_PER_BAR);
+
+    for (let b = 0; b < numBars; b++) {
+      const group = document.createElement('div');
+      group.className = 'bar-group';
+
+      // How many minutes this bar represents
+      const startMin = b * MINS_PER_BAR;
+      const endMin   = Math.min(startMin + MINS_PER_BAR, totalMins);
+      const barMins  = endMin - startMin; // 1..5
+
+      const col = document.createElement('div');
+      col.className = 'bar-col';
+      col.style.height = (BAR_HEIGHT * barMins / MINS_PER_BAR) + 'px';
+      col.dataset.barIndex = b;
+      col.dataset.barMins  = barMins;
+
+      // Fill element
+      const fill = document.createElement('div');
+      fill.className = 'bar-fill';
+      if (mode === 'break') fill.classList.add('break');
+      if (mode === 'long')  fill.classList.add('long-break');
+      fill.style.height = '100%'; // will be updated by updateBars()
+      col.appendChild(fill);
+
+      // Tick marks: one per minute boundary inside the bar
+      const ticks = document.createElement('div');
+      ticks.className = 'bar-ticks';
+      for (let t = 0; t <= barMins; t++) {
+        const tick = document.createElement('div');
+        tick.className = 'bar-tick';
+        ticks.appendChild(tick);
+      }
+      col.appendChild(ticks);
+
+      // Label: the minute at the END of this bar
+      const label = document.createElement('div');
+      label.className = 'bar-label';
+      label.textContent = endMin + 'm';
+
+      group.appendChild(col);
+      group.appendChild(label);
+      barViz.appendChild(group);
+    }
+  }
+
+  function updateBars() {
+    const totalMins  = totalSeconds / 60;
+    const elapsed    = totalSeconds - secondsLeft;
+    const elapsedMin = elapsed / 60;
+    const numBars    = barViz.querySelectorAll('.bar-col').length;
+
+    barViz.querySelectorAll('.bar-col').forEach((col, b) => {
+      const fill = col.querySelector('.bar-fill');
+      const barMins = parseFloat(col.dataset.barMins);
+      const startMin = b * MINS_PER_BAR;
+      const endMin   = startMin + barMins;
+
+      // How full is this bar? (1 = full, 0 = empty)
+      let ratio;
+      if (elapsedMin >= endMin) {
+        ratio = 0; // fully consumed
+      } else if (elapsedMin <= startMin) {
+        ratio = 1; // not yet touched
+      } else {
+        // partially consumed: remaining = endMin - elapsedMin
+        ratio = (endMin - elapsedMin) / barMins;
+      }
+      fill.style.height = (ratio * 100) + '%';
+    });
+  }
+
   function initTimer() {
     totalSeconds = getDuration(); secondsLeft = totalSeconds;
     updateDisplay(); updatePhaseLabel(); buildDots(); applyRingMode();
+    buildBars(); updateBars();
   }
 
-  // ── Mode tabs ────────────────────────────────────────────────────────────────
+  // ── Flash helper ─────────────────────────────────────────────────────────────
+  function flashTransition() {
+    flashEl.classList.add('active');
+    setTimeout(() => flashEl.classList.remove('active'), 400);
+  }
+
+  // ── Mode tabs (manual) ───────────────────────────────────────────────────────
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       stopTimer(); mode = tab.dataset.mode;
@@ -701,23 +777,44 @@
     running = false; clearInterval(intervalId);
     startBtn.textContent = '▶ Démarrer';
   }
+
   function tick() {
     if (tickOn) playTick();
     secondsLeft--; updateDisplay();
     if (secondsLeft <= 0) {
       clearInterval(intervalId); running = false;
       if (bellOn) playBell();
-      onCycleEnd();
+      flashTransition();
+      // Short delay so bell plays before auto-switch
+      setTimeout(onCycleEnd, 800);
     }
   }
+
   function onCycleEnd() {
     const c = getCycles();
     if (mode === 'work') {
       cyclesDone++; buildDots();
-      if (cyclesDone >= c) { cyclesDone = 0; setMode('long'); }
-      else { setMode('break'); }
-    } else { setMode('work'); }
+      if (cyclesDone >= c) { cyclesDone = 0; autoSetMode('long'); }
+      else { autoSetMode('break'); }
+    } else {
+      autoSetMode('work');
+    }
   }
+
+  // autoSetMode: switches AND immediately starts the next period
+  function autoSetMode(m) {
+    mode = m;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
+    initTimer();
+    startBtn.textContent = '⏸ Pause';
+    // Auto-launch after brief flash delay
+    setTimeout(() => {
+      running = true;
+      intervalId = setInterval(tick, 1000);
+    }, 300);
+  }
+
+  // setMode (manual — no auto-start)
   function setMode(m) {
     mode = m;
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
@@ -732,7 +829,6 @@
 
   // ── TO-DO LIST ───────────────────────────────────────────────────────────────
   let todos = JSON.parse(localStorage.getItem('pomo-todos') || '[]');
-  // todos = [{id, text, done}]
 
   const todoList  = document.getElementById('todoList');
   const todoEmpty = document.getElementById('todoEmpty');
@@ -741,41 +837,42 @@
 
   function saveTodos() { localStorage.setItem('pomo-todos', JSON.stringify(todos)); }
 
+  function sortedTodos() {
+    // Pending first (preserving insertion order), done at the bottom
+    const pending = todos.filter(t => !t.done);
+    const done    = todos.filter(t => t.done);
+    return [...pending, ...done];
+  }
+
   function renderTodos() {
-    // Remove all except empty placeholder
     todoList.querySelectorAll('.todo-item').forEach(el => el.remove());
-    const done   = todos.filter(t => t.done).length;
-    const total  = todos.length;
-    todoCount.textContent = total === 0 ? '0 tâche' : `${done}/${total}`;
+    const doneCount = todos.filter(t => t.done).length;
+    const total     = todos.length;
+    todoCount.textContent = total === 0 ? '0 tâche' : `${doneCount}/${total}`;
     todoEmpty.style.display = total === 0 ? '' : 'none';
 
-    todos.forEach(todo => {
+    sortedTodos().forEach(todo => {
       const li = document.createElement('li');
       li.className = 'todo-item' + (todo.done ? ' done' : '');
       li.dataset.id = todo.id;
 
-      // Checkbox
       const check = document.createElement('div');
       check.className = 'todo-check' + (todo.done ? ' checked' : '');
       check.addEventListener('click', () => toggleTodo(todo.id));
 
-      // Text
       const span = document.createElement('span');
       span.className = 'todo-text';
       span.textContent = todo.text;
 
-      // Actions
       const actions = document.createElement('div');
       actions.className = 'todo-actions';
 
       const editBtn = document.createElement('button');
-      editBtn.className = 'todo-action'; editBtn.textContent = '✎';
-      editBtn.title = 'Modifier';
+      editBtn.className = 'todo-action'; editBtn.textContent = '✎'; editBtn.title = 'Modifier';
       editBtn.addEventListener('click', () => editTodo(todo.id, li, span));
 
       const delBtn = document.createElement('button');
-      delBtn.className = 'todo-action del'; delBtn.textContent = '✕';
-      delBtn.title = 'Supprimer';
+      delBtn.className = 'todo-action del'; delBtn.textContent = '✕'; delBtn.title = 'Supprimer';
       delBtn.addEventListener('click', () => deleteTodo(todo.id));
 
       actions.appendChild(editBtn); actions.appendChild(delBtn);
@@ -787,13 +884,26 @@
   function addTodo(text) {
     text = text.trim(); if (!text) return;
     todos.push({ id: Date.now(), text, done: false });
-    saveTodos(); renderTodos();
+    saveTodos();
+    // Render then mark new item for animation
+    renderTodos();
+    const items = todoList.querySelectorAll('.todo-item');
+    // New item is first among pending = first item in list
+    if (items.length) { items[0].classList.add('new'); setTimeout(() => items[0].classList.remove('new'), 300); }
     todoInput.value = '';
   }
 
   function toggleTodo(id) {
     const t = todos.find(t => t.id === id);
-    if (t) { t.done = !t.done; saveTodos(); renderTodos(); }
+    if (!t) return;
+    t.done = !t.done;
+    saveTodos();
+    // Animate the item before re-sorting
+    const li = todoList.querySelector(`[data-id="${id}"]`);
+    if (li) {
+      li.classList.add('reordering');
+      setTimeout(() => renderTodos(), 350);
+    } else { renderTodos(); }
   }
 
   function deleteTodo(id) {
@@ -804,22 +914,16 @@
   function editTodo(id, li, span) {
     const todo = todos.find(t => t.id === id);
     if (!todo) return;
-
     const inp = document.createElement('input');
     inp.className = 'todo-edit-input'; inp.value = todo.text; inp.maxLength = 120;
-
     span.replaceWith(inp); inp.focus(); inp.select();
-
     function save() {
       const val = inp.value.trim();
       if (val) { todo.text = val; saveTodos(); }
       renderTodos();
     }
     inp.addEventListener('blur', save);
-    inp.addEventListener('keydown', e => {
-      if (e.key === 'Enter') save();
-      if (e.key === 'Escape') renderTodos();
-    });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') renderTodos(); });
   }
 
   document.getElementById('todoAddBtn').addEventListener('click', () => addTodo(todoInput.value));
