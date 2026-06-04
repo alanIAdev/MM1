@@ -355,6 +355,152 @@
     .useful-link-arrow { margin-left: auto; font-size: 0.7rem; color: var(--muted); transition: transform 0.2s, color 0.2s; }
     .useful-link:hover .useful-link-arrow { transform: translate(2px,-2px); color: var(--accent); }
 
+    /* ── Water tracker ─────────────────────────────────────── */
+    .water-tracker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--card-bg);
+      min-width: 110px;
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+    .water-tracker.alert {
+      border-color: #e05050;
+      box-shadow: 0 0 12px rgba(224,80,80,0.25);
+      animation: waterAlert 1.8s ease-in-out infinite;
+    }
+    @keyframes waterAlert {
+      0%, 100% { box-shadow: 0 0 8px rgba(224,80,80,0.2); }
+      50%       { box-shadow: 0 0 18px rgba(224,80,80,0.5); }
+    }
+    .water-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .water-alert-msg {
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #e05050;
+      opacity: 0;
+      transition: opacity 0.3s;
+      text-align: center;
+    }
+    .water-tracker.alert .water-alert-msg { opacity: 1; }
+    .water-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .water-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: default;
+    }
+    .water-count {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-2);
+      min-width: 1.6ch;
+      text-align: center;
+      line-height: 1;
+    }
+    .water-tracker.alert .water-count { color: #e05050; }
+    .water-btn {
+      width: 22px; height: 22px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      line-height: 1;
+    }
+    .water-btn:hover {
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+      background: rgba(122,191,232,0.08);
+    }
+    .water-tracker.alert .water-btn:hover {
+      border-color: #e05050;
+      color: #e05050;
+      background: rgba(224,80,80,0.08);
+    }
+    .water-since {
+      font-size: 0.55rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .water-tracker.alert .water-since { color: #e05050; }
+
+    /* ── Micro-amélioration widget ─────────────────────────── */
+    .micro-body { padding: 1.1rem 1.25rem; }
+    .micro-action {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .micro-action strong {
+      font-weight: 700;
+      color: var(--accent-4);
+    }
+    .micro-meta {
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .micro-tag {
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+    }
+    .micro-refresh {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); background: transparent; border: 1px solid var(--border);
+      border-radius: 3px; padding: 0.25rem 0.55rem; cursor: pointer;
+      font-family: 'DM Mono', monospace; transition: all 0.2s;
+    }
+    .micro-refresh:hover { border-color: var(--accent-4); color: var(--accent-4); }
+    .micro-done {
+      display: inline-flex; align-items: center; gap: 0.3rem; margin-left: 0.4rem;
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); background: transparent; border: 1px solid var(--border);
+      border-radius: 3px; padding: 0.25rem 0.55rem; cursor: pointer;
+      font-family: 'DM Mono', monospace; transition: all 0.2s;
+    }
+    .micro-done:hover { border-color: var(--accent-4); color: var(--accent-4); }
+    .micro-done.completed {
+      border-color: var(--accent-4); color: var(--accent-4);
+      background: rgba(122,232,176,0.08);
+    }
+    .micro-streak {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.58rem; color: var(--accent-1); letter-spacing: 0.06em;
+    }
+
     @media (max-width: 600px) {
       .layout { padding: 2rem 1.25rem 4rem; }
       header { flex-direction: column; gap: 1.5rem; }
@@ -370,10 +516,24 @@
       <h1>Mini<span>Apps</span></h1>
       <p>Outils du quotidien — toujours disponibles</p>
     </div>
-    <div class="toggle-wrap">
-      <span class="toggle-icon">🌙</span>
-      <div class="toggle" id="themeToggle" role="button" aria-label="Basculer le thème" tabindex="0"></div>
-      <span class="toggle-icon">☀️</span>
+    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.6rem;">
+      <div class="toggle-wrap">
+        <span class="toggle-icon">🌙</span>
+        <div class="toggle" id="themeToggle" role="button" aria-label="Basculer le thème" tabindex="0"></div>
+        <span class="toggle-icon">☀️</span>
+      </div>
+      <!-- Water tracker -->
+      <div class="water-tracker" id="waterTracker">
+        <div class="water-label">Hydratation</div>
+        <div class="water-controls">
+          <button class="water-btn" id="waterDec" aria-label="Moins un verre">−</button>
+          <span class="water-icon">💧</span>
+          <span class="water-count" id="waterCount">0</span>
+          <button class="water-btn" id="waterInc" aria-label="Plus un verre">+</button>
+        </div>
+        <div class="water-since" id="waterSince">Aucun verre aujourd'hui</div>
+        <div class="water-alert-msg">💧 Boire un verre !</div>
+      </div>
     </div>
   </header>
 
@@ -511,6 +671,21 @@
       </div>
     </div>
 
+    <!-- Machine à micro-améliorations -->
+    <div class="widget" style="grid-column: 1 / -1;">
+      <div class="widget-header">⚡ Machine à micro-améliorations</div>
+      <div class="micro-body">
+        <div class="micro-action" id="microAction"></div>
+        <div class="micro-meta">
+          <span class="micro-tag" id="microCat"></span>
+          <span>· moins de 5 min</span>
+          <span class="micro-streak" id="microStreak"></span>
+        </div>
+        <button class="micro-refresh" id="microRefresh">↻ Nouvelle action</button>
+        <button class="micro-done" id="microDone">✓ Fait aujourd'hui</button>
+      </div>
+    </div>
+
   </div>
 
   <footer>
@@ -600,6 +775,164 @@
   });
 
   initPhrase();
+
+  // ── Water tracker ───────────────────────────────────────────
+  const WATER_INTERVAL_MINUTES = 90; // alert after 90 min without drinking
+
+  function todayKey() {
+    const d = new Date();
+    return `water_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+  }
+
+  function loadWaterState() {
+    try {
+      const raw = localStorage.getItem('waterState');
+      if (!raw) return { count: 0, lastDrink: null, date: todayKey() };
+      const s = JSON.parse(raw);
+      // Reset if new day
+      if (s.date !== todayKey()) return { count: 0, lastDrink: null, date: todayKey() };
+      return s;
+    } catch(e) { return { count: 0, lastDrink: null, date: todayKey() }; }
+  }
+
+  function saveWaterState(s) {
+    s.date = todayKey();
+    localStorage.setItem('waterState', JSON.stringify(s));
+  }
+
+  let waterState = loadWaterState();
+
+  function formatSince(ts) {
+    if (!ts) return 'Aucun verre aujourd'hui';
+    const diff = Math.floor((Date.now() - ts) / 60000);
+    if (diff < 1) return 'Il y a moins d'1 min';
+    if (diff < 60) return `Il y a ${diff} min`;
+    const h = Math.floor(diff / 60), m = diff % 60;
+    return `Il y a ${h}h${m > 0 ? m.toString().padStart(2,'0') : ''}`;
+  }
+
+  function renderWater() {
+    const el = document.getElementById('waterCount');
+    const tracker = document.getElementById('waterTracker');
+    const since = document.getElementById('waterSince');
+
+    el.textContent = waterState.count;
+    since.textContent = formatSince(waterState.lastDrink);
+
+    const isAlert = waterState.lastDrink === null ||
+      (Date.now() - waterState.lastDrink) > WATER_INTERVAL_MINUTES * 60000;
+
+    tracker.classList.toggle('alert', isAlert);
+  }
+
+  document.getElementById('waterInc').addEventListener('click', () => {
+    waterState.count++;
+    waterState.lastDrink = Date.now();
+    saveWaterState(waterState);
+    renderWater();
+  });
+
+  document.getElementById('waterDec').addEventListener('click', () => {
+    if (waterState.count > 0) waterState.count--;
+    saveWaterState(waterState);
+    renderWater();
+  });
+
+  renderWater();
+  setInterval(renderWater, 30000); // refresh every 30s
+
+  // ── Micro-améliorations ─────────────────────────────────────
+  const MICRO_ACTIONS = [
+    { text: "Bois <strong>un grand verre d'eau</strong> maintenant, debout, lentement.", cat: "Corps" },
+    { text: "<strong>Range ton bureau</strong> : jette ce qui traîne, aligne ce qui reste.", cat: "Espace" },
+    { text: "Fais <strong>10 étirements cervicaux</strong> : droite, gauche, avant, arrière.", cat: "Corps" },
+    { text: "Envoie un <strong>message de gratitude</strong> à quelqu'un que tu n'as pas contacté depuis longtemps.", cat: "Social" },
+    { text: "Note <strong>3 choses concrètes</strong> que tu veux accomplir demain.", cat: "Organisation" },
+    { text: "Fais <strong>20 pompes</strong> — ou le maximum que tu peux. Maintenant.", cat: "Corps" },
+    { text: "Ouvre une fenêtre et <strong>respire profondément</strong> 10 fois.", cat: "Bien-être" },
+    { text: "Supprime <strong>10 emails inutiles</strong> de ta boîte de réception.", cat: "Organisation" },
+    { text: "Mets une <strong>plante verte</strong> dans ton espace de travail (ou commande-en une).", cat: "Espace" },
+    { text: "Lis <strong>2 pages d'un livre</strong> que tu veux finir depuis des semaines.", cat: "Apprentissage" },
+    { text: "Note une <strong>peur que tu évites</strong> et imagine une toute petite action pour l'affronter.", cat: "Mental" },
+    { text: "Fais une <strong>liste des 3 dépenses inutiles</strong> de ce mois. Laquelle supprimer ?", cat: "Finance" },
+    { text: "Écris à la main <strong>une phrase sur ta journée</strong> — une seule, honnête.", cat: "Mental" },
+    { text: "Lève-toi et fais <strong>2 min de marche</strong> dans ta pièce, sans téléphone.", cat: "Corps" },
+    { text: "Désactive <strong>une notification</strong> d'app qui ne t'apporte rien.", cat: "Focus" },
+    { text: "Prépare <strong>ta tenue de demain</strong> maintenant pour gagner du temps le matin.", cat: "Organisation" },
+    { text: "Regarde tes <strong>abonnements actifs</strong> : en supprimer un inutile.", cat: "Finance" },
+    { text: "Fais <strong>une minute de planche</strong> (gainage). Chronomètre en main.", cat: "Corps" },
+    { text: "Ferme tous les <strong>onglets de navigateur</strong> que tu n'as pas consultés depuis 24h.", cat: "Focus" },
+    { text: "Écris <strong>une chose dont tu es fier</strong> cette semaine, même petite.", cat: "Mental" },
+    { text: "Mets en place <strong>une alarme « eau »</strong> toutes les 90 min sur ton téléphone.", cat: "Corps" },
+    { text: "Prépare <strong>ta liste de courses saine</strong> pour la semaine.", cat: "Corps" },
+    { text: "Identifie la tâche que tu repousses le plus : fais-en juste <strong>les 2 premières minutes</strong>.", cat: "Focus" },
+    { text: "Appelle ou écris à <strong>un parent ou ami</strong> que tu as négligé.", cat: "Social" },
+    { text: "Range <strong>5 objets</strong> qui ne sont pas à leur place.", cat: "Espace" },
+    { text: "Écris le <strong>nom d'un livre, podcast ou cours</strong> que tu veux explorer ce mois.", cat: "Apprentissage" },
+    { text: "Fais <strong>3 séries de 15 squats</strong>. Tes jambes diront merci.", cat: "Corps" },
+    { text: "Réserve <strong>30 min dans ton agenda</strong> pour un projet personnel cette semaine.", cat: "Organisation" },
+    { text: "Éteins les lumières inutiles et <strong>crée une ambiance</strong> propice à la concentration.", cat: "Espace" },
+    { text: "Prends <strong>une photo de quelque chose de beau</strong> autour de toi maintenant.", cat: "Bien-être" },
+  ];
+
+  function getMicroTodayIndex() {
+    const d = new Date();
+    const day = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+    return day % MICRO_ACTIONS.length;
+  }
+
+  function loadMicroState() {
+    try {
+      const raw = localStorage.getItem('microState');
+      const todayStr = new Date().toDateString();
+      if (!raw) return { idx: getMicroTodayIndex(), done: false, date: todayStr, streak: 0 };
+      const s = JSON.parse(raw);
+      if (s.date !== todayStr) {
+        // New day: advance streak if yesterday was done
+        const streak = s.done ? (s.streak || 0) + 1 : 0;
+        return { idx: getMicroTodayIndex(), done: false, date: todayStr, streak };
+      }
+      return s;
+    } catch(e) { return { idx: getMicroTodayIndex(), done: false, date: new Date().toDateString(), streak: 0 }; }
+  }
+
+  function saveMicroState(s) {
+    localStorage.setItem('microState', JSON.stringify(s));
+  }
+
+  let microState = loadMicroState();
+
+  function renderMicro() {
+    const action = MICRO_ACTIONS[microState.idx];
+    document.getElementById('microAction').innerHTML = action.text;
+    document.getElementById('microCat').textContent = action.cat;
+
+    const doneBtn = document.getElementById('microDone');
+    doneBtn.classList.toggle('completed', microState.done);
+    doneBtn.textContent = microState.done ? '✓ Accompli !' : '✓ Fait aujourd'hui';
+
+    const streakEl = document.getElementById('microStreak');
+    if (microState.streak > 0) {
+      streakEl.textContent = `🔥 ${microState.streak} jour${microState.streak > 1 ? 's' : ''} de suite`;
+    } else {
+      streakEl.textContent = '';
+    }
+  }
+
+  document.getElementById('microRefresh').addEventListener('click', () => {
+    microState.idx = (microState.idx + 1) % MICRO_ACTIONS.length;
+    microState.done = false;
+    saveMicroState(microState);
+    renderMicro();
+  });
+
+  document.getElementById('microDone').addEventListener('click', () => {
+    microState.done = !microState.done;
+    saveMicroState(microState);
+    renderMicro();
+  });
+
+  renderMicro();
 </script>
 </body>
 </html>
