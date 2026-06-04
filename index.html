@@ -305,10 +305,61 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Bottom widgets row */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .widget {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .widget-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--border);
+      font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    }
+    .phrase-body { padding: 1.1rem 1.25rem; }
+    .phrase-text {
+      font-family: 'Fraunces', serif; font-size: 1rem; font-style: italic;
+      font-weight: 300; line-height: 1.65; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .phrase-author { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.08em; }
+    .phrase-refresh {
+      display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.75rem;
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); background: transparent; border: 1px solid var(--border);
+      border-radius: 3px; padding: 0.25rem 0.55rem; cursor: pointer;
+      font-family: 'DM Mono', monospace; transition: all 0.2s;
+    }
+    .phrase-refresh:hover { border-color: var(--accent); color: var(--accent); }
+    .links-body { padding: 0.5rem 0; }
+    .useful-link {
+      display: flex; align-items: center; gap: 0.65rem;
+      padding: 0.65rem 1.1rem; text-decoration: none;
+      color: var(--text); font-size: 0.72rem;
+      border-bottom: 1px solid var(--border); transition: background 0.15s, color 0.15s;
+    }
+    .useful-link:last-child { border-bottom: none; }
+    .useful-link:hover { background: var(--accent-dim); color: var(--accent); }
+    .useful-link-icon {
+      width: 24px; height: 24px; border-radius: 3px; background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; flex-shrink: 0;
+    }
+    .useful-link-sub { font-size: 0.58rem; color: var(--muted); display: block; margin-top: 0.1rem; }
+    .useful-link-arrow { margin-left: auto; font-size: 0.7rem; color: var(--muted); transition: transform 0.2s, color 0.2s; }
+    .useful-link:hover .useful-link-arrow { transform: translate(2px,-2px); color: var(--accent); }
+
     @media (max-width: 600px) {
       .layout { padding: 2rem 1.25rem 4rem; }
       header { flex-direction: column; gap: 1.5rem; }
       .toggle-wrap { align-self: flex-end; }
+      .bottom-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -338,7 +389,7 @@
         <span class="card-arrow">↗</span>
       </div>
       <div class="card-name">Pomodoro</div>
-      <div class="card-desc">Timer de focus avec cycles de travail et de pause.</div>
+      <div class="card-desc">Timer de focus avec cycles de travail et de pause. Son optionnel sur chaque tic et à la fin du cycle.</div>
       <div class="card-tags">
         <span class="tag">Focus</span>
         <span class="tag">Timer</span>
@@ -390,35 +441,55 @@
         <span class="tag">Programmes</span>
       </div>
     </a>
-    <!-- Learnlab -->
-    <a class="card" href="apps/learnlab/learnlab.html" style="--card-accent: #b07ae8; --card-accent-bg: rgba(176,122,232,0.1);">
-      <div class="card-header">
-        <div class="card-icon">📚</div>
-        <span class="card-arrow">↗</span>
-      </div>
-      <div class="card-name">Learnlab</div>
-      <div class="card-desc">Outil pour apprendre de nouvelles compétences. </div>
-      <div class="card-tags">
-        <span class="tag">Skills variés </span>
-      </div>
-    </a>
-    
-    <!-- Placeholder future app -->
-    <div class="card soon2" style="--card-accent: #b07ae8; --card-accent-bg: rgba(176,122,232,0.1);">
-      <div class="card-header">
-        <div class="card-icon">✦</div>
-        <span class="soon-badge">Bientôt</span>
-      </div>
-      <div class="card-name">À venir</div>
-      <div class="card-desc">D'autres outils rejoindront cette page au fil du temps2.</div>
-      <div class="card-tags">
-        <span class="tag">—</span>
+
+  </div>
+
+  <!-- Bottom widgets -->
+  <div class="bottom-row">
+
+    <!-- Phrase du jour -->
+    <div class="widget">
+      <div class="widget-header">💬 Phrase du jour</div>
+      <div class="phrase-body">
+        <div class="phrase-text" id="phraseText"></div>
+        <div class="phrase-author" id="phraseAuthor"></div>
+        <button class="phrase-refresh" id="phraseRefresh">↻ Autre phrase</button>
       </div>
     </div>
-    
+
+    <!-- Liens utiles -->
+    <div class="widget">
+      <div class="widget-header">🔗 Liens utiles</div>
+      <div class="links-body">
+        <a class="useful-link" href="https://translate.google.com" target="_blank" rel="noopener">
+          <div class="useful-link-icon">🌐</div>
+          <div>
+            Google Traduction
+            <span class="useful-link-sub">translate.google.com</span>
+          </div>
+          <span class="useful-link-arrow">↗</span>
+        </a>
+        <a class="useful-link" href="https://investir.lesechos.fr/" target="_blank" rel="noopener">
+          <div class="useful-link-icon">📈</div>
+          <div>
+            Investir — Les Échos
+            <span class="useful-link-sub">investir.lesechos.fr</span>
+          </div>
+          <span class="useful-link-arrow">↗</span>
+        </a>
+        <a class="useful-link" href="https://www.lefigaro.fr/" target="_blank" rel="noopener">
+          <div class="useful-link-icon">📰</div>
+          <div>
+            Le Figaro
+            <span class="useful-link-sub">lefigaro.fr</span>
+          </div>
+          <span class="useful-link-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
   </div>
- 
-  
+
   <footer>
     <div><span class="footer-dot"></span>GitHub Pages — statique, sans serveur</div>
     <div id="appCount">4 apps disponibles</div>
@@ -429,7 +500,6 @@
   const toggle = document.getElementById('themeToggle');
   const html = document.documentElement;
 
-  // Restore preference
   const saved = localStorage.getItem('theme') || 'dark';
   html.setAttribute('data-theme', saved);
 
@@ -443,6 +513,58 @@
   toggle.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') toggle.click();
   });
+
+  // ── Phrase du jour ──────────────────────────────────────────
+  const PHRASES = [
+    { text: "Le secret pour avancer, c'est de commencer.", author: "Mark Twain" },
+    { text: "La discipline est le pont entre les objectifs et les accomplissements.", author: "Jim Rohn" },
+    { text: "Nous sommes ce que nous faisons de façon répétée. L'excellence n'est donc pas un acte, mais une habitude.", author: "Aristote" },
+    { text: "Il n'est pas nécessaire d'être excellent pour commencer, mais il est nécessaire de commencer pour être excellent.", author: "Zig Ziglar" },
+    { text: "Le succès, c'est d'aller d'échec en échec sans perdre son enthousiasme.", author: "Winston Churchill" },
+    { text: "La vie, c'est comme une bicyclette : il faut avancer pour ne pas perdre l'équilibre.", author: "Albert Einstein" },
+    { text: "Tout ce que l'esprit peut concevoir et croire, il peut l'atteindre.", author: "Napoleon Hill" },
+    { text: "Votre temps est limité, ne le gâchez pas à vivre la vie de quelqu'un d'autre.", author: "Steve Jobs" },
+    { text: "Ce n'est pas parce que les choses sont difficiles que nous n'osons pas, c'est parce que nous n'osons pas qu'elles sont difficiles.", author: "Sénèque" },
+    { text: "Les grandes choses ne sont pas faites par impulsion, mais par une série de petites choses rassemblées.", author: "Vincent van Gogh" },
+    { text: "La persévérance est la mère de la bonne fortune.", author: "Benjamin Disraeli" },
+    { text: "Crois en toi-même et tout devient possible.", author: "Anonyme" },
+    { text: "Le changement est difficile au début, compliqué au milieu et magnifique à la fin.", author: "Robin Sharma" },
+    { text: "Chaque jour est une nouvelle chance de changer ta vie.", author: "Anonyme" },
+    { text: "Ce qui ne te tue pas te rend plus fort.", author: "Friedrich Nietzsche" },
+    { text: "La patience est amère, mais ses fruits sont doux.", author: "Jean-Jacques Rousseau" },
+    { text: "Agis comme si ce que tu fais faisait une différence. Ça en fait une.", author: "William James" },
+    { text: "Le meilleur moment pour planter un arbre, c'était il y a vingt ans. Le deuxième meilleur moment, c'est maintenant.", author: "Proverbe chinois" },
+    { text: "Tu n'as pas à être parfait pour commencer, mais tu dois commencer pour être parfait.", author: "Anonyme" },
+    { text: "Les limites, comme les peurs, ne sont souvent qu'une illusion.", author: "Michael Jordan" },
+  ];
+
+  function getTodayPhrase() {
+    // Deterministic phrase based on day of year
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((now - start) / 864e5);
+    return PHRASES[dayOfYear % PHRASES.length];
+  }
+
+  let phraseIdx = null;
+
+  function showPhrase(p) {
+    document.getElementById('phraseText').textContent = '« ' + p.text + ' »';
+    document.getElementById('phraseAuthor').textContent = '— ' + p.author;
+  }
+
+  function initPhrase() {
+    const p = getTodayPhrase();
+    phraseIdx = PHRASES.indexOf(p);
+    showPhrase(p);
+  }
+
+  document.getElementById('phraseRefresh').addEventListener('click', () => {
+    phraseIdx = (phraseIdx + 1) % PHRASES.length;
+    showPhrase(PHRASES[phraseIdx]);
+  });
+
+  initPhrase();
 </script>
 </body>
 </html>
