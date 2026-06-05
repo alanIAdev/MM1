@@ -7,310 +7,139 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold: #e59834;
-    --gold-light: rgba(229,152,52,0.15);
-    --bg: #0d0d1a;
-    --bg2: #1a1a2e;
-    --bg3: #0f2744;
-    --text: #f0e6d3;
-    --text-muted: #aaa;
-    --text-dim: #888;
-    --border: rgba(255,255,255,0.1);
-    --teal: #4ecdc4;
-    --red: #ff6b6b;
-    --yellow: #ffe66d;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 40%, var(--bg3) 100%);
-    background-attachment: fixed;
-    color: var(--text);
-    font-family: 'Crimson Text', Georgia, serif;
-    font-size: 16px;
-    min-height: 100vh;
-  }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
-  ::-webkit-scrollbar-thumb { background: rgba(229,152,52,0.3); border-radius: 3px; }
-
-  /* ── TIMER BAR ─────────────────────────────── */
-  #timer-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-    height: 56px;
-    background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    border-bottom: 2px solid rgba(229,152,52,0.4);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 24px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  }
-  .timer-brand { display: flex; align-items: center; gap: 8px; }
-  .timer-brand span { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; letter-spacing: 0.5px; }
-  .timers-wrap { display: flex; gap: 12px; }
-  .timer-widget {
-    display: flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px; padding: 4px 12px;
-    transition: all 0.3s;
-  }
-  .timer-widget.running {
-    background: rgba(229,152,52,0.15);
-    border-color: rgba(229,152,52,0.6);
-  }
-  .timer-icon { font-size: 14px; color: var(--text-muted); }
-  .timer-widget.running .timer-icon { color: var(--gold); }
-  .timer-display {
-    font-family: 'Courier New', monospace; font-weight: 700; font-size: 17px;
-    color: #ccc; min-width: 60px; letter-spacing: 2px;
-  }
-  .timer-widget.running .timer-display { color: var(--gold); }
-  .btn-timer {
-    background: rgba(255,255,255,0.1); border: none; border-radius: 6px;
-    color: #ccc; font-weight: 700; cursor: pointer; padding: 3px 10px; font-size: 13px;
-    transition: all 0.2s; font-family: inherit;
-  }
-  .timer-widget.running .btn-timer { background: var(--gold); color: #1a1a2e; }
-  .btn-reset {
-    background: transparent; border: none; color: #888; cursor: pointer;
-    padding: 3px 6px; font-size: 14px; font-family: inherit;
-    transition: color 0.2s;
-  }
-  .btn-reset:hover { color: var(--red); }
-
-  /* ── LAYOUT ────────────────────────────────── */
-  #app { padding-top: 56px; }
-  .page { display: none; }
-  .page.active { display: block; }
-  
-  /* ── HOME PAGE ─────────────────────────────── */
-  .home-wrapper { max-width: 1100px; margin: 0 auto; padding: 48px 24px 60px; }
-  .home-header { text-align: center; margin-bottom: 40px; }
-  .home-label {
-    color: var(--gold); font-family: monospace; font-size: 12px;
-    text-transform: uppercase; letter-spacing: 4px; margin-bottom: 12px; display: block;
-  }
-  .home-title {
-    font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 58px);
-    font-weight: 900; line-height: 1.1; margin-bottom: 14px;
-  }
-  .home-sub { color: var(--text-dim); font-size: 16px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
-
-  /* ── FILTERS ───────────────────────────────── */
-  .filters { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; justify-content: center; }
-  .filter-sep { width: 1px; background: rgba(255,255,255,0.12); margin: 4px; }
-  .btn-filter {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
-    color: var(--text-muted); border-radius: 20px; padding: 7px 18px;
-    cursor: pointer; font-size: 14px; font-family: inherit; transition: all 0.2s;
-  }
-  .btn-filter.active {
-    background: rgba(229,152,52,0.2); border-color: var(--gold); color: var(--gold); font-weight: 600;
-  }
-  .recipe-count { color: #666; font-size: 13px; text-align: center; margin-bottom: 20px; }
-
-  /* ── RECIPE GRID ───────────────────────────── */
-  .recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-  .recipe-card {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 16px; padding: 22px; cursor: pointer;
-    transition: all 0.25s ease;
-  }
-  .recipe-card:hover {
-    background: rgba(229,152,52,0.08);
-    border-color: rgba(229,152,52,0.4);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-  }
-  .card-emoji { font-size: 42px; margin-bottom: 12px; display: block; }
-  .card-meta { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-family: monospace; }
-  .card-name { color: var(--text); font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
-  .card-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 14px; line-height: 1.6; }
-  .card-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-  .tag {
-    background: rgba(255,255,255,0.07); border-radius: 6px;
-    padding: 3px 9px; color: #bbb; font-size: 12px;
-  }
-
-  /* ── RECIPE PAGE ───────────────────────────── */
-  .recipe-header {
-    background: linear-gradient(180deg, rgba(229,152,52,0.07) 0%, transparent 100%);
-    padding: 24px 32px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  .btn-back {
-    background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-muted);
-    border-radius: 8px; padding: 6px 14px; cursor: pointer; font-size: 13px;
-    margin-bottom: 18px; font-family: inherit; transition: all 0.2s; display: inline-block;
-  }
-  .btn-back:hover { border-color: var(--gold); color: var(--gold); }
-  .recipe-header-inner { display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
-  .recipe-header-left { flex: 1; min-width: 280px; }
-  .recipe-category-badge { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-family: monospace; margin-bottom: 8px; }
-  .recipe-title { font-family: 'Playfair Display', serif; font-size: clamp(22px, 4vw, 34px); font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
-  .recipe-tagline { color: var(--text-muted); font-size: 14px; margin-bottom: 14px; line-height: 1.6; }
-  .recipe-times { display: flex; gap: 10px; flex-wrap: wrap; }
-  .time-badge {
-    background: rgba(255,255,255,0.06); border-radius: 8px; padding: 5px 12px;
-    color: #ccc; font-size: 13px;
-  }
-  .time-badge.total { background: rgba(229,152,52,0.15); color: var(--gold); font-weight: 600; }
-
-  <nav class="top-nav">
-  <a class="back-link" href="../../cuisine.html">←- Accueil</a>
-  <div class="nav-title">Reci<span>Pe</span></div>
-  <div class="toggle-wrap">
-    <span class="toggle-icon">🌙</span>
-    <div class="toggle" id="themeToggle" role="button" tabindex="0"></div>
-    <span class="toggle-icon">☀️</span>
-  </div>
-  </nav>
-  
-  /* Nutrition panel */
-  .nutrition-panel {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 14px; padding: 18px; min-width: 210px; max-width: 250px;
-  }
-  .nutrition-title { color: var(--gold); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-  .servings-control { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .btn-serving {
-    background: rgba(229,152,52,0.2); border: 1px solid var(--gold); color: var(--gold);
-    border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 20px;
-    font-weight: 700; display: flex; align-items: center; justify-content: center;
-    font-family: inherit; line-height: 1; transition: background 0.2s;
-  }
-  .btn-serving:hover { background: rgba(229,152,52,0.35); }
-  .servings-num { color: var(--text); font-size: 22px; font-weight: 700; font-family: 'Playfair Display', serif; min-width: 28px; text-align: center; }
-  .servings-label { color: var(--text-dim); font-size: 13px; }
-  .kcal-box { background: rgba(229,152,52,0.1); border-radius: 8px; padding: 7px 12px; margin-bottom: 12px; text-align: center; }
-  .kcal-num { color: var(--gold); font-weight: 700; font-size: 20px; }
-  .kcal-label { color: var(--text-muted); font-size: 12px; margin-left: 5px; }
-  .macro-row { margin-bottom: 10px; }
-  .macro-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
-  .macro-name { color: var(--text-muted); font-size: 12px; }
-  .macro-val { color: var(--text); font-size: 12px; font-weight: 600; }
-  .macro-track { background: rgba(255,255,255,0.08); border-radius: 4px; height: 6px; overflow: hidden; }
-  .macro-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
-
-  /* ── RECIPE BODY ───────────────────────────── */
-  .recipe-body { display: flex; align-items: flex-start; }
-  .steps-panel { flex: 1; padding: 24px 28px; min-width: 0; }
-  .step-nav { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-  .btn-step {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
-    color: var(--text-muted); border-radius: 8px; padding: 6px 14px;
-    cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s;
-  }
-  .btn-step.active {
-    background: var(--gold); border-color: var(--gold); color: #1a1a2e; font-weight: 700;
-  }
-  .step-card {
-    background: rgba(229,152,52,0.05); border: 1px solid rgba(229,152,52,0.25);
-    border-radius: 16px; padding: 24px;
-  }
-  .step-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
-  .step-label { color: var(--gold); font-family: monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
-  .step-title { color: var(--text); font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.2; }
-  .step-duration {
-    background: rgba(229,152,52,0.15); border: 1px solid rgba(229,152,52,0.3);
-    border-radius: 10px; padding: 6px 14px; text-align: center; flex-shrink: 0;
-  }
-  .step-duration-num { color: var(--gold); font-weight: 700; font-size: 18px; display: block; }
-  .step-duration-unit { color: var(--text-muted); font-size: 11px; }
-  .step-text { color: #d4c5b0; font-size: 15px; line-height: 1.85; margin-bottom: 16px; }
-  .step-tip {
-    background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.25);
-    border-radius: 10px; padding: 12px 16px;
-  }
-  .step-tip p { color: var(--teal); font-size: 14px; line-height: 1.7; }
-  .step-footer { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-  .btn-nav {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    color: #ccc; border-radius: 10px; padding: 10px 20px; cursor: pointer;
-    font-size: 14px; font-family: inherit; transition: all 0.2s;
-  }
-  .btn-nav:hover:not(:disabled) { background: rgba(255,255,255,0.14); }
-  .btn-nav:disabled { opacity: 0.35; cursor: default; }
-  .btn-nav.next {
-    background: rgba(229,152,52,0.2); border-color: var(--gold); color: var(--gold); font-weight: 600;
-  }
-  .btn-nav.next:hover:not(:disabled) { background: rgba(229,152,52,0.35); }
-
-  /* ── INGREDIENTS SIDEBAR ───────────────────── */
-  .ingredients-sidebar {
-    width: 270px; flex-shrink: 0;
-    padding: 24px 20px 24px 0;
-    position: sticky; top: 56px;
-    max-height: calc(100vh - 56px);
-    overflow-y: auto;
-  }
-  .ing-panel {
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-    border-radius: 16px; padding: 16px;
-  }
-  .ing-panel-title { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
-  .ing-item {
-    padding: 8px 10px; border-radius: 8px; margin-bottom: 4px;
-    border: 1px solid transparent;
-    transition: all 0.3s;
-  }
-  .ing-item.active {
-    background: rgba(229,152,52,0.12);
-    border-color: rgba(229,152,52,0.35);
-  }
-  .ing-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
-  .ing-name { color: #888; font-size: 13px; line-height: 1.4; flex: 1; }
-  .ing-item.active .ing-name { color: var(--text); font-weight: 600; }
-  .ing-active-dot { color: var(--gold); margin-right: 4px; font-size: 10px; }
-  .ing-qty { color: #666; font-size: 12px; font-weight: 600; white-space: nowrap; }
-  .ing-item.active .ing-qty { color: var(--gold); }
-  .ing-tip { color: var(--teal); font-size: 11px; margin-top: 4px; line-height: 1.5; font-style: italic; }
-
-  /* ── RESPONSIVE ────────────────────────────── */
-  @media (max-width: 768px) {
-    .recipe-header { padding: 16px; }
-    .recipe-header-inner { flex-direction: column; }
-    .nutrition-panel { max-width: 100%; width: 100%; }
-    .recipe-body { flex-direction: column-reverse; }
-    .ingredients-sidebar { width: 100%; position: static; max-height: none; padding: 0 16px 0; }
-    .steps-panel { padding: 16px; }
-    .timers-wrap { gap: 8px; }
-    .timer-widget { padding: 4px 8px; gap: 5px; }
-    .timer-display { font-size: 14px; min-width: 50px; }
-    .home-wrapper { padding: 32px 16px 48px; }
-  }
-  @media (max-width: 480px) {
-    .timer-brand span { display: none; }
-    .recipe-header { padding: 12px; }
-  }
+:root{--gold:#e59834;--bg:#0d0d1a;--bg2:#1a1a2e;--bg3:#0f2744;--text:#f0e6d3;--text-muted:#aaa;--text-dim:#888;--border:rgba(255,255,255,0.1);--teal:#4ecdc4;--red:#ff6b6b;--yellow:#ffe66d;}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 40%,var(--bg3) 100%);background-attachment:fixed;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:16px;min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:rgba(255,255,255,0.03)}::-webkit-scrollbar-thumb{background:rgba(229,152,52,0.3);border-radius:3px}
+/* TIMER BAR */
+#timer-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;background:linear-gradient(90deg,#1a1a2e,#16213e 50%,#0f3460);border-bottom:2px solid rgba(229,152,52,0.4);display:flex;align-items:center;justify-content:space-between;padding:0 16px;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.timer-left{display:flex;align-items:center;gap:12px}
+.btn-home-link{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.2);color:var(--text-muted);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;font-family:inherit;text-decoration:none;display:flex;align-items:center;gap:5px;transition:all 0.2s;white-space:nowrap}
+.btn-home-link:hover{border-color:var(--gold);color:var(--gold)}
+.timer-brand{display:flex;align-items:center;gap:6px}
+.timer-brand span{color:var(--gold);font-family:'Playfair Display',serif;font-weight:700;font-size:17px;letter-spacing:0.5px}
+.timers-wrap{display:flex;gap:10px}
+.timer-widget{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:4px 10px;transition:all 0.3s}
+.timer-widget.running{background:rgba(229,152,52,0.15);border-color:rgba(229,152,52,0.6)}
+.timer-icon{font-size:13px;color:var(--text-muted)}.timer-widget.running .timer-icon{color:var(--gold)}
+.timer-display{font-family:'Courier New',monospace;font-weight:700;font-size:16px;color:#ccc;min-width:55px;letter-spacing:2px}
+.timer-widget.running .timer-display{color:var(--gold)}
+.btn-timer{background:rgba(255,255,255,0.1);border:none;border-radius:6px;color:#ccc;font-weight:700;cursor:pointer;padding:3px 9px;font-size:12px;transition:all 0.2s;font-family:inherit}
+.timer-widget.running .btn-timer{background:var(--gold);color:#1a1a2e}
+.btn-reset{background:transparent;border:none;color:#888;cursor:pointer;padding:3px 5px;font-size:13px;font-family:inherit;transition:color 0.2s}
+.btn-reset:hover{color:var(--red)}
+/* LAYOUT */
+#app{padding-top:56px}.page{display:none}.page.active{display:block}
+/* HOME */
+.home-wrapper{max-width:1200px;margin:0 auto;padding:44px 24px 60px}
+.home-header{text-align:center;margin-bottom:36px}
+.home-label{color:var(--gold);font-family:monospace;font-size:12px;text-transform:uppercase;letter-spacing:4px;margin-bottom:12px;display:block}
+.home-title{font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,54px);font-weight:900;line-height:1.1;margin-bottom:12px}
+.home-sub{color:var(--text-dim);font-size:15px;max-width:460px;margin:0 auto;line-height:1.6}
+/* FILTERS */
+.filters-section{margin-bottom:28px}
+.filter-row{display:flex;gap:7px;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+.filter-label{color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:6px;font-family:monospace}
+.btn-filter{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:var(--text-muted);border-radius:20px;padding:6px 15px;cursor:pointer;font-size:13px;font-family:inherit;transition:all 0.2s}
+.btn-filter.active{background:rgba(229,152,52,0.2);border-color:var(--gold);color:var(--gold);font-weight:600}
+.filter-divider{width:100%;height:1px;background:rgba(255,255,255,0.06);margin:4px 0}
+.recipe-count{color:#666;font-size:13px;text-align:center;margin-bottom:18px}
+/* GRID */
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.recipe-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;transition:all 0.25s ease}
+.recipe-card:hover{background:rgba(229,152,52,0.08);border-color:rgba(229,152,52,0.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.3)}
+.card-emoji{font-size:38px;margin-bottom:10px;display:block}
+.card-meta{color:var(--gold);font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;font-family:monospace}
+.card-name{color:var(--text);font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:7px;line-height:1.3}
+.card-desc{color:var(--text-muted);font-size:13px;margin-bottom:12px;line-height:1.55}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{background:rgba(255,255,255,0.07);border-radius:6px;padding:3px 8px;color:#bbb;font-size:11px}
+/* RECIPE PAGE */
+.recipe-header{background:linear-gradient(180deg,rgba(229,152,52,0.07) 0%,transparent 100%);padding:22px 28px 18px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.btn-back{background:transparent;border:1px solid rgba(255,255,255,0.2);color:var(--text-muted);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px;margin-bottom:16px;font-family:inherit;transition:all 0.2s;display:inline-block}
+.btn-back:hover{border-color:var(--gold);color:var(--gold)}
+.recipe-header-inner{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap}
+.recipe-header-left{flex:1;min-width:260px}
+.recipe-category-badge{color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:2px;font-family:monospace;margin-bottom:7px}
+.recipe-title{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,32px);font-weight:700;margin-bottom:7px;line-height:1.2}
+.recipe-tagline{color:var(--text-muted);font-size:14px;margin-bottom:12px;line-height:1.6}
+.recipe-times{display:flex;gap:8px;flex-wrap:wrap}
+.time-badge{background:rgba(255,255,255,0.06);border-radius:8px;padding:4px 11px;color:#ccc;font-size:13px}
+.time-badge.total{background:rgba(229,152,52,0.15);color:var(--gold);font-weight:600}
+/* NUTRITION */
+.nutrition-panel{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;padding:16px;min-width:200px;max-width:240px}
+.nutrition-title{color:var(--gold);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:11px}
+.servings-control{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.btn-serving{background:rgba(229,152,52,0.2);border:1px solid var(--gold);color:var(--gold);border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1;transition:background 0.2s}
+.btn-serving:hover{background:rgba(229,152,52,0.35)}
+.servings-num{color:var(--text);font-size:20px;font-weight:700;font-family:'Playfair Display',serif;min-width:26px;text-align:center}
+.servings-label{color:var(--text-dim);font-size:12px}
+.kcal-box{background:rgba(229,152,52,0.1);border-radius:8px;padding:6px 10px;margin-bottom:10px;text-align:center}
+.kcal-num{color:var(--gold);font-weight:700;font-size:18px}
+.kcal-label{color:var(--text-muted);font-size:11px;margin-left:4px}
+.macro-row{margin-bottom:8px}
+.macro-header{display:flex;justify-content:space-between;margin-bottom:3px}
+.macro-name{color:var(--text-muted);font-size:11px}
+.macro-val{color:var(--text);font-size:11px;font-weight:600}
+.macro-track{background:rgba(255,255,255,0.08);border-radius:4px;height:5px;overflow:hidden}
+.macro-fill{height:100%;border-radius:4px;transition:width 0.5s}
+/* RECIPE BODY */
+.recipe-body{display:flex;align-items:flex-start}
+.steps-panel{flex:1;padding:22px 24px;min-width:0}
+.step-nav{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
+.btn-step{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:var(--text-muted);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;font-family:inherit;transition:all 0.2s}
+.btn-step.active{background:var(--gold);border-color:var(--gold);color:#1a1a2e;font-weight:700}
+.step-card{background:rgba(229,152,52,0.05);border:1px solid rgba(229,152,52,0.25);border-radius:16px;padding:22px}
+.step-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px}
+.step-label{color:var(--gold);font-family:monospace;font-size:11px;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.step-title{color:var(--text);font-family:'Playfair Display',serif;font-size:20px;font-weight:700;line-height:1.2}
+.step-duration{background:rgba(229,152,52,0.15);border:1px solid rgba(229,152,52,0.3);border-radius:10px;padding:5px 12px;text-align:center;flex-shrink:0}
+.step-duration-num{color:var(--gold);font-weight:700;font-size:17px;display:block}
+.step-duration-unit{color:var(--text-muted);font-size:10px}
+.step-text{color:#d4c5b0;font-size:15px;line-height:1.85;margin-bottom:14px}
+.step-tip{background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.25);border-radius:10px;padding:11px 14px}
+.step-tip p{color:var(--teal);font-size:13px;line-height:1.7}
+.step-footer{display:flex;justify-content:space-between;margin-top:18px;gap:8px}
+.btn-nav{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;border-radius:10px;padding:9px 18px;cursor:pointer;font-size:13px;font-family:inherit;transition:all 0.2s}
+.btn-nav:hover:not(:disabled){background:rgba(255,255,255,0.14)}
+.btn-nav:disabled{opacity:0.35;cursor:default}
+.btn-nav.next{background:rgba(229,152,52,0.2);border-color:var(--gold);color:var(--gold);font-weight:600}
+.btn-nav.next:hover:not(:disabled){background:rgba(229,152,52,0.35)}
+/* INGREDIENTS SIDEBAR */
+.ingredients-sidebar{width:260px;flex-shrink:0;padding:22px 16px 22px 0;position:sticky;top:56px;max-height:calc(100vh - 56px);overflow-y:auto}
+.ing-panel{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:16px;padding:14px}
+.ing-panel-title{color:var(--gold);font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+.ing-item{padding:7px 9px;border-radius:8px;margin-bottom:3px;border:1px solid transparent;transition:all 0.3s}
+.ing-item.active{background:rgba(229,152,52,0.12);border-color:rgba(229,152,52,0.35)}
+.ing-row{display:flex;justify-content:space-between;align-items:flex-start;gap:5px}
+.ing-name{color:#888;font-size:12px;line-height:1.4;flex:1}
+.ing-item.active .ing-name{color:var(--text);font-weight:600}
+.ing-active-dot{color:var(--gold);margin-right:3px;font-size:9px}
+.ing-qty{color:#666;font-size:11px;font-weight:600;white-space:nowrap}
+.ing-item.active .ing-qty{color:var(--gold)}
+.ing-tip{color:var(--teal);font-size:10px;margin-top:3px;line-height:1.5;font-style:italic}
+/* RESPONSIVE */
+@media(max-width:768px){
+  .recipe-header{padding:14px}.recipe-header-inner{flex-direction:column}.nutrition-panel{max-width:100%;width:100%}
+  .recipe-body{flex-direction:column-reverse}.ingredients-sidebar{width:100%;position:static;max-height:none;padding:0 14px}
+  .steps-panel{padding:14px}.timers-wrap{gap:6px}.timer-widget{padding:3px 7px;gap:4px}.timer-display{font-size:14px;min-width:48px}
+  .home-wrapper{padding:28px 14px 44px}
+}
+@media(max-width:480px){.timer-brand span{display:none}.btn-home-link span{display:none}}
 </style>
 </head>
 <body>
-
 <div id="timer-bar">
-  <div class="timer-brand">
-    <span>👨‍🍳</span>
-    <span>Ma Cuisine</span>
+  <div class="timer-left">
+    <div class="timer-brand"><span>👨‍🍳</span><span>Ma Cuisine</span></div>
+    <a class="btn-home-link" href="https://alaniadev.github.io/MM1/index.html" target="_blank" rel="noopener">🏠 <span>Accueil MM1</span></a>
   </div>
   <div class="timers-wrap">
-    <div class="timer-widget" id="tw1">
-      <span class="timer-icon">⏱</span>
-      <span class="timer-display" id="td1">00:00</span>
-      <button class="btn-timer" onclick="timerToggle(1)">▶</button>
-      <button class="btn-reset" onclick="timerReset(1)" title="Reset">↺</button>
-    </div>
-    <div class="timer-widget" id="tw2">
-      <span class="timer-icon">⏱</span>
-      <span class="timer-display" id="td2">00:00</span>
-      <button class="btn-timer" onclick="timerToggle(2)">▶</button>
-      <button class="btn-reset" onclick="timerReset(2)" title="Reset">↺</button>
-    </div>
+    <div class="timer-widget" id="tw1"><span class="timer-icon">⏱</span><span class="timer-display" id="td1">00:00</span><button class="btn-timer" onclick="timerToggle(1)">▶</button><button class="btn-reset" onclick="timerReset(1)" title="Reset">↺</button></div>
+    <div class="timer-widget" id="tw2"><span class="timer-icon">⏱</span><span class="timer-display" id="td2">00:00</span><button class="btn-timer" onclick="timerToggle(2)">▶</button><button class="btn-reset" onclick="timerReset(2)" title="Reset">↺</button></div>
   </div>
 </div>
-
 <div id="app">
-  <!-- HOME PAGE -->
   <div id="page-home" class="page active">
     <div class="home-wrapper">
       <div class="home-header">
@@ -318,22 +147,37 @@
         <h1 class="home-title">Ma Cuisine 🍳</h1>
         <p class="home-sub">Toutes les recettes expliquées pas à pas, avec conseils et astuces pour apprendre à cuisiner facilement.</p>
       </div>
-
-      <div class="filters">
-        <button class="btn-filter active" data-cat="all" onclick="setFilter('cat','all',this)">Toutes les recettes</button>
-        <button class="btn-filter" data-cat="plat" onclick="setFilter('cat','plat',this)">🍽️ Plats</button>
-        <button class="btn-filter" data-cat="dessert" onclick="setFilter('cat','dessert',this)">🍰 Desserts</button>
-        <div class="filter-sep"></div>
-        <button class="btn-filter active" data-oven="all" onclick="setFilter('oven','all',this)">Toutes cuissons</button>
-        <button class="btn-filter" data-oven="noOven" onclick="setFilter('oven','noOven',this)">🚫 Sans four</button>
-        <button class="btn-filter" data-oven="oven" onclick="setFilter('oven','oven',this)">🔥 Avec four</button>
+      <div class="filters-section">
+        <div class="filter-label">Catégorie</div>
+        <div class="filter-row" id="filter-cat">
+          <button class="btn-filter active" onclick="setFilter('cat','all',this)">Toutes</button>
+          <button class="btn-filter" onclick="setFilter('cat','plat',this)">🍽️ Plats</button>
+          <button class="btn-filter" onclick="setFilter('cat','dessert',this)">🍰 Desserts</button>
+          <button class="btn-filter" onclick="setFilter('cat','veggie',this)">🥦 Sans viande</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-label">Cuisson</div>
+        <div class="filter-row" id="filter-oven">
+          <button class="btn-filter active" onclick="setFilter('oven','all',this)">Toutes cuissons</button>
+          <button class="btn-filter" onclick="setFilter('oven','noOven',this)">🚫 Sans four</button>
+          <button class="btn-filter" onclick="setFilter('oven','oven',this)">🔥 Avec four</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-label">Type de viande</div>
+        <div class="filter-row" id="filter-meat">
+          <button class="btn-filter active" onclick="setFilter('meat','all',this)">Toutes</button>
+          <button class="btn-filter" onclick="setFilter('meat','porc',this)">🐷 Porc</button>
+          <button class="btn-filter" onclick="setFilter('meat','boeuf',this)">🐄 Bœuf</button>
+          <button class="btn-filter" onclick="setFilter('meat','poulet',this)">🐔 Poulet</button>
+          <button class="btn-filter" onclick="setFilter('meat','veau',this)">🐮 Veau</button>
+          <button class="btn-filter" onclick="setFilter('meat','poisson',this)">🐟 Poisson</button>
+          <button class="btn-filter" onclick="setFilter('meat','none',this)">🥦 Sans viande</button>
+        </div>
       </div>
       <p class="recipe-count" id="recipe-count"></p>
       <div class="recipe-grid" id="recipe-grid"></div>
     </div>
   </div>
-
-  <!-- RECIPE PAGE -->
   <div id="page-recipe" class="page">
     <div class="recipe-header">
       <button class="btn-back" onclick="showHome()">← Retour aux recettes</button>
@@ -356,15 +200,11 @@
             <button class="btn-serving" onclick="changeServings(1)">+</button>
             <span class="servings-label">personnes</span>
           </div>
-          <div class="kcal-box">
-            <span class="kcal-num" id="kcal-val">—</span>
-            <span class="kcal-label">kcal total</span>
-          </div>
+          <div class="kcal-box"><span class="kcal-num" id="kcal-val">—</span><span class="kcal-label">kcal total</span></div>
           <div id="macros-panel"></div>
         </div>
       </div>
     </div>
-
     <div class="recipe-body">
       <div class="steps-panel">
         <div class="step-nav" id="step-nav"></div>
@@ -383,529 +223,1343 @@
     </div>
   </div>
 </div>
-
 <script>
-// ─── DATA ─────────────────────────────────────────────────────────────────
-
 const RECIPES = [
-  {
-    id: 1,
-    name: "Émincé de porc aux légumes façon wok",
-    emoji: "🥢",
-    category: "plat",
-    needsOven: false,
-    prepTime: 15,
-    cookTime: 15,
-    baseServings: 4,
-    kcalPerServing: 380,
-    macros: { proteines: 32, lipides: 14, glucides: 18, fibres: 4 },
-    description: "Un plat asiatique savoureux, coloré et rapide à préparer. Parfait pour un repas équilibré en semaine.",
-    tips: "Le secret du wok : feu très vif et ingrédients coupés en petits morceaux pour une cuisson rapide et homogène.",
-    ingredients: [
-      { id:"i1", name:"Filet de porc", qty:600, unit:"g", tip:"Coupez-le en fines lamelles dans le sens contraire des fibres pour qu'il soit plus tendre." },
-      { id:"i2", name:"Poivron rouge", qty:1, unit:"pièce", tip:"Lavez-le, coupez le haut et le bas, retirez les graines blanches, puis tranchez en lanières." },
-      { id:"i3", name:"Poivron jaune", qty:1, unit:"pièce", tip:"Même technique que le rouge." },
-      { id:"i4", name:"Courgette", qty:1, unit:"pièce", tip:"Lavez-la, pas besoin d'éplucher. Coupez en rondelles de 5mm." },
-      { id:"i5", name:"Carotte", qty:2, unit:"pièces", tip:"Épluchez avec un économe, taillez en fins bâtonnets pour qu'elles cuisent vite." },
-      { id:"i6", name:"Oignon", qty:1, unit:"pièce", tip:"Épluchez et émincez finement. Pour ne pas pleurer, réfrigérez-le 15 min avant." },
-      { id:"i7", name:"Gousses d'ail", qty:3, unit:"pièces", tip:"Écrasez avec le plat du couteau pour retirer la peau, puis hachez finement." },
-      { id:"i8", name:"Sauce soja", qty:4, unit:"c.à.s", tip:"Utilisez de la sauce soja claire pour saler." },
-      { id:"i9", name:"Huile de sésame", qty:1, unit:"c.à.s", tip:"Ajoutez-la en fin de cuisson, jamais au début : elle brûle et perd son arôme." },
-      { id:"i10", name:"Huile neutre", qty:2, unit:"c.à.s", tip:"Pour la cuisson au wok." },
-      { id:"i11", name:"Gingembre frais", qty:1, unit:"cm", tip:"Épluchez avec une cuillère et râpez finement." },
-      { id:"i12", name:"Maïzena", qty:1, unit:"c.à.s", tip:"Servira à épaissir légèrement la sauce." },
-      { id:"i13", name:"Sel, poivre", qty:0, unit:"", tip:"" },
-    ],
-    steps: [
-      { id:"s1", title:"Préparer la viande", duration:10, ingredientIds:["i1","i8","i12"],
-        text:"Coupez le filet de porc en fines lamelles (environ 5mm d'épaisseur). Dans un bol, mélangez les lamelles avec 2 c.à.s de sauce soja et la maïzena. Mélangez bien pour enrober chaque morceau. Cette étape s'appelle la marinade et elle va attendrir la viande et lui donner du goût.",
-        tip:"✨ Astuce débutant : plus les lamelles sont fines, plus elles cuisent vite et restent tendres. Utilisez un couteau bien aiguisé ou mettez la viande 20 min au congélateur avant de couper." },
-      { id:"s2", title:"Préparer les légumes", duration:10, ingredientIds:["i2","i3","i4","i5","i6","i7","i11"],
-        text:"Lavez tous les légumes. Coupez les poivrons en lanières, la courgette en demi-rondelles, les carottes en fins bâtonnets. Émincez l'oignon finement. Hachez l'ail et le gingembre. Rangez chaque légume dans un petit bol séparé — au wok, tout va très vite et vous n'aurez pas le temps de couper pendant la cuisson !",
-        tip:"✨ Astuce : Préparez tout AVANT de commencer à cuire. Au wok, on ne quitte pas la casserole des yeux !" },
-      { id:"s3", title:"Saisir la viande", duration:5, ingredientIds:["i1","i10"],
-        text:"Chauffez votre wok (ou grande poêle) à feu très vif jusqu'à ce qu'il fume légèrement. Ajoutez l'huile neutre. Versez les lamelles de porc en une seule couche. Ne touchez pas pendant 1 minute pour qu'elles colorent bien. Puis remuez et continuez 2-3 minutes. Réservez la viande dans une assiette.",
-        tip:"✨ Astuce : Si votre wok est trop petit, faites la viande en 2 fois. Si vous entassez tout, les aliments cuisent à la vapeur au lieu de dorer." },
-      { id:"s4", title:"Cuire les légumes", duration:8, ingredientIds:["i6","i7","i11","i5","i2","i3","i4","i10"],
-        text:"Dans le même wok chaud, ajoutez un filet d'huile si nécessaire. Faites revenir l'oignon, l'ail et le gingembre 1 minute. Ajoutez les carottes 2 minutes, puis les poivrons 2 minutes, et enfin la courgette 2 minutes. Les légumes doivent rester légèrement croquants — c'est le secret du wok !",
-        tip:"✨ Astuce : On ajoute les légumes les plus durs en premier (carotte) et les plus tendres en dernier (courgette)." },
-      { id:"s5", title:"Finir et assaisonner", duration:3, ingredientIds:["i1","i8","i9","i13"],
-        text:"Remettez la viande dans le wok avec les légumes. Versez le reste de sauce soja (2 c.à.s). Mélangez bien pendant 1 minute sur feu vif. Hors du feu, ajoutez l'huile de sésame et mélangez. Goûtez et ajustez le sel et le poivre. Servez immédiatement avec du riz blanc.",
-        tip:"✨ Astuce : L'huile de sésame s'ajoute toujours hors du feu. C'est une huile aromatique, pas une huile de cuisson !" }
-    ]
-  },
-  {
-    id: 2,
-    name: "Émincé de bœuf au poivron",
-    emoji: "🥩",
-    category: "plat",
-    needsOven: false,
-    prepTime: 10,
-    cookTime: 15,
-    baseServings: 4,
-    kcalPerServing: 420,
-    macros: { proteines: 38, lipides: 18, glucides: 12, fibres: 3 },
-    description: "Un classique de la cuisine du quotidien, savoureux et nourrissant. La tendresse du bœuf avec le sucré des poivrons.",
-    tips: "La clé : une poêle très chaude pour bien saisir la viande et garder son jus à l'intérieur.",
-    ingredients: [
-      { id:"i1", name:"Steak ou rumsteck", qty:600, unit:"g", tip:"Demandez à votre boucher de la viande à fondue. Sinon, mettez 20 min au congélateur et coupez en lamelles fines." },
-      { id:"i2", name:"Poivron rouge", qty:2, unit:"pièces", tip:"Lavez, épépinez, coupez en lanières de 1cm." },
-      { id:"i3", name:"Poivron vert", qty:1, unit:"pièce", tip:"Plus amer que le rouge, il apporte du caractère au plat." },
-      { id:"i4", name:"Oignon", qty:2, unit:"pièces", tip:"Épluchez et coupez en demi-rondelles." },
-      { id:"i5", name:"Gousses d'ail", qty:3, unit:"pièces", tip:"Hachez finement après avoir retiré la peau." },
-      { id:"i6", name:"Concentré de tomate", qty:2, unit:"c.à.s", tip:"Donne de la profondeur et de la couleur à la sauce." },
-      { id:"i7", name:"Fond de veau ou de bœuf", qty:200, unit:"ml", tip:"En brick au supermarché. À défaut, eau chaude + cube de bouillon." },
-      { id:"i8", name:"Huile d'olive", qty:2, unit:"c.à.s", tip:"" },
-      { id:"i9", name:"Thym, laurier", qty:0, unit:"", tip:"Les herbes de Provence fonctionnent très bien aussi." },
-      { id:"i10", name:"Sel, poivre", qty:0, unit:"", tip:"" },
-      { id:"i11", name:"Maïzena (optionnel)", qty:1, unit:"c.à.c", tip:"Pour épaissir la sauce si elle est trop liquide." },
-    ],
-    steps: [
-      { id:"s1", title:"Préparer les ingrédients", duration:10, ingredientIds:["i1","i2","i3","i4","i5"],
-        text:"Coupez la viande en lamelles fines. Lavez et épépinez les poivrons, taillez-les en lanières. Épluchez et émincez les oignons en demi-rondelles. Hachez l'ail finement. Salez et poivrez la viande.",
-        tip:"✨ Astuce : Sortez la viande du réfrigérateur 15 minutes avant de cuire. Une viande à température ambiante saisit mieux qu'une viande froide." },
-      { id:"s2", title:"Saisir le bœuf", duration:5, ingredientIds:["i1","i8"],
-        text:"Chauffez une grande poêle à feu vif avec l'huile d'olive. Quand l'huile est bien chaude, ajoutez les lamelles de bœuf. Étalez-les bien et ne les bougez pas pendant 1 minute. Retournez et cuisez encore 1 minute. Le but est de les colorer, pas de les cuire à cœur. Réservez sur une assiette.",
-        tip:"✨ Astuce débutant : Si vous voyez de l'eau se former dans la poêle, la température n'est pas assez élevée. Augmentez le feu et faites la viande en 2 fois si nécessaire." },
-      { id:"s3", title:"Faire revenir les légumes", duration:8, ingredientIds:["i4","i5","i2","i3","i6","i9"],
-        text:"Dans la même poêle (sans nettoyer), baissez un peu le feu. Faites revenir les oignons 3 minutes jusqu'à ce qu'ils soient translucides. Ajoutez l'ail et les poivrons, cuisez 5 minutes en mélangeant régulièrement. Ajoutez le concentré de tomate et le thym/laurier, mélangez 1 minute.",
-        tip:"✨ Astuce : Un oignon est 'translucide' quand il devient presque transparent et doux. C'est le signe qu'il a perdu son âcreté." },
-      { id:"s4", title:"Préparer la sauce", duration:7, ingredientIds:["i7","i11","i1","i10"],
-        text:"Versez le fond de veau dans la poêle. Grattez bien le fond avec une cuillère en bois pour décoller tous les sucs caramélisés. Laissez mijoter 5 minutes. Si la sauce est trop liquide, délayez la maïzena dans 2 c.à.s d'eau froide et versez dans la sauce. Remettez la viande, mélangez et goûtez.",
-        tip:"✨ Astuce : Cette technique s'appelle 'déglacer'. Les petits morceaux collés au fond sont concentrés en goût. Ne les gâchez jamais !" }
-    ]
-  },
-  {
-    id: 3,
-    name: "Bœuf Stroganoff",
-    emoji: "🍲",
-    category: "plat",
-    needsOven: false,
-    prepTime: 15,
-    cookTime: 25,
-    baseServings: 4,
-    kcalPerServing: 520,
-    macros: { proteines: 35, lipides: 28, glucides: 15, fibres: 2 },
-    description: "Un grand classique russe crémeux et réconfortant. La crème fraîche et les champignons font toute la magie.",
-    tips: "Ne faites jamais bouillir la crème fraîche trop longtemps, elle risque de tourner. Feu doux en fin de cuisson.",
-    ingredients: [
-      { id:"i1", name:"Bœuf (faux-filet ou rumsteck)", qty:600, unit:"g", tip:"Coupez en lamelles de 1cm de large et 5cm de long. Des morceaux réguliers cuisent de façon homogène." },
-      { id:"i2", name:"Champignons de Paris", qty:300, unit:"g", tip:"Ne les lavez PAS sous l'eau. Essuyez-les avec un papier absorbant humide. Tranchez en 5mm." },
-      { id:"i3", name:"Oignon", qty:2, unit:"pièces", tip:"Émincez finement en demi-rondelles." },
-      { id:"i4", name:"Gousses d'ail", qty:2, unit:"pièces", tip:"Hachez finement." },
-      { id:"i5", name:"Crème fraîche épaisse", qty:200, unit:"ml", tip:"Sortez-la 30 min avant pour qu'elle soit à température ambiante." },
-      { id:"i6", name:"Moutarde de Dijon", qty:1, unit:"c.à.s", tip:"Apporte du caractère et lie la sauce." },
-      { id:"i7", name:"Bouillon de bœuf", qty:150, unit:"ml", tip:"Un demi-cube dilué dans 150ml d'eau chaude convient." },
-      { id:"i8", name:"Beurre", qty:30, unit:"g", tip:"Le beurre donne plus de richesse que l'huile pour ce plat." },
-      { id:"i9", name:"Huile", qty:1, unit:"c.à.s", tip:"Mélanger beurre + huile évite que le beurre brûle." },
-      { id:"i10", name:"Paprika doux", qty:1, unit:"c.à.c", tip:"La signature du stroganoff ! Donne couleur et douceur." },
-      { id:"i11", name:"Sel, poivre", qty:0, unit:"", tip:"" },
-      { id:"i12", name:"Persil frais", qty:1, unit:"bouquet", tip:"Hachez les feuilles finement, jetez les tiges." },
-    ],
-    steps: [
-      { id:"s1", title:"Préparer et assaisonner la viande", duration:10, ingredientIds:["i1","i10","i11"],
-        text:"Coupez le bœuf en lamelles régulières. Dans un bol, saupoudrez de paprika, sel et poivre. Mélangez pour bien enrober chaque morceau.",
-        tip:"✨ Astuce : Le paprika brûle facilement. On l'ajoute d'abord sur la viande crue plutôt que directement dans la poêle très chaude." },
-      { id:"s2", title:"Saisir la viande", duration:5, ingredientIds:["i1","i8","i9"],
-        text:"Chauffez 1 c.à.s d'huile + 15g de beurre dans une grande poêle à feu vif. Quand le beurre mousse, ajoutez les lamelles. Cuisez 2-3 minutes en les retournant. Elles doivent être dorées à l'extérieur mais légèrement rosées à l'intérieur. Réservez sur une assiette.",
-        tip:"✨ Astuce : 'Réserver' = mettre de côté dans une assiette. La viande va continuer à cuire légèrement avec sa propre chaleur." },
-      { id:"s3", title:"Faire revenir oignons et champignons", duration:10, ingredientIds:["i3","i4","i2","i8"],
-        text:"Dans la même poêle avec le reste de beurre, faites revenir les oignons à feu moyen 3-4 minutes. Ajoutez l'ail et cuisez 1 minute. Ajoutez les champignons — ils vont d'abord rejeter de l'eau (c'est normal), attendez qu'elle s'évapore complètement (3-4 min) pour que les champignons dorent.",
-        tip:"✨ Astuce champignons : Ils contiennent beaucoup d'eau. Au début ils 'mouillent' la poêle. C'est normal ! Continuez à cuire jusqu'à ce que l'eau disparaisse et qu'ils dorent." },
-      { id:"s4", title:"Faire la sauce crémeuse", duration:8, ingredientIds:["i7","i5","i6","i11"],
-        text:"Versez le bouillon dans la poêle et grattez le fond. Laissez réduire 3 minutes. Baissez le feu à doux. Incorporez la moutarde et mélangez. Ajoutez la crème fraîche et mélangez doucement. NE PAS faire bouillir à gros bouillons. Laissez frémir 3-4 minutes. Goûtez et rectifiez.",
-        tip:"✨ Astuce : La crème 'tranche' quand elle se sépare sous l'effet d'une chaleur trop forte. Feu doux et patience !" },
-      { id:"s5", title:"Finition", duration:3, ingredientIds:["i1","i12"],
-        text:"Remettez les lamelles de bœuf dans la sauce. Mélangez délicatement et réchauffez 2-3 minutes à feu doux. Ne cuisez plus longtemps pour ne pas durcir la viande. Parsemez de persil haché. Servez avec des tagliatelles, du riz ou des pommes de terre vapeur.",
-        tip:"✨ Astuce : Le persil frais haché apporte de la fraîcheur et de la couleur. Évitez le persil séché qui n'a presque aucun goût." }
-    ]
-  },
-  {
-    id: 4,
-    name: "Poulet Curry",
-    emoji: "🍛",
-    category: "plat",
-    needsOven: false,
-    prepTime: 15,
-    cookTime: 30,
-    baseServings: 4,
-    kcalPerServing: 460,
-    macros: { proteines: 40, lipides: 20, glucides: 22, fibres: 5 },
-    description: "Un curry de poulet onctueux et parfumé, inspiré de la cuisine indienne. Doux ou épicé selon votre goût.",
-    tips: "Toastez toujours vos épices en début de cuisson pour révéler tous leurs arômes. C'est le secret des bons currys.",
-    ingredients: [
-      { id:"i1", name:"Cuisses ou blancs de poulet", qty:800, unit:"g", tip:"Les cuisses sont plus moelleuses. Coupez en gros cubes de 3-4cm." },
-      { id:"i2", name:"Lait de coco", qty:400, unit:"ml (1 boîte)", tip:"Agitez la boîte avant d'ouvrir. Utilisez tout le contenu." },
-      { id:"i3", name:"Tomates concassées", qty:400, unit:"ml (1 boîte)", tip:"En boîte, c'est pratique et tout aussi bon." },
-      { id:"i4", name:"Oignon", qty:2, unit:"pièces", tip:"Hachez finement. Plus ils sont fins, plus ils fondront dans la sauce." },
-      { id:"i5", name:"Gousses d'ail", qty:4, unit:"pièces", tip:"Hachez ou pressez. L'ail est la base du curry." },
-      { id:"i6", name:"Gingembre frais", qty:3, unit:"cm", tip:"Épluchez avec une cuillère et râpez finement. Essentiel pour le curry !" },
-      { id:"i7", name:"Poudre de curry", qty:2, unit:"c.à.s", tip:"Commencez par 1 c.à.s si vous aimez doux." },
-      { id:"i8", name:"Curcuma", qty:1, unit:"c.à.c", tip:"Donne la belle couleur jaune. Attention, ça tache !" },
-      { id:"i9", name:"Cumin", qty:1, unit:"c.à.c", tip:"Apporte une note chaude et légèrement fumée." },
-      { id:"i10", name:"Huile neutre", qty:2, unit:"c.à.s", tip:"" },
-      { id:"i11", name:"Sel, poivre", qty:0, unit:"", tip:"" },
-      { id:"i12", name:"Coriandre fraîche", qty:1, unit:"bouquet", tip:"Optionnel. Si vous n'aimez pas, du persil frais fonctionne aussi." },
-      { id:"i13", name:"Jus de citron", qty:0.5, unit:"pièce", tip:"Un filet en fin de cuisson pour équilibrer la richesse du plat." },
-    ],
-    steps: [
-      { id:"s1", title:"Préparer le poulet", duration:10, ingredientIds:["i1","i7","i8","i11"],
-        text:"Coupez le poulet en cubes de 3-4cm. Saupoudrez avec la moitié du curry et le curcuma, salez et poivrez. Mélangez pour enrober. Ce pré-assaisonnement est une mini-marinade express qui commence à aromatiser la viande.",
-        tip:"✨ Astuce : Le curcuma tache tout (vêtements, plan de travail, ongles !). Mettez un torchon sur votre plan de travail." },
-      { id:"s2", title:"Toaster les épices", duration:8, ingredientIds:["i10","i4","i5","i6","i7","i9"],
-        text:"Chauffez l'huile dans une grande casserole à feu moyen. Faites revenir les oignons hachés 5 minutes jusqu'à ce qu'ils soient bien dorés. Ajoutez l'ail, le gingembre et le reste des épices (curry, cumin). Mélangez 2 minutes — vous devez sentir les épices se réveiller.",
-        tip:"✨ Astuce crucial : Faire revenir les épices dans la matière grasse libère leurs arômes. Ne sautez jamais cette étape !" },
-      { id:"s3", title:"Saisir le poulet", duration:5, ingredientIds:["i1"],
-        text:"Montez le feu à vif. Ajoutez les cubes de poulet assaisonnés dans la casserole. Faites-les dorer sur toutes leurs faces, environ 3-4 minutes. Ne couvrez pas, le but est de colorer, pas de cuire à la vapeur.",
-        tip:"✨ Astuce : La coloration développe des dizaines de nouvelles saveurs. Un poulet bien doré est infiniment plus savoureux !" },
-      { id:"s4", title:"Mijotage", duration:25, ingredientIds:["i3","i2","i11"],
-        text:"Ajoutez les tomates concassées et le lait de coco. Mélangez bien. Portez à légère ébullition, puis baissez le feu au minimum. Couvrez et laissez mijoter 20-25 minutes. Le poulet est cuit quand il n'est plus rosé à l'intérieur. Goûtez et ajustez.",
-        tip:"✨ Astuce : Mijoter = cuire à petits bouillons très doux. C'est ce qui permet à la viande de s'attendrir et aux saveurs de se mélanger." },
-      { id:"s5", title:"Finition et dressage", duration:2, ingredientIds:["i12","i13"],
-        text:"Pressez un demi-citron dans le curry et mélangez. Parsemez de coriandre (ou persil) frais haché. Servez avec du riz basmati. Pour le riz : rincez 3 fois, cuisez dans 2 volumes d'eau salée pendant 12 minutes à feu doux.",
-        tip:"✨ Astuce : Le citron en fin de cuisson 'réveille' toutes les saveurs du plat. Essayez de goûter avant et après — la différence est spectaculaire !" }
-    ]
-  },
-  {
-    id: 5,
-    name: "Pain Perdu",
-    emoji: "🍞",
-    category: "dessert",
-    needsOven: false,
-    prepTime: 10,
-    cookTime: 10,
-    baseServings: 4,
-    kcalPerServing: 340,
-    macros: { proteines: 12, lipides: 14, glucides: 42, fibres: 2 },
-    description: "La recette anti-gaspi parfaite pour finir le vieux pain. Croustillant dehors, fondant dedans.",
-    tips: "Le secret : bien tremper le pain pour qu'il s'imbibe mais ne s'effondre pas. Un pain légèrement rassis est idéal.",
-    ingredients: [
-      { id:"i1", name:"Pain (baguette ou pain de mie)", qty:8, unit:"tranches épaisses", tip:"Un pain rassis d'1-2 jours est idéal : il absorbe mieux sans se désintégrer. Tranches de 2cm." },
-      { id:"i2", name:"Œufs", qty:3, unit:"pièces", tip:"Cassez chaque œuf dans un petit bol avant d'ajouter au mélange." },
-      { id:"i3", name:"Lait", qty:200, unit:"ml", tip:"Entier de préférence pour plus d'onctuosité." },
-      { id:"i4", name:"Sucre", qty:3, unit:"c.à.s", tip:"Vanillé si vous en avez." },
-      { id:"i5", name:"Extrait de vanille", qty:1, unit:"c.à.c", tip:"Optionnel mais transforme complètement le plat." },
-      { id:"i6", name:"Cannelle (optionnel)", qty:0.5, unit:"c.à.c", tip:"Se marie parfaitement avec la vanille." },
-      { id:"i7", name:"Beurre", qty:40, unit:"g", tip:"Le beurre donne cette belle couleur dorée et ce goût inimitable." },
-      { id:"i8", name:"Sucre glace ou confiture", qty:0, unit:"pour servir", tip:"Pour la décoration finale." },
-    ],
-    steps: [
-      { id:"s1", title:"Préparer l'appareil", duration:5, ingredientIds:["i2","i3","i4","i5","i6"],
-        text:"Dans un plat creux (assiette à soupe), cassez les œufs et battez-les à la fourchette. Ajoutez le lait, le sucre, la vanille et la cannelle. Fouettez jusqu'à obtenir un mélange homogène. Ce mélange s'appelle un 'appareil' en cuisine.",
-        tip:"✨ Astuce : Un plat assez grand pour tremper une tranche à plat est idéal." },
-      { id:"s2", title:"Tremper le pain", duration:5, ingredientIds:["i1"],
-        text:"Déposez les tranches de pain dans l'appareil. Attendez 1-2 minutes, puis retournez-les délicatement. Le pain doit être bien imbibé mais encore se tenir.",
-        tip:"✨ Astuce : Trop trempé = le pain se désintègre. Pas assez = le cœur reste sec. Cherchez le juste milieu !" },
-      { id:"s3", title:"Cuisson à la poêle", duration:8, ingredientIds:["i7","i1"],
-        text:"Faites fondre le beurre dans une grande poêle à feu moyen. Quand il mousse et sent la noisette, déposez les tranches imbibées. Cuisez 2-3 minutes de chaque côté jusqu'à ce qu'elles soient bien dorées.",
-        tip:"✨ Astuce : Le beurre 'noisette' donne une saveur extraordinaire. Mais entre noisette et brûlé, c'est très rapide !" },
-      { id:"s4", title:"Service", duration:2, ingredientIds:["i8"],
-        text:"Déposez les tranches dorées dans une assiette. Saupoudrez de sucre glace à travers une passoire fine. Accompagnez de confiture, fruits frais, miel, ou glace vanille.",
-        tip:"✨ Astuce : Le pain perdu se mange chaud, immédiatement. Il perd de sa magie en refroidissant !" }
-    ]
-  },
-  {
-    id: 6,
-    name: "Crêpes",
-    emoji: "🥞",
-    category: "dessert",
-    needsOven: false,
-    prepTime: 10,
-    cookTime: 20,
-    baseServings: 4,
-    kcalPerServing: 280,
-    macros: { proteines: 9, lipides: 10, glucides: 38, fibres: 1 },
-    description: "La recette traditionnelle des crêpes bretonnes. Fines, dorées, délicieuses.",
-    tips: "La pâte doit reposer au moins 30 minutes au réfrigérateur — c'est le secret d'une pâte sans grumeaux.",
-    ingredients: [
-      { id:"i1", name:"Farine", qty:250, unit:"g", tip:"Farine T45 ou T55. Tamisez-la pour éviter les grumeaux." },
-      { id:"i2", name:"Œufs", qty:3, unit:"pièces", tip:"À température ambiante. Ils s'incorporent mieux que des œufs froids." },
-      { id:"i3", name:"Lait", qty:500, unit:"ml", tip:"Entier pour des crêpes riches. Versez-le progressivement." },
-      { id:"i4", name:"Beurre fondu", qty:50, unit:"g", tip:"Faites fondre au micro-ondes 30 sec. Laissez refroidir avant d'incorporer." },
-      { id:"i5", name:"Sucre", qty:1, unit:"c.à.s", tip:"Pour les crêpes sucrées. Omettez pour des galettes." },
-      { id:"i6", name:"Sel", qty:1, unit:"pincée", tip:"Même pour les crêpes sucrées — rehausse tous les arômes." },
-      { id:"i7", name:"Extrait de vanille", qty:1, unit:"c.à.c", tip:"Optionnel mais très bon." },
-      { id:"i8", name:"Rhum ou fleur d'oranger", qty:1, unit:"c.à.s", tip:"Optionnel, pour parfumer comme en Bretagne." },
-      { id:"i9", name:"Huile pour la poêle", qty:1, unit:"c.à.s", tip:"Pour graisser la poêle entre chaque crêpe." },
-    ],
-    steps: [
-      { id:"s1", title:"Préparer la pâte", duration:10, ingredientIds:["i1","i2","i3","i4","i5","i6","i7","i8"],
-        text:"Dans un grand saladier, mettez la farine tamisée, le sucre et le sel. Faites un puits (un trou) au centre. Cassez les œufs dans le puits et commencez à mélanger avec un fouet, en incorporant la farine depuis les bords vers le centre. Ajoutez le lait petit à petit tout en fouettant. Terminez par le beurre fondu refroidi, la vanille et le rhum.",
-        tip:"✨ Astuce débutant : La méthode du puits évite les grumeaux. Si vous en avez quand même, mixez la pâte 30 secondes !" },
-      { id:"s2", title:"Repos de la pâte", duration:30, ingredientIds:[],
-        text:"Couvrez le saladier d'un film plastique et laissez reposer au réfrigérateur au minimum 30 minutes (idéalement 1 heure). Le gluten se détend et la pâte devient plus lisse. La crêpe sera plus fine et souple.",
-        tip:"✨ Astuce : Le repos n'est pas optionnel ! Profitez de ce temps pour préparer vos garnitures." },
-      { id:"s3", title:"Cuire les crêpes", duration:20, ingredientIds:["i9"],
-        text:"Sortez la pâte du réfrigérateur. Chauffez une poêle à crêpes à feu moyen-vif. Huilez légèrement avec un papier absorbant. Versez une petite louche de pâte et inclinez immédiatement la poêle en rond pour étaler finement. Cuisez 1 minute jusqu'à ce que les bords se décollent, puis retournez et cuisez 30 secondes.",
-        tip:"✨ Astuce : La première crêpe est souvent ratée — c'est normal ! Elle sert à calibrer la poêle. Mangez-la en cuisine, c'est le privilège du cuisinier !" },
-      { id:"s4", title:"Garnitures et service", duration:5, ingredientIds:[],
-        text:"Empilez les crêpes cuites sur une assiette. Garnissez selon vos envies : beurre + sucre, confiture, Nutella, ou jus de citron + sucre pour la version bretonne classique. Les crêpes se conservent 2-3 jours au réfrigérateur.",
-        tip:"✨ Astuce : Vous pouvez congeler les crêpes en séparant chaque crêpe avec du papier cuisson." }
-    ]
-  }
+{id:1,name:"Émincé de porc aux légumes façon wok",emoji:"🥢",category:"plat",meat:"porc",needsOven:false,prepTime:15,cookTime:15,baseServings:4,kcalPerServing:380,macros:{proteines:32,lipides:14,glucides:18,fibres:4},
+description:"Un plat asiatique savoureux, coloré et rapide. Parfait pour un repas équilibré en semaine.",
+tips:"Le secret du wok : feu très vif et ingrédients coupés en petits morceaux pour une cuisson rapide.",
+ingredients:[
+{id:"i1",name:"Filet de porc",qty:600,unit:"g",tip:"Coupez en fines lamelles dans le sens contraire des fibres."},
+{id:"i2",name:"Poivron rouge",qty:1,unit:"pièce",tip:"Lavez, retirez les graines, tranchez en lanières."},
+{id:"i3",name:"Poivron jaune",qty:1,unit:"pièce",tip:"Même technique que le rouge."},
+{id:"i4",name:"Courgette",qty:1,unit:"pièce",tip:"Pas besoin d'éplucher. Rondelles de 5mm."},
+{id:"i5",name:"Carotte",qty:2,unit:"pièces",tip:"Épluchez, taillez en fins bâtonnets."},
+{id:"i6",name:"Oignon",qty:1,unit:"pièce",tip:"Émincez finement."},
+{id:"i7",name:"Gousses d'ail",qty:3,unit:"pièces",tip:"Écrasez pour enlever la peau, hachez."},
+{id:"i8",name:"Sauce soja",qty:4,unit:"c.à.s",tip:"Sauce soja claire de préférence."},
+{id:"i9",name:"Huile de sésame",qty:1,unit:"c.à.s",tip:"Ajoutez hors du feu — brûle et perd son arôme."},
+{id:"i10",name:"Huile neutre",qty:2,unit:"c.à.s",tip:"Pour la cuisson au wok."},
+{id:"i11",name:"Gingembre frais",qty:1,unit:"cm",tip:"Épluchez avec une cuillère, râpez finement."},
+{id:"i12",name:"Maïzena",qty:1,unit:"c.à.s",tip:"Pour épaissir légèrement la sauce."},
+{id:"i13",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Mariner la viande",duration:10,ingredientIds:["i1","i8","i12"],
+text:"Coupez le porc en fines lamelles (5mm). Mélangez avec 2 c.à.s de sauce soja et la maïzena. Laissez reposer pendant que vous préparez les légumes.",
+tip:"✨ Plus les lamelles sont fines, plus elles cuisent vite et restent tendres. Mettez la viande 20 min au congélateur pour faciliter la coupe."},
+{id:"s2",title:"Préparer les légumes",duration:10,ingredientIds:["i2","i3","i4","i5","i6","i7","i11"],
+text:"Lavez tous les légumes. Coupez les poivrons en lanières, la courgette en demi-rondelles, les carottes en bâtonnets. Émincez l'oignon. Hachez ail et gingembre. Rangez chaque légume dans un bol séparé.",
+tip:"✨ Préparez tout AVANT de cuire. Au wok, tout va très vite !"},
+{id:"s3",title:"Saisir la viande",duration:5,ingredientIds:["i1","i10"],
+text:"Chauffez le wok à feu très vif jusqu'à ce qu'il fume. Ajoutez l'huile. Versez les lamelles sans entasser. Ne touchez pas 1 minute, puis remuez 2-3 min. Réservez dans une assiette.",
+tip:"✨ Si votre wok est trop petit, faites la viande en 2 fois. Un wok trop rempli cuit à la vapeur."},
+{id:"s4",title:"Cuire les légumes",duration:8,ingredientIds:["i6","i7","i11","i5","i2","i3","i4","i10"],
+text:"Dans le même wok, faites revenir oignon, ail et gingembre 1 min. Ajoutez les carottes 2 min, les poivrons 2 min, la courgette 2 min. Les légumes doivent rester légèrement croquants.",
+tip:"✨ Les légumes les plus durs en premier (carotte), les plus tendres en dernier (courgette)."},
+{id:"s5",title:"Finir et assaisonner",duration:3,ingredientIds:["i1","i8","i9","i13"],
+text:"Remettez la viande. Versez le reste de sauce soja. Mélangez 1 minute à feu vif. Hors du feu, ajoutez l'huile de sésame. Goûtez, ajustez. Servez avec du riz blanc.",
+tip:"✨ L'huile de sésame s'ajoute HORS du feu. C'est une huile aromatique, pas de cuisson !"}
+]},
+
+{id:2,name:"Côtes de porc à la moutarde",emoji:"🍖",category:"plat",meat:"porc",needsOven:false,prepTime:5,cookTime:15,baseServings:4,kcalPerServing:440,macros:{proteines:38,lipides:22,glucides:5,fibres:0},
+description:"Un classique rapide et délicieux. La moutarde forme une croûte savoureuse qui garde la viande moelleuse.",
+tips:"La clé : une poêle bien chaude pour saisir, puis feu moyen pour finir sans dessécher.",
+ingredients:[
+{id:"i1",name:"Côtes de porc",qty:4,unit:"pièces",tip:"Choisissez des côtes de 2cm d'épaisseur. Sortez-les 15 min avant de cuire."},
+{id:"i2",name:"Moutarde de Dijon",qty:3,unit:"c.à.s",tip:"Forte ou à l'ancienne selon votre goût."},
+{id:"i3",name:"Huile d'olive",qty:1,unit:"c.à.s",tip:""},
+{id:"i4",name:"Beurre",qty:20,unit:"g",tip:"Ajoute richesse et couleur dorée."},
+{id:"i5",name:"Herbes de Provence",qty:1,unit:"c.à.c",tip:"Ou thym seul."},
+{id:"i6",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Enduire de moutarde",duration:5,ingredientIds:["i1","i2","i5","i6"],
+text:"Salez et poivrez les côtes des deux côtés. Enduisez généreusement de moutarde sur chaque face. Saupoudrez d'herbes. La moutarde va former une croûte parfumée à la cuisson.",
+tip:"✨ Cette étape peut se faire 30 min à l'avance pour une mini-marinade."},
+{id:"s2",title:"Saisir les côtes",duration:6,ingredientIds:["i3","i4","i1"],
+text:"Chauffez une grande poêle à feu vif avec huile + beurre. Quand le beurre mousse, déposez les côtes. Saisissez 3 min sans bouger pour former une belle croûte. Retournez et saisissez encore 3 min.",
+tip:"✨ Ne bougez pas la viande ! C'est en laissant la croûte se former qu'on obtient la belle couleur caramélisée."},
+{id:"s3",title:"Finir la cuisson",duration:5,ingredientIds:["i1"],
+text:"Baissez le feu à moyen. Continuez 2-3 min de chaque côté. Pour vérifier : appuyez avec le doigt — souple = saignant, ferme = bien cuit. Laissez reposer 2 min avant de servir.",
+tip:"✨ Laisser reposer la viande permet au jus de se redistribuer. Coupez immédiatement et vous perdrez tout le jus !"}
+]},
+
+{id:3,name:"Porc au caramel vietnamien",emoji:"🍯",category:"plat",meat:"porc",needsOven:false,prepTime:10,cookTime:35,baseServings:4,kcalPerServing:490,macros:{proteines:35,lipides:18,glucides:32,fibres:1},
+description:"Un plat vietnamien fondant où le porc mijote dans un caramel salé-sucré irrésistible. Parfait avec du riz.",
+tips:"Surveillez le caramel comme le lait sur le feu : entre doré et brûlé, il n'y a que quelques secondes.",
+ingredients:[
+{id:"i1",name:"Poitrine ou échine de porc",qty:700,unit:"g",tip:"Cubes de 3-4cm. La poitrine reste moelleuse grâce à son gras."},
+{id:"i2",name:"Sucre",qty:4,unit:"c.à.s",tip:"Pour faire le caramel."},
+{id:"i3",name:"Sauce de poisson (nuoc-mâm)",qty:3,unit:"c.à.s",tip:"À défaut, utilisez de la sauce soja."},
+{id:"i4",name:"Gousses d'ail",qty:3,unit:"pièces",tip:"Hachez finement."},
+{id:"i5",name:"Gingembre",qty:2,unit:"cm",tip:"Épluchez et hachez."},
+{id:"i6",name:"Échalotes",qty:2,unit:"pièces",tip:"Émincez finement."},
+{id:"i7",name:"Eau chaude",qty:200,unit:"ml",tip:""},
+{id:"i8",name:"Poivre noir",qty:0,unit:"",tip:"Généreux — essentiel dans ce plat."}
+],
+steps:[
+{id:"s1",title:"Faire le caramel",duration:8,ingredientIds:["i2"],
+text:"Dans une cocotte, versez le sucre et 2 c.à.s d'eau. Chauffez à feu moyen-vif SANS remuer. Attendez une couleur ambrée foncée (5-7 min). Inclinez légèrement la casserole si inégal.",
+tip:"✨ NE REMUEZ JAMAIS un caramel au sucre : ça le fait cristalliser. Contentez-vous d'incliner doucement."},
+{id:"s2",title:"Saisir le porc dans le caramel",duration:5,ingredientIds:["i1","i4","i5","i6"],
+text:"Hors du feu, ajoutez les morceaux de porc (ça crépite — c'est normal !). Remettez sur feu vif, enrobez. Ajoutez ail, gingembre et échalotes. Faites dorer 3-4 min.",
+tip:"✨ Le caramel va durcir au contact de la viande froide, puis re-fondre. Continuez à remuer."},
+{id:"s3",title:"Mijoter",duration:30,ingredientIds:["i3","i7","i8"],
+text:"Versez l'eau chaude et la sauce de poisson. Poivrez généreusement. Portez à ébullition, baissez au minimum, couvrez à moitié et laissez mijoter 25-30 min. La sauce doit devenir sirupeuse.",
+tip:"✨ Plus ça mijote, plus la viande s'attendrit. Si la sauce réduit trop vite, ajoutez un peu d'eau."}
+]}
+// BOEUF SANS FOUR
+,{id:4,name:"Émincé de bœuf au poivron",emoji:"🥩",category:"plat",meat:"boeuf",needsOven:false,prepTime:10,cookTime:15,baseServings:4,kcalPerServing:420,macros:{proteines:38,lipides:18,glucides:12,fibres:3},
+description:"Un classique savoureux et nourrissant. La tendresse du bœuf avec le sucré des poivrons colorés.",
+tips:"La clé : une poêle très chaude pour bien saisir la viande et garder son jus.",
+ingredients:[
+{id:"i1",name:"Steak ou rumsteck",qty:600,unit:"g",tip:"Demandez de la viande à fondue. Sinon, 20 min au congélateur et coupez en lamelles fines."},
+{id:"i2",name:"Poivron rouge",qty:2,unit:"pièces",tip:"Lavez, épépinez, coupez en lanières de 1cm."},
+{id:"i3",name:"Poivron vert",qty:1,unit:"pièce",tip:"Plus amer que le rouge, apporte du caractère."},
+{id:"i4",name:"Oignon",qty:2,unit:"pièces",tip:"Épluchez et coupez en demi-rondelles."},
+{id:"i5",name:"Gousses d'ail",qty:3,unit:"pièces",tip:"Hachez finement."},
+{id:"i6",name:"Concentré de tomate",qty:2,unit:"c.à.s",tip:"Donne profondeur et couleur à la sauce."},
+{id:"i7",name:"Fond de veau",qty:200,unit:"ml",tip:"En brick au supermarché. Ou eau + cube de bouillon."},
+{id:"i8",name:"Huile d'olive",qty:2,unit:"c.à.s",tip:""},
+{id:"i9",name:"Thym, laurier",qty:0,unit:"",tip:"Les herbes de Provence fonctionnent aussi."},
+{id:"i10",name:"Sel, poivre",qty:0,unit:"",tip:""},
+{id:"i11",name:"Maïzena (optionnel)",qty:1,unit:"c.à.c",tip:"Pour épaissir la sauce si trop liquide."}
+],
+steps:[
+{id:"s1",title:"Préparer les ingrédients",duration:10,ingredientIds:["i1","i2","i3","i4","i5"],
+text:"Coupez la viande en lamelles fines. Lavez, épépinez et taillez les poivrons en lanières. Émincez les oignons. Hachez l'ail. Salez et poivrez la viande.",
+tip:"✨ Sortez la viande du réfrigérateur 15 min avant de cuire. Une viande à température ambiante saisit mieux."},
+{id:"s2",title:"Saisir le bœuf",duration:5,ingredientIds:["i1","i8"],
+text:"Chauffez une grande poêle à feu vif avec l'huile. Quand l'huile est très chaude, ajoutez les lamelles. Ne bougez pas 1 minute, retournez et cuisez 1 min. Le but est de colorer, pas cuire à cœur. Réservez.",
+tip:"✨ Si de l'eau se forme, la température est trop basse. Augmentez le feu et faites en 2 fois."},
+{id:"s3",title:"Faire revenir les légumes",duration:8,ingredientIds:["i4","i5","i2","i3","i6","i9"],
+text:"Dans la même poêle, faites revenir les oignons 3 min. Ajoutez ail et poivrons, cuisez 5 min. Ajoutez le concentré de tomate et les herbes, mélangez 1 min.",
+tip:"✨ Un oignon est 'translucide' quand il devient transparent et doux — il a perdu son âcreté."},
+{id:"s4",title:"Préparer la sauce",duration:7,ingredientIds:["i7","i11","i1","i10"],
+text:"Versez le fond de veau. Grattez bien le fond de la poêle pour décoller les sucs. Laissez mijoter 5 min. Si trop liquide, délayez la maïzena dans 2 c.à.s d'eau froide et versez. Remettez la viande, goûtez.",
+tip:"✨ Gratter le fond, c'est 'déglacer'. Ces petits morceaux collés sont concentrés en goût — ne les perdez jamais !"}
+]},
+
+{id:5,name:"Bœuf Stroganoff",emoji:"🍲",category:"plat",meat:"boeuf",needsOven:false,prepTime:15,cookTime:25,baseServings:4,kcalPerServing:520,macros:{proteines:35,lipides:28,glucides:15,fibres:2},
+description:"Un grand classique russe crémeux et réconfortant. La crème fraîche et les champignons font toute la magie.",
+tips:"Ne faites jamais bouillir la crème fraîche trop longtemps, elle risque de tourner. Feu doux en fin.",
+ingredients:[
+{id:"i1",name:"Bœuf (faux-filet ou rumsteck)",qty:600,unit:"g",tip:"Coupez en lamelles de 1cm de large et 5cm de long."},
+{id:"i2",name:"Champignons de Paris",qty:300,unit:"g",tip:"NE PAS laver sous l'eau. Essuyez avec un papier humide. Tranchez à 5mm."},
+{id:"i3",name:"Oignon",qty:2,unit:"pièces",tip:"Émincez finement."},
+{id:"i4",name:"Gousses d'ail",qty:2,unit:"pièces",tip:"Hachez finement."},
+{id:"i5",name:"Crème fraîche épaisse",qty:200,unit:"ml",tip:"Sortez-la 30 min avant pour qu'elle soit à température ambiante."},
+{id:"i6",name:"Moutarde de Dijon",qty:1,unit:"c.à.s",tip:"Apporte du caractère et lie la sauce."},
+{id:"i7",name:"Bouillon de bœuf",qty:150,unit:"ml",tip:"Un demi-cube dans 150ml d'eau chaude."},
+{id:"i8",name:"Beurre",qty:30,unit:"g",tip:""},
+{id:"i9",name:"Huile",qty:1,unit:"c.à.s",tip:"Mélanger beurre + huile évite que le beurre brûle."},
+{id:"i10",name:"Paprika doux",qty:1,unit:"c.à.c",tip:"La signature du stroganoff !"},
+{id:"i11",name:"Sel, poivre",qty:0,unit:"",tip:""},
+{id:"i12",name:"Persil frais",qty:1,unit:"bouquet",tip:"Hachez les feuilles finement."}
+],
+steps:[
+{id:"s1",title:"Assaisonner la viande",duration:10,ingredientIds:["i1","i10","i11"],
+text:"Coupez le bœuf en lamelles régulières. Saupoudrez de paprika, sel et poivre. Mélangez pour bien enrober.",
+tip:"✨ Le paprika brûle facilement — ajoutez-le sur la viande crue plutôt que dans la poêle chaude."},
+{id:"s2",title:"Saisir la viande",duration:5,ingredientIds:["i1","i8","i9"],
+text:"Chauffez huile + 15g de beurre à feu vif. Quand le beurre mousse, ajoutez les lamelles. Cuisez 2-3 min. Dorées dehors, légèrement rosées dedans. Réservez.",
+tip:"✨ 'Réserver' = mettre de côté dans une assiette. La viande continuera à cuire avec sa chaleur résiduelle."},
+{id:"s3",title:"Oignons et champignons",duration:10,ingredientIds:["i3","i4","i2","i8"],
+text:"Dans la même poêle avec le reste de beurre, faites revenir les oignons 3-4 min. Ajoutez l'ail 1 min. Ajoutez les champignons : ils vont rejeter de l'eau (normal), attendez qu'elle s'évapore puis qu'ils dorent.",
+tip:"✨ Les champignons contiennent beaucoup d'eau. Attendez patiemment qu'elle s'évapore avant de continuer."},
+{id:"s4",title:"Sauce crémeuse",duration:8,ingredientIds:["i7","i5","i6","i11"],
+text:"Versez le bouillon, grattez le fond. Réduisez 3 min. Baissez le feu. Incorporez la moutarde, puis la crème. NE PAS faire bouillir à gros bouillons. Frémissement doux 3-4 min.",
+tip:"✨ La crème tranche (se sépare) si la chaleur est trop forte. Feu doux = sauce lisse et onctueuse."},
+{id:"s5",title:"Finition",duration:3,ingredientIds:["i1","i12"],
+text:"Remettez la viande, réchauffez 2-3 min à feu doux. Parsemez de persil haché. Servez avec des tagliatelles ou du riz.",
+tip:"✨ Le persil frais apporte fraîcheur et couleur. Évitez le persil séché qui n'a presque aucun goût."}
+]},
+
+{id:6,name:"Steak haché sauce au poivre",emoji:"🥊",category:"plat",meat:"boeuf",needsOven:false,prepTime:5,cookTime:12,baseServings:4,kcalPerServing:390,macros:{proteines:36,lipides:20,glucides:6,fibres:1},
+description:"Un steak sauce poivre maison facile, rapide et impressionnant. La sauce crémeuse transforme un steak ordinaire.",
+tips:"Faites reposer la viande 2 minutes après cuisson — le jus se redistribue et chaque bouchée est meilleure.",
+ingredients:[
+{id:"i1",name:"Steaks hachés (15% MG)",qty:4,unit:"pièces 150g",tip:"15% de matière grasse = meilleur goût et tient mieux à la cuisson."},
+{id:"i2",name:"Échalotes",qty:3,unit:"pièces",tip:"Émincez très finement — elles fondent dans la sauce."},
+{id:"i3",name:"Poivre concassé",qty:1,unit:"c.à.s",tip:"Concassez des grains dans un torchon avec le fond d'une casserole. Le poivre frais est infiniment plus parfumé."},
+{id:"i4",name:"Cognac ou whisky (optionnel)",qty:2,unit:"c.à.s",tip:"L'alcool s'évapore et donne un vrai goût de restaurant."},
+{id:"i5",name:"Crème liquide entière",qty:150,unit:"ml",tip:"Liquide (pas épaisse) pour une sauce plus fluide."},
+{id:"i6",name:"Beurre",qty:25,unit:"g",tip:""},
+{id:"i7",name:"Sel",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Cuire les steaks",duration:6,ingredientIds:["i1","i6","i7"],
+text:"Chauffez une poêle à feu très vif avec la moitié du beurre. Salez les steaks. Cuisez selon votre préférence : 2 min/côté = saignant, 3 min/côté = à point. Réservez, couvrez d'alu, laissez reposer 2 min.",
+tip:"✨ La cuisson idéale d'un steak haché : cœur rose. Couvrir d'alu garde la chaleur pendant le repos."},
+{id:"s2",title:"Sauce au poivre",duration:8,ingredientIds:["i2","i3","i4","i5","i6"],
+text:"Dans la même poêle, faites fondre le reste de beurre. Faites revenir les échalotes 2 min. Ajoutez le poivre, cuisez 1 min. HORS DU FEU, versez le cognac, remettez sur feu et réduisez 30 sec. Versez la crème, laissez épaissir 2-3 min.",
+tip:"✨ Verser l'alcool HORS du feu évite les flammes. Si ça flambe légèrement — ça s'éteint seul. Normal !"}
+]}
+// POULET SANS FOUR
+,{id:7,name:"Poulet Curry",emoji:"🍛",category:"plat",meat:"poulet",needsOven:false,prepTime:15,cookTime:30,baseServings:4,kcalPerServing:460,macros:{proteines:40,lipides:20,glucides:22,fibres:5},
+description:"Un curry de poulet onctueux et parfumé. Doux ou épicé selon votre goût.",
+tips:"Toastez toujours vos épices en début de cuisson pour révéler leurs arômes — c'est le secret des bons currys.",
+ingredients:[
+{id:"i1",name:"Cuisses ou blancs de poulet",qty:800,unit:"g",tip:"Les cuisses sont plus moelleuses. Cubes de 3-4cm."},
+{id:"i2",name:"Lait de coco",qty:400,unit:"ml",tip:"Agitez la boîte avant d'ouvrir."},
+{id:"i3",name:"Tomates concassées",qty:400,unit:"ml",tip:"En boîte, pratique et très bon."},
+{id:"i4",name:"Oignon",qty:2,unit:"pièces",tip:"Hachez finement."},
+{id:"i5",name:"Gousses d'ail",qty:4,unit:"pièces",tip:"Hachez ou pressez."},
+{id:"i6",name:"Gingembre frais",qty:3,unit:"cm",tip:"Épluchez avec une cuillère, râpez."},
+{id:"i7",name:"Poudre de curry",qty:2,unit:"c.à.s",tip:"Commencez par 1 c.à.s si vous aimez doux."},
+{id:"i8",name:"Curcuma",qty:1,unit:"c.à.c",tip:"Donne la couleur jaune. Ça tache !"},
+{id:"i9",name:"Cumin",qty:1,unit:"c.à.c",tip:"Note chaude et légèrement fumée."},
+{id:"i10",name:"Huile neutre",qty:2,unit:"c.à.s",tip:""},
+{id:"i11",name:"Sel, poivre",qty:0,unit:"",tip:""},
+{id:"i12",name:"Coriandre fraîche",qty:1,unit:"bouquet",tip:"Optionnel. Du persil frais fonctionne aussi."},
+{id:"i13",name:"Citron",qty:0.5,unit:"pièce",tip:"Un filet en fin pour équilibrer."}
+],
+steps:[
+{id:"s1",title:"Préparer le poulet",duration:10,ingredientIds:["i1","i7","i8","i11"],
+text:"Coupez le poulet en cubes. Saupoudrez avec la moitié du curry et le curcuma, salez, poivrez. Mélangez.",
+tip:"✨ Le curcuma tache tout ! Tablier conseillé."},
+{id:"s2",title:"Toaster les épices",duration:8,ingredientIds:["i10","i4","i5","i6","i7","i9"],
+text:"Chauffez l'huile à feu moyen. Faites revenir les oignons 5 min jusqu'à dorés. Ajoutez ail, gingembre et épices. Mélangez 2 min — les arômes se révèlent.",
+tip:"✨ Faire revenir les épices dans la matière grasse libère leurs arômes. Ne sautez jamais cette étape !"},
+{id:"s3",title:"Saisir le poulet",duration:5,ingredientIds:["i1"],
+text:"Montez le feu. Ajoutez les cubes de poulet. Faites-les dorer sur toutes les faces 3-4 min.",
+tip:"✨ La coloration développe des dizaines de saveurs supplémentaires (réaction de Maillard)."},
+{id:"s4",title:"Mijoter",duration:25,ingredientIds:["i3","i2","i11"],
+text:"Ajoutez tomates et lait de coco. Portez à légère ébullition puis baissez au minimum. Couvrez et mijotez 20-25 min.",
+tip:"✨ Mijoter = petits bouillons très doux. La patience est une épice aussi !"},
+{id:"s5",title:"Finition",duration:2,ingredientIds:["i12","i13"],
+text:"Pressez le citron. Parsemez de coriandre fraîche. Servez avec du riz basmati.",
+tip:"✨ Le citron en fin 'réveille' toutes les saveurs du plat."}
+]},
+
+{id:8,name:"Poulet à la crème et champignons",emoji:"🍄",category:"plat",meat:"poulet",needsOven:false,prepTime:10,cookTime:25,baseServings:4,kcalPerServing:480,macros:{proteines:42,lipides:24,glucides:10,fibres:2},
+description:"Un plat réconfortant et élégant en 35 minutes. La sauce crémeuse aux champignons est irrésistible.",
+tips:"L'astuce : faire dorer les champignons séparément pour qu'ils soient bien cuits et pas gorgés d'eau.",
+ingredients:[
+{id:"i1",name:"Blancs de poulet",qty:4,unit:"pièces",tip:"Aplatissez légèrement avec la paume pour une épaisseur homogène."},
+{id:"i2",name:"Champignons de Paris",qty:400,unit:"g",tip:"NE PAS laver sous l'eau. Essuyez et tranchez."},
+{id:"i3",name:"Échalotes",qty:2,unit:"pièces",tip:"Émincez finement."},
+{id:"i4",name:"Ail",qty:2,unit:"gousses",tip:"Hachez finement."},
+{id:"i5",name:"Crème fraîche liquide",qty:200,unit:"ml",tip:"Entière pour une sauce onctueuse."},
+{id:"i6",name:"Bouillon de poulet",qty:100,unit:"ml",tip:"Un quart de cube dans 100ml d'eau chaude."},
+{id:"i7",name:"Beurre",qty:30,unit:"g",tip:""},
+{id:"i8",name:"Huile",qty:1,unit:"c.à.s",tip:""},
+{id:"i9",name:"Persil frais",qty:1,unit:"bouquet",tip:"Hachez finement."},
+{id:"i10",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Cuire le poulet",duration:10,ingredientIds:["i1","i8","i7","i10"],
+text:"Salez et poivrez les blancs. Chauffez huile + moitié du beurre à feu moyen-vif. Cuisez 5 min côté beau, 5 min côté plat. Bien dorés. Réservez.",
+tip:"✨ Pour vérifier si un blanc est cuit : pressez avec le doigt. Élastique et ferme = cuit. Très souple = encore cru."},
+{id:"s2",title:"Faire revenir champignons",duration:8,ingredientIds:["i2","i3","i4","i7"],
+text:"Dans la même poêle, faites fondre le reste de beurre. Faites revenir les échalotes 2 min. Ajoutez les champignons, cuisez à feu vif sans trop remuer jusqu'à ce qu'ils dorent (5-6 min). Ajoutez l'ail 1 min.",
+tip:"✨ Ne remuez pas trop les champignons ! Trop agités, ils rendent leur eau et cuisent à la vapeur au lieu de dorer."},
+{id:"s3",title:"Sauce et finition",duration:8,ingredientIds:["i6","i5","i1","i9","i10"],
+text:"Versez le bouillon, grattez le fond, réduisez 2 min. Ajoutez la crème, mélangez. Remettez les blancs dans la sauce. Frémissez 5 min à feu doux. Parsemez de persil. Goûtez.",
+tip:"✨ Les blancs vont finir de cuire dans la sauce crémeuse tout en lui apportant leur jus."}
+]},
+
+{id:9,name:"Poulet sauté citron et herbes",emoji:"🍋",category:"plat",meat:"poulet",needsOven:false,prepTime:10,cookTime:20,baseServings:4,kcalPerServing:350,macros:{proteines:44,lipides:14,glucides:4,fibres:1},
+description:"Léger, frais et parfumé — un poulet méditerranéen avec des notes de citron et d'herbes fraîches.",
+tips:"Le citron doit être ajouté en fin de cuisson : si on le fait trop cuire il devient amer.",
+ingredients:[
+{id:"i1",name:"Blancs ou cuisses de poulet",qty:800,unit:"g",tip:"En morceaux de taille similaire pour une cuisson homogène."},
+{id:"i2",name:"Citron",qty:2,unit:"pièces",tip:"Zeste + jus des 2. Lavez bien la peau avant de zester."},
+{id:"i3",name:"Ail",qty:4,unit:"gousses",tip:"Hachez finement."},
+{id:"i4",name:"Thym frais",qty:3,unit:"branches",tip:"Effeuillez en passant les doigts à l'envers sur la tige."},
+{id:"i5",name:"Romarin",qty:1,unit:"branche",tip:"Hachez finement — une branche suffit, c'est puissant."},
+{id:"i6",name:"Persil frais",qty:0.5,unit:"bouquet",tip:"Pour la finition."},
+{id:"i7",name:"Huile d'olive",qty:3,unit:"c.à.s",tip:"Utiliser une huile fruitée pour plus de goût."},
+{id:"i8",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Marinade express",duration:10,ingredientIds:["i1","i2","i3","i4","i5","i7","i8"],
+text:"Mélangez le poulet avec le zeste de 1 citron, la moitié de l'ail haché, le thym, le romarin, 2 c.à.s d'huile, sel et poivre. Laissez reposer 10 min minimum.",
+tip:"✨ Le zeste de citron (la partie jaune de la peau) contient les huiles essentielles — 80% de l'arôme citronné."},
+{id:"s2",title:"Saisir le poulet",duration:10,ingredientIds:["i1","i7"],
+text:"Chauffez 1 c.à.s d'huile à feu vif. Faites dorer les morceaux sur toutes les faces, 3-4 min par côté. Ne bougez pas trop la viande.",
+tip:"✨ Un poulet bien doré retient ses jus. Un poulet pâle = viande sèche et fade."},
+{id:"s3",title:"Finir et citronner",duration:8,ingredientIds:["i3","i2","i6"],
+text:"Baissez le feu à moyen. Ajoutez l'ail restant, cuisez 1 min. Pressez le jus des 2 citrons sur le poulet. Ajoutez le zeste du 2e citron. Couvrez et laissez finir 5 min. Parsemez de persil.",
+tip:"✨ Vérifiez la cuisson : coupez un morceau, la chair doit être blanche partout. Du rose = pas encore cuit."}
+]}
+// VEAU SANS FOUR
+,{id:10,name:"Escalopes milanaises",emoji:"🍽️",category:"plat",meat:"veau",needsOven:false,prepTime:15,cookTime:10,baseServings:4,kcalPerServing:480,macros:{proteines:42,lipides:22,glucides:20,fibres:1},
+description:"Croustillant dehors, tendre dedans. La panure milanaise transforme des escalopes ordinaires en régal.",
+tips:"La chapelure doit adhérer parfaitement : bien appuyer avec la paume à chaque étape de la panure.",
+ingredients:[
+{id:"i1",name:"Escalopes de veau",qty:4,unit:"pièces",tip:"Demandez des escalopes fines (5mm). Sinon aplatissez entre 2 feuilles de film avec un rouleau."},
+{id:"i2",name:"Œufs",qty:2,unit:"pièces",tip:"Battez en omelette dans une assiette creuse."},
+{id:"i3",name:"Chapelure",qty:150,unit:"g",tip:"Fine du commerce. Pour maison : mixez du pain de mie rassis."},
+{id:"i4",name:"Farine",qty:80,unit:"g",tip:"Première étape de la panure."},
+{id:"i5",name:"Parmesan râpé",qty:50,unit:"g",tip:"Mélangez à la chapelure pour la version milanaise authentique."},
+{id:"i6",name:"Beurre",qty:40,unit:"g",tip:"La cuisson au beurre donne une coloration parfaite."},
+{id:"i7",name:"Huile",qty:2,unit:"c.à.s",tip:"Associé au beurre pour éviter qu'il brûle."},
+{id:"i8",name:"Citron",qty:1,unit:"pièce",tip:"En quartiers pour servir."},
+{id:"i9",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer la panure",duration:10,ingredientIds:["i2","i3","i4","i5","i9"],
+text:"3 assiettes : 1. farine, 2. œufs battus, 3. chapelure + parmesan. Salez, poivrez les escalopes. Passez chaque escalope dans farine (secouez l'excédent), puis œuf, puis chapelure. Appuyez bien à chaque étape.",
+tip:"✨ La technique 'farine-œuf-chapelure' s'appelle 'à l'anglaise'. Bien appuyer = la panure tient. Secouer l'excédent = panure pas trop épaisse."},
+{id:"s2",title:"Cuire les escalopes",duration:8,ingredientIds:["i6","i7","i1"],
+text:"Chauffez beurre + huile à feu moyen-vif. Quand le beurre mousse, déposez les escalopes. Cuisez 3-4 min sans toucher. Retournez délicatement et cuisez 2-3 min.",
+tip:"✨ Si la chapelure colore trop vite, baissez le feu. Trop chaud = brûlée dehors, crue dedans."},
+{id:"s3",title:"Servir",duration:2,ingredientIds:["i8"],
+text:"Posez sur du papier absorbant 30 sec pour retirer l'excès de gras. Servez immédiatement avec un quartier de citron à presser.",
+tip:"✨ L'escalope milanaise se mange immédiatement — la panure ramollit en attendant."}
+]},
+
+{id:11,name:"Veau Marengo",emoji:"🫕",category:"plat",meat:"veau",needsOven:false,prepTime:15,cookTime:60,baseServings:4,kcalPerServing:420,macros:{proteines:38,lipides:16,glucides:14,fibres:3},
+description:"Un grand classique de la cuisine française. Le veau mijote dans une sauce tomate aux champignons.",
+tips:"Le mijotage long est le secret : plus ça cuit doucement, plus la viande s'attendrit.",
+ingredients:[
+{id:"i1",name:"Épaule de veau",qty:800,unit:"g",tip:"Cubes de 4cm. L'épaule est idéale pour les mijotés."},
+{id:"i2",name:"Champignons de Paris",qty:250,unit:"g",tip:"Essuyez et coupez en 4."},
+{id:"i3",name:"Tomates concassées",qty:400,unit:"ml",tip:"1 boîte."},
+{id:"i4",name:"Oignon",qty:1,unit:"pièce",tip:"Hachez grossièrement."},
+{id:"i5",name:"Carottes",qty:2,unit:"pièces",tip:"Épluchez et coupez en rondelles."},
+{id:"i6",name:"Ail",qty:3,unit:"gousses",tip:"Hachez finement."},
+{id:"i7",name:"Bouillon de veau",qty:300,unit:"ml",tip:"1 cube dans 300ml d'eau chaude."},
+{id:"i8",name:"Vin blanc sec",qty:150,unit:"ml",tip:"Optionnel mais apporte beaucoup de complexité."},
+{id:"i9",name:"Bouquet garni",qty:0,unit:"",tip:"Thym, laurier, persil attachés ensemble."},
+{id:"i10",name:"Huile",qty:2,unit:"c.à.s",tip:""},
+{id:"i11",name:"Farine",qty:1,unit:"c.à.s",tip:"Pour lier la sauce."},
+{id:"i12",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Faire dorer le veau",duration:10,ingredientIds:["i1","i10","i11","i12"],
+text:"Farinez légèrement les cubes (secouez l'excédent). Chauffez l'huile dans une cocotte à feu vif. Faites dorer les cubes par petites quantités 2-3 min par face. Réservez.",
+tip:"✨ Fariner la viande avant de saisir : la farine colore et épaissira naturellement la sauce."},
+{id:"s2",title:"Faire revenir les légumes",duration:8,ingredientIds:["i4","i5","i6","i2"],
+text:"Dans la même cocotte, faites revenir l'oignon 3 min. Ajoutez carottes, champignons et ail, cuisez 4 min.",
+tip:"✨ Les sucs dorés au fond de la cocotte vont parfumer la sauce lors du mijotage."},
+{id:"s3",title:"Déglacer et mijoter",duration:55,ingredientIds:["i8","i3","i7","i9","i1","i12"],
+text:"Versez le vin blanc, grattez bien le fond. Réduisez 2 min. Ajoutez tomates, bouillon, bouquet garni et les cubes de veau. Portez à ébullition, baissez au minimum. Couvrez et laissez mijoter 45-50 min.",
+tip:"✨ Si la sauce est trop liquide en fin, retirez le couvercle et laissez réduire 10 min."}
+]},
+
+{id:12,name:"Émincé de veau à la zurichoise",emoji:"🇨🇭",category:"plat",meat:"veau",needsOven:false,prepTime:10,cookTime:15,baseServings:4,kcalPerServing:440,macros:{proteines:40,lipides:22,glucides:8,fibres:1},
+description:"Spécialité suisse : sauce crémeuse aux champignons et vin blanc enrobe des lamelles de veau tendres.",
+tips:"Ce plat se cuit et se sert rapidement — préparez tous vos ingrédients à l'avance.",
+ingredients:[
+{id:"i1",name:"Noix de veau ou filet",qty:600,unit:"g",tip:"Émincez en lamelles de 5mm."},
+{id:"i2",name:"Champignons de Paris",qty:300,unit:"g",tip:"Essuyez et tranchez finement."},
+{id:"i3",name:"Oignon",qty:1,unit:"pièce",tip:"Hachez très finement."},
+{id:"i4",name:"Crème fraîche liquide",qty:200,unit:"ml",tip:""},
+{id:"i5",name:"Vin blanc sec",qty:100,unit:"ml",tip:""},
+{id:"i6",name:"Beurre",qty:40,unit:"g",tip:""},
+{id:"i7",name:"Maïzena",qty:1,unit:"c.à.c",tip:"Pour lier légèrement."},
+{id:"i8",name:"Sel, poivre, muscade",qty:0,unit:"",tip:"La muscade râpée est la touche signature."}
+],
+steps:[
+{id:"s1",title:"Saisir le veau",duration:5,ingredientIds:["i1","i6","i8"],
+text:"Chauffez 20g de beurre à feu très vif. Saisissez les lamelles de veau 1-2 min en remuant constamment. À peine dorées. Réservez immédiatement.",
+tip:"✨ Le veau cuit très rapidement. Trop cuit = caoutchouteux. L'objectif : juste colorer légèrement."},
+{id:"s2",title:"Champignons et sauce",duration:10,ingredientIds:["i3","i2","i5","i4","i7","i8","i6"],
+text:"Dans la même poêle, faites fondre le reste de beurre. Faites revenir l'oignon 2 min. Ajoutez les champignons, dorez 4 min. Versez le vin blanc, grattez et réduisez de moitié. Délayez la maïzena dans 2 c.à.s d'eau froide, ajoutez. Versez la crème, mélangez 2 min. Muscade, sel, poivre.",
+tip:"✨ La maïzena délayée dans l'eau froide avant d'être ajoutée évite les grumeaux dans la sauce."},
+{id:"s3",title:"Finition",duration:2,ingredientIds:["i1"],
+text:"Remettez le veau dans la sauce 1-2 min à feu doux pour réchauffer sans surcuire. Servez immédiatement avec des rösti ou des pâtes.",
+tip:"✨ Ce plat ne s'attend pas — servez dès que c'est prêt pour le veau tendre et la sauce onctueuse."}
+]}
+// POISSON SANS FOUR
+,{id:13,name:"Saumon à la poêle sauce citronnée",emoji:"🐟",category:"plat",meat:"poisson",needsOven:false,prepTime:5,cookTime:10,baseServings:4,kcalPerServing:380,macros:{proteines:40,lipides:20,glucides:3,fibres:0},
+description:"Le saumon à la poêle est la base de tout cuisinier. Maîtrisez cette technique et vous aurez un plat élégant en 15 min.",
+tips:"Commencez côté peau — elle protège la chair et devient délicieusement croustillante.",
+ingredients:[
+{id:"i1",name:"Pavés de saumon",qty:4,unit:"pièces 150g",tip:"À température ambiante. Séchez avec du papier absorbant (sinon la vapeur empêche la coloration)."},
+{id:"i2",name:"Citron",qty:1,unit:"pièce",tip:"Jus + zeste."},
+{id:"i3",name:"Beurre",qty:25,unit:"g",tip:"Le beurre donne une belle coloration noisette."},
+{id:"i4",name:"Câpres",qty:1,unit:"c.à.s",tip:"Optionnel — acidité qui se marie parfaitement avec le saumon."},
+{id:"i5",name:"Persil ou aneth frais",qty:0.5,unit:"bouquet",tip:"L'aneth est l'herbe classique du saumon."},
+{id:"i6",name:"Huile",qty:1,unit:"c.à.s",tip:""},
+{id:"i7",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer le saumon",duration:5,ingredientIds:["i1","i7"],
+text:"Séchez les pavés avec du papier absorbant — très important pour avoir une belle croûte. Salez et poivrez des deux côtés.",
+tip:"✨ Un poisson bien séché = belle croûte croustillante. Un poisson humide = colle et s'effrite."},
+{id:"s2",title:"Cuire le saumon",duration:8,ingredientIds:["i1","i6","i3"],
+text:"Chauffez l'huile dans une poêle antiadhésive à feu moyen-vif. Déposez les pavés CÔTÉ PEAU EN BAS. Cuisez 4-5 min sans bouger jusqu'à peau croustillante et cuisson remontant à mi-hauteur. Retournez et cuisez 1-2 min côté chair. Ajoutez le beurre, arrosez.",
+tip:"✨ Commencer côté peau : elle protège la chair délicate. Quand la cuisson remonte à mi-hauteur = moment de retourner."},
+{id:"s3",title:"Sauce citronnée",duration:3,ingredientIds:["i2","i4","i5"],
+text:"Dans la même poêle chaude (hors feu), pressez le citron, ajoutez le zeste, les câpres et les herbes. Mélangez rapidement. Versez sur le saumon.",
+tip:"✨ Le saumon est cuit quand la chair est opaque mais encore légèrement translucide au centre. Trop cuit = sec et sans goût."}
+]},
+
+{id:14,name:"Cabillaud à la provençale",emoji:"🍅",category:"plat",meat:"poisson",needsOven:false,prepTime:10,cookTime:20,baseServings:4,kcalPerServing:290,macros:{proteines:38,lipides:8,glucides:12,fibres:4},
+description:"Des filets de cabillaud pochés dans une sauce tomate parfumée aux herbes méditerranéennes.",
+tips:"Le cabillaud est délicat et se défait facilement. Soyez très délicat quand vous le manipulez.",
+ingredients:[
+{id:"i1",name:"Filets de cabillaud",qty:600,unit:"g",tip:"Séchez avec du papier absorbant. Vérifiez l'absence d'arêtes en passant les doigts."},
+{id:"i2",name:"Tomates concassées",qty:400,unit:"ml",tip:"1 boîte."},
+{id:"i3",name:"Oignon",qty:1,unit:"pièce",tip:"Hachez."},
+{id:"i4",name:"Ail",qty:3,unit:"gousses",tip:"Hachez finement."},
+{id:"i5",name:"Olives noires",qty:80,unit:"g",tip:"Dénoyautées, coupez en deux si grosses."},
+{id:"i6",name:"Câpres",qty:1,unit:"c.à.s",tip:"Optionnel mais authentique."},
+{id:"i7",name:"Herbes de Provence",qty:2,unit:"c.à.c",tip:""},
+{id:"i8",name:"Huile d'olive",qty:3,unit:"c.à.s",tip:""},
+{id:"i9",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer la sauce provençale",duration:10,ingredientIds:["i3","i4","i2","i5","i6","i7","i8","i9"],
+text:"Chauffez l'huile à feu moyen. Faites revenir l'oignon 3 min. Ajoutez l'ail 1 min. Ajoutez les tomates, olives, câpres et herbes. Salez, poivrez. Laissez mijoter 8-10 min jusqu'à ce que la sauce épaississe.",
+tip:"✨ La sauce doit être épaisse. Si trop liquide, le poisson sera noyé. Laissez réduire davantage si besoin."},
+{id:"s2",title:"Pocher le poisson",duration:10,ingredientIds:["i1"],
+text:"Faites des creux dans la sauce. Déposez délicatement les filets. Couvrez et laissez cuire 8-10 min à feu doux. Cuit quand il se détache en feuillets et n'est plus translucide.",
+tip:"✨ 'Pocher' = cuire dans un liquide frémissant. Ne faites PAS bouillir — le poisson se désintègrerait."}
+]},
+
+{id:15,name:"Crevettes sautées ail et beurre",emoji:"🦐",category:"plat",meat:"poisson",needsOven:false,prepTime:5,cookTime:5,baseServings:4,kcalPerServing:260,macros:{proteines:28,lipides:14,glucides:2,fibres:0},
+description:"Le plat le plus rapide : 10 minutes chrono. Des crevettes juteuses dans un beurre à l'ail parfumé.",
+tips:"Les crevettes cuisent très vite — dès qu'elles sont roses et enroulées en C, elles sont cuites.",
+ingredients:[
+{id:"i1",name:"Grosses crevettes crues",qty:600,unit:"g",tip:"Décortiquées. Bien séchées avec du papier absorbant."},
+{id:"i2",name:"Ail",qty:4,unit:"gousses",tip:"Hachez très finement ou utilisez un presse-ail."},
+{id:"i3",name:"Beurre",qty:50,unit:"g",tip:"Demi-sel pour plus de goût."},
+{id:"i4",name:"Persil frais",qty:0.5,unit:"bouquet",tip:"Hachez finement."},
+{id:"i5",name:"Citron",qty:1,unit:"pièce",tip:"Jus + quartiers pour servir."},
+{id:"i6",name:"Piment d'Espelette",qty:1,unit:"pincée",tip:"Optionnel pour une légère chaleur."},
+{id:"i7",name:"Sel",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Cuire les crevettes",duration:4,ingredientIds:["i1","i3","i2","i7","i6"],
+text:"Chauffez le beurre à feu vif. Quand il mousse, ajoutez les crevettes EN UNE SEULE COUCHE. Ajoutez l'ail haché. Cuisez 1-2 min jusqu'à ce qu'elles deviennent ROSES en dessous, retournez et cuisez 1 min. Elles s'enroulent en C — c'est signe qu'elles sont cuites.",
+tip:"✨ Une crevette cuite = rose et enroulée en C. Trop cuite = enroulée en O et caoutchouteuse. Il n'y a que 30 secondes entre les deux !"},
+{id:"s2",title:"Finition",duration:2,ingredientIds:["i4","i5"],
+text:"Hors du feu, pressez le citron, parsemez de persil haché. Mélangez et servez immédiatement avec du pain ou des pâtes.",
+tip:"✨ Ce plat ne s'attend pas. Les crevettes continuent de cuire avec la chaleur du beurre. Servez dès que c'est prêt !"}
+]}
+// FOUR — PORC
+,{id:16,name:"Rôti de porc aux herbes et légumes",emoji:"🥕",category:"plat",meat:"porc",needsOven:true,prepTime:15,cookTime:75,baseServings:6,kcalPerServing:420,macros:{proteines:44,lipides:16,glucides:12,fibres:3},
+description:"Un plat familial classique qui cuit seul au four pendant que vous vaquez à vos occupations.",
+tips:"Arrosez le rôti avec son jus toutes les 20 minutes — c'est le secret d'une viande moelleuse et bien dorée.",
+ingredients:[
+{id:"i1",name:"Rôti de porc dans le filet",qty:1200,unit:"g",tip:"Rôti ficelé. Sortez-le 30 min avant."},
+{id:"i2",name:"Carottes",qty:3,unit:"pièces",tip:"Épluchez et coupez en rondelles épaisses."},
+{id:"i3",name:"Pommes de terre",qty:600,unit:"g",tip:"Épluchez et coupez en cubes de 3cm."},
+{id:"i4",name:"Oignon",qty:2,unit:"pièces",tip:"Coupez en quartiers."},
+{id:"i5",name:"Gousses d'ail",qty:5,unit:"pièces",tip:"Laissez entières avec la peau (ail en chemise)."},
+{id:"i6",name:"Thym frais",qty:4,unit:"branches",tip:""},
+{id:"i7",name:"Romarin",qty:2,unit:"branches",tip:""},
+{id:"i8",name:"Huile d'olive",qty:3,unit:"c.à.s",tip:""},
+{id:"i9",name:"Moutarde",qty:2,unit:"c.à.s",tip:"Pour badigeonner le rôti."},
+{id:"i10",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préchauffer et préparer",duration:15,ingredientIds:["i1","i9","i10","i2","i3","i4","i5"],
+text:"Préchauffez le four à 180°C. Badigeonnez le rôti de moutarde sur toutes les faces. Salez et poivrez. Dans un plat à four, disposez les légumes et l'ail en chemise. Arrosez d'huile, salez, poivrez. Posez le rôti sur les légumes.",
+tip:"✨ Préchauffer = allumer le four À L'AVANCE pour qu'il soit à bonne température à l'enfournement. Essentiel pour une cuisson régulière."},
+{id:"s2",title:"Cuisson au four",duration:75,ingredientIds:["i6","i7","i8"],
+text:"Ajoutez thym et romarin autour du rôti. Versez 100ml d'eau dans le fond du plat. Enfournez 1h15 pour un rôti de 1,2kg (1h par kilo). Arrosez avec le jus de cuisson toutes les 20 min.",
+tip:"✨ Règle du rôti de porc : 1 heure par kilo à 180°C. Pour vérifier : piquez le centre — le jus doit couler clair, pas rosé."},
+{id:"s3",title:"Repos et découpe",duration:10,ingredientIds:["i1"],
+text:"Sortez du four, couvrez de papier alu et laissez reposer 10 min. Ce repos est OBLIGATOIRE. Découpez en tranches régulières. Servez avec les légumes et le jus de cuisson.",
+tip:"✨ Le repos permet aux jus de se redistribuer. Un rôti coupé immédiatement perd la moitié de son jus !"}
+]},
+
+{id:17,name:"Travers de porc caramélisés",emoji:"🍖",category:"plat",meat:"porc",needsOven:true,prepTime:10,cookTime:120,baseServings:4,kcalPerServing:580,macros:{proteines:42,lipides:32,glucides:22,fibres:1},
+description:"Des ribs fondants et laqués — la viande se détache de l'os à la fourchette. Un régal !",
+tips:"Le secret : cuisson longue basse température d'abord, puis la sauce pour laquer en fin de cuisson.",
+ingredients:[
+{id:"i1",name:"Travers de porc (ribs)",qty:1200,unit:"g",tip:"Demandez à votre boucher de les couper en portions de 2-3 os."},
+{id:"i2",name:"Sauce soja",qty:4,unit:"c.à.s",tip:""},
+{id:"i3",name:"Miel",qty:3,unit:"c.à.s",tip:"Le miel caramélise et laque la viande."},
+{id:"i4",name:"Ketchup",qty:3,unit:"c.à.s",tip:"Base de la marinade."},
+{id:"i5",name:"Vinaigre de cidre",qty:2,unit:"c.à.s",tip:"L'acidité équilibre le sucré."},
+{id:"i6",name:"Ail",qty:3,unit:"gousses",tip:"Hachez finement."},
+{id:"i7",name:"Paprika fumé",qty:1,unit:"c.à.c",tip:"Donne une note fumée magique."},
+{id:"i8",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer la marinade",duration:10,ingredientIds:["i2","i3","i4","i5","i6","i7","i8"],
+text:"Mélangez tous les ingrédients de la marinade dans un bol. Badigeonnez les ribs généreusement des deux côtés. Idéalement, laissez mariner 2h ou toute la nuit au réfrigérateur.",
+tip:"✨ Plus la marinade est longue, plus les saveurs pénètrent. Mais 10 min suffisent si vous êtes pressé."},
+{id:"s2",title:"Cuisson basse température",duration:100,ingredientIds:["i1"],
+text:"Préchauffez le four à 150°C. Posez les ribs dans un grand plat, couvrez de papier aluminium. Enfournez 1h30. La viande commence à se détacher des os.",
+tip:"✨ La cuisson basse et longue couverte rend les ribs fondants. La chaleur douce rompt le collagène du tissu conjonctif."},
+{id:"s3",title:"Laquage final",duration:20,ingredientIds:["i2","i3"],
+text:"Montez le four à 220°C. Retirez le papier alu. Badigeonnez les ribs avec reste de marinade + 2 c.à.s de miel. Enfournez 15-20 min sans couvrir, en surveillant, jusqu'à surface caramélisée et brillante.",
+tip:"✨ Surveillez attentivement : le miel caramélise vite à haute température et peut brûler. Restez proche du four."}
+]},
+
+{id:18,name:"Gratin de pommes de terre au jambon",emoji:"🧀",category:"plat",meat:"porc",needsOven:true,prepTime:20,cookTime:60,baseServings:6,kcalPerServing:450,macros:{proteines:22,lipides:24,glucides:38,fibres:3},
+description:"Un gratin réconfortant et généreux. Le jambon apporte une note fumée qui se marie parfaitement avec la crème.",
+tips:"Le secret : des tranches de pommes de terre régulières pour une cuisson homogène.",
+ingredients:[
+{id:"i1",name:"Pommes de terre",qty:1000,unit:"g",tip:"Variété à chair ferme (Charlotte, Amandine). Tranchez très finement (3mm)."},
+{id:"i2",name:"Jambon blanc",qty:200,unit:"g",tip:"En tranches épaisses, coupées en morceaux."},
+{id:"i3",name:"Crème fraîche liquide",qty:300,unit:"ml",tip:"Entière pour un gratin crémeux."},
+{id:"i4",name:"Gruyère râpé",qty:120,unit:"g",tip:"Ou comté, emmental."},
+{id:"i5",name:"Ail",qty:2,unit:"gousses",tip:"Pour frotter le plat."},
+{id:"i6",name:"Lait",qty:150,unit:"ml",tip:"Mélangé à la crème pour alléger."},
+{id:"i7",name:"Beurre",qty:15,unit:"g",tip:"Pour beurrer le plat."},
+{id:"i8",name:"Noix de muscade",qty:1,unit:"pincée",tip:"Râpée fraîche si possible."},
+{id:"i9",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer et préchauffer",duration:20,ingredientIds:["i1","i5","i7","i3","i6","i8","i9"],
+text:"Préchauffez le four à 180°C. Frottez un plat à gratin avec les gousses d'ail coupées. Beurrez le plat. Mélangez crème, lait, muscade, sel et poivre dans un bol.",
+tip:"✨ Les tranches de pommes de terre doivent être aussi fines et régulières que possible. Une mandoline est idéale."},
+{id:"s2",title:"Monter le gratin",duration:10,ingredientIds:["i1","i2","i3","i4"],
+text:"Alternez les couches : pommes de terre, morceaux de jambon, filet de mélange crème. Répétez en terminant par une couche de pommes de terre. Versez le reste de crème. Parsemez de gruyère râpé.",
+tip:"✨ Ne lésinez pas sur le fromage pour la surface — c'est ce qui formera la belle croûte dorée et croustillante !"},
+{id:"s3",title:"Cuire au four",duration:60,ingredientIds:["i1"],
+text:"Enfournez à 180°C pendant 55-60 min. Vérifiez en plantant un couteau : il doit s'enfoncer sans résistance. Si la surface colore trop vite, couvrez de papier alu.",
+tip:"✨ Un gratin se teste avec un couteau : si ça résiste, pas encore cuit. Si ça entre comme dans du beurre, c'est parfait !"}
+]}
+// FOUR — BOEUF
+,{id:19,name:"Bœuf bourguignon simplifié",emoji:"🍷",category:"plat",meat:"boeuf",needsOven:true,prepTime:20,cookTime:150,baseServings:6,kcalPerServing:520,macros:{proteines:42,lipides:22,glucides:18,fibres:4},
+description:"Le grand classique de la cuisine française adapté aux débutants. Long mais simple — le four fait tout.",
+tips:"Un plat réchauffé le lendemain est encore meilleur : les saveurs ont eu le temps de se développer.",
+ingredients:[
+{id:"i1",name:"Bœuf à braiser (paleron ou joue)",qty:1000,unit:"g",tip:"Cubes de 4-5cm. Le paleron s'attendrit lors de la cuisson longue."},
+{id:"i2",name:"Vin rouge",qty:750,unit:"ml",tip:"Un vin que vous boiriez. Pas besoin de grand cru."},
+{id:"i3",name:"Lardons fumés",qty:150,unit:"g",tip:""},
+{id:"i4",name:"Champignons de Paris",qty:250,unit:"g",tip:"Essuyez, coupez en deux ou laissez entiers si petits."},
+{id:"i5",name:"Carottes",qty:3,unit:"pièces",tip:"Rondelles épaisses."},
+{id:"i6",name:"Oignon",qty:2,unit:"pièces",tip:"Hachez grossièrement."},
+{id:"i7",name:"Ail",qty:4,unit:"gousses",tip:"Hachez."},
+{id:"i8",name:"Bouillon de bœuf",qty:300,unit:"ml",tip:"2 cubes dans 300ml d'eau chaude."},
+{id:"i9",name:"Concentré de tomate",qty:2,unit:"c.à.s",tip:""},
+{id:"i10",name:"Farine",qty:2,unit:"c.à.s",tip:"Pour lier la sauce."},
+{id:"i11",name:"Bouquet garni",qty:0,unit:"",tip:"Thym, laurier."},
+{id:"i12",name:"Huile",qty:2,unit:"c.à.s",tip:""},
+{id:"i13",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Faire dorer viande et lardons",duration:20,ingredientIds:["i1","i3","i10","i12","i13"],
+text:"Préchauffez le four à 160°C. Chauffez l'huile dans une cocotte allant au four à feu vif. Faites dorer les lardons 3 min. Farinez les cubes de bœuf, faites-les dorer par petites quantités (2-3 min par face). Réservez.",
+tip:"✨ Faites dorer la viande en PETITES QUANTITÉS — si vous entassez tout, elle cuit à la vapeur au lieu de dorer."},
+{id:"s2",title:"Faire revenir les légumes",duration:8,ingredientIds:["i6","i7","i5","i9"],
+text:"Dans la même cocotte, faites revenir l'oignon 3 min. Ajoutez ail, carottes et concentré de tomate, cuisez 3 min.",
+tip:"✨ Ces étapes semblent longues mais sont rapides. Chaque couche de saveur compte dans ce plat."},
+{id:"s3",title:"Mouiller et enfourner",duration:150,ingredientIds:["i2","i8","i1","i3","i11","i4","i13"],
+text:"Remettez viande et lardons. Versez vin et bouillon — la viande doit être presque couverte. Ajoutez le bouquet garni. Portez à ébullition, couvrez et enfournez à 160°C pendant 2h30. Ajoutez les champignons à mi-cuisson.",
+tip:"✨ La longue cuisson à 160°C transforme les cubes durs en viande fondante. Le vin perd son alcool et garde son goût."}
+]},
+
+{id:20,name:"Lasagnes bolognaise",emoji:"🍝",category:"plat",meat:"boeuf",needsOven:true,prepTime:30,cookTime:75,baseServings:6,kcalPerServing:560,macros:{proteines:30,lipides:24,glucides:52,fibres:4},
+description:"Le plat familial par excellence. Un peu long à préparer, mais tellement bon que ça vaut chaque minute.",
+tips:"La béchamel doit être bien lisse et ni trop épaisse ni trop liquide — elle se répand facilement entre les couches.",
+ingredients:[
+{id:"i1",name:"Feuilles de lasagnes",qty:12,unit:"à 15 feuilles",tip:"Sèches du commerce — pas besoin de les précuire si la sauce est assez liquide."},
+{id:"i2",name:"Bœuf haché",qty:500,unit:"g",tip:""},
+{id:"i3",name:"Tomates concassées",qty:800,unit:"ml (2 boîtes)",tip:""},
+{id:"i4",name:"Oignon",qty:1,unit:"pièce",tip:"Hachez finement."},
+{id:"i5",name:"Ail",qty:3,unit:"gousses",tip:"Hachez."},
+{id:"i6",name:"Lait",qty:500,unit:"ml",tip:"Pour la béchamel."},
+{id:"i7",name:"Beurre",qty:50,unit:"g",tip:"Pour la béchamel."},
+{id:"i8",name:"Farine",qty:50,unit:"g",tip:"Pour la béchamel."},
+{id:"i9",name:"Gruyère râpé",qty:150,unit:"g",tip:""},
+{id:"i10",name:"Huile d'olive",qty:2,unit:"c.à.s",tip:""},
+{id:"i11",name:"Herbes de Provence",qty:1,unit:"c.à.c",tip:""},
+{id:"i12",name:"Sel, poivre, muscade",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Faire la bolognaise",duration:25,ingredientIds:["i2","i4","i5","i3","i11","i10","i12"],
+text:"Chauffez l'huile, faites revenir l'oignon 3 min. Ajoutez l'ail 1 min. Ajoutez la viande hachée, cassez-la avec une cuillère et faites-la dorer 5 min. Ajoutez les tomates et herbes. Salez, poivrez. Laissez mijoter 15 min.",
+tip:"✨ La bolognaise doit être bien réduite et épaisse. Si elle est trop liquide, les lasagnes seront détrempées."},
+{id:"s2",title:"Faire la béchamel",duration:10,ingredientIds:["i7","i8","i6","i9","i12"],
+text:"Faites fondre le beurre à feu moyen. Ajoutez la farine, mélangez vigoureusement 1 min (ça forme un roux). Versez le lait chaud PROGRESSIVEMENT tout en fouettant sans arrêt. Continuez à fouetter jusqu'à ce que la sauce épaississe (5 min). Salez, poivrez, muscade.",
+tip:"✨ Secret d'une béchamel sans grumeaux : verser le lait progressivement tout en fouettant SANS INTERRUPTION."},
+{id:"s3",title:"Monter et cuire au four",duration:60,ingredientIds:["i1","i2","i6","i9"],
+text:"Préchauffez à 180°C. Dans un grand plat beurré, alternez : béchamel fine, feuilles de lasagnes, bolognaise, béchamel. Répétez 3-4 fois. Terminez par béchamel + gruyère râpé. Enfournez 45-50 min.",
+tip:"✨ Couvrez de papier alu les 30 premières minutes pour que les lasagnes absorbent l'humidité. Retirez ensuite pour gratiner."}
+]},
+
+{id:21,name:"Hamburgers maison au four",emoji:"🍔",category:"plat",meat:"boeuf",needsOven:true,prepTime:20,cookTime:20,baseServings:4,kcalPerServing:650,macros:{proteines:38,lipides:32,glucides:42,fibres:3},
+description:"Des burgers maison bien meilleurs que ceux du commerce. Le four assure une cuisson homogène sans fumée.",
+tips:"La clé d'un bon steak de burger : ne pas trop manipuler la viande hachée pour garder une texture fondante.",
+ingredients:[
+{id:"i1",name:"Bœuf haché 20% MG",qty:600,unit:"g",tip:"20% de MG = burgers juteux. Moins gras = burgers secs."},
+{id:"i2",name:"Buns à hamburger",qty:4,unit:"pièces",tip:"Briochés si possible."},
+{id:"i3",name:"Fromage à fondre",qty:4,unit:"tranches",tip:"Cheddar, gouda, emmental..."},
+{id:"i4",name:"Oignon",qty:1,unit:"pièce",tip:"Pour les oignons caramélisés optionnels."},
+{id:"i5",name:"Ail",qty:1,unit:"gousse",tip:"Hachez finement, incorporez dans la viande."},
+{id:"i6",name:"Sauce Worcestershire",qty:1,unit:"c.à.c",tip:"Ou sauce soja. Booste le goût."},
+{id:"i7",name:"Sel, poivre",qty:0,unit:"",tip:"Salez JUSTE AVANT de cuire."},
+{id:"i8",name:"Garnitures",qty:0,unit:"salade, tomate, cornichons",tip:"Lavez la salade, tranchez la tomate."}
+],
+steps:[
+{id:"s1",title:"Préparer les steaks",duration:10,ingredientIds:["i1","i5","i6","i7"],
+text:"Préchauffez le four à 200°C. Mélangez la viande hachée avec l'ail haché et la sauce Worcestershire. Formez 4 steaks de 150g en les manipulant le MOINS POSSIBLE. Faites un creux au centre avec le pouce. Salez et poivrez juste avant d'enfourner.",
+tip:"✨ Le creux central empêche le burger de gonfler à la cuisson. Sans ce creux, le centre se dilate et forme une boulette."},
+{id:"s2",title:"Cuire au four",duration:14,ingredientIds:["i1","i3"],
+text:"Posez les steaks sur une grille au-dessus d'une plaque. Enfournez 12 min pour à point, 14 min pour bien cuit. Posez une tranche de fromage sur chaque steak 2 min avant la fin.",
+tip:"✨ La grille est importante : le burger cuit dans sa vapeur si posé sur une plaque pleine. Sur grille = chaleur tout autour."},
+{id:"s3",title:"Assembler le burger",duration:5,ingredientIds:["i2","i8","i4"],
+text:"Toastez les buns 2 min au four. Assemblez dans l'ordre : bun bas, sauce, salade, tomate, steak avec fromage, cornichons, bun haut. Servez immédiatement.",
+tip:"✨ Salade entre le pain et la tomate — elle protège le pain de l'humidité."}
+]}
+// FOUR — POULET
+,{id:22,name:"Poulet rôti classique",emoji:"🍗",category:"plat",meat:"poulet",needsOven:true,prepTime:15,cookTime:70,baseServings:4,kcalPerServing:450,macros:{proteines:46,lipides:24,glucides:4,fibres:1},
+description:"Maîtriser le poulet rôti, c'est maîtriser la base de la cuisine familiale. Simple, économique, délicieux.",
+tips:"Le beurre sous la peau est le secret d'un poulet rôti inoubliable — la chair reste juteuse et parfumée.",
+ingredients:[
+{id:"i1",name:"Poulet entier",qty:1600,unit:"g",tip:"Un poulet fermier Label Rouge si possible. Sortez-le 30 min avant du frigo."},
+{id:"i2",name:"Beurre mou",qty:60,unit:"g",tip:"Sortez-le 30 min avant pour qu'il soit malléable."},
+{id:"i3",name:"Ail",qty:4,unit:"gousses",tip:"2 dans le beurre haché, 2 dans la cavité."},
+{id:"i4",name:"Thym frais",qty:4,unit:"branches",tip:"Mélangé au beurre."},
+{id:"i5",name:"Citron",qty:1,unit:"pièce",tip:"La moitié dans la cavité parfume de l'intérieur."},
+{id:"i6",name:"Huile d'olive",qty:1,unit:"c.à.s",tip:"Pour la peau."},
+{id:"i7",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer le beurre aux herbes",duration:10,ingredientIds:["i2","i3","i4","i7"],
+text:"Préchauffez le four à 200°C. Mélangez le beurre mou avec 2 gousses d'ail hachées, le thym effeuillé, sel et poivre. Glissez vos doigts entre la peau et la chair du poulet pour décoller la peau sans la déchirer. Farcissez ce beurre sous la peau.",
+tip:"✨ Le beurre sous la peau fond pendant la cuisson et imprègne directement la chair. La peau le protège et reste croustillante. C'est le truc des chefs !"},
+{id:"s2",title:"Préparer et enfourner",duration:5,ingredientIds:["i5","i3","i6","i7"],
+text:"Glissez le demi-citron et les 2 gousses d'ail dans la cavité du poulet. Badigeonnez la peau d'huile d'olive, salez généreusement. Posez le poulet sur une grille dans le plat.",
+tip:"✨ Posé sur une grille, la chaleur circule tout autour du poulet — la peau croustille sur toutes les faces."},
+{id:"s3",title:"Cuire au four",duration:70,ingredientIds:["i1"],
+text:"Enfournez à 200°C. Retournez le poulet à mi-cuisson. Pour 1,6kg : 1h10 environ. Vérifiez en piquant la cuisse — le jus doit couler clair (pas rosé). Laissez reposer 10 min sous alu avant de découper.",
+tip:"✨ Règle du poulet rôti : 20 min par 500g + 20 min. Jus clair en piquant la cuisse = cuisson parfaite."}
+]},
+
+{id:23,name:"Poulet pané au four",emoji:"🌿",category:"plat",meat:"poulet",needsOven:true,prepTime:15,cookTime:25,baseServings:4,kcalPerServing:360,macros:{proteines:44,lipides:10,glucides:22,fibres:1},
+description:"Tout le croustillant du poulet pané, sans friture ! La panure dorée au four grâce au parmesan.",
+tips:"Pour une panure ultra-croustillante : badigeonnez légèrement d'huile avant d'enfourner.",
+ingredients:[
+{id:"i1",name:"Blancs de poulet",qty:4,unit:"pièces",tip:"Coupez chaque blanc en 2-3 lanières."},
+{id:"i2",name:"Œufs",qty:2,unit:"pièces",tip:"Battez en omelette."},
+{id:"i3",name:"Chapelure panko",qty:120,unit:"g",tip:"La chapelure japonaise est plus croustillante que l'ordinaire."},
+{id:"i4",name:"Parmesan râpé",qty:50,unit:"g",tip:"Mélangé à la chapelure, il apporte un goût intense."},
+{id:"i5",name:"Ail en poudre",qty:0.5,unit:"c.à.c",tip:""},
+{id:"i6",name:"Paprika",qty:0.5,unit:"c.à.c",tip:"Pour la couleur et le goût."},
+{id:"i7",name:"Farine",qty:60,unit:"g",tip:"Première étape de la panure."},
+{id:"i8",name:"Huile d'olive",qty:2,unit:"c.à.s",tip:"Pour badigeonner la panure."},
+{id:"i9",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer la panure",duration:10,ingredientIds:["i3","i4","i5","i6","i2","i7","i9"],
+text:"Préchauffez le four à 200°C. Posez du papier cuisson sur une plaque. Préparez 3 assiettes : 1. farine, 2. œufs battus, 3. chapelure panko + parmesan + ail + paprika + sel + poivre. Passez chaque morceau dans cet ordre.",
+tip:"✨ La farine en premier = l'œuf adhère. L'œuf = la chapelure adhère. Sans cette progression, la panure tombe à la cuisson."},
+{id:"s2",title:"Cuire au four",duration:25,ingredientIds:["i1","i8"],
+text:"Posez les morceaux panés sur la plaque. Badigeonnez légèrement d'huile d'olive. Enfournez 20-25 min en retournant à mi-cuisson. La panure doit être dorée et croustillante.",
+tip:"✨ Badigeonner d'huile est la clé : sans huile, la panure reste sèche et pâle. Avec un peu d'huile, elle dore comme si elle était frite."}
+]},
+
+{id:24,name:"Cuisses de poulet confites aux olives",emoji:"🫒",category:"plat",meat:"poulet",needsOven:true,prepTime:10,cookTime:60,baseServings:4,kcalPerServing:480,macros:{proteines:42,lipides:28,glucides:8,fibres:3},
+description:"Un plat méditerranéen fondant où le poulet cuit doucement dans un bain d'olives, tomates et herbes.",
+tips:"Les cuisses sont meilleures que les blancs pour ce plat — elles restent tendres et juteuses après une longue cuisson.",
+ingredients:[
+{id:"i1",name:"Cuisses de poulet",qty:4,unit:"pièces",tip:"Avec os et peau — gardez la peau, elle protège la chair."},
+{id:"i2",name:"Olives vertes et noires",qty:200,unit:"g",tip:"Mélangées pour plus de goût."},
+{id:"i3",name:"Tomates cerises",qty:250,unit:"g",tip:"Ou 2 tomates normales coupées en quartiers."},
+{id:"i4",name:"Oignon rouge",qty:2,unit:"pièces",tip:"Émincez en demi-rondelles."},
+{id:"i5",name:"Ail",qty:4,unit:"gousses",tip:"Entières (en chemise) — fondent et parfument."},
+{id:"i6",name:"Herbes de Provence",qty:2,unit:"c.à.c",tip:""},
+{id:"i7",name:"Huile d'olive",qty:3,unit:"c.à.s",tip:""},
+{id:"i8",name:"Vin blanc ou bouillon",qty:100,unit:"ml",tip:"Empêche de dessécher et fait la sauce."},
+{id:"i9",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Saisir le poulet",duration:10,ingredientIds:["i1","i7","i9"],
+text:"Préchauffez le four à 180°C. Salez et poivrez les cuisses des deux côtés. Chauffez l'huile dans une poêle allant au four. Faites dorer les cuisses CÔTÉ PEAU EN BAS 5 min sans bouger jusqu'à peau bien dorée. Retournez 2 min.",
+tip:"✨ Dorer la peau avant d'enfourner = peau croustillante + saveur caramélisée qui parfume tout le plat."},
+{id:"s2",title:"Ajouter les légumes et enfourner",duration:60,ingredientIds:["i2","i3","i4","i5","i6","i8"],
+text:"Ajoutez autour des cuisses : oignons, tomates cerises, olives, ail. Saupoudrez d'herbes de Provence. Versez le vin blanc. Enfournez à 180°C pendant 50-55 min.",
+tip:"✨ Vérifiez à mi-cuisson : si le fond du plat est sec, ajoutez un peu d'eau ou de bouillon pour protéger les légumes."}
+]}
+// FOUR — VEAU
+,{id:25,name:"Blanquette de veau au four",emoji:"🥛",category:"plat",meat:"veau",needsOven:true,prepTime:20,cookTime:90,baseServings:4,kcalPerServing:480,macros:{proteines:42,lipides:22,glucides:16,fibres:3},
+description:"La blanquette est l'un des plats les plus emblématiques de la cuisine française. Douce, crémeuse, réconfortante.",
+tips:"La blanquette ne se fait PAS dorer — la viande reste blanche. C'est la différence avec le bœuf bourguignon.",
+ingredients:[
+{id:"i1",name:"Épaule de veau",qty:800,unit:"g",tip:"Cubes de 4cm."},
+{id:"i2",name:"Carottes",qty:3,unit:"pièces",tip:"Rondelles."},
+{id:"i3",name:"Champignons de Paris",qty:200,unit:"g",tip:"Entiers si petits, coupés en 4 si grands."},
+{id:"i4",name:"Oignon",qty:1,unit:"pièce",tip:"Laissez entier, piquez-le de 2 clous de girofle."},
+{id:"i5",name:"Crème fraîche",qty:200,unit:"ml",tip:""},
+{id:"i6",name:"Bouillon de veau",qty:800,unit:"ml",tip:"3 cubes dans 800ml d'eau chaude."},
+{id:"i7",name:"Farine",qty:2,unit:"c.à.s",tip:"Pour lier la sauce."},
+{id:"i8",name:"Beurre",qty:30,unit:"g",tip:""},
+{id:"i9",name:"Citron",qty:0.5,unit:"pièce",tip:"Un filet pour la finition."},
+{id:"i10",name:"Bouquet garni",qty:0,unit:"",tip:"Thym, laurier."},
+{id:"i11",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Blanchir la viande",duration:10,ingredientIds:["i1"],
+text:"Préchauffez le four à 160°C. Mettez les cubes de veau dans une casserole, couvrez d'eau froide. Portez à ébullition, laissez bouillir 2 min. De l'écume (impuretés) remonte. Égouttez et rincez la viande.",
+tip:"✨ Blanchir = plonger dans l'eau froide et porter à ébullition. Les impuretés remontent en écume. On jette cette eau. Résultat : une sauce blanche impeccable."},
+{id:"s2",title:"Cuire avec les légumes",duration:80,ingredientIds:["i2","i4","i3","i6","i10","i1","i11"],
+text:"Dans une cocotte, mettez le veau blanchi, les carottes, l'oignon piqué de clous de girofle, les champignons, le bouquet garni. Couvrez de bouillon. Portez à ébullition, couvrez et enfournez à 160°C pendant 1h20.",
+tip:"✨ La cuisson au four est plus douce et homogène que sur la plaque. La viande cuit entourée de chaleur."},
+{id:"s3",title:"Sauce et finition",duration:10,ingredientIds:["i7","i8","i5","i9","i11"],
+text:"Prélevez 400ml de bouillon de cuisson. Faites fondre le beurre, ajoutez la farine, mélangez 1 min. Versez le bouillon progressivement en fouettant. Portez à ébullition. Incorporez la crème. Versez sur la viande, ajoutez le citron.",
+tip:"✨ Cette sauce s'appelle un 'velouté' — une béchamel faite avec du bouillon au lieu du lait."}
+]},
+
+{id:26,name:"Osso Buco à la milanaise",emoji:"🇮🇹",category:"plat",meat:"veau",needsOven:true,prepTime:15,cookTime:90,baseServings:4,kcalPerServing:520,macros:{proteines:44,lipides:20,glucides:18,fibres:3},
+description:"Un grand classique italien fondant. La gremolata finale (ail, citron, persil) transforme complètement ce plat.",
+tips:"L'osso buco se reconnaît au cylindre d'os avec de la moelle à l'intérieur — un délice à récupérer à la cuillère !",
+ingredients:[
+{id:"i1",name:"Jarret de veau tranché (osso buco)",qty:4,unit:"tranches épaisses",tip:"Liez chaque tranche avec de la ficelle alimentaire pour qu'elle garde sa forme."},
+{id:"i2",name:"Tomates concassées",qty:400,unit:"ml",tip:""},
+{id:"i3",name:"Vin blanc sec",qty:200,unit:"ml",tip:""},
+{id:"i4",name:"Bouillon de veau",qty:200,unit:"ml",tip:""},
+{id:"i5",name:"Oignon",qty:1,unit:"pièce",tip:"Hachez."},
+{id:"i6",name:"Carottes",qty:2,unit:"pièces",tip:"Petits dés."},
+{id:"i7",name:"Céleri",qty:2,unit:"branches",tip:"Petits dés."},
+{id:"i8",name:"Ail",qty:2,unit:"gousses",tip:"Hachez."},
+{id:"i9",name:"Farine",qty:2,unit:"c.à.s",tip:"Pour fariner les tranches."},
+{id:"i10",name:"Huile d'olive",qty:2,unit:"c.à.s",tip:""},
+{id:"i11",name:"Persil frais",qty:0.5,unit:"bouquet",tip:"Pour la gremolata."},
+{id:"i12",name:"Citron",qty:1,unit:"pièce",tip:"Zeste pour la gremolata."},
+{id:"i13",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Dorer la viande",duration:15,ingredientIds:["i1","i9","i10","i13"],
+text:"Préchauffez le four à 160°C. Salez, poivrez et farinez les tranches d'osso buco. Dans une cocotte, chauffez l'huile à feu vif. Faites dorer les tranches 3-4 min par face. Réservez.",
+tip:"✨ Fariner puis dorer = croûte savoureuse + la farine épaissira la sauce naturellement."},
+{id:"s2",title:"Légumes et sauce",duration:10,ingredientIds:["i5","i6","i7","i8","i3","i2","i4"],
+text:"Faites revenir oignon, carotte et céleri 5 min. Ajoutez l'ail 1 min. Versez le vin blanc, réduisez 2 min. Ajoutez tomates et bouillon. Remettez la viande.",
+tip:"✨ Les dés de carotte, céleri et oignon s'appellent une 'mirepoix' — la base aromatique des plats mijotés italiens."},
+{id:"s3",title:"Mijoter au four et gremolata",duration:90,ingredientIds:["i11","i12","i8"],
+text:"Couvrez et enfournez à 160°C pendant 1h30. La viande doit se détacher de l'os. Préparez la gremolata : mélangez persil haché + zeste de citron + 1 gousse d'ail hachée. Parsemez juste avant de servir.",
+tip:"✨ La gremolata est la touche finale OBLIGATOIRE. Elle apporte fraîcheur et luminosité à ce plat riche."}
+]},
+
+{id:27,name:"Épaule de veau aux légumes du soleil",emoji:"☀️",category:"plat",meat:"veau",needsOven:true,prepTime:15,cookTime:90,baseServings:4,kcalPerServing:440,macros:{proteines:40,lipides:18,glucides:16,fibres:5},
+description:"Une épaule de veau fondante entourée de légumes méditerranéens colorés.",
+tips:"Badigeonner la viande plusieurs fois en cours de cuisson = surface brillante et savoureuse.",
+ingredients:[
+{id:"i1",name:"Épaule de veau roulée",qty:900,unit:"g",tip:"Demandez-la ficelée au boucher."},
+{id:"i2",name:"Courgette",qty:2,unit:"pièces",tip:"Rondelles épaisses de 2cm."},
+{id:"i3",name:"Aubergine",qty:1,unit:"pièce",tip:"Cubes. Salez 15 min et rincez pour enlever l'amertume."},
+{id:"i4",name:"Poivron rouge",qty:2,unit:"pièces",tip:"Épépinez, coupez en morceaux."},
+{id:"i5",name:"Tomates",qty:3,unit:"pièces",tip:"Coupez en quartiers."},
+{id:"i6",name:"Oignon rouge",qty:1,unit:"pièce",tip:"Coupez en quartiers."},
+{id:"i7",name:"Ail",qty:5,unit:"gousses",tip:"En chemise (avec la peau)."},
+{id:"i8",name:"Huile d'olive",qty:4,unit:"c.à.s",tip:""},
+{id:"i9",name:"Herbes de Provence",qty:2,unit:"c.à.c",tip:""},
+{id:"i10",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer et dorer",duration:15,ingredientIds:["i1","i8","i9","i10"],
+text:"Préchauffez le four à 180°C. Badigeonnez l'épaule d'huile d'olive, salez, poivrez, parsemez d'herbes. Dans une grande poêle, faites dorer l'épaule sur toutes les faces 8-10 min.",
+tip:"✨ Dorer avant d'enfourner = saveur caramélisée qui parfume ensuite les légumes."},
+{id:"s2",title:"Préparer les légumes et enfourner",duration:90,ingredientIds:["i2","i3","i4","i5","i6","i7","i8","i9","i10"],
+text:"Dans le plat à four, disposez tous les légumes autour de l'épaule. Arrosez d'huile, saupoudrez d'herbes, salez et poivrez. Ajoutez 100ml d'eau dans le fond. Enfournez à 180°C pendant 1h15 à 1h30. Arrosez toutes les 20 min.",
+tip:"✨ Les légumes doivent légèrement caraméliser. S'ils colorent trop vite, ajoutez un peu d'eau."}
+]}
+// FOUR — POISSON
+,{id:28,name:"Saumon en papillote aux légumes",emoji:"🐠",category:"plat",meat:"poisson",needsOven:true,prepTime:10,cookTime:20,baseServings:4,kcalPerServing:340,macros:{proteines:38,lipides:16,glucides:8,fibres:3},
+description:"La papillote est la méthode la plus simple et saine du four. Le poisson cuit dans sa vapeur et reste toujours moelleux.",
+tips:"La papillote doit être bien fermée pour que la vapeur reste à l'intérieur — c'est ce qui cuit le poisson.",
+ingredients:[
+{id:"i1",name:"Pavés de saumon",qty:4,unit:"pièces 150g",tip:"Frais de préférence. Séchez avec du papier absorbant."},
+{id:"i2",name:"Courgette",qty:1,unit:"pièce",tip:"Très fines rondelles (2mm) pour qu'elles cuisent vite."},
+{id:"i3",name:"Tomates cerises",qty:200,unit:"g",tip:"Coupez en deux."},
+{id:"i4",name:"Citron",qty:2,unit:"pièces",tip:"Tranches fines."},
+{id:"i5",name:"Aneth ou persil frais",qty:0.5,unit:"bouquet",tip:"L'aneth est l'herbe classique du saumon."},
+{id:"i6",name:"Ail",qty:2,unit:"gousses",tip:"Hachez finement."},
+{id:"i7",name:"Huile d'olive",qty:2,unit:"c.à.s",tip:"Un filet par papillote."},
+{id:"i8",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer les papillotes",duration:10,ingredientIds:["i1","i2","i3","i4","i5","i6","i7","i8"],
+text:"Préchauffez le four à 200°C. Découpez 4 grands carrés de papier aluminium. Sur chaque carré : rondelles de courgette, tomates cerises, tranches de citron. Posez le pavé de saumon dessus. Ajoutez ail, aneth, sel, poivre. Arrosez d'huile. Refermez hermétiquement.",
+tip:"✨ Une papillote bien fermée crée un 'four dans le four'. La vapeur circule et cuit le poisson en douceur."},
+{id:"s2",title:"Cuire et ouvrir",duration:20,ingredientIds:["i1"],
+text:"Posez les papillotes sur une plaque. Enfournez 15-18 min. ATTENTION en ouvrant : la vapeur brûlante sort d'un coup ! Ouvrez en vous penchant de côté. Servez dans la papillote ou en assiette.",
+tip:"✨ Pour vérifier sans ouvrir : pressez légèrement la papillote. Si la chair cède sans résistance, c'est cuit."}
+]},
+
+{id:29,name:"Gratin de poisson à la béchamel",emoji:"🧅",category:"plat",meat:"poisson",needsOven:true,prepTime:20,cookTime:35,baseServings:4,kcalPerServing:420,macros:{proteines:36,lipides:18,glucides:28,fibres:2},
+description:"Un gratin crémeux et réconfortant qui transforme du poisson simple en plat festif.",
+tips:"Vous pouvez utiliser n'importe quel poisson à chair blanche : cabillaud, lieu, merlan, etc.",
+ingredients:[
+{id:"i1",name:"Filets de poisson blanc",qty:600,unit:"g",tip:"Séchez-les bien. Vérifiez les arêtes."},
+{id:"i2",name:"Crevettes cuites",qty:200,unit:"g",tip:"Optionnel mais donne du luxe au gratin."},
+{id:"i3",name:"Lait",qty:500,unit:"ml",tip:"Pour la béchamel."},
+{id:"i4",name:"Beurre",qty:50,unit:"g",tip:""},
+{id:"i5",name:"Farine",qty:50,unit:"g",tip:""},
+{id:"i6",name:"Gruyère râpé",qty:100,unit:"g",tip:""},
+{id:"i7",name:"Échalotes",qty:2,unit:"pièces",tip:"Émincez finement."},
+{id:"i8",name:"Persil frais",qty:0.5,unit:"bouquet",tip:"Hachez."},
+{id:"i9",name:"Noix de muscade",qty:1,unit:"pincée",tip:""},
+{id:"i10",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Pocher le poisson",duration:10,ingredientIds:["i1","i7"],
+text:"Préchauffez le four à 200°C. Chauffez le lait avec les échalotes. Plongez les filets de poisson dans le lait frémissant, couvrez et laissez pocher 5 min. Retirez délicatement les filets (gardez le lait pour la béchamel). Émiettez grossièrement.",
+tip:"✨ Pocher le poisson dans le lait = il reste tendre et le lait s'imprègne du goût du poisson pour la béchamel."},
+{id:"s2",title:"Faire la béchamel",duration:8,ingredientIds:["i4","i5","i3","i9","i10"],
+text:"Faites fondre le beurre à feu moyen. Ajoutez la farine, mélangez 1 min (roux). Versez le lait de cuisson chaud progressivement en fouettant sans cesse. Portez à ébullition en fouettant — la sauce épaissit. Salez, poivrez, muscade. Ajoutez le persil.",
+tip:"✨ Verser le lait chaud (et non froid) évite les grumeaux. Fouetter sans interruption est la clé."},
+{id:"s3",title:"Monter le gratin",duration:30,ingredientIds:["i1","i2","i6","i3"],
+text:"Beurrez un plat à gratin. Disposez le poisson émietté et les crevettes. Versez la béchamel. Parsemez de gruyère. Enfournez à 200°C pendant 20-25 min jusqu'à dorure.",
+tip:"✨ Pour une belle croûte dorée, passez sous le grill les 3 dernières minutes."}
+]},
+
+{id:30,name:"Daurade entière rôtie",emoji:"🐡",category:"plat",meat:"poisson",needsOven:true,prepTime:10,cookTime:25,baseServings:4,kcalPerServing:320,macros:{proteines:40,lipides:12,glucides:4,fibres:2},
+description:"Rôtir un poisson entier au four est la méthode la plus simple et spectaculaire pour les débutants.",
+tips:"Un poisson entier cuit mieux qu'en filets : les os parfument la chair et la protègent de la dessication.",
+ingredients:[
+{id:"i1",name:"Daurade royale",qty:2,unit:"pièces 600g",tip:"Demandez au poissonnier de les vider et écailler. Faites 3 incisions sur chaque flanc."},
+{id:"i2",name:"Citron",qty:2,unit:"pièces",tip:"En tranches pour farcir la cavité."},
+{id:"i3",name:"Fenouil",qty:1,unit:"bulbe",tip:"Émincez finement. Se marie parfaitement avec la daurade."},
+{id:"i4",name:"Tomates cerises",qty:200,unit:"g",tip:""},
+{id:"i5",name:"Ail",qty:4,unit:"gousses",tip:"En chemise."},
+{id:"i6",name:"Thym et romarin",qty:0,unit:"quelques branches",tip:"Dans la cavité et autour."},
+{id:"i7",name:"Huile d'olive",qty:3,unit:"c.à.s",tip:""},
+{id:"i8",name:"Vin blanc sec",qty:100,unit:"ml",tip:"Versé dans le fond du plat."},
+{id:"i9",name:"Fleur de sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer les daurades",duration:10,ingredientIds:["i1","i2","i6","i9","i7"],
+text:"Préchauffez le four à 200°C. Rincez et séchez les poissons. Farcissez les cavités avec des tranches de citron, du thym et du romarin. Badigeonnez généreusement d'huile d'olive des deux côtés. Salez à la fleur de sel, poivrez.",
+tip:"✨ Les 3 incisions sur les flancs permettent aux épices de pénétrer et à la chaleur d'atteindre le cœur plus rapidement."},
+{id:"s2",title:"Préparer le lit de légumes",duration:5,ingredientIds:["i3","i4","i5","i7","i9"],
+text:"Dans le plat à four, disposez le fenouil émincé, les tomates cerises et l'ail en chemise. Arrosez d'huile, salez et poivrez. Versez le vin blanc dans le fond.",
+tip:"✨ Les légumes servent de 'lit' pour le poisson. Ils se gorgent du jus de cuisson."},
+{id:"s3",title:"Rôtir au four",duration:25,ingredientIds:["i1"],
+text:"Posez les daurades sur les légumes. Enfournez à 200°C pour 20-25 min. Le poisson est cuit quand l'œil est blanc et que la chair se détache de l'arête avec une fourchette.",
+tip:"✨ Pour lever un filet : glissez une spatule le long de l'arête centrale, soulevez — toute la chair vient d'un côté. Retournez et répétez."}
+]}
+// PLATS SANS VIANDE (5)
+,{id:31,name:"Ratatouille de légumes du soleil",emoji:"🍆",category:"veggie",meat:"none",needsOven:false,prepTime:20,cookTime:40,baseServings:4,kcalPerServing:220,macros:{proteines:5,lipides:10,glucides:22,fibres:8},
+description:"La ratatouille est un plat provençal mythique qui transforme les légumes d'été en une symphonie de saveurs.",
+tips:"Le secret : cuire chaque légume séparément pour qu'il garde sa texture, puis les réunir à la fin.",
+ingredients:[
+{id:"i1",name:"Aubergine",qty:2,unit:"pièces",tip:"Cubes de 2cm. Salez, attendez 15 min, rincez et séchez."},
+{id:"i2",name:"Courgette",qty:3,unit:"pièces",tip:"Rondelles épaisses de 1,5cm."},
+{id:"i3",name:"Poivron rouge",qty:2,unit:"pièces",tip:"Épépinez et coupez en morceaux."},
+{id:"i4",name:"Poivron jaune",qty:1,unit:"pièce",tip:"Épépinez et coupez en morceaux."},
+{id:"i5",name:"Tomates",qty:4,unit:"pièces",tip:"Bien mûres. Ébouillantez 30 sec pour peler, puis coupez en morceaux."},
+{id:"i6",name:"Oignon",qty:2,unit:"pièces",tip:"Hachez grossièrement."},
+{id:"i7",name:"Ail",qty:4,unit:"gousses",tip:"Hachez finement."},
+{id:"i8",name:"Herbes de Provence",qty:2,unit:"c.à.c",tip:"Thym, romarin, basilic..."},
+{id:"i9",name:"Huile d'olive",qty:5,unit:"c.à.s",tip:"Indispensable dans ce plat."},
+{id:"i10",name:"Sel, poivre",qty:0,unit:"",tip:""},
+{id:"i11",name:"Basilic frais",qty:0.5,unit:"bouquet",tip:"Ajoutez en fin de cuisson — ne supporte pas la chaleur."}
+],
+steps:[
+{id:"s1",title:"Préparer les légumes",duration:20,ingredientIds:["i1","i2","i3","i4","i5"],
+text:"Salez les aubergines coupées, posez sur un torchon 15 min pour dégorger. Rincez et séchez. Préparez tous les autres légumes.",
+tip:"✨ 'Dégorger' les aubergines avec le sel élimine l'eau amère. Sans cette étape, elles absorbent trop d'huile et restent amères."},
+{id:"s2",title:"Cuire les légumes séparément",duration:25,ingredientIds:["i1","i2","i3","i4","i9","i10"],
+text:"Chauffez l'huile à feu moyen-vif. Cuisez chaque légume séparément 5-7 min jusqu'à légèrement doré : d'abord les aubergines, puis les courgettes, puis les poivrons. Réservez chaque légume.",
+tip:"✨ Cuire séparément = chaque légume garde sa texture. Si on met tout ensemble, les plus tendres (courgette) deviennent de la bouillie."},
+{id:"s3",title:"Réunir et mijoter",duration:20,ingredientIds:["i6","i7","i5","i8","i11","i10"],
+text:"Dans la même poêle, faites revenir les oignons 3 min. Ajoutez l'ail 1 min. Ajoutez les tomates et les herbes. Laissez compoter 5 min. Réunissez tous les légumes. Mélangez doucement et laissez mijoter 10 min. Parsemez de basilic frais.",
+tip:"✨ La ratatouille est meilleure réchauffée le lendemain. Les saveurs ont eu le temps de se mélanger."}
+]},
+
+{id:32,name:"Soupe de légumes maison",emoji:"🥣",category:"veggie",meat:"none",needsOven:false,prepTime:15,cookTime:30,baseServings:4,kcalPerServing:160,macros:{proteines:5,lipides:4,glucides:24,fibres:7},
+description:"La soupe maison est l'une des choses les plus réconfortantes qui soit. Simple, économique et infiniment modulable.",
+tips:"Plus les légumes sont variés, meilleure est la soupe. Voici une base que vous pouvez adapter avec ce que vous avez.",
+ingredients:[
+{id:"i1",name:"Pommes de terre",qty:3,unit:"pièces",tip:"Épluchez et coupez en cubes. Elles épaissiront la soupe naturellement."},
+{id:"i2",name:"Carottes",qty:3,unit:"pièces",tip:"Épluchez et coupez en rondelles."},
+{id:"i3",name:"Poireaux",qty:2,unit:"pièces",tip:"Coupez les parties vertes foncées, lavez soigneusement (il y a souvent de la terre entre les couches), coupez en rondelles."},
+{id:"i4",name:"Courgette",qty:1,unit:"pièce",tip:"En cubes."},
+{id:"i5",name:"Oignon",qty:1,unit:"pièce",tip:"Hachez."},
+{id:"i6",name:"Ail",qty:2,unit:"gousses",tip:"Hachez finement."},
+{id:"i7",name:"Bouillon de légumes",qty:1200,unit:"ml",tip:"3 cubes dans 1,2L d'eau chaude."},
+{id:"i8",name:"Huile d'olive",qty:2,unit:"c.à.s",tip:""},
+{id:"i9",name:"Cerfeuil ou persil",qty:0.5,unit:"bouquet",tip:"Pour garnir."},
+{id:"i10",name:"Sel, poivre",qty:0,unit:"",tip:""}
+],
+steps:[
+{id:"s1",title:"Faire revenir les aromates",duration:5,ingredientIds:["i5","i6","i3","i8"],
+text:"Chauffez l'huile dans une grande casserole. Faites revenir l'oignon et l'ail 3 min. Ajoutez les poireaux et cuisez encore 3 min.",
+tip:"✨ Faire revenir les aromates avant d'ajouter l'eau concentre leurs saveurs et parfume mieux la soupe."},
+{id:"s2",title:"Ajouter et cuire",duration:25,ingredientIds:["i1","i2","i4","i7","i10"],
+text:"Ajoutez carottes, pommes de terre et courgette. Versez le bouillon. Portez à ébullition, baissez le feu et laissez mijoter 20-25 min jusqu'à ce que tous les légumes soient tendres.",
+tip:"✨ Goûtez en cours de cuisson pour ajuster le sel. Les bouillons du commerce sont souvent déjà salés."},
+{id:"s3",title:"Mixer et servir",duration:3,ingredientIds:["i9","i10"],
+text:"Pour une soupe veloutée : mixez avec un mixeur plongeant directement dans la casserole. Pour une soupe avec morceaux : servez tel quel. Parsemez d'herbes fraîches. Servez avec du pain grillé.",
+tip:"✨ ATTENTION au mixeur plongeant dans les liquides chauds : ne remplissez pas au max, tenez le couvercle pour éviter les projections. Ou attendez que la soupe refroidisse un peu."}
+]},
+
+{id:33,name:"Omelette aux légumes et fromage",emoji:"🍳",category:"veggie",meat:"none",needsOven:false,prepTime:10,cookTime:10,baseServings:2,kcalPerServing:380,macros:{proteines:24,lipides:26,glucides:8,fibres:2},
+description:"L'omelette est le plat le plus simple et rapide du répertoire. Maîtrisez-la et vous aurez toujours une solution en 10 minutes.",
+tips:"Une bonne omelette est baveuse à l'intérieur et ne brunit jamais à l'extérieur — feu moyen et attention !",
+ingredients:[
+{id:"i1",name:"Œufs",qty:6,unit:"pièces",tip:"Cassez chaque œuf dans un bol avant d'ajouter au mélange."},
+{id:"i2",name:"Champignons de Paris",qty:150,unit:"g",tip:"Tranchez finement."},
+{id:"i3",name:"Poivron",qty:0.5,unit:"pièce",tip:"Coupez en tout petits dés."},
+{id:"i4",name:"Échalote",qty:1,unit:"pièce",tip:"Émincez finement."},
+{id:"i5",name:"Fromage râpé (gruyère, comté...)",qty:60,unit:"g",tip:""},
+{id:"i6",name:"Beurre",qty:20,unit:"g",tip:"Ne pas utiliser d'huile — le beurre donne plus de goût."},
+{id:"i7",name:"Sel, poivre",qty:0,unit:"",tip:""},
+{id:"i8",name:"Ciboulette ou persil",qty:0,unit:"quelques brins",tip:"Hachez finement."}
+],
+steps:[
+{id:"s1",title:"Faire revenir les légumes",duration:5,ingredientIds:["i2","i3","i4","i6","i7"],
+text:"Faites fondre la moitié du beurre à feu moyen-vif. Faites revenir l'échalote 1 min. Ajoutez les champignons et le poivron, faites sauter 4-5 min jusqu'à dorure. Salez, poivrez. Réservez.",
+tip:"✨ La garniture doit être cuite à l'avance car l'omelette cuit très vite."},
+{id:"s2",title:"Cuire l'omelette",duration:5,ingredientIds:["i1","i6","i5","i7"],
+text:"Battez les œufs avec une fourchette. Salez, poivrez. Faites fondre le reste de beurre à feu moyen dans une poêle antiadhésive. Versez les œufs. Avec une spatule, ramenez les bords vers le centre en inclinant la poêle. Quand le dessus est encore légèrement coulant, ajoutez la garniture et le fromage d'un côté.",
+tip:"✨ L'omelette parfaite est jaune pâle dehors et légèrement coulante dedans."},
+{id:"s3",title:"Plier et servir",duration:1,ingredientIds:["i8"],
+text:"Pliez l'omelette en deux ou en trois. Faites-la glisser dans une assiette. Parsemez d'herbes fraîches. Servez IMMÉDIATEMENT.",
+tip:"✨ Une omelette n'attend pas — elle continue à cuire avec sa chaleur résiduelle."}
+]},
+
+{id:34,name:"Riz sauté aux légumes façon thaï",emoji:"🌿",category:"veggie",meat:"none",needsOven:false,prepTime:15,cookTime:15,baseServings:4,kcalPerServing:380,macros:{proteines:10,lipides:10,glucides:62,fibres:5},
+description:"Un plat complet et savoureux à base de riz et légumes colorés avec des saveurs asiatiques parfumées.",
+tips:"Le riz doit être froid (cuit la veille de préférence) pour ne pas coller quand on le fait sauter.",
+ingredients:[
+{id:"i1",name:"Riz cuit froid (de la veille)",qty:400,unit:"g",tip:"Le riz froid de la veille est essentiel — les grains secs se séparent bien. Riz chaud = riz collant."},
+{id:"i2",name:"Œufs",qty:3,unit:"pièces",tip:"Battez en omelette."},
+{id:"i3",name:"Carottes",qty:2,unit:"pièces",tip:"Râpez ou coupez en tout petits dés."},
+{id:"i4",name:"Petits pois surgelés",qty:150,unit:"g",tip:"Pas besoin de décongeler."},
+{id:"i5",name:"Oignon",qty:1,unit:"pièce",tip:"Hachez."},
+{id:"i6",name:"Ail",qty:3,unit:"gousses",tip:"Hachez finement."},
+{id:"i7",name:"Sauce soja",qty:3,unit:"c.à.s",tip:""},
+{id:"i8",name:"Huile de sésame",qty:1,unit:"c.à.s",tip:"En fin de cuisson."},
+{id:"i9",name:"Huile neutre",qty:2,unit:"c.à.s",tip:"Pour cuire."},
+{id:"i10",name:"Oignons verts",qty:2,unit:"tiges",tip:"Coupez en rondelles pour garnir."}
+],
+steps:[
+{id:"s1",title:"Faire les œufs brouillés",duration:3,ingredientIds:["i2","i9"],
+text:"Chauffez 1 c.à.s d'huile dans un wok à feu vif. Versez les œufs battus et remuez constamment en les cassant en petits morceaux (2 min). Réservez.",
+tip:"✨ Les œufs brouillés rapides restent moelleux. Trop cuits = secs et caoutchouteux."},
+{id:"s2",title:"Sauter les légumes",duration:7,ingredientIds:["i5","i6","i3","i4","i9"],
+text:"Dans le même wok, chauffez l'huile restante à feu très vif. Faites sauter l'oignon 1 min. Ajoutez les carottes 2 min, puis les petits pois 1 min. Tout doit rester croquant.",
+tip:"✨ Feu TRÈS VIF pour les légumes — c'est le principe du wok. Les légumes doivent sauter, pas mijoter."},
+{id:"s3",title:"Ajouter le riz et assaisonner",duration:5,ingredientIds:["i1","i7","i8","i2","i10"],
+text:"Ajoutez le riz froid, égrénez bien avec une spatule. Cuisez 2-3 min en remuant constamment. Versez la sauce soja, mélangez. Remettez les œufs. Hors du feu, ajoutez l'huile de sésame. Garnissez d'oignons verts.",
+tip:"✨ Le riz doit légèrement colorer — cette légère caramélisation donne le goût du riz sauté de restaurant."}
+]},
+
+{id:35,name:"Poêlée de légumes et œufs au plat",emoji:"🥦",category:"veggie",meat:"none",needsOven:false,prepTime:10,cookTime:15,baseServings:2,kcalPerServing:340,macros:{proteines:18,lipides:20,glucides:22,fibres:7},
+description:"Un repas complet et nourrissant en moins de 25 minutes. Les légumes rôtis à la poêle transformés par les œufs.",
+tips:"La poêle doit être bien chaude pour que les légumes caramélisent et ne rendent pas d'eau.",
+ingredients:[
+{id:"i1",name:"Pommes de terre",qty:2,unit:"pièces",tip:"Cubes de 1,5cm. Passez 3 min au micro-ondes d'abord pour accélérer la cuisson."},
+{id:"i2",name:"Poivron",qty:1,unit:"pièce",tip:"Coupez en dés."},
+{id:"i3",name:"Courgette",qty:1,unit:"pièce",tip:"Rondelles épaisses."},
+{id:"i4",name:"Oignon",qty:1,unit:"pièce",tip:"Émincez."},
+{id:"i5",name:"Ail",qty:2,unit:"gousses",tip:"Hachez."},
+{id:"i6",name:"Œufs",qty:4,unit:"pièces",tip:""},
+{id:"i7",name:"Paprika fumé",qty:0.5,unit:"c.à.c",tip:"Donne couleur et goût fumé."},
+{id:"i8",name:"Huile d'olive",qty:2,unit:"c.à.s",tip:""},
+{id:"i9",name:"Sel, poivre",qty:0,unit:"",tip:""},
+{id:"i10",name:"Herbes fraîches",qty:0,unit:"",tip:"Persil ou ciboulette haché."}
+],
+steps:[
+{id:"s1",title:"Cuire les pommes de terre",duration:10,ingredientIds:["i1","i8","i7","i9"],
+text:"Chauffez l'huile dans une grande poêle à feu moyen-vif. Ajoutez les cubes de pommes de terre (ou passez-les 3 min micro-ondes d'abord). Cuisez 8-10 min en remuant régulièrement jusqu'à bien dorés. Saupoudrez de paprika.",
+tip:"✨ Le micro-ondes 3 min avant les pré-cuit et réduit le temps à la poêle."},
+{id:"s2",title:"Ajouter les légumes",duration:7,ingredientIds:["i4","i5","i2","i3","i9"],
+text:"Ajoutez l'oignon, cuisez 2 min. Ajoutez l'ail, le poivron et la courgette. Cuisez encore 5 min en remuant. Les légumes doivent être tendres et légèrement dorés.",
+tip:"✨ Ne salez pas trop tôt — le sel fait sortir l'eau et les légumes mouillent la poêle au lieu de dorer."},
+{id:"s3",title:"Cuire les œufs",duration:3,ingredientIds:["i6","i10"],
+text:"Faites des petits creux dans les légumes. Cassez un œuf dans chaque creux. Salez, poivrez. Couvrez et laissez cuire 2-3 min jusqu'à ce que le blanc soit pris et le jaune encore coulant. Parsemez d'herbes.",
+tip:"✨ Le couvercle crée de la vapeur qui cuit le dessus du blanc sans avoir à retourner l'œuf."}
+]}
+// DESSERTS (10)
+,{id:36,name:"Pain Perdu",emoji:"🍞",category:"dessert",meat:"none",needsOven:false,prepTime:10,cookTime:10,baseServings:4,kcalPerServing:340,macros:{proteines:12,lipides:14,glucides:42,fibres:2},
+description:"La recette anti-gaspi parfaite pour finir le vieux pain. Croustillant dehors, fondant dedans.",
+tips:"Un pain rassis d'1-2 jours est idéal : il absorbe mieux sans se désintégrer.",
+ingredients:[
+{id:"i1",name:"Pain rassis",qty:8,unit:"tranches épaisses",tip:"Baguette ou pain de mie, tranches de 2cm."},
+{id:"i2",name:"Œufs",qty:3,unit:"pièces",tip:"Cassez d'abord dans un petit bol."},
+{id:"i3",name:"Lait",qty:200,unit:"ml",tip:"Entier de préférence."},
+{id:"i4",name:"Sucre",qty:3,unit:"c.à.s",tip:"Vanillé si possible."},
+{id:"i5",name:"Extrait de vanille",qty:1,unit:"c.à.c",tip:"Optionnel."},
+{id:"i6",name:"Cannelle",qty:0.5,unit:"c.à.c",tip:"Optionnel."},
+{id:"i7",name:"Beurre",qty:40,unit:"g",tip:"Pour la belle couleur dorée."},
+{id:"i8",name:"Sucre glace ou confiture",qty:0,unit:"pour servir",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer l'appareil",duration:5,ingredientIds:["i2","i3","i4","i5","i6"],
+text:"Dans un plat creux, battez les œufs. Ajoutez lait, sucre, vanille et cannelle. Fouettez jusqu'à obtenir un mélange homogène.",
+tip:"✨ Un plat assez grand pour tremper une tranche à plat est idéal."},
+{id:"s2",title:"Tremper le pain",duration:5,ingredientIds:["i1"],
+text:"Plongez les tranches dans l'appareil. Attendez 1-2 min par côté. Le pain doit être bien imbibé mais tenir.",
+tip:"✨ Trop trempé = se désintègre. Pas assez = cœur sec. Trouvez le juste milieu !"},
+{id:"s3",title:"Cuire au beurre",duration:8,ingredientIds:["i7","i1"],
+text:"Faites fondre le beurre à feu moyen. Quand il sent la noisette, déposez les tranches. Cuisez 2-3 min par côté jusqu'à belle couleur dorée.",
+tip:"✨ Le beurre noisette donne une saveur extraordinaire. Entre noisette et brûlé, il n'y a que quelques secondes !"},
+{id:"s4",title:"Service",duration:2,ingredientIds:["i8"],
+text:"Saupoudrez de sucre glace. Accompagnez de confiture, fruits frais ou glace vanille.",
+tip:"✨ Mangez immédiatement — le pain perdu perd de sa magie en refroidissant !"}
+]},
+
+{id:37,name:"Crêpes traditionnelles",emoji:"🥞",category:"dessert",meat:"none",needsOven:false,prepTime:10,cookTime:20,baseServings:4,kcalPerServing:280,macros:{proteines:9,lipides:10,glucides:38,fibres:1},
+description:"La recette bretonne traditionnelle. Fines, dorées, délicieuses. La première est toujours ratée — c'est la règle.",
+tips:"La pâte DOIT reposer 30 min minimum au réfrigérateur — c'est le secret des crêpes légères sans grumeaux.",
+ingredients:[
+{id:"i1",name:"Farine",qty:250,unit:"g",tip:"T45 ou T55. Tamisez-la pour éviter les grumeaux."},
+{id:"i2",name:"Œufs",qty:3,unit:"pièces",tip:"À température ambiante."},
+{id:"i3",name:"Lait",qty:500,unit:"ml",tip:"Versez progressivement."},
+{id:"i4",name:"Beurre fondu",qty:50,unit:"g",tip:"Refroidissez avant d'incorporer."},
+{id:"i5",name:"Sucre",qty:1,unit:"c.à.s",tip:"Omettez pour des galettes salées."},
+{id:"i6",name:"Sel",qty:1,unit:"pincée",tip:"Même pour les crêpes sucrées."},
+{id:"i7",name:"Extrait de vanille",qty:1,unit:"c.à.c",tip:"Optionnel."},
+{id:"i8",name:"Rhum ou fleur d'oranger",qty:1,unit:"c.à.s",tip:"Optionnel."},
+{id:"i9",name:"Huile pour la poêle",qty:1,unit:"c.à.s",tip:""}
+],
+steps:[
+{id:"s1",title:"Préparer la pâte",duration:10,ingredientIds:["i1","i2","i3","i4","i5","i6","i7","i8"],
+text:"Faites un puits dans la farine. Cassez les œufs dedans. Fouettez en incorporant la farine depuis les bords. Ajoutez le lait progressivement, puis le beurre fondu froid, la vanille et le rhum.",
+tip:"✨ Méthode du puits = anti-grumeaux. Si grumeaux quand même : mixez 30 secondes. Résultat garanti !"},
+{id:"s2",title:"Repos obligatoire",duration:30,ingredientIds:[],
+text:"Couvrez et laissez reposer au réfrigérateur 30 minutes minimum (1h idéalement). Le gluten se détend.",
+tip:"✨ Ce repos n'est pas optionnel ! Crêpe sans repos = plus épaisse et caoutchouteuse."},
+{id:"s3",title:"Cuire les crêpes",duration:20,ingredientIds:["i9"],
+text:"Chauffez une poêle huilée à feu moyen-vif. Versez une louche, inclinez en rond pour étaler finement. 1 min, retournez, 30 sec. Empilez.",
+tip:"✨ La première crêpe est TOUJOURS ratée. Mangez-la secrètement — c'est le privilège du cuisinier !"}
+]},
+
+{id:38,name:"Mousse au chocolat",emoji:"🍫",category:"dessert",meat:"none",needsOven:false,prepTime:20,cookTime:0,baseServings:6,kcalPerServing:320,macros:{proteines:8,lipides:18,glucides:30,fibres:2},
+description:"Une mousse légère et aérienne — la texture parfaite. Seulement 3 ingrédients pour un résultat spectaculaire.",
+tips:"Les blancs en neige sont le secret de la légèreté. Incorporez-les très délicatement pour ne pas les casser.",
+ingredients:[
+{id:"i1",name:"Chocolat noir 70%",qty:200,unit:"g",tip:"Cassez en petits morceaux pour faciliter la fonte."},
+{id:"i2",name:"Œufs",qty:6,unit:"pièces",tip:"Séparez les blancs des jaunes. Blancs à température ambiante."},
+{id:"i3",name:"Sucre",qty:2,unit:"c.à.s",tip:"Optionnel — le chocolat 70% est déjà sucré."},
+{id:"i4",name:"Sel",qty:1,unit:"pincée",tip:"Dans les blancs — aide à monter."}
+],
+steps:[
+{id:"s1",title:"Faire fondre le chocolat",duration:5,ingredientIds:["i1"],
+text:"Cassez le chocolat en morceaux dans un bol. Faites fondre au bain-marie (bol posé sur casserole d'eau frémissante, sans contact avec l'eau) en remuant. Ou au micro-ondes 30 sec par 30 sec en remuant entre chaque. Laissez refroidir 5 min.",
+tip:"✨ Le chocolat brûle facilement au micro-ondes. Procédez toujours par courtes impulsions de 30 sec."},
+{id:"s2",title:"Incorporer les jaunes",duration:3,ingredientIds:["i2","i3"],
+text:"Séparez les blancs des jaunes. Ajoutez les jaunes UN PAR UN au chocolat fondu (pas encore chaud) en mélangeant bien entre chaque. Ajoutez le sucre si désiré.",
+tip:"✨ Ajouter les jaunes un par un = ils s'incorporent mieux. Tous d'un coup dans le chocolat chaud = ils cuisent partiellement."},
+{id:"s3",title:"Monter les blancs en neige",duration:5,ingredientIds:["i2","i4"],
+text:"Dans un bol propre et sec, montez les blancs avec une pincée de sel au batteur électrique. Commencez doucement, puis augmentez la vitesse. Les blancs sont prêts quand ils forment des pics fermes qui tiennent sans retomber.",
+tip:"✨ Les bols et fouets doivent être ABSOLUMENT propres et secs. La moindre trace de gras empêche les blancs de monter."},
+{id:"s4",title:"Incorporer et réfrigérer",duration:10,ingredientIds:["i2"],
+text:"Incorporez 1/3 des blancs en neige au chocolat vigoureusement. Ajoutez le reste des blancs en 2 fois, en pliant DÉLICATEMENT avec une maryse du bas vers le haut. Versez dans des ramequins. Réfrigérez 3h minimum.",
+tip:"✨ 'Plier' = mouvement circulaire du bas vers le haut, sans écraser. C'est ce qui préserve les bulles d'air des blancs."}
+]},
+
+{id:39,name:"Tarte aux pommes facile",emoji:"🍎",category:"dessert",meat:"none",needsOven:true,prepTime:15,cookTime:35,baseServings:6,kcalPerServing:290,macros:{proteines:4,lipides:12,glucides:42,fibres:3},
+description:"La tarte aux pommes est le dessert français par excellence. Avec une pâte feuilletée du commerce, elle est simple comme bonjour.",
+tips:"Disposez les pommes en rosace pour un résultat visuellement impressionnant — c'est plus facile qu'il n'y paraît.",
+ingredients:[
+{id:"i1",name:"Pâte feuilletée du commerce",qty:1,unit:"rouleau",tip:"Sortez-la 15 min avant pour qu'elle soit malléable."},
+{id:"i2",name:"Pommes",qty:4,unit:"pièces",tip:"Golden ou Granny Smith. Épluchez, évidez, tranchez finement en lamelles."},
+{id:"i3",name:"Sucre",qty:3,unit:"c.à.s",tip:"Pour saupoudrer sur les pommes."},
+{id:"i4",name:"Beurre",qty:30,unit:"g",tip:"En petits morceaux sur les pommes — fond et caramélise."},
+{id:"i5",name:"Confiture d'abricot",qty:2,unit:"c.à.s",tip:"Pour faire briller la tarte à la sortie du four."},
+{id:"i6",name:"Cannelle",qty:0.5,unit:"c.à.c",tip:"Optionnel."},
+{id:"i7",name:"Sucre glace",qty:1,unit:"c.à.s",tip:"Optionnel, pour finir."}
+],
+steps:[
+{id:"s1",title:"Préparer et préchauffer",duration:15,ingredientIds:["i1","i2"],
+text:"Préchauffez le four à 200°C. Déroulez la pâte dans un moule à tarte. Piquez le fond à la fourchette partout. Épluchez les pommes, coupez-les en 4, retirez le cœur, tranchez finement en lamelles de 3mm.",
+tip:"✨ Piquer la pâte à la fourchette avant de garnir = la pâte ne gonfle pas sous les pommes."},
+{id:"s2",title:"Disposer les pommes",duration:5,ingredientIds:["i2","i3","i4","i6"],
+text:"Disposez les tranches de pommes en rosace en partant du bord vers le centre. Chevauchement régulier. Saupoudrez de sucre et cannelle. Répartissez des petits morceaux de beurre sur les pommes.",
+tip:"✨ Commencez par l'extérieur et spirallez vers le centre. C'est si joli et plus facile qu'il n'y paraît !"},
+{id:"s3",title:"Cuire et lustrer",duration:35,ingredientIds:["i5","i7"],
+text:"Enfournez à 200°C pendant 30-35 min. La pâte doit être bien dorée, les pommes légèrement caramélisées. Pendant les 2 dernières minutes, badigeonnez de confiture d'abricot chauffée pour faire briller.",
+tip:"✨ La confiture d'abricot lustrée donne le beau brillant des tartes de pâtisserie. Réchauffez-la 30 sec au micro-ondes."}
+]},
+
+{id:40,name:"Fondant au chocolat",emoji:"💎",category:"dessert",meat:"none",needsOven:true,prepTime:15,cookTime:12,baseServings:6,kcalPerServing:380,macros:{proteines:7,lipides:22,glucides:38,fibres:2},
+description:"LE dessert qui impressionne toujours. Un cœur coulant au chocolat en 12 minutes. Parfait pour les invités.",
+tips:"La cuisson est ultra-précise : 10-12 min selon votre four. Faites un test avec un ramequin avant le jour J.",
+ingredients:[
+{id:"i1",name:"Chocolat noir 60% minimum",qty:200,unit:"g",tip:"Minimum 60% de cacao pour que ce soit intense."},
+{id:"i2",name:"Beurre",qty:100,unit:"g",tip:"+ un peu pour beurrer les ramequins."},
+{id:"i3",name:"Œufs",qty:4,unit:"pièces",tip:"Entiers."},
+{id:"i4",name:"Sucre",qty:100,unit:"g",tip:""},
+{id:"i5",name:"Farine",qty:40,unit:"g",tip:"Seulement 40g — structure légèrement sans cuire le cœur."},
+{id:"i6",name:"Cacao en poudre",qty:1,unit:"c.à.s",tip:"Pour fariner les ramequins."}
+],
+steps:[
+{id:"s1",title:"Préparer",duration:10,ingredientIds:["i1","i2","i6"],
+text:"Préchauffez le four à 200°C. Beurrez et poudrez de cacao 6 ramequins (tapotez pour enlever l'excédent). Au bain-marie, faites fondre chocolat + beurre. Mélangez jusqu'à lisse. Laissez refroidir 5 min.",
+tip:"✨ Beurrer + poudrer les ramequins = les fondants se démoulent parfaitement. Sans cette étape, ils collent."},
+{id:"s2",title:"Préparer l'appareil",duration:5,ingredientIds:["i3","i4","i5","i1"],
+text:"Battez œufs + sucre jusqu'à ce que le mélange blanchisse et double de volume (2-3 min au fouet). Versez le chocolat fondu sur ce mélange, incorporez. Ajoutez la farine tamisée et mélangez.",
+tip:"✨ Blanchir les œufs avec le sucre incorpore de l'air = texture légère. Sans cette étape, le fondant sera dense."},
+{id:"s3",title:"Cuire exactement",duration:12,ingredientIds:["i1"],
+text:"Remplissez les ramequins aux 3/4. Vous pouvez les réfrigérer jusqu'à 24h à ce stade. Enfournez 10-12 min. Le dessus doit être mat (pas brillant) mais le centre encore tremblant. Démoulez sur assiette après 1 min de repos.",
+tip:"✨ 10 min = cœur très coulant. 12 min = cœur légèrement coulant. 14 min = plus de cœur coulant. Chaque four est différent — faites un test !"}
+]},
+
+{id:41,name:"Tiramisu classique",emoji:"☕",category:"dessert",meat:"none",needsOven:false,prepTime:25,cookTime:0,baseServings:8,kcalPerServing:380,macros:{proteines:8,lipides:20,glucides:40,fibres:1},
+description:"Le dessert italien préféré de tous. Crémeux, parfumé au café, irrésistible. Il se prépare la veille — pratique !",
+tips:"Le tiramisu est meilleur après une nuit au réfrigérateur : les biscuits ont absorbé le café et la texture est parfaite.",
+ingredients:[
+{id:"i1",name:"Mascarpone",qty:500,unit:"g",tip:"Fromage crémeux italien. Sortez-le 20 min avant."},
+{id:"i2",name:"Œufs",qty:4,unit:"pièces",tip:"Séparez blancs et jaunes."},
+{id:"i3",name:"Sucre",qty:80,unit:"g",tip:""},
+{id:"i4",name:"Biscuits à la cuillère (boudoirs)",qty:300,unit:"g",tip:"Ou ladyfingers. S'imbibent parfaitement."},
+{id:"i5",name:"Café fort froid",qty:300,unit:"ml",tip:"Espresso ou café fort. FROID — pour ne pas trop ramollir les biscuits."},
+{id:"i6",name:"Amaretto ou rhum",qty:2,unit:"c.à.s",tip:"Optionnel mais très bon."},
+{id:"i7",name:"Cacao en poudre non sucré",qty:3,unit:"c.à.s",tip:"Pour saupoudrer le dessus."}
+],
+steps:[
+{id:"s1",title:"Préparer la crème",duration:15,ingredientIds:["i1","i2","i3"],
+text:"Séparez jaunes et blancs. Battez jaunes + sucre jusqu'à ce que le mélange blanchisse. Incorporez le mascarpone, mélangez jusqu'à lisse. Montez les blancs en neige ferme. Incorporez délicatement les blancs au mascarpone.",
+tip:"✨ Les blancs en neige incorporés = tiramisu léger et aérien. Sans blancs, la crème est trop dense."},
+{id:"s2",title:"Tremper les biscuits",duration:5,ingredientIds:["i4","i5","i6"],
+text:"Mélangez café froid + amaretto dans un bol plat. Trempez rapidement chaque biscuit dans le café (1-2 secondes chaque côté — juste le temps qu'il soit imbibé mais pas mou).",
+tip:"✨ Trempage rapide = biscuit imbibé mais encore ferme. Trop long = biscuit détrempé, le tiramisu s'effondre."},
+{id:"s3",title:"Monter et réfrigérer",duration:10,ingredientIds:["i4","i1","i7"],
+text:"Dans un plat rectangulaire : couche de crème, couche de biscuits imbibés, couche de crème, couche de biscuits, couche de crème. Saupoudrez généreusement de cacao. Réfrigérez minimum 4h, idéalement une nuit.",
+tip:"✨ Le tiramisu a besoin de temps. Au bout de 4h, les saveurs se sont mélangées et la texture est parfaite."}
+]},
+
+{id:42,name:"Crème brûlée",emoji:"🔥",category:"dessert",meat:"none",needsOven:true,prepTime:15,cookTime:45,baseServings:6,kcalPerServing:350,macros:{proteines:6,lipides:24,glucides:28,fibres:0},
+description:"L'un des desserts les plus élégants de la cuisine française. Le craquement de la croûte caramélisée est inoubliable.",
+tips:"Le secret est une cuisson douce au bain-marie — la crème ne doit jamais bouillir, sinon elle fait des bulles.",
+ingredients:[
+{id:"i1",name:"Crème liquide entière",qty:500,unit:"ml",tip:"Entière obligatoire — pas de crème légère."},
+{id:"i2",name:"Jaunes d'œufs",qty:5,unit:"pièces",tip:"Gardez les blancs pour une autre recette."},
+{id:"i3",name:"Sucre",qty:80,unit:"g",tip:"Pour l'appareil."},
+{id:"i4",name:"Extrait de vanille",qty:1,unit:"c.à.c",tip:"Ou une gousse de vanille fendue."},
+{id:"i5",name:"Sucre roux",qty:6,unit:"c.à.s",tip:"Pour caraméliser le dessus — 1 c.à.s par ramequin."}
+],
+steps:[
+{id:"s1",title:"Préparer l'appareil",duration:10,ingredientIds:["i1","i2","i3","i4"],
+text:"Préchauffez le four à 150°C. Chauffez la crème avec la vanille jusqu'à frémissement (pas bouillir). Dans un bol, battez jaunes + sucre jusqu'à blanchiment. Versez la crème chaude progressivement sur les jaunes en fouettant.",
+tip:"✨ Verser la crème chaude progressivement = les jaunes ne cuisent pas (sinon vous auriez une omelette). Allez-y lentement !"},
+{id:"s2",title:"Cuisson au bain-marie",duration:40,ingredientIds:["i1"],
+text:"Filtrez l'appareil à travers une passoire. Versez dans des ramequins. Posez les ramequins dans un grand plat. Versez de l'eau chaude dans le plat jusqu'à mi-hauteur des ramequins. Enfournez à 150°C pendant 35-40 min.",
+tip:"✨ Le bain-marie = chaleur douce et homogène. La crème cuit sans bouillir. C'est la méthode des grands chefs."},
+{id:"s3",title:"Caraméliser et servir",duration:5,ingredientIds:["i5"],
+text:"Laissez refroidir puis réfrigérez minimum 3h. Juste avant de servir, saupoudrez 1 c.à.s de sucre roux sur chaque crème. Caramélisez avec un chalumeau en mouvements circulaires jusqu'à croûte dorée et dure.",
+tip:"✨ Pas de chalumeau ? Passez sous le grill du four à 250°C très rapproché pendant 2-3 min."}
+]},
+
+{id:43,name:"Clafoutis aux cerises",emoji:"🍒",category:"dessert",meat:"none",needsOven:true,prepTime:10,cookTime:40,baseServings:6,kcalPerServing:260,macros:{proteines:8,lipides:10,glucides:34,fibres:2},
+description:"Un dessert rustique et moelleux entre le flan et le gâteau. Aussi bon tiède avec de la glace que froid le lendemain.",
+tips:"Le secret d'un bon clafoutis : ne pas trop cuire. Il doit encore trembler légèrement au centre à la sortie du four.",
+ingredients:[
+{id:"i1",name:"Cerises",qty:500,unit:"g",tip:"Rincez et équeutez. Avec ou sans noyaux (avec noyaux = plus de goût, selon la tradition)."},
+{id:"i2",name:"Œufs",qty:3,unit:"pièces",tip:""},
+{id:"i3",name:"Sucre",qty:80,unit:"g",tip:""},
+{id:"i4",name:"Farine",qty:60,unit:"g",tip:""},
+{id:"i5",name:"Lait",qty:300,unit:"ml",tip:"Entier de préférence."},
+{id:"i6",name:"Crème fraîche",qty:50,unit:"ml",tip:"Optionnel mais rend le clafoutis plus riche."},
+{id:"i7",name:"Beurre",qty:20,unit:"g",tip:"Pour le moule + un peu dans la pâte."},
+{id:"i8",name:"Vanille",qty:1,unit:"c.à.c",tip:""},
+{id:"i9",name:"Sucre glace",qty:1,unit:"c.à.s",tip:"Pour saupoudrer à la sortie du four."}
+],
+steps:[
+{id:"s1",title:"Préparer",duration:10,ingredientIds:["i2","i3","i4","i5","i6","i8","i7"],
+text:"Préchauffez le four à 180°C. Beurrez un plat à gratin. Battez œufs + sucre jusqu'à blanchiment. Incorporez la farine, puis le lait et la crème progressivement. Ajoutez la vanille et le beurre fondu.",
+tip:"✨ La pâte de clafoutis ressemble à une pâte à crêpes épaisse. Elle doit être totalement lisse — mixez si des grumeaux persistent."},
+{id:"s2",title:"Cuire",duration:40,ingredientIds:["i1"],
+text:"Disposez les cerises dans le plat beurré. Versez la pâte par-dessus. Enfournez 35-40 min. Le clafoutis est cuit quand il est doré mais encore légèrement tremblant au centre.",
+tip:"✨ Le clafoutis DOIT légèrement trembler au centre à la sortie du four. Il se raffermit en refroidissant. Trop cuit = caoutchouteux."},
+{id:"s3",title:"Finition",duration:2,ingredientIds:["i9"],
+text:"Saupoudrez de sucre glace à la sortie du four. Servez tiède avec de la glace vanille, ou froid. Se conserve 2 jours au réfrigérateur.",
+tip:"✨ Le clafoutis se mange idéalement tiède le jour même, ou froid le lendemain."}
+]},
+
+{id:44,name:"Riz au lait crémeux",emoji:"🥛",category:"dessert",meat:"none",needsOven:false,prepTime:5,cookTime:35,baseServings:4,kcalPerServing:280,macros:{proteines:8,lipides:10,glucides:40,fibres:0},
+description:"Le dessert le plus réconfortant qui soit. Simple, doux, onctueux — un retour en enfance garanti.",
+tips:"Le secret : beaucoup de patience et remuer souvent. Le riz absorbe le lait lentement pour une texture crémeuse.",
+ingredients:[
+{id:"i1",name:"Riz rond (riz à dessert)",qty:150,unit:"g",tip:"Riz rond de type 'riz au lait'. Pas de riz basmati ni long."},
+{id:"i2",name:"Lait entier",qty:800,unit:"ml",tip:"Entier obligatoire pour une onctuosité optimale."},
+{id:"i3",name:"Sucre",qty:70,unit:"g",tip:""},
+{id:"i4",name:"Vanille",qty:1,unit:"gousse ou c.à.c",tip:"Si gousse : fendez-la et grattez les graines."},
+{id:"i5",name:"Cannelle",qty:1,unit:"bâton",tip:"Optionnel."},
+{id:"i6",name:"Sel",qty:1,unit:"pincée",tip:""}
+],
+steps:[
+{id:"s1",title:"Démarrer la cuisson",duration:5,ingredientIds:["i1","i2","i4","i5","i6"],
+text:"Dans une grande casserole, versez le lait, la vanille, la cannelle et le sel. Portez à frémissement. Ajoutez le riz en pluie en remuant. Laissez frémir à feu très doux.",
+tip:"✨ Frémir = petites bulles à peine perceptibles. Pas bouillir ! Le lait qui bout fort s'échappe de la casserole."},
+{id:"s2",title:"Cuire lentement",duration:30,ingredientIds:["i3"],
+text:"Laissez cuire à feu très doux en remuant souvent (toutes les 3-4 min) pendant 25-30 min. Ajoutez le sucre à mi-cuisson. Le riz gonfle et absorbe le lait. La préparation épaissit.",
+tip:"✨ Le riz au lait s'épaissit en refroidissant. Retirez du feu quand la consistance est encore un peu plus liquide que désiré."},
+{id:"s3",title:"Finition",duration:2,ingredientIds:[],
+text:"Retirez la gousse de vanille et le bâton de cannelle. Servez tiède dans des petits bols ou des verrines. Saupoudrez de cannelle ou ajoutez une cuillère de confiture.",
+tip:"✨ Pour un riz au lait encore plus crémeux : ajoutez 2 c.à.s de crème fraîche en fin de cuisson hors du feu."}
+]},
+
+{id:45,name:"Banana bread moelleux",emoji:"🍌",category:"dessert",meat:"none",needsOven:true,prepTime:10,cookTime:55,baseServings:8,kcalPerServing:310,macros:{proteines:6,lipides:12,glucides:46,fibres:2},
+description:"LE gâteau anti-gaspi qui utilise les bananes trop mûres. Ultra-moelleux, parfumé à la vanille — facile et irratable.",
+tips:"Les bananes TRÈS mûres (presque noires) sont les meilleures : elles sont sucrées et se mixent facilement.",
+ingredients:[
+{id:"i1",name:"Bananes très mûres",qty:3,unit:"pièces",tip:"Plus elles sont noires et molles, mieux c'est !"},
+{id:"i2",name:"Farine",qty:200,unit:"g",tip:""},
+{id:"i3",name:"Sucre",qty:100,unit:"g",tip:"Brun (cassonade) pour une note caramel."},
+{id:"i4",name:"Œufs",qty:2,unit:"pièces",tip:""},
+{id:"i5",name:"Beurre fondu",qty:80,unit:"g",tip:"Refroidissez avant d'incorporer."},
+{id:"i6",name:"Levure chimique",qty:1,unit:"sachet (11g)",tip:"La levure chimique fait gonfler le gâteau."},
+{id:"i7",name:"Extrait de vanille",qty:1,unit:"c.à.c",tip:""},
+{id:"i8",name:"Sel",qty:1,unit:"pincée",tip:""},
+{id:"i9",name:"Noix ou pépites de chocolat",qty:80,unit:"g",tip:"Optionnel mais excellent."}
+],
+steps:[
+{id:"s1",title:"Préparer la pâte",duration:10,ingredientIds:["i1","i2","i3","i4","i5","i6","i7","i8","i9"],
+text:"Préchauffez le four à 175°C. Beurrez un moule à cake. Écrasez les bananes à la fourchette jusqu'à purée grossière. Ajoutez œufs + sucre + beurre fondu + vanille, mélangez. Incorporez farine + levure + sel. Ne mélangez pas trop — quelques grumeaux = gâteau moelleux.",
+tip:"✨ Secret du moelleux : ne pas trop mélanger la pâte une fois la farine ajoutée. Sur-mélanger = gâteau dur."},
+{id:"s2",title:"Cuire au four",duration:55,ingredientIds:["i1"],
+text:"Versez la pâte dans le moule beurré. Ajoutez noix ou pépites de chocolat par-dessus si désiré. Enfournez à 175°C pendant 50-55 min. Vérifiez avec un couteau : planté au centre, il doit ressortir sans pâte collante.",
+tip:"✨ Si le dessus colore trop vite, couvrez de papier alu les 15 dernières minutes."}
+]}
 ];
-
-// ─── STATE ────────────────────────────────────────────────────────────────
-
-let state = {
-  catFilter: 'all',
-  ovenFilter: 'all',
-  currentRecipe: null,
-  currentStep: 0,
-  servings: 4,
-};
-
-// ─── TIMERS ───────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE & TIMERS
+// ═══════════════════════════════════════════════════════════════════════════
+let state = { catFilter:'all', ovenFilter:'all', meatFilter:'all', currentRecipe:null, currentStep:0, servings:4 };
 
 const timers = {
-  1: { seconds: 0, running: false, interval: null },
-  2: { seconds: 0, running: false, interval: null },
+  1:{seconds:0,running:false,interval:null},
+  2:{seconds:0,running:false,interval:null}
 };
 
-function formatTime(s) {
-  const h = Math.floor(s / 3600);
-  const m = Math.floor((s % 3600) / 60);
-  const sec = s % 60;
-  const pad = n => String(n).padStart(2, '0');
-  return h > 0 ? `${pad(h)}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`;
+function formatTime(s){
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  const p=n=>String(n).padStart(2,'0');
+  return h>0?`${p(h)}:${p(m)}:${p(sec)}`:`${p(m)}:${p(sec)}`;
+}
+function timerToggle(id){
+  const t=timers[id],w=document.getElementById('tw'+id),d=document.getElementById('td'+id),btn=w.querySelector('.btn-timer');
+  if(t.running){clearInterval(t.interval);t.running=false;w.classList.remove('running');btn.textContent='▶';}
+  else{t.interval=setInterval(()=>{t.seconds++;d.textContent=formatTime(t.seconds);},1000);t.running=true;w.classList.add('running');btn.textContent='⏸';}
+}
+function timerReset(id){
+  const t=timers[id];clearInterval(t.interval);t.running=false;t.seconds=0;
+  const w=document.getElementById('tw'+id);w.classList.remove('running');
+  w.querySelector('.btn-timer').textContent='▶';document.getElementById('td'+id).textContent='00:00';
 }
 
-function timerToggle(id) {
-  const t = timers[id];
-  const w = document.getElementById('tw' + id);
-  const d = document.getElementById('td' + id);
-  const btn = w.querySelector('.btn-timer');
-  if (t.running) {
-    clearInterval(t.interval);
-    t.running = false;
-    w.classList.remove('running');
-    btn.textContent = '▶';
-  } else {
-    t.interval = setInterval(() => {
-      t.seconds++;
-      d.textContent = formatTime(t.seconds);
-    }, 1000);
-    t.running = true;
-    w.classList.add('running');
-    btn.textContent = '⏸';
-  }
-}
-
-function timerReset(id) {
-  const t = timers[id];
-  clearInterval(t.interval);
-  t.running = false;
-  t.seconds = 0;
-  const w = document.getElementById('tw' + id);
-  w.classList.remove('running');
-  w.querySelector('.btn-timer').textContent = '▶';
-  document.getElementById('td' + id).textContent = '00:00';
-}
-
-// ─── FILTERS ─────────────────────────────────────────────────────────────
-
-function setFilter(type, value, btn) {
-  if (type === 'cat') {
-    state.catFilter = value;
-    document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active'));
-  } else {
-    state.ovenFilter = value;
-    document.querySelectorAll('[data-oven]').forEach(b => b.classList.remove('active'));
-  }
+// ═══════════════════════════════════════════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════════════════════════════════════════
+function setFilter(type,value,btn){
+  if(type==='cat'){state.catFilter=value;document.querySelectorAll('#filter-cat .btn-filter').forEach(b=>b.classList.remove('active'));}
+  else if(type==='oven'){state.ovenFilter=value;document.querySelectorAll('#filter-oven .btn-filter').forEach(b=>b.classList.remove('active'));}
+  else{state.meatFilter=value;document.querySelectorAll('#filter-meat .btn-filter').forEach(b=>b.classList.remove('active'));}
   btn.classList.add('active');
   renderGrid();
 }
 
-function getFiltered() {
-  return RECIPES.filter(r => {
-    if (state.catFilter !== 'all' && r.category !== state.catFilter) return false;
-    if (state.ovenFilter === 'noOven' && r.needsOven) return false;
-    if (state.ovenFilter === 'oven' && !r.needsOven) return false;
+function getFiltered(){
+  return RECIPES.filter(r=>{
+    if(state.catFilter==='plat' && r.category!=='plat') return false;
+    if(state.catFilter==='dessert' && r.category!=='dessert') return false;
+    if(state.catFilter==='veggie' && r.category!=='veggie') return false;
+    if(state.ovenFilter==='noOven' && r.needsOven) return false;
+    if(state.ovenFilter==='oven' && !r.needsOven) return false;
+    if(state.meatFilter!=='all' && r.meat!==state.meatFilter) return false;
     return true;
   });
 }
 
-// ─── RENDER HOME ──────────────────────────────────────────────────────────
-
-function renderGrid() {
-  const filtered = getFiltered();
-  const grid = document.getElementById('recipe-grid');
-  const count = document.getElementById('recipe-count');
-  count.textContent = `${filtered.length} recette${filtered.length !== 1 ? 's' : ''} disponible${filtered.length !== 1 ? 's' : ''}`;
-  grid.innerHTML = filtered.map(r => `
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDER HOME
+// ═══════════════════════════════════════════════════════════════════════════
+function renderGrid(){
+  const filtered=getFiltered();
+  document.getElementById('recipe-count').textContent=`${filtered.length} recette${filtered.length!==1?'s':''} disponible${filtered.length!==1?'s':''}`;
+  document.getElementById('recipe-grid').innerHTML=filtered.map(r=>`
     <div class="recipe-card" onclick="openRecipe(${r.id})">
       <span class="card-emoji">${r.emoji}</span>
-      <div class="card-meta">${r.category === 'dessert' ? '🍰 Dessert' : '🍽️ Plat'} · ${r.needsOven ? '🔥 Four' : '🚫 Sans four'}</div>
+      <div class="card-meta">${r.category==='dessert'?'🍰 Dessert':r.category==='veggie'?'🥦 Sans viande':'🍽️ Plat'} · ${r.needsOven?'🔥 Avec four':'🚫 Sans four'}</div>
       <div class="card-name">${r.name}</div>
       <div class="card-desc">${r.description}</div>
       <div class="card-tags">
-        <span class="tag">⏱ ${r.prepTime + r.cookTime} min</span>
+        <span class="tag">⏱ ${r.prepTime+r.cookTime} min</span>
         <span class="tag">🔥 ${r.kcalPerServing} kcal</span>
         <span class="tag">👥 ${r.baseServings} pers.</span>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-// ─── OPEN RECIPE ──────────────────────────────────────────────────────────
-
-function openRecipe(id) {
-  const r = RECIPES.find(x => x.id === id);
-  state.currentRecipe = r;
-  state.currentStep = 0;
-  state.servings = r.baseServings;
+// ═══════════════════════════════════════════════════════════════════════════
+// OPEN / CLOSE RECIPE
+// ═══════════════════════════════════════════════════════════════════════════
+function openRecipe(id){
+  const r=RECIPES.find(x=>x.id===id);
+  state.currentRecipe=r;state.currentStep=0;state.servings=r.baseServings;
   renderRecipe();
   document.getElementById('page-home').classList.remove('active');
   document.getElementById('page-recipe').classList.add('active');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
-
-function showHome() {
+function showHome(){
   document.getElementById('page-recipe').classList.remove('active');
   document.getElementById('page-home').classList.add('active');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
 
-// ─── RENDER RECIPE ────────────────────────────────────────────────────────
-
-function renderRecipe() {
-  const r = state.currentRecipe;
-  const ratio = state.servings / r.baseServings;
-
-  // Header
-  document.getElementById('r-badge').textContent =
-    (r.category === 'dessert' ? '🍰 Dessert' : '🍽️ Plat principal') +
-    ' · ' + (r.needsOven ? '🔥 Nécessite un four' : '🚫 Sans four');
-  document.getElementById('r-title').textContent = r.emoji + ' ' + r.name;
-  document.getElementById('r-tagline').textContent = r.tips;
-  document.getElementById('r-prep').textContent = '⏱ Prép : ' + r.prepTime + ' min';
-  document.getElementById('r-cook').textContent = '🔥 Cuisson : ' + r.cookTime + ' min';
-  document.getElementById('r-total').textContent = 'Total : ' + (r.prepTime + r.cookTime) + ' min';
-
-  // Nutrition
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDER RECIPE
+// ═══════════════════════════════════════════════════════════════════════════
+function renderRecipe(){
+  const r=state.currentRecipe;
+  const catLabel=r.category==='dessert'?'🍰 Dessert':r.category==='veggie'?'🥦 Plat sans viande':'🍽️ Plat principal';
+  document.getElementById('r-badge').textContent=catLabel+' · '+(r.needsOven?'🔥 Nécessite un four':'🚫 Sans four');
+  document.getElementById('r-title').textContent=r.emoji+' '+r.name;
+  document.getElementById('r-tagline').textContent=r.tips;
+  document.getElementById('r-prep').textContent='⏱ Prép : '+r.prepTime+' min';
+  document.getElementById('r-cook').textContent='🔥 Cuisson : '+r.cookTime+' min';
+  document.getElementById('r-total').textContent='Total : '+(r.prepTime+r.cookTime)+' min';
   renderNutrition();
-
-  // Step nav
-  const nav = document.getElementById('step-nav');
-  nav.innerHTML = r.steps.map((s, i) => `
-    <button class="btn-step${i === state.currentStep ? ' active' : ''}" onclick="goToStep(${i})">${i+1}. ${s.title}</button>
-  `).join('');
-
-  // Step card
+  document.getElementById('step-nav').innerHTML=r.steps.map((s,i)=>`<button class="btn-step${i===state.currentStep?' active':''}" onclick="goToStep(${i})">${i+1}. ${s.title}</button>`).join('');
   renderStep();
-
-  // Ingredients
   renderIngredients();
 }
 
-function renderNutrition() {
-  const r = state.currentRecipe;
-  const ratio = state.servings / r.baseServings;
-  document.getElementById('servings-num').textContent = state.servings;
-  document.getElementById('kcal-val').textContent = Math.round(r.kcalPerServing * ratio);
-
-  const macroColors = {
-    proteines: '#4ecdc4',
-    glucides: '#ffe66d',
-    lipides: '#ff6b6b',
-    fibres: '#a8e6cf'
-  };
-  const macroMax = { proteines: 60, glucides: 80, lipides: 50, fibres: 20 };
-  const macroLabels = { proteines: 'Protéines', glucides: 'Glucides', lipides: 'Lipides', fibres: 'Fibres' };
-
-  document.getElementById('macros-panel').innerHTML = Object.keys(r.macros).map(k => {
-    const val = Math.round(r.macros[k] * ratio);
-    const pct = Math.min((val / macroMax[k]) * 100, 100);
-    return `
-      <div class="macro-row">
-        <div class="macro-header">
-          <span class="macro-name">${macroLabels[k]}</span>
-          <span class="macro-val">${val}g</span>
-        </div>
-        <div class="macro-track"><div class="macro-fill" style="width:${pct}%;background:${macroColors[k]}"></div></div>
-      </div>`;
+function renderNutrition(){
+  const r=state.currentRecipe,ratio=state.servings/r.baseServings;
+  document.getElementById('servings-num').textContent=state.servings;
+  document.getElementById('kcal-val').textContent=Math.round(r.kcalPerServing*ratio);
+  const colors={proteines:'#4ecdc4',glucides:'#ffe66d',lipides:'#ff6b6b',fibres:'#a8e6cf'};
+  const maxes={proteines:60,glucides:80,lipides:50,fibres:20};
+  const labels={proteines:'Protéines',glucides:'Glucides',lipides:'Lipides',fibres:'Fibres'};
+  document.getElementById('macros-panel').innerHTML=Object.keys(r.macros).map(k=>{
+    const val=Math.round(r.macros[k]*ratio),pct=Math.min((val/maxes[k])*100,100);
+    return `<div class="macro-row"><div class="macro-header"><span class="macro-name">${labels[k]}</span><span class="macro-val">${val}g</span></div><div class="macro-track"><div class="macro-fill" style="width:${pct}%;background:${colors[k]}"></div></div></div>`;
   }).join('');
 }
 
-function renderStep() {
-  const r = state.currentRecipe;
-  const step = r.steps[state.currentStep];
-
-  document.getElementById('step-card').innerHTML = `
+function renderStep(){
+  const r=state.currentRecipe,step=r.steps[state.currentStep];
+  document.getElementById('step-card').innerHTML=`
     <div class="step-card-header">
-      <div>
-        <div class="step-label">Étape ${state.currentStep + 1} / ${r.steps.length}</div>
-        <div class="step-title">${step.title}</div>
-      </div>
-      ${step.duration > 0 ? `
-        <div class="step-duration">
-          <span class="step-duration-num">${step.duration}</span>
-          <span class="step-duration-unit">min</span>
-        </div>` : ''}
+      <div><div class="step-label">Étape ${state.currentStep+1} / ${r.steps.length}</div><div class="step-title">${step.title}</div></div>
+      ${step.duration>0?`<div class="step-duration"><span class="step-duration-num">${step.duration}</span><span class="step-duration-unit">min</span></div>`:''}
     </div>
     <p class="step-text">${step.text}</p>
-    ${step.tip ? `<div class="step-tip"><p>${step.tip}</p></div>` : ''}
-  `;
-
-  document.getElementById('btn-prev').disabled = state.currentStep === 0;
-  document.getElementById('btn-next').disabled = state.currentStep === r.steps.length - 1;
-
-  // Update step nav buttons
-  document.querySelectorAll('.btn-step').forEach((btn, i) => {
-    btn.classList.toggle('active', i === state.currentStep);
-  });
-
-  // Update ingredients highlights
+    ${step.tip?`<div class="step-tip"><p>${step.tip}</p></div>`:''}`;
+  document.getElementById('btn-prev').disabled=state.currentStep===0;
+  document.getElementById('btn-next').disabled=state.currentStep===r.steps.length-1;
+  document.querySelectorAll('.btn-step').forEach((b,i)=>b.classList.toggle('active',i===state.currentStep));
   renderIngredients();
 }
 
-function renderIngredients() {
-  const r = state.currentRecipe;
-  const ratio = state.servings / r.baseServings;
-  const activeIds = r.steps[state.currentStep].ingredientIds;
-
-  document.getElementById('ing-list').innerHTML = r.ingredients.map(ing => {
-    const isActive = activeIds.includes(ing.id);
-    const scaledQty = ing.qty > 0
-      ? (() => { const v = ing.qty * ratio; return Number.isInteger(v) ? v : Math.round(v * 10) / 10; })()
-      : null;
-    return `
-      <div class="ing-item${isActive ? ' active' : ''}">
-        <div class="ing-row">
-          <span class="ing-name">${isActive ? '<span class="ing-active-dot">●</span>' : ''}${ing.name}</span>
-          ${scaledQty !== null ? `<span class="ing-qty">${scaledQty}${ing.unit ? ' ' + ing.unit : ''}</span>` : ''}
-        </div>
-        ${isActive && ing.tip ? `<div class="ing-tip">${ing.tip}</div>` : ''}
-      </div>`;
+function renderIngredients(){
+  const r=state.currentRecipe,ratio=state.servings/r.baseServings;
+  const activeIds=r.steps[state.currentStep].ingredientIds;
+  document.getElementById('ing-list').innerHTML=r.ingredients.map(ing=>{
+    const isActive=activeIds.includes(ing.id);
+    const v=ing.qty>0?ing.qty*ratio:null;
+    const scaledQty=v!==null?(Number.isInteger(v)?v:Math.round(v*10)/10):null;
+    return `<div class="ing-item${isActive?' active':''}">
+      <div class="ing-row">
+        <span class="ing-name">${isActive?'<span class="ing-active-dot">●</span>':''}${ing.name}</span>
+        ${scaledQty!==null?`<span class="ing-qty">${scaledQty}${ing.unit?' '+ing.unit:''}</span>`:''}
+      </div>
+      ${isActive&&ing.tip?`<div class="ing-tip">${ing.tip}</div>`:''}
+    </div>`;
   }).join('');
 }
 
-function goToStep(i) {
-  state.currentStep = i;
-  renderStep();
+function goToStep(i){state.currentStep=i;renderStep();}
+function changeStep(dir){
+  const r=state.currentRecipe,next=state.currentStep+dir;
+  if(next>=0&&next<r.steps.length){state.currentStep=next;renderStep();document.querySelector('.steps-panel').scrollIntoView({behavior:'smooth',block:'start'});}
+}
+function changeServings(dir){
+  const next=state.servings+dir;
+  if(next<1)return;
+  state.servings=next;renderNutrition();renderIngredients();
 }
 
-function changeStep(dir) {
-  const r = state.currentRecipe;
-  const next = state.currentStep + dir;
-  if (next >= 0 && next < r.steps.length) {
-    state.currentStep = next;
-    renderStep();
-    document.querySelector('.steps-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
-
-function changeServings(dir) {
-  const next = state.servings + dir;
-  if (next < 1) return;
-  state.servings = next;
-  renderNutrition();
-  renderIngredients();
-}
-
-// ─── INIT ─────────────────────────────────────────────────────────────────
-
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
 renderGrid();
-</script>
-</body>
-</html>
+</script></body></html>
