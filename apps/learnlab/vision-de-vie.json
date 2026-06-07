@@ -1,0 +1,173 @@
+{
+  "skill": "Clarifier sa Vision de Vie",
+  "description": "La plupart des gens vivent par défaut — en répondant aux demandes des autres, aux attentes sociales et aux habitudes héritées. Clarifier ta vision, c'est décider activement de qui tu veux être et comment tu veux vivre.",
+  "difficulty": "intermédiaire",
+  "tags": ["sens", "direction", "valeurs", "vision", "vie intentionnelle"],
+  "sections": [
+    {
+      "id": "diagnostic",
+      "title": "Diagnostic — où en es-tu ?",
+      "icon": "🔍",
+      "content": "Avant de savoir où aller, il faut savoir où tu en es — honnêtement, pas poliment. La plupart des gens évitent ce diagnostic parce que la réponse est inconfortable. C'est exactement pour ça qu'il est précieux.",
+      "tricks": [
+        {
+          "name": "La roue de la vie",
+          "difficulty": 1,
+          "description": "Exercice classique mais redoutablement efficace : évaluer ton niveau de satisfaction dans les 8 domaines clés de la vie.",
+          "steps": [
+            "Note de 1 à 10 ta satisfaction actuelle dans chaque domaine :",
+            "Santé & énergie / Relations amoureuses / Famille & amis / Finances / Carrière & projets / Développement personnel / Loisirs & créativité / Environnement & logement",
+            "Dessine une roue — les zones basses sont tes priorités d'amélioration",
+            "Une roue déséquilibrée 'roule mal' — les domaines sont interconnectés",
+            "Refais cet exercice tous les 6 mois pour mesurer ta progression"
+          ],
+          "tips": "Sois honnête, pas optimiste. Un 6 'poli' quand c'est un vrai 4 te prive d'une information précieuse."
+        },
+        {
+          "name": "La question des regrets",
+          "difficulty": 4,
+          "description": "Bronnie Ware, infirmière en soins palliatifs, a listé les 5 regrets les plus fréquents en fin de vie. Ce prisme révèle souvent ce qui compte vraiment, là où les urgences quotidiennes obscurcissent tout.",
+          "steps": [
+            "Imagine que tu as 85 ans et que tu regardes ta vie : qu'est-ce que tu regretterais de ne pas avoir fait ?",
+            "Les 5 regrets universels : ne pas avoir vécu une vie authentique / avoir trop travaillé / ne pas avoir exprimé ses émotions / ne pas avoir maintenu ses amitiés / ne pas s'être accordé plus de bonheur",
+            "Pour chaque regret : est-ce que je cours ce risque aujourd'hui ?",
+            "Écris tes propres regrets potentiels — sois précis"
+          ],
+          "tips": "Jeff Bezos appelle ça le 'regret minimization framework'. Avant une grande décision : 'À 80 ans, est-ce que je regretterai de ne pas l'avoir fait ?'"
+        },
+        {
+          "name": "L'écart idéal/réel",
+          "difficulty": 3,
+          "description": "Formuler explicitement l'écart entre ta vie actuelle et ta vie idéale crée une tension créative — un moteur de changement bien plus puissant que la culpabilité ou la peur.",
+          "steps": [
+            "Décris ta journée idéale type dans 5 ans : du réveil au coucher, en détail",
+            "Décris ta journée réelle actuelle",
+            "Identifie les 3 plus grands écarts",
+            "Pour chaque écart : qu'est-ce qui change concrètement pour le réduire ?",
+            "L'écart n'est pas une raison de se critiquer — c'est une carte de navigation"
+          ],
+          "tips": "La journée idéale est souvent plus simple qu'on ne le croit : temps, santé, connexion, sens. Rarement : luxe, statut, notoriété."
+        }
+      ]
+    },
+    {
+      "id": "valeurs",
+      "title": "Identifier ses vraies valeurs",
+      "icon": "⚓",
+      "content": "Les valeurs sont les critères inconscients selon lesquels tu prends toutes tes décisions. Quand tu agis contre tes valeurs, tu le ressens — même sans le formuler. Les connaître explicitement te donne une boussole interne.",
+      "tricks": [
+        {
+          "name": "L'exercice des pics et creux",
+          "difficulty": 2,
+          "description": "Tes valeurs profondes se révèlent dans tes moments les plus intenses — positifs comme négatifs.",
+          "steps": [
+            "Note les 5-10 moments de ta vie où tu t'es senti le plus vivant, fier ou aligné",
+            "Note les 5-10 moments où tu t'es senti le plus mal, trahis ou vide",
+            "Pour chaque pic : quelle valeur était honorée ? (liberté, connexion, création, justice, dépassement…)",
+            "Pour chaque creux : quelle valeur était bafouée ?",
+            "Les valeurs qui reviennent le plus sont tes valeurs fondamentales"
+          ],
+          "tips": "Tes valeurs vraies se trouvent dans tes émotions fortes — pas dans ce que tu penses devoir valoriser."
+        },
+        {
+          "name": "Le test de la décision difficile",
+          "difficulty": 3,
+          "description": "Face à une décision difficile où tu ne sais pas quoi faire, tu peux utiliser tes valeurs comme critère de tri plutôt que le calcul rationnel.",
+          "steps": [
+            "Pose la décision difficile devant toi",
+            "Pour chaque option : 'Est-ce que cette option honore mes valeurs fondamentales ?'",
+            "La réponse émotionnelle immédiate à cette question est souvent plus fiable que la réflexion longue",
+            "Une décision alignée avec tes valeurs, même difficile à court terme, est presque toujours la bonne sur le long terme"
+          ],
+          "tips": "Les décisions les plus difficiles ne sont pas entre bien et mal — elles sont entre deux biens ou deux valeurs en tension. Savoir lesquelles tu priorises t'aide à choisir."
+        }
+      ]
+    },
+    {
+      "id": "vision",
+      "title": "Construire sa vision de vie",
+      "icon": "🌅",
+      "content": "Une vision de vie n'est pas un business plan. Ce n'est pas non plus un fantasme vague. C'est une description claire et émotionnellement engageante de la vie que tu veux construire.",
+      "tricks": [
+        {
+          "name": "La lettre du futur soi",
+          "difficulty": 3,
+          "description": "Exercice puissant utilisé en psychologie positive et par de nombreux entrepreneurs pour créer une vision concrète et émotionnellement vivante.",
+          "steps": [
+            "Prends 30 minutes dans un endroit calme",
+            "Projette-toi 10 ans dans le futur — tu vis exactement la vie que tu voulais",
+            "Écris une lettre à toi-même (depuis le futur) décrivant cette vie en détail",
+            "Qui es-tu ? Où vis-tu ? Avec qui ? Que fais-tu le matin ? Quel impact as-tu ? Comment te sens-tu ?",
+            "Pas de censure — écris la vie que tu veux vraiment, pas celle qui semble raisonnable"
+          ],
+          "tips": "Cette lettre devient un document de référence. Relis-la régulièrement. Elle te recentre quand tu t'égares dans l'urgence du quotidien."
+        },
+        {
+          "name": "Les 3 horizons",
+          "difficulty": 2,
+          "description": "Structurer la vision sur 3 horizons temporels permet de relier le grand rêve aux actions quotidiennes — sans perdre de vue ni l'un ni l'autre.",
+          "steps": [
+            "Horizon 10 ans : qui veux-tu être ? (identité, impact, style de vie)",
+            "Horizon 3 ans : où dois-tu en être pour que le 10 ans soit possible ? (jalons clés)",
+            "Horizon 1 an : qu'est-ce qui change concrètement cette année pour avancer vers le 3 ans ?",
+            "Horizon 90 jours : quelles sont les 3 priorités de ce trimestre ?",
+            "Revois et ajuste les horizons courts tous les trimestres"
+          ],
+          "tips": "Le 10 ans inspire. Le 1 an oriente. Le 90 jours agit. Sans les trois, soit tu rêves sans agir, soit tu t'agites sans direction."
+        },
+        {
+          "name": "Le énoncé de mission personnelle",
+          "difficulty": 4,
+          "description": "Stephen Covey (Les 7 habitudes) recommande de rédiger un énoncé de mission personnel — une phrase ou un paragraphe court qui résume ce que tu veux être et ce à quoi tu veux contribuer.",
+          "steps": [
+            "Réponds à ces 3 questions :",
+            "1. Qu'est-ce que tu veux ÊTRE ? (qualités de caractère)",
+            "2. Qu'est-ce que tu veux FAIRE ? (contributions, accomplissements)",
+            "3. Quel IMPACT veux-tu avoir sur les autres et le monde ?",
+            "Synthétise en 1-3 phrases claires",
+            "Affiche-le là où tu le vois chaque jour"
+          ],
+          "tips": "Exemple : 'Je veux être quelqu'un de profondément présent pour ceux que j'aime, qui crée des choses utiles, et qui laisse les gens qu'il croise avec un peu plus d'énergie qu'ils n'en avaient avant.' Simple, clair, guidant."
+        }
+      ]
+    },
+    {
+      "id": "priorites",
+      "title": "Définir ses priorités",
+      "icon": "🎯",
+      "content": "Une vision sans priorités reste un rêve. Les priorités transforment la vision en choix quotidiens — en décidant à quoi tu dis oui et, surtout, à quoi tu dis non.",
+      "items": [
+        { "name": "Les Big Rocks (Stephen Covey)", "description": "Si tu remplis un bocal de petits cailloux d'abord, les gros ne rentrent plus. Si tu mets les gros en premier, les petits se glissent autour. Les 'big rocks' = tes priorités absolues. Les planifier en premier dans la semaine, pas les cases vides." },
+        { "name": "La liste des non-priorités", "description": "Aussi importante que la liste des priorités : la liste des choses auxquelles tu dis non. Chaque oui est un non implicite à autre chose. Savoir ce à quoi tu renonces délibérément est une marque de clarté." },
+        { "name": "Le test de l'alignement quotidien", "description": "Chaque soir, pose-toi 1 question : 'Est-ce que ce que j'ai fait aujourd'hui m'a rapproché de ma vision ?' Pas besoin d'une réponse parfaite — juste d'une honnêteté honnête sur la tendance." },
+        { "name": "Réviser et ajuster", "description": "La vision n'est pas gravée dans le marbre. Elle évolue avec toi. Une revue annuelle approfondie (2-3h seul ou avec un proche de confiance) permet de vérifier l'alignement et d'ajuster le cap." }
+      ]
+    },
+    {
+      "id": "obstacles",
+      "title": "Surmonter les obstacles internes",
+      "icon": "🧱",
+      "content": "La plupart des obstacles à une vie alignée sont internes — peur, doute, regard des autres, perfectionnisme. Les identifier ne les supprime pas, mais ça réduit leur emprise.",
+      "items": [
+        { "name": "La peur du regard des autres", "description": "La majorité de nos non-choix viennent de la peur de décevoir, de paraître fou ou de perdre l'approbation. Rappel : les gens pensent à toi bien moins que tu ne le crois — ils sont occupés avec leurs propres peurs." },
+        { "name": "Le perfectionnisme comme procrastination", "description": "'Je commencerai quand les conditions seront parfaites' est souvent la peur de l'échec déguisée en rigueur. La version imparfaite qui existe surpasse toujours la version parfaite qui n'existe pas encore." },
+        { "name": "L'identité comme prison", "description": "'Je ne suis pas quelqu'un qui...' est l'une des phrases les plus dangereuses. Les identités se choisissent et se construisent. James Clear : les changements durables commencent par une décision d'identité, pas d'habitude." },
+        { "name": "Le syndrome de l'imposteur", "description": "Sentiment d'être moins compétent, légitime ou méritant que les autres ne le pensent. Présent chez la majorité des personnes accomplies. La seule réponse : agir malgré le doute, et observer que le monde ne s'effondre pas." }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "Clarifier sa vision de vie est un processus, pas un événement. Il se affine avec le temps et l'action.",
+      "plan": [
+        { "phase": "Semaine 1", "focus": "Diagnostic honnête", "objectif": "Roue de la vie complétée. Identifier les 3 domaines les moins satisfaisants." },
+        { "phase": "Semaine 2", "focus": "Valeurs", "objectif": "Exercice des pics et creux. Identifier ses 5 valeurs fondamentales." },
+        { "phase": "Semaine 3", "focus": "Vision 10 ans", "objectif": "Lettre du futur soi rédigée. Journée idéale décrite en détail." },
+        { "phase": "Semaine 4", "focus": "Horizons & priorities", "objectif": "3 horizons définis (10 ans / 3 ans / 1 an). Énoncé de mission personnel en 1-3 phrases." },
+        { "phase": "Mois 2-3", "focus": "Premiers alignements", "objectif": "Identifier 1 grand changement à faire dans les 90 jours. Commencer à dire non à 1 chose non-prioritaire." },
+        { "phase": "Continu", "focus": "Revue trimestrielle", "objectif": "Chaque trimestre : 1h de recul. Est-ce que mes actions quotidiennes reflètent ma vision ? Ajuster si besoin." }
+      ]
+    }
+  ]
+}

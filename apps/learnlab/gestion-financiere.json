@@ -1,0 +1,151 @@
+{
+  "skill": "Gestion Financière Personnelle",
+  "description": "Maîtriser son argent n'est pas réservé aux riches ou aux experts. Comprendre les bases du budget, de l'épargne et de l'investissement te donne une liberté et une sécurité que peu de gens ont.",
+  "difficulty": "débutant",
+  "tags": ["argent", "budget", "épargne", "investissement", "liberté financière"],
+  "sections": [
+    {
+      "id": "mindset",
+      "title": "La relation à l'argent",
+      "icon": "🧭",
+      "content": "Avant les chiffres, il y a les croyances. La majorité de nos comportements financiers sont des habitudes héritées — pas des choix conscients. Les identifier est la première étape.",
+      "items": [
+        { "name": "Les croyances limitantes", "description": "'L'argent c'est sale', 'je suis nul en maths donc en finances', 'c'est pour les riches d'investir'. Ces croyances te coûtent des dizaines de milliers d'euros sur une vie. Les identifier, c'est déjà les désactiver." },
+        { "name": "L'argent comme outil", "description": "L'argent n'est ni bon ni mauvais — c'est un outil. Il amplifie ce que tu es déjà. L'objectif n'est pas d'être riche — c'est d'avoir assez de liberté financière pour vivre selon tes valeurs." },
+        { "name": "La règle de l'intérêt composé", "description": "Einstein aurait appelé l'intérêt composé 'la huitième merveille du monde'. 100€ investis à 7%/an deviennent 200€ en 10 ans, 400€ en 20 ans, 800€ en 30 ans. Le temps est la variable la plus puissante." },
+        { "name": "Commencer maintenant", "description": "Le meilleur moment pour commencer à épargner et investir était il y a 10 ans. Le deuxième meilleur moment, c'est maintenant. Attendre 'les conditions parfaites' est la principale cause de retraite pauvre." }
+      ]
+    },
+    {
+      "id": "budget",
+      "title": "Construire son budget",
+      "icon": "📊",
+      "content": "Un budget n'est pas une prison — c'est une carte. Il te dit où va ton argent, te permet de faire des choix conscients et de financer ce qui compte vraiment pour toi.",
+      "tricks": [
+        {
+          "name": "La règle 50/30/20",
+          "difficulty": 1,
+          "description": "Le système de budget le plus simple et le plus efficace. Divise tes revenus nets en trois catégories.",
+          "steps": [
+            "50% — Besoins : loyer, nourriture, transport, abonnements essentiels, assurances",
+            "30% — Envies : restaurants, loisirs, shopping, voyages, sorties",
+            "20% — Épargne et investissement : fonds d'urgence, retraite, projets",
+            "Si tes besoins dépassent 50% : explorer comment réduire (logement, abonnements, transport)",
+            "Si tu ne peux pas épargner 20% : commence par 5%, augmente progressivement"
+          ],
+          "tips": "Le 20% d'épargne se fait EN PREMIER — virement automatique dès réception du salaire. Ce qui reste, tu le dépenses. Ne jamais épargner ce qui 'reste à la fin du mois'."
+        },
+        {
+          "name": "L'audit des dépenses",
+          "difficulty": 2,
+          "description": "La majorité des gens n'ont aucune idée de où va leur argent. L'audit révèle souvent des fuites invisibles qui totalisent plusieurs centaines d'euros par mois.",
+          "steps": [
+            "Télécharge tes relevés des 3 derniers mois",
+            "Catégorise chaque dépense (alimentation, transport, abonnements, loisirs, etc.)",
+            "Cherche les abonnements oubliés — ils coûtent souvent 100-200€/mois en cumulé",
+            "Identifie ta dépense 'vide' : celle qui coûte le plus sans t'apporter de vraie satisfaction",
+            "Apps utiles : Bankin', Linxo, ou simplement un tableau Excel"
+          ],
+          "tips": "L'exercice de l'audit choque souvent. C'est son utilité. Voir les chiffres réels, sans jugement, est le seul point de départ honnête."
+        },
+        {
+          "name": "Automatiser ses finances",
+          "difficulty": 2,
+          "description": "La volonté est une ressource limitée. Le système qui fonctionne sans y penser est bien supérieur à la discipline quotidienne.",
+          "steps": [
+            "Dès réception du salaire : virement automatique vers épargne (même 50€ pour commencer)",
+            "Paiements récurrents en prélèvement automatique : loyer, charges, abonnements",
+            "Compte courant 'dépenses' séparé du compte 'épargne'",
+            "Alerte SMS pour chaque transaction : conscientise chaque achat",
+            "Revue mensuelle de 15 min : tout ça tourne seul le reste du temps"
+          ],
+          "tips": "'Pay yourself first' — te payer en premier avant toutes les dépenses. Ce principe simple est à l'origine de la plupart des patrimoines construits progressivement."
+        }
+      ]
+    },
+    {
+      "id": "epargne",
+      "title": "Épargne & fonds d'urgence",
+      "icon": "🏦",
+      "content": "L'épargne n'est pas que pour les projets — c'est d'abord un filet de sécurité. Sans fonds d'urgence, la moindre dépense imprévue devient une crise.",
+      "items": [
+        { "name": "Le fonds d'urgence — priorité absolue", "description": "3 à 6 mois de dépenses courantes disponibles immédiatement, sur un compte liquide (Livret A, livret bancaire). Avant tout investissement, avant tout remboursement de dette sauf urgence. C'est ton bouclier contre les imprévus." },
+        { "name": "Livret A et LDDS", "description": "Exonérés d'impôt, disponibles à tout moment, garantis par l'État. Taux : 3% (2024). Pour l'épargne de précaution uniquement — pas pour de l'accumulation long terme. Plafond Livret A : 22 950€. LDDS : 12 000€." },
+        { "name": "Le PEL pour les projets", "description": "Plan Épargne Logement : taux fixe bloqué, idéal pour un projet immobilier à 4-10 ans. Peut servir à obtenir un prêt immobilier à taux préférentiel." },
+        { "name": "L'épargne salariale", "description": "Si ton employeur propose un Plan d'Épargne Entreprise avec abondement : c'est de l'argent gratuit. Maximise-le avant tout autre placement." }
+      ]
+    },
+    {
+      "id": "investissement",
+      "title": "Investir pour le long terme",
+      "icon": "📈",
+      "content": "L'investissement n'est pas de la spéculation. Investir régulièrement sur le long terme dans des actifs diversifiés est accessible à tous et transforme des sommes modestes en patrimoine réel.",
+      "tricks": [
+        {
+          "name": "Le PEA — enveloppe prioritaire",
+          "difficulty": 3,
+          "description": "Plan d'Épargne en Actions : exonération d'impôt sur les plus-values après 5 ans, plafond de 150 000€. L'enveloppe fiscale la plus avantageuse pour investir en Bourse en France.",
+          "steps": [
+            "Ouvre un PEA dans une banque en ligne (Boursorama, Fortuneo, Bourse Direct — frais < 0.5%)",
+            "Investis dans des ETF monde (ex : MSCI World, S&P 500) plutôt que des actions individuelles",
+            "Investissement régulier mensuel ('DCA' : Dollar Cost Averaging) — même 50€/mois",
+            "Ne touche pas pendant 5 ans minimum pour bénéficier de l'avantage fiscal",
+            "Ne regarde pas tous les jours — les fluctuations à court terme sont du bruit"
+          ],
+          "tips": "Un ETF MSCI World a rapporté en moyenne 8-10%/an sur 30 ans. Investir 200€/mois pendant 30 ans à 8% = ~300 000€. La magie de l'intérêt composé."
+        },
+        {
+          "name": "L'assurance-vie — fiscalité et flexibilité",
+          "difficulty": 3,
+          "description": "Enveloppe polyvalente : fiscalité avantageuse après 8 ans, possibilité d'investir en fonds euros (capital garanti) et en unités de compte (actions, immobilier). Complémentaire au PEA.",
+          "steps": [
+            "Ouvre une assurance-vie dans un courtier en ligne (Linxo Épargne, Yomoni, Nalo)",
+            "Fonds euros : pour la partie sécurisée du patrimoine",
+            "Unités de compte (ETF) : pour la croissance long terme",
+            "Avantage succession : transmission hors droits de succession dans certaines limites"
+          ],
+          "tips": "L'assurance-vie n'est pas que pour la retraite — c'est un outil de gestion de patrimoine polyvalent. Ouvre-en une tôt pour faire courir le délai fiscal de 8 ans."
+        },
+        {
+          "name": "Les ETF — l'investissement intelligent",
+          "difficulty": 2,
+          "description": "Un ETF (fonds indiciel coté) réplique un indice boursier. Au lieu de choisir des actions individuelles (risqué, chronophage), tu investis dans des centaines ou milliers d'entreprises en un seul achat.",
+          "steps": [
+            "ETF MSCI World : 1 600 entreprises des pays développés. Diversification maximale.",
+            "ETF S&P 500 : 500 plus grandes entreprises américaines",
+            "Frais : cherche des ETF avec TER < 0.3%/an (Amundi, Lyxor, iShares)",
+            "Stratégie DCA : investis le même montant chaque mois, quelles que soient les conditions de marché",
+            "Ne vends pas en cas de baisse — c'est là où les non-initiés perdent de l'argent"
+          ],
+          "tips": "John Bogle, fondateur de Vanguard : 'Ne cherchez pas l'aiguille dans la meule de foin. Achetez la meule entière.' C'est exactement ce que font les ETF."
+        }
+      ]
+    },
+    {
+      "id": "dettes",
+      "title": "Gérer et sortir des dettes",
+      "icon": "🔓",
+      "content": "Toutes les dettes ne sont pas égales. Savoir les prioriser et les éliminer systématiquement est l'une des meilleures rentabilités possibles.",
+      "items": [
+        { "name": "La hiérarchie des dettes", "description": "Urgence maximale : crédits à la consommation et renouvelables (15-25%/an). Priorité haute : crédit auto, dettes personnelles. Gérable : crédit immobilier (3-5%) — rembourse normalement, l'investissement rapporte plus." },
+        { "name": "La méthode avalanche", "description": "Rembourse en priorité la dette au taux d'intérêt le plus élevé (mathématiquement optimal). Paie le minimum sur toutes les autres, mets tout le surplus sur la plus chère. Répète jusqu'à élimination." },
+        { "name": "La méthode boule de neige", "description": "Rembourse en priorité la plus petite dette (psychologiquement motivant). Moins optimal mathématiquement mais excellent pour maintenir l'élan. Choisis selon ta psychologie." },
+        { "name": "Ne jamais contracter un crédit conso", "description": "Un crédit à 20%/an pour financer un téléphone ou des vacances est l'une des pires décisions financières possibles. Si tu ne peux pas te le payer cash, attends ou épargne pour ça." }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "Les finances personnelles se construisent étape par étape, dans le bon ordre. Sauter des étapes coûte cher.",
+      "plan": [
+        { "phase": "Mois 1", "focus": "Audit & clarté", "objectif": "Audit des dépenses des 3 derniers mois. Identifier les fuites. Couper les abonnements inutiles." },
+        { "phase": "Mois 2", "focus": "Budget & automatisation", "objectif": "Mettre en place la règle 50/30/20. Virement automatique d'épargne dès le salaire." },
+        { "phase": "Mois 3-6", "focus": "Fonds d'urgence", "objectif": "Atteindre 1 mois de dépenses sur Livret A. Puis 3 mois. C'est la fondation." },
+        { "phase": "Mois 6-12", "focus": "Éliminer les dettes coûteuses", "objectif": "Rembourser tout crédit > 5% d'intérêt en priorité." },
+        { "phase": "An 2", "focus": "Commencer à investir", "objectif": "Ouvrir PEA + assurance-vie. Premier investissement ETF World, même 50€/mois." },
+        { "phase": "An 3+", "focus": "Optimiser et accélérer", "objectif": "Augmenter le taux d'épargne progressivement. Comprendre sa situation patrimoniale globale." }
+      ]
+    }
+  ]
+}

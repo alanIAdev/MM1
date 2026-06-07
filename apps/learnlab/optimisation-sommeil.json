@@ -1,0 +1,162 @@
+{
+  "skill": "Optimisation du Sommeil",
+  "description": "Le sommeil est le levier de performance le plus sous-estimé. Mieux dormir améliore la mémoire, les émotions, l'énergie, le métabolisme et la longévité. Ce n'est pas du repos — c'est une activité biologique essentielle.",
+  "difficulty": "débutant",
+  "tags": ["sommeil", "énergie", "santé", "récupération", "rythme circadien"],
+  "sections": [
+    {
+      "id": "science",
+      "title": "La science du sommeil",
+      "icon": "🔬",
+      "content": "Comprendre ce qui se passe pendant le sommeil transforme ton rapport à lui — il ne s'agit plus d'une perte de temps mais d'un investissement biologique.",
+      "items": [
+        { "name": "Les cycles de 90 minutes", "description": "Le sommeil se déroule en cycles de ~90 minutes alternant sommeil léger, sommeil profond et sommeil paradoxal (REM). Une nuit de 7h30 = 5 cycles complets. Se réveiller en milieu de cycle explique la sensation d'être 'cassé' le matin." },
+        { "name": "Le sommeil profond", "description": "Phases 3-4 du cycle : réparation physique, consolidation de la mémoire procédurale, sécrétion d'hormone de croissance, nettoyage des déchets neuronaux (système glymphatique). Majorité en début de nuit." },
+        { "name": "Le sommeil paradoxal (REM)", "description": "Traitement émotionnel, consolidation de la mémoire déclarative, créativité. Matthew Walker : 'Le REM est une thérapie nocturne gratuite.' Majorité en fin de nuit — couper la nuit court le supprime." },
+        { "name": "La dette de sommeil", "description": "Le cerveau ne récupère pas une dette de sommeil en dormant un week-end. La dette s'accumule et dégrade les performances cognitives — de façon insidieuse : on s'adapte à être sous-performant sans le réaliser." },
+        { "name": "Le rythme circadien", "description": "Horloge biologique interne sur ~24h régulée par la lumière. Elle contrôle la température corporelle, la mélatonine, le cortisol. La perturber (écrans le soir, lever tardif le week-end) dégrade la qualité du sommeil en profondeur." }
+      ]
+    },
+    {
+      "id": "ennemis",
+      "title": "Les ennemis du sommeil",
+      "icon": "⚠️",
+      "content": "Avant d'optimiser, il faut supprimer ce qui sabote. La plupart des problèmes de sommeil ont des causes environnementales claires et corrigeables.",
+      "tricks": [
+        {
+          "name": "La lumière bleue le soir",
+          "difficulty": 2,
+          "description": "Les écrans émettent une lumière bleue qui bloque la mélatonine (hormone du sommeil) jusqu'à 3h après l'exposition. Le cerveau reçoit le signal 'c'est le jour' alors qu'il est 23h.",
+          "steps": [
+            "Coupe les écrans 1h avant le coucher (idéalement 2h)",
+            "Active le mode nuit / Night Shift sur tous les appareils",
+            "Lunettes anti-lumière bleue si inévitable",
+            "Lumières tamisées et chaudes le soir dans toute la maison",
+            "Remplace le scroll du soir par lecture papier, podcast ou musique"
+          ],
+          "tips": "Une bougie ou une lampe de sel le soir signale au cerveau la transition jour/nuit. Simple et étonnamment efficace."
+        },
+        {
+          "name": "La caféine — timing critique",
+          "difficulty": 2,
+          "description": "La caféine a une demi-vie de 5-7h. Un café à 15h = la moitié de la caféine encore présente à 20h. Elle ne supprime pas la somnolence — elle la masque temporairement.",
+          "steps": [
+            "Dernier café/thé : 13h-14h maximum",
+            "Attention aux sources cachées : chocolat, sodas, certains médicaments",
+            "Pas de café dans la première heure du réveil — laisse le cortisol naturel faire son travail d'abord",
+            "Si tu 'ne ressens pas' la caféine, tu es probablement en dette de sommeil chronique"
+          ],
+          "tips": "Essaie 2 semaines sans caféine après 13h. La qualité du sommeil s'améliore souvent dès la première semaine."
+        },
+        {
+          "name": "La chambre trop chaude",
+          "difficulty": 2,
+          "description": "Le corps doit baisser sa température centrale de ~1°C pour initier le sommeil. Une chambre chaude empêche cette chute thermique — l'endormissement est retardé, le sommeil profond réduit.",
+          "steps": [
+            "Température idéale de la chambre : 16-19°C",
+            "Aère la chambre 10 minutes avant de dormir",
+            "Prends une douche chaude 1h avant le coucher (paradoxal mais efficace : la chaleur dilate les vaisseaux, la chaleur corporelle s'évacue rapidement après)",
+            "Mains et pieds froids = difficultés d'endormissement : chaussettes ou bouillotte"
+          ],
+          "tips": "La douche chaude 1-2h avant le coucher est l'un des gestes les plus efficaces pour accélérer l'endormissement — validé par plusieurs études."
+        },
+        {
+          "name": "L'alcool — l'ennemi silencieux",
+          "difficulty": 3,
+          "description": "L'alcool aide à s'endormir mais détruit la qualité du sommeil : il supprime le REM, fragmente les cycles et provoque des micro-réveils. On dort plus longtemps mais on récupère moins.",
+          "steps": [
+            "Même 1-2 verres affectent mesurables la qualité du sommeil",
+            "Si tu consommes : finir 3h avant le coucher minimum",
+            "Hydrate-toi bien après consommation",
+            "Observe la différence sur ton tracker de sommeil (si tu en as un)"
+          ],
+          "tips": "Une application de suivi du sommeil (Oura Ring, Whoop, ou simplement l'app Santé d'iPhone) rend l'impact de l'alcool sur le sommeil profond immédiatement visible."
+        }
+      ]
+    },
+    {
+      "id": "optimiser",
+      "title": "Optimiser son sommeil",
+      "icon": "✨",
+      "content": "Une fois les saboteurs éliminés, ces pratiques améliorent activement la qualité et la profondeur du sommeil.",
+      "tricks": [
+        {
+          "name": "La régularité — règle n°1",
+          "difficulty": 2,
+          "description": "Se lever à la même heure TOUS les jours (week-ends inclus) est le geste le plus impactant pour la qualité du sommeil. L'horloge circadienne adore la régularité.",
+          "steps": [
+            "Fixe une heure de lever fixe — pas une heure de coucher",
+            "Même le week-end : décalage max 30-45 min",
+            "Le 'jet lag social' (lever tardif le week-end) est l'une des causes principales de fatigue chronique",
+            "La somnolence du soir viendra naturellement une fois le rythme installé"
+          ],
+          "tips": "Il vaut mieux se lever à 7h fatigué que de 'récupérer' jusqu'à 11h — ce dernier décale l'endormissement du soir et perpétue le cycle."
+        },
+        {
+          "name": "La lumière du matin",
+          "difficulty": 1,
+          "description": "S'exposer à la lumière naturelle dans les 30-60 premières minutes du lever synchronise l'horloge circadienne et fixe le 'timer' pour la mélatonine du soir 14-16h plus tard.",
+          "steps": [
+            "Ouvre les volets immédiatement au lever",
+            "Sors dehors 10-15 minutes le matin (même nuageux — 10x plus de lux qu'en intérieur)",
+            "Mange ou prends ton café dehors si possible",
+            "En hiver : lampe de luminothérapie (10 000 lux) pendant 20-30 min le matin"
+          ],
+          "tips": "Andrew Huberman (Stanford) : 'La lumière du matin est le levier n°1 pour optimiser son énergie et son sommeil.' Gratuit, immédiat, puissant."
+        },
+        {
+          "name": "Le rituel de décompression",
+          "difficulty": 2,
+          "description": "Le cerveau ne s'éteint pas en 5 minutes. Un rituel de transition signal au système nerveux de passer du mode 'alerte' au mode 'repos'.",
+          "steps": [
+            "Commence 30-60 min avant l'heure cible de sommeil",
+            "Activités calmes : lecture physique, étirements, journaling, méditation, musique douce",
+            "Température de la pièce : baisse le chauffage",
+            "Écris les pensées parasites / tâches du lendemain pour 'vider' le mental",
+            "Évite : news, réseaux sociaux, discussions animées, écrans"
+          ],
+          "tips": "Le journaling du soir (5 min) : note 3 choses positives de la journée + les tâches du lendemain. Réduit l'activation mentale nocturne de façon mesurable."
+        },
+        {
+          "name": "La sieste stratégique",
+          "difficulty": 2,
+          "description": "Une sieste bien dosée augmente les performances cognitives de 34% et la vigilance de 100% (NASA). Mal dosée, elle ruine l'endormissement du soir.",
+          "steps": [
+            "Durée idéale : 10-20 minutes (évite le sommeil profond)",
+            "Timing : entre 13h et 15h (creux circadien naturel)",
+            "La 'nap café' : bois un café, dors 20 min — tu te réveilles avec la caféine qui prend effet",
+            "Pas de sieste après 16h si tu veux dormir à 23h",
+            "Pas de sieste si tu souffres d'insomnie chronique"
+          ],
+          "tips": "Si 20 min de sieste te laissent groggy, tu es probablement en dette de sommeil chronique — signe que le problème est plus profond."
+        }
+      ]
+    },
+    {
+      "id": "insomnie",
+      "title": "Gérer l'insomnie & les réveils nocturnes",
+      "icon": "🌊",
+      "content": "L'insomnie occasionnelle est normale. L'insomnie chronique mérite une attention particulière. Ces outils gèrent les deux.",
+      "items": [
+        { "name": "La règle des 20 minutes", "description": "Si tu n'es pas endormi après 20 minutes, lève-toi. Va dans une pièce sombre, fais quelque chose de calme (lecture à lumière faible), et reviens quand tu te sens somnolent. Rester au lit éveillé associe le lit à l'éveil — c'est le cœur de l'insomnie chronique." },
+        { "name": "La respiration 4-7-8", "description": "Inspire 4s, retiens 7s, expire 8s. Répète 4 cycles. Active le système parasympathique et réduit le cortisol rapidement. Efficace pour les réveils nocturnes anxieux." },
+        { "name": "Le body scan", "description": "Allongé, promène ton attention de la tête aux pieds, groupe musculaire par groupe musculaire. Contracte puis relâche chaque zone. Déplace l'attention du mental vers le corps — l'endormissement suit souvent." },
+        { "name": "Ne pas regarder l'heure", "description": "Regarder l'heure en se réveillant la nuit active le calcul anxieux ('il me reste X heures'). Retourne ou couvre ton réveil. L'anxiété de performance sur le sommeil est une des principales causes d'insomnie." }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "Commence par les 3 changements les plus impactants. Ajoute progressivement. La constance sur 3 semaines suffit à ressentir une vraie différence.",
+      "plan": [
+        { "phase": "Semaine 1", "focus": "Heure de lever fixe + lumière matin", "objectif": "Même heure de lever 7j/7. Exposition lumineuse dans les 30 min du réveil." },
+        { "phase": "Semaine 2", "focus": "Couper caféine après 13h + écrans -1h", "objectif": "Dernier café avant 13h. Remplacer le scroll du soir par lecture ou podcast." },
+        { "phase": "Semaine 3", "focus": "Température chambre + rituel du soir", "objectif": "16-19°C dans la chambre. Rituel de 30 min avant le coucher." },
+        { "phase": "Semaine 4", "focus": "Douche chaude + journaling soir", "objectif": "Douche 1-2h avant le coucher. Journal de 5 min pour vider le mental." },
+        { "phase": "Mois 2", "focus": "Affiner et tracker", "objectif": "Observer les patterns avec une app ou journal. Identifier ce qui fonctionne le mieux pour toi spécifiquement." },
+        { "phase": "Mois 3+", "focus": "Sommeil comme fondation", "objectif": "Le sommeil est non-négociable dans ta routine. Tu remarques la différence sur l'énergie, l'humeur et la cognition." }
+      ]
+    }
+  ]
+}

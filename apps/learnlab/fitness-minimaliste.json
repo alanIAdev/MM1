@@ -1,0 +1,158 @@
+{
+  "skill": "Fitness Minimaliste",
+  "description": "Rester en forme, fort et en bonne santé sans salle de sport, sans équipement coûteux et sans des heures d'entraînement. La régularité sur des mouvements simples bat la complexité abandonnée.",
+  "difficulty": "débutant",
+  "tags": ["sport", "santé", "corps", "force", "habitude"],
+  "sections": [
+    {
+      "id": "principes",
+      "title": "Les principes qui changent tout",
+      "icon": "🧭",
+      "content": "Le fitness est simple — l'industrie l'a complexifié pour vendre des abonnements, des suppléments et des programmes. Ces principes te permettent de faire plus avec moins.",
+      "items": [
+        { "name": "La régularité > l'intensité", "description": "3 séances de 20 min par semaine pendant 1 an surpassent largement 3 mois de sessions intenses puis 9 mois d'abandon. Le meilleur programme est celui que tu fais vraiment." },
+        { "name": "La surcharge progressive", "description": "Le corps s'adapte à un stress puis stagne si ce stress ne change pas. Il faut progressivement augmenter la difficulté : plus de répétitions, de séries, de temps sous tension ou une variante plus difficile." },
+        { "name": "Les mouvements fondamentaux", "description": "Pousser, tirer, squat, charnière (hip hinge), gainage, locomotion. Ces 6 patterns couvrent 95% de ce dont le corps a besoin. Tout le reste est optionnel." },
+        { "name": "Le repos fait partie de l'entraînement", "description": "La progression se fait pendant la récupération, pas pendant l'effort. Sans repos suffisant, il n'y a pas d'adaptation — juste de la fatigue accumulée." },
+        { "name": "La cohérence sur 6 mois", "description": "Les vrais résultats visibles demandent 3-6 mois de régularité. Avant ça, les changements sont réels (force, énergie, humeur) mais pas encore visibles. La clé : ne pas abandonner avant de voir." }
+      ]
+    },
+    {
+      "id": "poids-corps",
+      "title": "Entraînement au poids du corps",
+      "icon": "💪",
+      "content": "Le corps est ton meilleur équipement. Les exercices au poids de corps permettent de développer une vraie force fonctionnelle, n'importe où, sans matériel.",
+      "tricks": [
+        {
+          "name": "La pompe — le mouvement universel",
+          "difficulty": 2,
+          "description": "La pompe travaille poitrine, épaules, triceps et gainage en un seul mouvement. Elle a des dizaines de variantes permettant une progression infinie.",
+          "steps": [
+            "Pompe sur genoux → pompe classique → pompe pieds surélevés → pompe archer → pompe sur 1 bras",
+            "Position correcte : corps aligné, coudes à 45° du corps (pas à 90°)",
+            "Descends lentement (3s), pause en bas, pousse explosif",
+            "Objectif débutant : 3 séries de 10 pompes correctes",
+            "Objectif intermédiaire : 3 séries de 20, puis variantes difficiles"
+          ],
+          "tips": "Si tu ne peux pas faire 1 pompe correcte : commence sur les genoux. La forme prime toujours sur le nombre."
+        },
+        {
+          "name": "Le squat — la fondation du bas du corps",
+          "difficulty": 2,
+          "description": "Le squat est le mouvement le plus naturel et complet pour le bas du corps : quadriceps, fessiers, ischio-jambiers, mollets, gainage.",
+          "steps": [
+            "Pieds largeur d'épaules, orteils légèrement tournés vers l'extérieur",
+            "Descends comme pour t'asseoir sur une chaise basse, genoux dans l'axe des orteils",
+            "Cuisse parallèle au sol minimum, dos droit, poitrine haute",
+            "Progression : squat assisté → squat classique → squat goblet → pistol squat",
+            "3 séries de 15-20 répétitions pour débuter"
+          ],
+          "tips": "Si tes talons se lèvent : travaille la mobilité des chevilles (exercices d'étirement du mollet quotidiens)."
+        },
+        {
+          "name": "Le gainage — la fondation de tout",
+          "difficulty": 1,
+          "description": "Un core solide protège le dos, améliore la posture et rend tous les autres exercices plus efficaces. Le gainage n'est pas que la planche — c'est une famille d'exercices.",
+          "steps": [
+            "Planche basse (coudes) : corps aligné, pas de cambrure ni de fesses en l'air",
+            "Commence par 3 x 20 secondes, progresse vers 3 x 60s",
+            "Ajoute : planche latérale, planche avec élévation de jambe, dead bug",
+            "Mountain climbers pour combiner gainage et cardio",
+            "Évite les crunchs à répétition : faible efficacité, charge sur la colonne"
+          ],
+          "tips": "La planche est un exercice de résistance, pas de durée. 3 x 30s avec une parfaite forme > 1 x 3 min avachi."
+        },
+        {
+          "name": "Le tirage — muscles du dos",
+          "difficulty": 3,
+          "description": "Les muscles du dos sont souvent négligés au poids du corps. Un manque de 'tirage' crée des déséquilibres et des douleurs. Heureusement, une barre de traction ou même une table suffisent.",
+          "steps": [
+            "Sans équipement : inverted row sous une table (corps incliné, tire ta poitrine vers le bord)",
+            "Avec une barre de traction à poser dans un cadre de porte (~20€) : traction assistée avec élastique → traction classique → traction lestée",
+            "Poignée en supination (paumes vers toi) = plus facile, biceps aidant",
+            "Objectif : 3 séries de 8 tractions correctes"
+          ],
+          "tips": "La barre de traction de porte est l'investissement fitness le plus rentable qui existe. 20€, utilisation à vie, exercices infinis."
+        }
+      ]
+    },
+    {
+      "id": "cardio",
+      "title": "Cardio minimaliste",
+      "icon": "🏃",
+      "content": "Le cardio n'a pas besoin d'être long pour être efficace. L'intensité compense le volume — et la marche est bien plus puissante qu'on ne le croit.",
+      "tricks": [
+        {
+          "name": "La marche — le cardio sous-estimé",
+          "difficulty": 1,
+          "description": "8 000 à 10 000 pas par jour réduit la mortalité toutes causes de 50%, améliore l'humeur, régule la glycémie, facilite la digestion et booste la créativité. Gratuit, sans récupération nécessaire.",
+          "steps": [
+            "Objectif : 7 000-10 000 pas/jour (téléphone en poche ou montre connectée)",
+            "Trucs simples : descendre un arrêt plus tôt, appels téléphoniques en marchant, 15 min après chaque repas",
+            "Marche rapide (où tu peux parler mais difficilement chanter) = zone 2 cardio idéale",
+            "2 x 30 min de marche vaut mieux qu'1 session de running que tu n'aimes pas"
+          ],
+          "tips": "La marche post-repas (10-15 min) abaisse le pic glycémique de 30%. Excellent pour l'énergie de l'après-midi."
+        },
+        {
+          "name": "Le HIIT — cardio efficace en peu de temps",
+          "difficulty": 4,
+          "description": "High Intensity Interval Training : alterner efforts maximaux courts et récupération. 15-20 min de HIIT donne des bénéfices cardiovasculaires supérieurs à 45 min de cardio modéré.",
+          "steps": [
+            "Protocole Tabata : 20s effort maximal / 10s repos, 8 rounds (4 minutes totales)",
+            "Exercices : burpees, jumping jacks, sprint sur place, mountain climbers",
+            "Protocole 30/30 : 30s effort / 30s repos, 10-15 rounds",
+            "Maximum 2-3x par semaine — le HIIT demande une vraie récupération",
+            "Pas adapté aux débutants complets : commence par la marche et les exercices de base"
+          ],
+          "tips": "Le HIIT n'est pas obligatoire pour être en forme. Pour la santé générale, la zone 2 (marche rapide, vélo léger) est souvent plus bénéfique sur le long terme."
+        }
+      ]
+    },
+    {
+      "id": "programmes",
+      "title": "Programmes selon ton profil",
+      "icon": "📋",
+      "content": "Trois programmes progressifs selon le temps disponible et le niveau. Chacun peut se faire sans équipement, chez soi.",
+      "items": [
+        {
+          "name": "Programme 10 min/jour (débutant)",
+          "description": "Lundi/Mercredi/Vendredi : 3 x 10 pompes (ou genoux) + 3 x 15 squats + 3 x 20s planche. Mardi/Jeudi/Samedi : 20 min de marche rapide. Dimanche : repos. Durée : 10-15 min/session."
+        },
+        {
+          "name": "Programme 20 min/jour (intermédiaire)",
+          "description": "Push (pompes, dips) / Pull (tractions, inverted rows) / Legs (squats, fentes, pont fessier) en rotation. 3-4 séances semaine. 3-4 exercices par séance, 3 séries de 8-15 reps. + marche quotidienne."
+        },
+        {
+          "name": "Programme 30 min (avancé)",
+          "description": "Full body 3x/semaine : pompes variantes + tractions + squat bulgare + hip hinge (RDL au poids du corps ou haltères) + gainage complexe. 1 session HIIT de 20 min/semaine. Progression mensuelle des variantes."
+        }
+      ]
+    },
+    {
+      "id": "mobilite",
+      "title": "Mobilité & récupération",
+      "icon": "🧘",
+      "content": "La mobilité est la compétence physique la plus négligée — et celle qui détermine ta capacité à rester actif toute ta vie sans douleur.",
+      "items": [
+        { "name": "La routine du matin (5 min)", "description": "Au lever : rotations de la nuque, rotations des épaules, chat-vache (colonne), fente hip flexor (30s chaque côté), squat profond tenu 30s. Fait quotidiennement, ça change tout à 40-50 ans." },
+        { "name": "Étirements post-entraînement", "description": "5-10 min d'étirements statiques APRÈS l'effort (pas avant). Insiste sur ce que tu viens de travailler. Tiens chaque position 30-45s. La respiration profonde pendant l'étirement augmente l'amplitude." },
+        { "name": "Le rouleau de massage (foam roller)", "description": "~15€, investissement pour la vie. Roule lentement sur les zones tendues (mollets, IT band, dos). Réduit les courbatures, améliore la mobilité. 5 minutes avant ou après la séance." }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "La progression en fitness minimaliste est claire : maîtrise les bases, augmente la difficulté, reste régulier.",
+      "plan": [
+        { "phase": "Semaine 1-2", "focus": "Établir l'habitude", "objectif": "3 sessions de 15 min. Priorité : la régularité, pas l'intensité. Même 5 pompes et 10 squats comptent." },
+        { "phase": "Semaine 3-4", "focus": "Maîtriser les formes", "objectif": "Pompe, squat et planche avec une forme correcte. Augmenter les répétitions progressivement." },
+        { "phase": "Mois 2", "focus": "Ajouter tirage + cardio", "objectif": "Introduire inverted rows ou tractions assistées. 7 000 pas/jour comme objectif quotidien." },
+        { "phase": "Mois 3", "focus": "Surcharge progressive", "objectif": "Variantes plus difficiles pour chaque exercice. 3 séances force + 2 marches actives/semaine." },
+        { "phase": "Mois 4-6", "focus": "Programme structuré", "objectif": "Push/Pull/Legs ou full body 3x/semaine. Objectifs chiffrés (10 tractions, 30 pompes, pistol squat assisté)." },
+        { "phase": "Mois 6+", "focus": "Mode de vie actif", "objectif": "Le mouvement est intégré dans ton quotidien. Tu n'as plus besoin de 'motivation' — c'est une habitude." }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "skill": "Revenus Complémentaires",
+  "description": "Créer une source de revenus en dehors de ton emploi principal te donne une liberté financière, une sécurité et souvent un sens que le salariat ne procure pas. Ce n'est pas un mythe — c'est une compétence.",
+  "difficulty": "intermédiaire",
+  "tags": ["argent", "freelance", "liberté financière", "entrepreneuriat", "side project"],
+  "sections": [
+    {
+      "id": "mindset",
+      "title": "L'état d'esprit du créateur",
+      "icon": "🧭",
+      "content": "Avant de chercher 'comment gagner de l'argent en ligne', il faut comprendre la mécanique fondamentale : on génère des revenus en résolvant des problèmes pour des gens qui ont les moyens de les payer.",
+      "items": [
+        { "name": "Valeur d'abord, argent ensuite", "description": "Toute source de revenus durable repose sur de la valeur créée pour quelqu'un. La question n'est pas 'comment je gagne de l'argent ?' mais 'quel problème je peux résoudre mieux que la majorité ?'" },
+        { "name": "Le triangle compétence/passion/marché", "description": "Les meilleurs side projects sont à l'intersection de ce que tu sais faire, ce qui t'intéresse, et ce que des gens sont prêts à payer. Un seul coin du triangle ne suffit pas." },
+        { "name": "Commencer petit, itérer vite", "description": "Ne cherche pas le projet parfait. Lance quelque chose d'imparfait rapidement, mesure ce qui fonctionne, ajuste. La plupart des créateurs qui réussissent ont pivoté 2-3 fois depuis leur idée initiale." },
+        { "name": "La patience du premier euro", "description": "Le premier euro est toujours le plus difficile. Il demande souvent 3-6 mois d'effort sans retour visible. Ceux qui abandonnent à 2 mois ne savent jamais s'ils étaient à 1 semaine du décollage." }
+      ]
+    },
+    {
+      "id": "freelance",
+      "title": "Freelance & Services",
+      "icon": "💼",
+      "content": "Le freelance est le chemin le plus rapide vers les premiers revenus complémentaires. Tu monétises des compétences que tu as déjà.",
+      "tricks": [
+        {
+          "name": "Identifier sa compétence monnayable",
+          "difficulty": 2,
+          "description": "Tu as très probablement des compétences que des gens paient pour avoir. Le problème : on sous-estime ce qu'on sait faire parce que ça nous semble 'normal'.",
+          "steps": [
+            "Liste tout ce que tu fais mieux que la majorité (même les choses qui te semblent banales)",
+            "Filtre : qu'est-ce que des entreprises ou particuliers paient déjà pour faire faire ?",
+            "Compétences fréquemment monnayables : rédaction, design, développement, traduction, comptabilité, formation, conseil, montage vidéo, gestion réseaux sociaux",
+            "Teste l'idée : propose à 3 personnes de ton réseau, observe la réaction"
+          ],
+          "tips": "La règle du 'spécialiste' : un généraliste qui écrit des articles gagne 50€/article. Un spécialiste qui écrit des articles SaaS B2B gagne 300€/article. Niche = valeur."
+        },
+        {
+          "name": "Trouver ses premiers clients",
+          "difficulty": 3,
+          "description": "Les premières missions ne viennent pas de Malt ou Upwork — elles viennent de ton réseau existant. C'est contre-intuitif mais universellement vrai.",
+          "steps": [
+            "Étape 1 : dis à 20 personnes de ton réseau ce que tu proposes. Simple message direct, pas de pitch élaboré.",
+            "Étape 2 : rejoins des communautés en ligne où se trouvent tes clients potentiels (Slack, Discord, forums, LinkedIn)",
+            "Étape 3 : publie du contenu utile sur LinkedIn ou X dans ta niche — ça crée de l'inbound naturellement",
+            "Étape 4 : Malt, Upwork, Fiverr pour les débuts — accepte les premiers prix bas pour avoir des avis"
+          ],
+          "tips": "La première mission se trouve presque toujours dans les 150 personnes qu'on connaît déjà. L'erreur classique : chercher des inconnus avant d'avoir épuisé le réseau existant."
+        },
+        {
+          "name": "Fixer et augmenter ses tarifs",
+          "difficulty": 4,
+          "description": "La majorité des freelances se sous-payent massivement. Augmenter ses tarifs est l'action la plus impactante — et la plus difficile psychologiquement.",
+          "steps": [
+            "Calcule ton taux journalier réel : salaire cible annuel ÷ 200 jours × 2 (charges + jours non facturés)",
+            "Si tu n'essuies jamais de refus sur ton tarif, tu es trop bas",
+            "Augmente de 20-30% à chaque nouveau client",
+            "La valeur > le temps : facture la valeur créée, pas les heures passées",
+            "Un client qui part parce que tu augmentes libère du temps pour un meilleur client"
+          ],
+          "tips": "Exercice mental : demande 30% de plus que ton tarif habituel sur ta prochaine proposition. Observe. Tu seras souvent surpris."
+        }
+      ]
+    },
+    {
+      "id": "contenu",
+      "title": "Création de contenu",
+      "icon": "📱",
+      "content": "Le contenu construit une audience qui t'appartient. Une audience est un actif qui se valorise dans le temps et ouvre des portes indépendantes de ton emploi.",
+      "tricks": [
+        {
+          "name": "Choisir sa plateforme et son format",
+          "difficulty": 2,
+          "description": "Chaque plateforme a sa logique. Il vaut mieux exceller sur une que d'être médiocre sur cinq.",
+          "steps": [
+            "LinkedIn : idéal pour le B2B, le conseil, les compétences professionnelles. Portée organique encore forte.",
+            "YouTube : contenu long, recherche, evergreen. Long à lancer, très durable.",
+            "Newsletter (Substack, Beehiiv) : audience qui t'appartient, relation directe. Croissance lente mais solide.",
+            "TikTok/Reels : croissance rapide, contenu court, idéal pour la notoriété mais monétisation moins directe.",
+            "X (Twitter) : idéas, threads, network. Très fort pour le tech/startups/finance."
+          ],
+          "tips": "Choisis la plateforme où se trouve ton audience cible ET où tu peux être régulier. La régularité bat la perfection."
+        },
+        {
+          "name": "La stratégie du contenu utile",
+          "difficulty": 3,
+          "description": "Le contenu qui construit une vraie audience n'est pas du contenu 'inspirant' — c'est du contenu qui résout des problèmes réels ou enseigne quelque chose d'actionnable.",
+          "steps": [
+            "Écris sur ce que tu maîtrises et ce que tu apprends : 'Teacher's curse' — enseigner ce qu'on apprend",
+            "Format 80/20 : 80% de valeur gratuite, 20% d'offre ou CTA",
+            "Réponds aux questions que ton audience se pose (forums, commentaires, Reddit)",
+            "La régularité prime : 1 post par semaine pendant 1 an > 10 posts par semaine pendant 1 mois puis abandon"
+          ],
+          "tips": "Le premier contenu sera nul — et c'est normal. Les créateurs qui ont une audience aujourd'hui ont tous des posts de débuts embarrassants. Le secret : continuer malgré ça."
+        },
+        {
+          "name": "Monétiser une audience",
+          "difficulty": 4,
+          "description": "Une audience se monétise de plusieurs façons. La clé : ne monétiser qu'une fois que tu as donné assez de valeur pour que les gens aient envie de te payer.",
+          "steps": [
+            "Formation en ligne (Teachable, Gumroad) : scalable, marge excellente, demande une vraie audience",
+            "Produits numériques (templates, guides, outils) : passif une fois créé",
+            "Sponsoring : brands payent pour accéder à ton audience. Commence à partir de 1 000-5 000 abonnés engagés",
+            "Membership / communauté payante : abonnement récurrent, relation directe",
+            "Consulting / coaching : conversion directe de l'audience en clients"
+          ],
+          "tips": "Règle : attends d'avoir 1 000 vrais abonnés engagés avant de monétiser. Trop tôt = perte de confiance. La patience ici est stratégique."
+        }
+      ]
+    },
+    {
+      "id": "produits",
+      "title": "Produits & revenus passifs",
+      "icon": "⚙️",
+      "content": "Le revenu passif pur n'existe pas — mais des revenus nécessitant peu de maintenance après la création initiale, oui. Ce sont les actifs numériques.",
+      "items": [
+        { "name": "Produits numériques", "description": "Templates (Notion, Figma, Excel), guides PDF, presets, polices, icônes. Créés une fois, vendus à l'infini. Plateformes : Gumroad, Etsy (digital), Creative Market. Avantage : démarrage rapide, investissement minimal." },
+        { "name": "Formations en ligne", "description": "Cours sur Udemy, Teachable, Podia. Forte marge, scalable. Nécessite une vraie expertise et une audience ou du marketing. Udemy : trafic existant mais marges réduites. Plateforme propre : plus de contrôle et de marge." },
+        { "name": "Affiliation", "description": "Recommander des produits et toucher une commission sur les ventes (5-50% selon le secteur). Fonctionne avec une audience ou un blog SEO. Amazon Affiliates, logiciels SaaS (souvent 30-50% récurrents)." },
+        { "name": "SaaS / micro-outils", "description": "Pour les profils techniques : créer un petit outil en ligne résolvant un problème précis. Abonnement mensuel, peu de support si bien conçu. Exemples : outils de génération, automatisations, calculateurs spécialisés." }
+      ]
+    },
+    {
+      "id": "organisation",
+      "title": "S'organiser en parallèle d'un emploi",
+      "icon": "⏱️",
+      "content": "Le side project se construit dans les marges — matin, soir, week-end. L'organisation est cruciale pour ne pas s'épuiser ni négliger l'essentiel.",
+      "items": [
+        { "name": "Le bloc sacré", "description": "Réserve 1 à 2 heures par jour (souvent le matin avant le travail) uniquement pour ton projet. Protège ce créneau comme une réunion inviolable. En 1 heure par jour sur 1 an = 365 heures de travail = un vrai projet." },
+        { "name": "La règle d'une seule chose", "description": "Chaque semaine, une seule priorité pour ton projet. Pas 5. Une. La dispersion est le principal tueur de side projects." },
+        { "name": "Mesurer les vrais indicateurs", "description": "Les vanity metrics (vues, likes) ne paient pas les factures. Suis : nombre de prospects contactés, propositions envoyées, clients signés, revenus générés, abonnés actifs (pas total)." },
+        { "name": "Fixer une deadline externe", "description": "Annoncer publiquement une date de lancement crée une pression externe saine. 'Je lance ma newsletter le 1er du mois prochain' — cette annonce fait plus que des semaines de planification." }
+      ]
+    },
+    {
+      "id": "plan",
+      "title": "Plan de progression",
+      "icon": "📅",
+      "content": "Douze mois pour passer de 0 à des revenus complémentaires réels et réguliers.",
+      "plan": [
+        { "phase": "Mois 1", "focus": "Exploration & validation", "objectif": "Identifier 3 idées de side project. Valider l'une d'elles en parlant à 10 personnes du marché cible." },
+        { "phase": "Mois 2-3", "focus": "Premiers pas & premier euro", "objectif": "Lancer une version minimale. Contacter 20 personnes du réseau. Objectif : 1er client ou 1er euro." },
+        { "phase": "Mois 4-6", "focus": "Traction & répétabilité", "objectif": "Rendre le processus d'acquisition reproductible. Viser 3-5 clients/mois ou 200€/mois de revenus." },
+        { "phase": "Mois 7-9", "focus": "Optimiser & scaler", "objectif": "Identifier ce qui fonctionne vraiment. Doubler dessus. Automatiser ce qui peut l'être." },
+        { "phase": "Mois 10-12", "focus": "Consolidation", "objectif": "Revenus complémentaires stables et prévisibles. Décision : maintenir le niveau ou accélérer vers plus." }
+      ]
+    }
+  ]
+}
