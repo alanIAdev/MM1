@@ -698,9 +698,16 @@ function renderDashboard(){
         <div class="logo">Quest ⬡</div>
         <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:1px">${dayName} · ${today()}</div>
       </div>
-      <div style="text-align:right">
-        <div style="font-size:22px;font-weight:800;color:#fff">${pctDay}%</div>
-        <div style="font-size:9px;color:rgba(255,255,255,.35)">du jour</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <a href="https://alaniadev.github.io/MM1/" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:5px 10px;text-decoration:none;color:rgba(255,255,255,.55);font-size:10px;font-weight:600;letter-spacing:.3px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Home
+        </a>
+        <div style="text-align:right">
+          <div style="font-size:22px;font-weight:800;color:#fff">${pctDay}%</div>
+          <div style="font-size:9px;color:rgba(255,255,255,.35)">du jour</div>
+        </div>
       </div>
     </div>
 
@@ -896,7 +903,7 @@ function renderHistory(){
     if(!catTasks.length) return;
     tableBody+=`<tr class="hist-cat-row"><td colspan="${allDates.length+1}">${cat.icon} ${escH(cat.name)}</td></tr>`;
     catTasks.forEach(t=>{
-      let row=`<td title="${escH(t.title)}">${escH(t.title.slice(0,14)+(t.title.length>14?'…':''))}</td>`;
+      let row=`<td title="${escH(t.title)}" style="cursor:pointer" onclick="openEditTask('${t.id}')">${escH(t.title.slice(0,12)+(t.title.length>12?'…':''))} <span style="opacity:.35;font-size:9px">✎</span></td>`;
       allDates.forEach(d=>{
         const isT=d===todayStr;
         const due=isTaskDueOnDate(t,d);
@@ -904,10 +911,10 @@ function renderHistory(){
         const mx=maxComp(t.freq);
         const bg=isT?'background:rgba(0,212,255,.04);':'';
         let cell;
-        if(!due) cell=`<td class="hist-cell-na" style="${bg}">·</td>`;
-        else if(cnt>=mx) cell=`<td class="hist-cell-done" style="${bg}">✓</td>`;
-        else if(cnt>0) cell=`<td style="color:rgba(124,106,255,.6);font-size:10px;${bg}">½</td>`;
-        else cell=`<td class="hist-cell-miss" style="${bg}">○</td>`;
+        if(!due) cell=`<td class="hist-cell-na" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">·</td>`;
+        else if(cnt>=mx) cell=`<td class="hist-cell-done" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">✓</td>`;
+        else if(cnt>0) cell=`<td style="color:rgba(124,106,255,.6);font-size:10px;${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">½</td>`;
+        else cell=`<td class="hist-cell-miss" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">○</td>`;
         row+=cell;
       });
       tableBody+=`<tr>${row}</tr>`;
@@ -926,7 +933,10 @@ function renderHistory(){
     <div class="header"><span class="section-title">Historique</span></div>
     <div class="filter-row">${dayBtns}
       <span style="flex:1"></span>
-      <span style="font-size:9px;color:rgba(255,255,255,.2);align-self:center">✓ fait &nbsp;○ manqué &nbsp;· hors planning</span>
+      <span style="font-size:9px;color:rgba(255,255,255,.2);align-self:center">✓ fait &nbsp;○ manqué &nbsp;· N/A</span>
+    </div>
+    <div style="font-size:9px;color:rgba(124,106,255,.5);margin-bottom:8px;padding:6px 10px;background:rgba(124,106,255,.07);border-radius:8px;border:1px solid rgba(124,106,255,.12)">
+      ✎ Clique sur le nom d'une tâche pour la modifier · Clique sur une cellule pour ajouter/retirer une complétion
     </div>
     <div class="hist-scroll">
       <table class="hist-table">
@@ -936,6 +946,33 @@ function renderHistory(){
     </div>
     ${tasks.length===0?'<div style="color:rgba(255,255,255,.2);text-align:center;padding:40px;font-size:13px">Aucune tâche enregistrée</div>':''}
   </div>`;
+}
+
+function toggleHistCell(taskId, dateStr){
+  const t=tasks.find(x=>x.id===taskId);
+  if(!t) return;
+  const log=[...(t.completionLog||[])];
+  const idx=log.indexOf(dateStr);
+  if(idx>=0){
+    // Remove one occurrence
+    log.splice(idx,1);
+    showToast('Complétion retirée');
+  } else {
+    // Add one completion
+    log.push(dateStr);
+    // Recalculate streak
+    showToast('Complétion ajoutée',TASK_XP);
+  }
+  tasks=tasks.map(x=>x.id===taskId?{...x,completionLog:log}:x);
+  // Recompute XP for cats (approximate: just add/remove TASK_XP)
+  const cat=cats.find(c=>c.id===t.catId);
+  if(cat){
+    const delta=idx>=0?-TASK_XP:TASK_XP;
+    cats=cats.map(c=>c.id===t.catId?{...c,xp:Math.max(0,(c.xp||0)+delta)}:c);
+    save('qst_cats',cats);
+  }
+  save('qst_tasks',tasks);
+  render();
 }
 
 // ══════════════════════════════════════════════════════
@@ -1033,6 +1070,45 @@ let modalType='task',editTaskId=null;
 let mTitle='',mCatId='',mFreq='daily',mWeekDays=[],mIcon='⚡';
 
 const ICONS=['⚡','💪','📚','🎯','🎨','🏃','🧘','💼','🌱','🎮','🍎','✍️','🔬','🎵','❤️','💰','🧠','🏋️','🤝','📈'];
+
+// Preset tasks per default category ID
+const PRESET_TASKS={
+  cat_sport:[
+    {title:'Séance de musculation',freq:'3week'},{title:'Cardio 30 min',freq:'daily'},
+    {title:'Étirements matinaux',freq:'daily'},{title:'Sport en extérieur',freq:'2week'},
+    {title:'Marche 8000 pas',freq:'daily'},{title:'Yoga flow',freq:'3week'},
+  ],
+  cat_wisdom:[
+    {title:'Lire 20 pages',freq:'daily'},{title:'Podcast éducatif',freq:'3week'},
+    {title:'Écrire dans son journal',freq:'daily'},{title:'Apprendre une nouvelle compétence',freq:'2week'},
+    {title:'Revoir ses notes',freq:'weekly'},{title:'Méditation de pleine conscience',freq:'daily'},
+  ],
+  cat_health:[
+    {title:'Boire 2L d\'eau',freq:'daily'},{title:'Dormir 8h',freq:'daily'},
+    {title:'Préparer un repas sain',freq:'daily'},{title:'Pas de sucre ajouté',freq:'daily'},
+    {title:'Prendre ses compléments',freq:'daily'},{title:'Consultation médicale',freq:'once'},
+  ],
+  cat_rel:[
+    {title:'Appeler un proche',freq:'2week'},{title:'Message d\'encouragement',freq:'3week'},
+    {title:'Sortie avec des amis',freq:'weekly'},{title:'Moment en famille',freq:'weekly'},
+    {title:'Exprimer sa gratitude',freq:'daily'},{title:'Date night',freq:'weekly'},
+  ],
+  cat_work:[
+    {title:'Planifier sa journée',freq:'daily'},{title:'Inbox zéro',freq:'daily'},
+    {title:'Bloc de travail profond 2h',freq:'daily'},{title:'Revue hebdomadaire',freq:'weekly'},
+    {title:'Apprendre un outil pro',freq:'2week'},{title:'Mettre à jour son portfolio',freq:'once'},
+  ],
+  cat_self:[
+    {title:'Méditation 10 min',freq:'daily'},{title:'Affirmations positives',freq:'daily'},
+    {title:'Heure sans écran',freq:'daily'},{title:'Développer une nouvelle habitude',freq:'daily'},
+    {title:'Lire sur le développement perso',freq:'3week'},{title:'Bilan hebdomadaire',freq:'weekly'},
+  ],
+  cat_rev:[
+    {title:'Suivre ses dépenses',freq:'daily'},{title:'Revue du budget mensuel',freq:'once'},
+    {title:'Investir une somme fixe',freq:'weekly'},{title:'Prospecter un client',freq:'3week'},
+    {title:'Idée de revenus passifs',freq:'weekly'},{title:'Mettre à jour ses objectifs financiers',freq:'weekly'},
+  ],
+};
 const DAY_COUNT={'2week':2,'3week':3,'4week':4,'weekly':1};
 const NEEDS_DAYS=new Set(['2week','3week','4week','weekly']);
 
@@ -1062,6 +1138,15 @@ function toggleMDay(d){
   const mx=DAY_COUNT[mFreq]||1;
   mWeekDays=mWeekDays.includes(d)?mWeekDays.filter(x=>x!==d):(mWeekDays.length<mx?[...mWeekDays,d]:mWeekDays);
   renderModal();
+}
+
+function applyPreset(btn){
+  syncFromDOM();
+  const title=btn.dataset.title||'';
+  const freq=btn.dataset.freq||'daily';
+  mTitle=title;mFreq=freq;mWeekDays=[];
+  renderModal();
+  setTimeout(()=>{const ti=document.getElementById('m-title');if(ti)ti.value=title;},10);
 }
 
 function freqHint(f){
@@ -1095,7 +1180,24 @@ function renderModal(){
       <div class="form-label">${mFreq==='weekly'?'Jour de rappel':'Jours de rappel'} (${mWeekDays.length}/${DAY_COUNT[mFreq]||1})</div>
       <div class="day-wrap">${DAY_NAMES.map((d,i)=>`<button class="day-btn${mWeekDays.includes(i)?' active':''}" onclick="toggleMDay(${i})">${d}</button>`).join('')}</div>`:'';
     const catOpts=cats.map(c=>`<option value="${c.id}"${c.id===mCatId?' selected':''}>${c.icon} ${c.name}</option>`).join('');
+    // Preset suggestions for current category (safe string concat, no nested backticks)
+    let presetHTML='';
+    if(!isEdit){
+      const presets=(PRESET_TASKS[mCatId]||[]);
+      if(presets.length){
+        let btns='';
+        presets.forEach(p=>{
+          btns+='<button onclick="applyPreset(this)" data-title="'+escH(p.title)+'" data-freq="'+p.freq+'" '+
+            'style="background:rgba(124,106,255,.1);border:1px solid rgba(124,106,255,.25);color:rgba(255,255,255,.65);'+
+            'border-radius:20px;padding:5px 11px;font-size:10px;font-weight:500;cursor:pointer;white-space:nowrap">'+
+            escH(p.title)+'</button>';
+        });
+        presetHTML='<div class="form-label">Suggestions rapides</div>'+
+          '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">'+btns+'</div>';
+      }
+    }
     html+=`<div class="modal-title">${isEdit?'Modifier la tâche':'Nouvelle tâche'}</div>
+    ${presetHTML}
     <div class="form-label">Titre</div>
     <input id="m-title" class="form-input" placeholder="Nom de la tâche..." autocomplete="off" value="${escH(mTitle)}" oninput="mTitle=this.value">
     <div class="form-label">Fréquence</div>
@@ -1103,7 +1205,7 @@ function renderModal(){
     ${hint?`<div class="freq-hint">${hint}</div>`:''}
     ${daySection}
     <div class="form-label">Catégorie</div>
-    <select id="m-cat" class="form-select" onchange="mCatId=this.value">${catOpts}</select>`;
+    <select id="m-cat" class="form-select" onchange="syncFromDOM();mCatId=this.value;renderModal()">${catOpts}</select>`;
   }
 
   html+=`<div style="display:flex;gap:8px;margin-top:20px">
