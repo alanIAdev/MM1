@@ -852,8 +852,11 @@
     const dayOfYear = Math.floor((now - start) / 864e5);
     return PHRASES[dayOfYear % PHRASES.length];
   }
-
-  let phraseIdx = null;
+  function getRandomPhrase() {
+    const randomIndex = Math.floor(Math.random() * PHRASES.length);
+    return PHRASES[randomIndex];
+  }
+    let phraseIdx = null;
 
   function showPhrase(p) {
     document.getElementById('phraseText').textContent = '« ' + p.text + ' »';
@@ -861,7 +864,7 @@
   }
 
   function initPhrase() {
-    const p = getTodayPhrase();
+    const p = getRandomPhrase();;
     phraseIdx = PHRASES.indexOf(p);
     showPhrase(p);
   }
