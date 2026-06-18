@@ -5,1425 +5,512 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Mon Bullet Journal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ivory: #F9F6F0;
-    --ivory-dark: #EDE8DF;
-    --ink: #2C2416;
-    --ink-light: #6B5E4A;
-    --ocre: #C4873A;
-    --ocre-light: #E8C490;
-    --sage: #7A9E7E;
-    --slate: #5B7FA6;
-    --brick: #B85C4A;
-    --paper: #FDFAF5;
-  }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #D6CFC3;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-image: 
-      radial-gradient(ellipse at top left, #C9C2B5 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, #BFB8AA 0%, transparent 50%);
-  }
-
-  #root { width: 100%; max-width: 1100px; }
-
-  /* JOURNAL WRAPPER */
-  .journal {
-    display: flex;
-    background: var(--ink);
-    border-radius: 4px 12px 12px 4px;
-    box-shadow: 
-      -4px 0 0 #1a140d,
-      8px 8px 30px rgba(0,0,0,0.4),
-      20px 20px 60px rgba(0,0,0,0.2);
-    min-height: 700px;
-    position: relative;
-  }
-
-  /* SPINE */
-  .spine {
-    width: 36px;
-    background: linear-gradient(180deg, #1a140d 0%, #2C2416 50%, #1a140d 100%);
-    border-radius: 4px 0 0 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 0;
-    gap: 18px;
-    flex-shrink: 0;
-  }
-
-  .spine-ring {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 3px solid #8B7355;
-    background: #2C2416;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05);
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    width: 200px;
-    background: linear-gradient(180deg, #3D3020 0%, #2C2416 100%);
-    padding: 24px 0 24px 0;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-  }
-
-  .sidebar-title {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    color: var(--ocre-light);
-    font-size: 18px;
-    padding: 0 20px 20px;
-    border-bottom: 1px solid rgba(196,135,58,0.2);
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-
-  .sidebar-title span { display: block; font-size: 11px; font-style: normal; font-family: 'Inter', sans-serif; color: var(--ink-light); margin-top: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
-
-  .nav-section-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: #6B5E4A;
-    padding: 12px 20px 4px;
-    font-weight: 600;
-  }
-
-  .nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #A89880;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    text-align: left;
-    transition: all 0.15s;
-    border-left: 3px solid transparent;
-    width: 100%;
-  }
-
-  .nav-btn:hover { background: rgba(196,135,58,0.1); color: var(--ocre-light); }
-  .nav-btn.active { background: rgba(196,135,58,0.15); color: var(--ocre-light); border-left-color: var(--ocre); font-weight: 500; }
-  .nav-btn .icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
-
-  /* PAGE */
-  .page {
-    flex: 1;
-    background: var(--paper);
-    border-radius: 0 12px 12px 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    background-image: 
-      repeating-linear-gradient(transparent, transparent 27px, #E8E0D4 27px, #E8E0D4 28px);
-    background-position: 0 52px;
-  }
-
-  .page-header {
-    background: var(--paper);
-    padding: 20px 32px 16px;
-    border-bottom: 2px solid var(--ocre);
-    background-image: none;
-    position: relative;
-  }
-
-  .page-header::after {
-    content: '';
-    position: absolute;
-    left: 60px;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: rgba(184,92,74,0.3);
-  }
-
-  .page-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    color: var(--ink);
-    font-weight: 700;
-  }
-
-  .page-subtitle {
-    font-size: 12px;
-    color: var(--ink-light);
-    margin-top: 2px;
-    letter-spacing: 0.05em;
-  }
-
-  .page-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px 32px 32px;
-  }
-
-  .page-body::-webkit-scrollbar { width: 6px; }
-  .page-body::-webkit-scrollbar-track { background: transparent; }
-  .page-body::-webkit-scrollbar-thumb { background: var(--ivory-dark); border-radius: 3px; }
-
-  /* BULLETS */
-  .bullet-list { list-style: none; }
-
-  .bullet-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.04);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--ink);
-    group: true;
-  }
-
-  .bullet-item.done { text-decoration: line-through; color: var(--ink-light); }
-  .bullet-item.migrated { color: var(--slate); }
-
-  .bullet-symbol {
-    font-size: 15px;
-    line-height: 1.4;
-    min-width: 20px;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .bullet-text { flex: 1; cursor: pointer; line-height: 1.5; }
-
-  .bullet-delete {
-    opacity: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--brick);
-    font-size: 16px;
-    line-height: 1;
-    padding: 0 4px;
-    transition: opacity 0.15s;
-  }
-
-  .bullet-item:hover .bullet-delete { opacity: 1; }
-
-  /* ADD ENTRY */
-  .add-entry {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-    align-items: center;
-    background: rgba(255,255,255,0.5);
-    border: 1px dashed var(--ivory-dark);
-    border-radius: 6px;
-    padding: 8px 12px;
-  }
-
-  .add-entry select {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    background: none;
-    border: none;
-    color: var(--ink-light);
-    cursor: pointer;
-    outline: none;
-    padding: 2px;
-  }
-
-  .add-entry input {
-    flex: 1;
-    background: none;
-    border: none;
-    outline: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--ink);
-  }
-
-  .add-entry input::placeholder { color: #BBA98A; }
-
-  .add-entry button {
-    background: var(--ocre);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 4px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    transition: background 0.15s;
-  }
-  .add-entry button:hover { background: #B07830; }
-
-  /* CARDS & SECTIONS */
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 17px;
-    color: var(--ink);
-    margin: 24px 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--ivory-dark);
-  }
-
-  /* FUTURE LOG */
-  .month-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    margin-top: 8px;
-  }
-
-  .month-card {
-    background: white;
-    border-radius: 8px;
-    padding: 14px;
-    border: 1px solid var(--ivory-dark);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-
-  .month-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 14px;
-    color: var(--ink);
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--ivory-dark);
-  }
-
-  .month-card .event-item {
-    font-size: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 3px 0;
-    color: var(--ink-light);
-    border-bottom: 1px dotted #EDE8DF;
-    display: flex;
-    gap: 6px;
-    cursor: pointer;
-  }
-
-  .month-card .event-item:hover { color: var(--ink); }
-  .month-card .add-month-event { 
-    margin-top: 6px;
-    width: 100%;
-    background: none;
-    border: 1px dashed #DDD;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 11px;
-    color: var(--ink-light);
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    text-align: left;
-    transition: all 0.15s;
-  }
-  .month-card .add-month-event:hover { border-color: var(--ocre); color: var(--ocre); }
-
-  /* MONTHLY LOG */
-  .weekly-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin: 8px 0 16px;
-  }
-
-  .day-header {
-    text-align: center;
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--ink-light);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 4px 0;
-  }
-
-  .day-cell {
-    background: white;
-    border: 1px solid var(--ivory-dark);
-    border-radius: 6px;
-    min-height: 70px;
-    padding: 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-  }
-
-  .day-cell:hover { border-color: var(--ocre); box-shadow: 0 0 0 2px rgba(196,135,58,0.1); }
-  .day-cell.today { border-color: var(--ocre); background: rgba(196,135,58,0.05); }
-  .day-cell.empty { background: var(--ivory); opacity: 0.4; pointer-events: none; }
-
-  .day-number {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--ink-light);
-    margin-bottom: 4px;
-  }
-
-  .day-cell.today .day-number {
-    background: var(--ocre);
-    color: white;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    margin-bottom: 4px;
-  }
-
-  .day-event {
-    font-size: 9px;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--slate);
-    line-height: 1.3;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-
-  /* INDEX */
-  .index-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-  .index-table th {
-    text-align: left;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    padding: 6px 10px;
-    border-bottom: 2px solid var(--ink);
-  }
-  .index-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--ivory-dark);
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--ink);
-    transition: all 0.15s;
-  }
-  .index-table tr:hover td { background: rgba(196,135,58,0.07); color: var(--ocre); }
-  .index-table td:last-child { color: var(--ink-light); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-
-  /* TRACKERS */
-  .tracker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-  .tracker-card {
-    background: white;
-    border-radius: 10px;
-    padding: 16px;
-    border: 1px solid var(--ivory-dark);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-
-  .tracker-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    color: var(--ink);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* HABIT GRID */
-  .habit-days {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
-
-  .habit-day {
-    width: 22px;
-    height: 22px;
-    border-radius: 4px;
-    border: 1.5px solid var(--ivory-dark);
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    color: transparent;
-    background: white;
-  }
-
-  .habit-day.checked { background: var(--sage); border-color: var(--sage); color: white; }
-  .habit-day:hover:not(.checked) { border-color: var(--sage); background: rgba(122,158,126,0.1); }
-
-  /* MOOD / HAPPINESS */
-  .mood-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    margin: 4px 0;
-    font-size: 12px;
-    color: var(--ink-light);
-  }
-
-  .mood-dot {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    transition: all 0.15s;
-    background: var(--ivory);
-  }
-  .mood-dot:hover { transform: scale(1.15); }
-  .mood-dot.selected { border-color: var(--ocre); box-shadow: 0 0 0 3px rgba(196,135,58,0.2); }
-
-  /* WATER TRACKER */
-  .water-glasses {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 8px;
-  }
-
-  .glass {
-    font-size: 22px;
-    cursor: pointer;
-    opacity: 0.25;
-    transition: all 0.15s;
-    filter: grayscale(100%);
-  }
-
-  .glass.filled { opacity: 1; filter: grayscale(0%); }
-  .glass:hover { transform: scale(1.1); }
-
-  /* SLEEP */
-  .sleep-bar-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 4px 0;
-  }
-
-  .sleep-day-label { font-size: 11px; color: var(--ink-light); width: 28px; font-family: 'JetBrains Mono', monospace; }
-
-  .sleep-bar-bg {
-    flex: 1;
-    height: 14px;
-    background: var(--ivory-dark);
-    border-radius: 7px;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-  }
-
-  .sleep-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--slate), #7AADD4);
-    border-radius: 7px;
-    transition: width 0.3s;
-  }
-
-  .sleep-hours { font-size: 11px; color: var(--ink-light); width: 32px; text-align: right; font-family: 'JetBrains Mono', monospace; }
-
-  /* EXPENSE */
-  .expense-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 0;
-    border-bottom: 1px dotted var(--ivory-dark);
-    font-size: 12px;
-  }
-  .expense-cat {
-    font-size: 14px;
-    width: 20px;
-    text-align: center;
-  }
-  .expense-desc { flex: 1; color: var(--ink); }
-  .expense-amount { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--brick); }
-
-  .add-expense {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-    flex-wrap: wrap;
-  }
-  .add-expense input, .add-expense select {
-    flex: 1;
-    min-width: 60px;
-    padding: 5px 8px;
-    border: 1px solid var(--ivory-dark);
-    border-radius: 5px;
-    font-size: 12px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    color: var(--ink);
-    background: white;
-  }
-  .add-expense button {
-    background: var(--brick);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    white-space: nowrap;
-  }
-
-  /* JOURNAL */
-  .journal-textarea {
-    width: 100%;
-    min-height: 300px;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    line-height: 28px;
-    color: var(--ink);
-    resize: none;
-    padding: 0;
-  }
-
-  /* SPORT TRACKER */
-  .sport-week {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .sport-day-cell {
-    text-align: center;
-    padding: 8px 4px;
-    border-radius: 8px;
-    border: 1.5px solid var(--ivory-dark);
-    cursor: pointer;
-    transition: all 0.15s;
-    background: white;
-  }
-  .sport-day-cell.active { background: var(--sage); border-color: var(--sage); }
-  .sport-day-cell .sday-label { font-size: 9px; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; }
-  .sport-day-cell.active .sday-label { color: white; }
-  .sport-day-cell .sday-icon { font-size: 18px; margin: 4px 0; }
-  .sport-day-cell .sday-num { font-size: 9px; color: var(--ink-light); font-family: 'JetBrains Mono', monospace; }
-  .sport-day-cell.active .sday-num { color: rgba(255,255,255,0.8); }
-
-  /* TAGS / BADGES */
-  .tag {
-    display: inline-block;
-    padding: 1px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .tag-task { background: rgba(196,135,58,0.15); color: var(--ocre); }
-  .tag-event { background: rgba(91,127,166,0.15); color: var(--slate); }
-  .tag-note { background: rgba(122,158,126,0.15); color: var(--sage); }
-  .tag-page { background: rgba(44,36,22,0.1); color: var(--ink-light); font-family: 'JetBrains Mono', monospace; }
-
-  /* MODAL INPUT */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-  }
-  .modal-box {
-    background: var(--paper);
-    border-radius: 12px;
-    padding: 24px;
-    min-width: 320px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  }
-  .modal-box h3 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 16px; color: var(--ink); }
-  .modal-box input, .modal-box textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--ivory-dark);
-    border-radius: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--ink);
-    outline: none;
-    margin-bottom: 12px;
-    background: white;
-  }
-  .modal-box textarea { min-height: 80px; resize: vertical; }
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
-  .modal-actions button { padding: 7px 18px; border-radius: 6px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; }
-  .btn-cancel { background: var(--ivory-dark); color: var(--ink-light); }
-  .btn-save { background: var(--ocre); color: white; }
-
-  /* RESPONSIVE */
-  @media (max-width: 700px) {
-    .journal { flex-direction: column; }
-    .spine { width: 100%; height: 24px; flex-direction: row; padding: 0 16px; border-radius: 4px 4px 0 0; }
-    .spine-ring { width: 14px; height: 14px; }
-    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 8px 0; }
-    .nav-section-label { display: none; }
-    .month-grid { grid-template-columns: 1fr; }
-    .tracker-grid { grid-template-columns: 1fr; }
-    .weekly-grid { grid-template-columns: repeat(7, 1fr); }
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ivory:#F9F6F0;--ivory-dark:#EDE8DF;--ink:#2C2416;--ink-light:#6B5E4A;--ocre:#C4873A;--ocre-light:#E8C490;--sage:#7A9E7E;--slate:#5B7FA6;--brick:#B85C4A;--paper:#FDFAF5;}
+body{font-family:'Inter',sans-serif;background:#D6CFC3;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px;background-image:radial-gradient(ellipse at top left,#C9C2B5 0%,transparent 50%),radial-gradient(ellipse at bottom right,#BFB8AA 0%,transparent 50%);}
+#root{width:100%;max-width:1140px;}
+.journal{display:flex;background:var(--ink);border-radius:4px 14px 14px 4px;box-shadow:-4px 0 0 #1a140d,10px 10px 40px rgba(0,0,0,.45);min-height:720px;}
+.spine{width:34px;background:linear-gradient(180deg,#1a140d,#2C2416 50%,#1a140d);border-radius:4px 0 0 4px;display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:16px;flex-shrink:0;}
+.ring{width:18px;height:18px;border-radius:50%;border:3px solid #8B7355;background:#2C2416;box-shadow:inset 0 1px 3px rgba(0,0,0,.5);}
+.sidebar{width:196px;background:linear-gradient(180deg,#3D3020,#2C2416);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.sidebar-brand{font-family:'Playfair Display',serif;font-style:italic;color:var(--ocre-light);font-size:18px;padding:20px 18px 16px;border-bottom:1px solid rgba(196,135,58,.2);line-height:1.3;}
+.sidebar-brand small{display:block;font-size:10px;font-style:normal;font-family:'Inter',sans-serif;color:var(--ink-light);margin-top:3px;letter-spacing:.1em;text-transform:uppercase;}
+.sec-label{font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:#5A4D3A;padding:12px 18px 4px;font-weight:600;}
+.nav-btn{display:flex;align-items:center;gap:9px;padding:8px 18px;background:none;border:none;border-left:3px solid transparent;cursor:pointer;color:#A89880;font-family:'Inter',sans-serif;font-size:13px;text-align:left;transition:all .15s;width:100%;}
+.nav-btn:hover{background:rgba(196,135,58,.1);color:var(--ocre-light);}
+.nav-btn.active{background:rgba(196,135,58,.18);color:var(--ocre-light);border-left-color:var(--ocre);font-weight:500;}
+.nav-btn .ni{font-size:14px;width:17px;text-align:center;flex-shrink:0;}
+.sidebar-foot{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(196,135,58,.15);font-size:10px;color:#5A4D3A;font-family:'JetBrains Mono',monospace;}
+.page{flex:1;background:var(--paper);border-radius:0 14px 14px 0;display:flex;flex-direction:column;background-image:repeating-linear-gradient(transparent,transparent 27px,#E8E0D4 27px,#E8E0D4 28px);background-position:0 54px;overflow:hidden;}
+.page-head{background:var(--paper);padding:18px 30px 14px;border-bottom:2px solid var(--ocre);background-image:none;flex-shrink:0;}
+.page-head h1{font-family:'Playfair Display',serif;font-size:24px;color:var(--ink);}
+.page-head p{font-size:11px;color:var(--ink-light);margin-top:2px;letter-spacing:.04em;}
+.page-body{flex:1;overflow-y:auto;padding:22px 30px 32px;}
+.page-body::-webkit-scrollbar{width:5px;}
+.page-body::-webkit-scrollbar-thumb{background:var(--ivory-dark);border-radius:3px;}
+.badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;}
+.b-page{background:rgba(44,36,22,.1);color:var(--ink-light);font-family:'JetBrains Mono',monospace;}
+.bullet-list{list-style:none;}
+.bi{display:flex;align-items:flex-start;gap:9px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.04);font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);}
+.bi.done .bi-text{text-decoration:line-through;color:var(--ink-light);}
+.bi-sym{font-size:14px;line-height:1.5;min-width:18px;text-align:center;cursor:pointer;user-select:none;}
+.bi-text{flex:1;cursor:pointer;line-height:1.55;}
+.bi-del{opacity:0;background:none;border:none;cursor:pointer;color:var(--brick);font-size:17px;padding:0 3px;transition:opacity .15s;}
+.bi:hover .bi-del{opacity:1;}
+.add-row{display:flex;gap:8px;margin-top:14px;align-items:center;background:rgba(255,255,255,.5);border:1px dashed var(--ivory-dark);border-radius:6px;padding:7px 10px;}
+.add-row select{font-family:'JetBrains Mono',monospace;font-size:14px;background:none;border:none;color:var(--ink-light);cursor:pointer;outline:none;}
+.add-row input{flex:1;background:none;border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);}
+.add-row input::placeholder{color:#BBA98A;}
+.add-row button{background:var(--ocre);color:#fff;border:none;border-radius:4px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;}
+.add-row button:hover{background:#B07830;}
+.st{font-family:'Playfair Display',serif;font-size:16px;color:var(--ink);margin:22px 0 10px;display:flex;align-items:center;gap:8px;}
+.st::after{content:'';flex:1;height:1px;background:var(--ivory-dark);}
+.idx-table{width:100%;border-collapse:collapse;margin-top:8px;}
+.idx-table th{text-align:left;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-light);padding:6px 10px;border-bottom:2px solid var(--ink);}
+.idx-table td{padding:8px 10px;border-bottom:1px solid var(--ivory-dark);font-size:13px;color:var(--ink);transition:all .15s;}
+.idx-table tr{cursor:pointer;}
+.idx-table tr:hover td{background:rgba(196,135,58,.07);color:var(--ocre);}
+.month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px;}
+.month-card{background:#fff;border-radius:8px;padding:14px;border:1px solid var(--ivory-dark);box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.month-card h3{font-family:'Playfair Display',serif;font-size:14px;color:var(--ink);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--ivory-dark);}
+.m-evt{font-size:12px;font-family:'JetBrains Mono',monospace;padding:3px 0;color:var(--ink-light);border-bottom:1px dotted #EDE8DF;display:flex;gap:5px;align-items:center;}
+.m-evt-del{background:none;border:none;cursor:pointer;color:var(--brick);opacity:.4;font-size:13px;margin-left:auto;}
+.m-evt-del:hover{opacity:1;}
+.m-add{margin-top:6px;width:100%;background:none;border:1px dashed #DDD;border-radius:4px;padding:4px 8px;font-size:11px;color:var(--ink-light);cursor:pointer;font-family:'Inter',sans-serif;text-align:left;transition:all .15s;}
+.m-add:hover{border-color:var(--ocre);color:var(--ocre);}
+.cal-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.cal-nav span{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);flex:1;text-align:center;}
+.cal-btn{background:none;border:1px solid var(--ivory-dark);border-radius:5px;padding:4px 11px;cursor:pointer;font-size:15px;color:var(--ink-light);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px;}
+.cal-dh{text-align:center;font-size:9px;font-weight:600;color:var(--ink-light);letter-spacing:.05em;text-transform:uppercase;padding:4px 0;}
+.cal-cell{background:#fff;border:1.5px solid var(--ivory-dark);border-radius:6px;min-height:68px;padding:5px;cursor:pointer;transition:all .15s;}
+.cal-cell:hover{border-color:var(--ocre);box-shadow:0 0 0 2px rgba(196,135,58,.1);}
+.cal-cell.today{border-color:var(--ocre);background:rgba(196,135,58,.05);}
+.cal-cell.empty{background:var(--ivory);opacity:.35;pointer-events:none;}
+.cal-dn{font-size:10px;font-weight:600;color:var(--ink-light);margin-bottom:3px;}
+.cal-ev{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--slate);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sport-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0 16px;}
+.sport-day{text-align:center;padding:8px 3px;border-radius:8px;border:1.5px solid var(--ivory-dark);cursor:pointer;transition:all .15s;background:#fff;}
+.sport-day.on{background:var(--sage);border-color:var(--sage);}
+.sport-day .sd-l{font-size:9px;color:var(--ink-light);text-transform:uppercase;letter-spacing:.04em;}
+.sport-day.on .sd-l,.sport-day.on .sd-v{color:#fff;}
+.sport-day .sd-i{font-size:20px;margin:4px 0;}
+.sport-day .sd-v{font-size:9px;color:var(--ink-light);font-family:'JetBrains Mono',monospace;}
+.prog-bar{height:11px;background:var(--ivory-dark);border-radius:6px;overflow:hidden;margin-top:8px;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--sage),#5A8C5E);border-radius:6px;transition:width .4s;}
+.glasses{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;}
+.glass{font-size:26px;cursor:pointer;opacity:.22;filter:grayscale(100%);transition:all .2s;user-select:none;}
+.glass.on{opacity:1;filter:grayscale(0%);}
+.glass:hover{transform:scale(1.1);}
+.sleep-row{display:flex;align-items:center;gap:8px;margin:5px 0;}
+.sleep-lbl{font-size:11px;color:var(--ink-light);width:26px;font-family:'JetBrains Mono',monospace;}
+.sleep-bg{flex:1;height:14px;background:var(--ivory-dark);border-radius:7px;overflow:hidden;cursor:pointer;}
+.sleep-fill{height:100%;background:linear-gradient(90deg,var(--slate),#7AADD4);border-radius:7px;transition:width .25s;}
+.sleep-val{font-size:11px;color:var(--ink-light);width:28px;text-align:right;font-family:'JetBrains Mono',monospace;}
+.exp-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dotted var(--ivory-dark);font-size:12px;}
+.exp-cat{font-size:15px;width:20px;text-align:center;}
+.exp-desc{flex:1;color:var(--ink);}
+.exp-amt{font-family:'JetBrains Mono',monospace;font-weight:500;color:var(--brick);}
+.exp-del{background:none;border:none;cursor:pointer;color:var(--brick);opacity:.4;font-size:14px;margin-left:6px;}
+.exp-del:hover{opacity:1;}
+.add-exp{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.add-exp input,.add-exp select{flex:1;min-width:60px;padding:5px 8px;border:1px solid var(--ivory-dark);border-radius:5px;font-size:12px;font-family:'Inter',sans-serif;outline:none;color:var(--ink);background:#fff;}
+.add-exp button{background:var(--brick);color:#fff;border:none;border-radius:5px;padding:5px 12px;font-size:12px;cursor:pointer;}
+.habit-row{margin-bottom:14px;}
+.habit-hd{display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px;color:var(--ink);font-weight:500;}
+.habit-hd span{font-size:11px;color:var(--ink-light);font-family:'JetBrains Mono',monospace;font-weight:400;}
+.habit-days{display:flex;gap:4px;flex-wrap:wrap;}
+.hd{width:22px;height:22px;border-radius:4px;border:1.5px solid var(--ivory-dark);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;background:#fff;user-select:none;}
+.hd.on{background:var(--sage);border-color:var(--sage);color:#fff;}
+.hd:hover:not(.on){border-color:var(--sage);background:rgba(122,158,126,.1);}
+.hap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px;}
+.hap-dh{text-align:center;font-size:9px;font-weight:600;color:var(--ink-light);letter-spacing:.05em;text-transform:uppercase;padding:3px 0;}
+.hap-cell{background:#fff;border:1.5px solid var(--ivory-dark);border-radius:7px;padding:5px 3px;text-align:center;min-height:72px;}
+.hap-cell.today-h{border-color:var(--ocre);}
+.hap-dn{font-size:9px;color:var(--ink-light);margin-bottom:3px;font-weight:500;}
+.hap-dn.td{color:var(--ocre);font-weight:700;}
+.mood-btn{font-size:12px;cursor:pointer;opacity:.2;transition:all .15s;display:block;line-height:1.3;user-select:none;}
+.mood-btn.sel{opacity:1;transform:scale(1.15);}
+.mood-btn:hover{opacity:.7;}
+.j-area{width:100%;min-height:320px;border:none;outline:none;background:transparent;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:28px;color:var(--ink);resize:none;padding:0;}
+.j-wc{font-size:11px;color:var(--ink-light);text-align:right;margin-top:6px;font-family:'JetBrains Mono',monospace;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:200;}
+.modal{background:var(--paper);border-radius:12px;padding:24px;min-width:310px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal h3{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:14px;color:var(--ink);}
+.modal input{width:100%;padding:8px 12px;border:1px solid var(--ivory-dark);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);outline:none;background:#fff;}
+.modal-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;}
+.modal-acts button{padding:7px 18px;border-radius:6px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;}
+.btn-cancel{background:var(--ivory-dark);color:var(--ink-light);}
+.btn-save{background:var(--ocre);color:#fff;}
+.info-box{margin-top:18px;padding:12px 16px;background:rgba(196,135,58,.07);border-radius:8px;border-left:3px solid var(--ocre);font-size:12px;color:var(--ink-light);line-height:1.7;}
 </style>
 </head>
 <body>
 <div id="root"></div>
+<script>
+(function(){
+const h = React.createElement;
+const {useState} = React;
 
-<script type="text/babel">
-const { useState, useCallback } = React;
-
-const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-const DAYS_FR = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-const SPORT_DAYS = ['L','M','M','J','V','S','D'];
-const BULLET_TYPES = [
-  { symbol: '•', label: 'Tâche', type: 'task' },
-  { symbol: '○', label: 'Événement', type: 'event' },
-  { symbol: '–', label: 'Note', type: 'note' },
+const MONTHS=['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'];
+const MONTHS_FR=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const DAYS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const MOODS=['😞','😕','😐','🙂','😄'];
+const HABIT_LIST=[{id:'lecture',label:'📚 Lecture'},{id:'meditation',label:'🧘 Méditation'},{id:'sport',label:'🏃 Sport'},{id:'journal',label:'✍️ Journal'},{id:'gratitude',label:'🙏 Gratitude'}];
+const EXPENSE_CATS=['🍽️','🚗','🏠','🛍️','💊','🎭','📚','✈️','💡','❓'];
+const NAV=[
+  {id:'index',label:'Index',icon:'📋',sec:'Structure'},
+  {id:'future',label:'Future Log',icon:'🗓️',sec:'Structure'},
+  {id:'monthly',label:'Monthly Log',icon:'📅',sec:'Logs'},
+  {id:'daily',label:'Daily Log',icon:'✏️',sec:'Logs'},
+  {id:'journal',label:'Journal',icon:'📖',sec:'Logs'},
+  {id:'sport',label:'Sport',icon:'🏃',sec:'Trackers'},
+  {id:'water',label:'Hydratation',icon:'💧',sec:'Trackers'},
+  {id:'sleep',label:'Sommeil',icon:'🌙',sec:'Trackers'},
+  {id:'expenses',label:'Dépenses',icon:'💶',sec:'Trackers'},
+  {id:'habits',label:'Habitudes',icon:'🌱',sec:'Trackers'},
+  {id:'happiness',label:'Bonheur',icon:'☀️',sec:'Trackers'},
 ];
+const PAGE_NUM={index:'—',future:'1',monthly:'8',daily:'12',journal:'15',sport:'20',water:'21',sleep:'22',expenses:'23',habits:'24',happiness:'25'};
+const now=new Date();
+const TODAY=now.getDate(), T_MONTH=now.getMonth(), T_YEAR=now.getFullYear();
 
-const HABIT_LIST = [
-  { id: 'lecture', label: '📚 Lecture' },
-  { id: 'meditation', label: '🧘 Méditation' },
-  { id: 'sport', label: '🏃 Sport' },
-  { id: 'journal', label: '✍️ Journal' },
-  { id: 'gratitude', label: '🙏 Gratitude' },
+function daysInMonth(y,m){return new Date(y,m+1,0).getDate();}
+function firstDayOfMonth(y,m){let d=new Date(y,m,1).getDay();return d===0?6:d-1;}
+
+const initDaily=[
+  {id:1,sym:'•',text:'Acheter des croquettes pour le chat',done:false},
+  {id:2,sym:'○',text:'Rendez-vous chez le dentiste à 14h',done:false},
+  {id:3,sym:'–',text:'Nouveau restaurant à tester : Le Zinc',done:false},
 ];
-
-const EXPENSE_CATS = ['🍽️','🚗','🏠','🛍️','💊','🎭','📚','✈️','💡','❓'];
-
-const now = new Date();
-const TODAY_DAY = now.getDate();
-const TODAY_MONTH = now.getMonth();
-const TODAY_YEAR = now.getFullYear();
-
-// Helper: days in month
-function getDaysInMonth(year, month) {
-  return new Date(year, month + 1, 0).getDate();
-}
-function getFirstDayOfMonth(year, month) {
-  let d = new Date(year, month, 1).getDay();
-  return d === 0 ? 6 : d - 1; // Monday=0
-}
-
-// --- NAV ITEMS ---
-const NAV = [
-  { id: 'index', label: 'Index', icon: '📋', section: 'Structure' },
-  { id: 'future', label: 'Future Log', icon: '🗓️', section: 'Structure' },
-  { id: 'monthly', label: 'Monthly Log', icon: '📅', section: 'Logs' },
-  { id: 'daily', label: 'Daily Log', icon: '✏️', section: 'Logs' },
-  { id: 'journal', label: 'Journal', icon: '📖', section: 'Logs' },
-  { id: 'sport', label: 'Sport', icon: '🏃', section: 'Trackers' },
-  { id: 'water', label: 'Hydratation', icon: '💧', section: 'Trackers' },
-  { id: 'sleep', label: 'Sommeil', icon: '🌙', section: 'Trackers' },
-  { id: 'expenses', label: 'Dépenses', icon: '💶', section: 'Trackers' },
-  { id: 'habits', label: 'Habitudes', icon: '🌱', section: 'Trackers' },
-  { id: 'happiness', label: 'Bonheur', icon: '☀️', section: 'Trackers' },
+const initMonthGoals=[
+  {id:1,sym:'•',text:'Terminer le livre sur le stoïcisme',done:false},
+  {id:2,sym:'•',text:'Courir 3 fois par semaine',done:false},
+  {id:3,sym:'–',text:'Mois de la créativité',done:false},
 ];
+const initFuture={};
+MONTHS.forEach(function(_,i){initFuture[i]=i===0?['Vacances à Lyon']:i===1?['Anniversaire Maman']:[];});
+const initHabits={};
+HABIT_LIST.forEach(function(hab){initHabits[hab.id]=Array(31).fill(false);});
+const initMoods={};
+for(var i=1;i<=31;i++)initMoods[i]=null;
 
-const PAGE_NUMBERS = {
-  index: '—', future: '1', monthly: '8', daily: '12', journal: '15',
-  sport: '20', water: '21', sleep: '22', expenses: '23', habits: '24', happiness: '25'
-};
-
-// ---- INITIAL STATE ----
-const initDailyEntries = [
-  { id: 1, symbol: '•', text: 'Acheter des croquettes pour le chat', done: false, type: 'task' },
-  { id: 2, symbol: '○', text: 'Rendez-vous chez le dentiste à 14h', done: false, type: 'event' },
-  { id: 3, symbol: '–', text: 'Nouveau restaurant à tester : Le Zinc', done: false, type: 'note' },
-];
-
-const initFutureLog = {
-  0: ['Vacances à Lyon'],
-  1: ['Anniversaire Maman', 'Départ ski'],
-  2: ['Conférence UX'],
-  3: [],4:[],5:[],6:[],7:[],8:[],9:[],10:[],11:[],
-};
-
-const initMonthlyGoals = [
-  { id: 1, symbol: '•', text: 'Terminer le livre sur le stoïcisme', done: false, type: 'task' },
-  { id: 2, symbol: '•', text: 'Courir 3 fois par semaine', done: false, type: 'task' },
-  { id: 3, symbol: '–', text: 'Mois de la créativité', done: false, type: 'note' },
-];
-
-const initHabits = {};
-HABIT_LIST.forEach(h => {
-  initHabits[h.id] = Array(31).fill(false);
-});
-
-const initSleep = [7, 6.5, 8, 7.5, 6, 7, 8, 6.5, 7];
-const initWater = 4;
-const initSport = [false, true, false, true, false, true, false];
-const initExpenses = [
-  { id: 1, cat: '🍽️', desc: 'Déjeuner boulangerie', amount: 8.50 },
-  { id: 2, cat: '🚗', desc: 'Essence', amount: 55 },
-  { id: 3, cat: '📚', desc: 'Livre "Atomic Habits"', amount: 18 },
-];
-
-const initMoods = {};
-for (let i = 1; i <= 31; i++) initMoods[i] = null;
-
-const MOODS = ['😞','😕','😐','🙂','😄'];
-
-// ---- MODAL ----
-function Modal({ title, onSave, onClose, placeholder = 'Saisir...' }) {
-  const [val, setVal] = useState('');
-  return (
-    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal-box">
-        <h3>{title}</h3>
-        <input
-          autoFocus
-          value={val}
-          onChange={e => setVal(e.target.value)}
-          placeholder={placeholder}
-          onKeyDown={e => { if (e.key === 'Enter') { onSave(val); onClose(); } if (e.key === 'Escape') onClose(); }}
-        />
-        <div className="modal-actions">
-          <button className="btn-cancel" onClick={onClose}>Annuler</button>
-          <button className="btn-save" onClick={() => { onSave(val); onClose(); }}>Ajouter</button>
-        </div>
-      </div>
-    </div>
-  );
+// Modal
+function Modal(props){
+  var title=props.title, placeholder=props.placeholder, onSave=props.onSave, onClose=props.onClose;
+  var _s=useState(''); var val=_s[0]; var setVal=_s[1];
+  return h('div',{className:'overlay',onClick:function(ev){if(ev.target===ev.currentTarget)onClose();}},
+    h('div',{className:'modal'},
+      h('h3',null,title),
+      h('input',{autoFocus:true,value:val,placeholder:placeholder||'Saisir…',
+        onChange:function(ev){setVal(ev.target.value);},
+        onKeyDown:function(ev){if(ev.key==='Enter'){onSave(val);onClose();}if(ev.key==='Escape')onClose();}}),
+      h('div',{className:'modal-acts'},
+        h('button',{className:'btn-cancel',onClick:onClose},'Annuler'),
+        h('button',{className:'btn-save',onClick:function(){onSave(val);onClose();}},'Ajouter'))));
 }
 
-// ---- BULLET LIST COMPONENT ----
-function BulletList({ entries, onToggle, onDelete, onAdd }) {
-  const [newText, setNewText] = useState('');
-  const [newType, setNewType] = useState('•');
-
-  const handleAdd = () => {
-    if (!newText.trim()) return;
-    onAdd({ symbol: newType, text: newText.trim() });
-    setNewText('');
-  };
-
-  return (
-    <div>
-      <ul className="bullet-list">
-        {entries.map(e => (
-          <li key={e.id} className={`bullet-item ${e.done ? 'done' : ''}`}>
-            <span className="bullet-symbol" onClick={() => onToggle(e.id)}>
-              {e.done ? '✕' : e.symbol}
-            </span>
-            <span className="bullet-text" onClick={() => onToggle(e.id)}>{e.text}</span>
-            <button className="bullet-delete" onClick={() => onDelete(e.id)}>×</button>
-          </li>
-        ))}
-      </ul>
-      <div className="add-entry">
-        <select value={newType} onChange={e => setNewType(e.target.value)}>
-          {BULLET_TYPES.map(b => <option key={b.type} value={b.symbol}>{b.symbol} {b.label}</option>)}
-        </select>
-        <input
-          placeholder="Nouvelle entrée…"
-          value={newText}
-          onChange={e => setNewText(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleAdd()}
-        />
-        <button onClick={handleAdd}>+ Ajouter</button>
-      </div>
-    </div>
-  );
+// BulletList
+function BulletList(props){
+  var entries=props.entries, onToggle=props.onToggle, onDelete=props.onDelete, onAdd=props.onAdd;
+  var _t=useState(''); var txt=_t[0]; var setTxt=_t[1];
+  var _s=useState('•'); var sym=_s[0]; var setSym=_s[1];
+  function add(){if(!txt.trim())return;onAdd({sym:sym,text:txt.trim()});setTxt('');}
+  return h('div',null,
+    h('ul',{className:'bullet-list'},
+      entries.map(function(en){
+        return h('li',{key:en.id,className:'bi'+(en.done?' done':'')},
+          h('span',{className:'bi-sym',onClick:function(){onToggle(en.id);}},en.done?'✕':en.sym),
+          h('span',{className:'bi-text',onClick:function(){onToggle(en.id);}},en.text),
+          h('button',{className:'bi-del',onClick:function(){onDelete(en.id);}},'×'));
+      })),
+    h('div',{className:'add-row'},
+      h('select',{value:sym,onChange:function(ev){setSym(ev.target.value);}},
+        h('option',{value:'•'},'• Tâche'),
+        h('option',{value:'○'},'○ Événement'),
+        h('option',{value:'–'},'– Note')),
+      h('input',{value:txt,placeholder:'Nouvelle entrée…',onChange:function(ev){setTxt(ev.target.value);},
+        onKeyDown:function(ev){if(ev.key==='Enter')add();}}),
+      h('button',{onClick:add},'+ Ajouter')));
 }
 
-// ---- PAGES ----
-function IndexPage({ onNavigate }) {
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 16, fontStyle: 'italic' }}>
-        Table des matières de votre carnet. Cliquez sur une section pour y accéder.
-      </p>
-      <table className="index-table">
-        <thead>
-          <tr>
-            <th>Section</th>
-            <th>Description</th>
-            <th>Page</th>
-          </tr>
-        </thead>
-        <tbody>
-          {NAV.filter(n => n.id !== 'index').map(n => (
-            <tr key={n.id} onClick={() => onNavigate(n.id)}>
-              <td>{n.icon} {n.label}</td>
-              <td style={{ color: 'var(--ink-light)', fontSize: 12 }}>
-                {{ future: 'Événements à venir sur 12 mois', monthly: 'Rendez-vous et objectifs du mois',
-                   daily: 'Tâches, événements et notes du jour', journal: 'Pensées libres et réflexions',
-                   sport: 'Sessions sportives hebdomadaires', water: 'Suivi de l\'hydratation quotidienne',
-                   sleep: 'Heures de sommeil par nuit', expenses: 'Budget et dépenses',
-                   habits: 'Habitudes quotidiennes', happiness: 'Humeur et bonheur quotidien'
-                }[n.id] || ''}
-              </td>
-              <td><span className="tag tag-page">{PAGE_NUMBERS[n.id]}</span></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div style={{ marginTop: 24, padding: 16, background: 'rgba(196,135,58,0.07)', borderRadius: 8, borderLeft: '3px solid var(--ocre)' }}>
-        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 13, color: 'var(--ink)', marginBottom: 6 }}>Légende des symboles</div>
-        {BULLET_TYPES.map(b => (
-          <div key={b.type} style={{ display: 'flex', gap: 10, fontSize: 13, fontFamily: 'JetBrains Mono, monospace', marginBottom: 4 }}>
-            <span style={{ color: 'var(--ocre)', minWidth: 20, textAlign: 'center' }}>{b.symbol}</span>
-            <span style={{ color: 'var(--ink-light)' }}>{b.label}</span>
-          </div>
-        ))}
-        <div style={{ display: 'flex', gap: 10, fontSize: 13, fontFamily: 'JetBrains Mono, monospace', marginTop: 4 }}>
-          <span style={{ color: 'var(--brick)', minWidth: 20, textAlign: 'center' }}>✕</span>
-          <span style={{ color: 'var(--ink-light)' }}>Tâche terminée</span>
-        </div>
-      </div>
-    </div>
-  );
+// INDEX
+function IndexPage(props){
+  var onNav=props.onNav;
+  var descs={future:'Événements sur 12 mois',monthly:'Rendez-vous et objectifs',daily:'Tâches, événements, notes',journal:'Pensées et réflexions libres',sport:'Sessions hebdomadaires',water:'Hydratation quotidienne',sleep:'Heures de sommeil',expenses:'Budget et dépenses',habits:'Habitudes quotidiennes',happiness:'Humeur et bonheur'};
+  return h('div',null,
+    h('p',{style:{color:'var(--ink-light)',fontSize:13,marginBottom:16,fontStyle:'italic'}},'Table des matières — cliquez pour naviguer.'),
+    h('table',{className:'idx-table'},
+      h('thead',null,h('tr',null,h('th',null,'Section'),h('th',null,'Description'),h('th',null,'Page'))),
+      h('tbody',null,NAV.filter(function(n){return n.id!=='index';}).map(function(n){
+        return h('tr',{key:n.id,onClick:function(){onNav(n.id);}},
+          h('td',null,n.icon+' '+n.label),
+          h('td',{style:{color:'var(--ink-light)',fontSize:12}},descs[n.id]||''),
+          h('td',null,h('span',{className:'badge b-page'},PAGE_NUM[n.id])));
+      }))),
+    h('div',{className:'info-box'},
+      h('div',{style:{fontFamily:"'Playfair Display',serif",fontSize:13,color:'var(--ink)',marginBottom:6}},'Légende des symboles'),
+      h('div',null,'• Tâche'),h('div',null,'○ Événement'),h('div',null,'– Note'),h('div',null,'✕ Terminée')));
 }
 
-function FutureLogPage({ futureLog, setFutureLog }) {
-  const [modal, setModal] = useState(null);
-  const months = Array.from({ length: 12 }, (_, i) => (TODAY_MONTH + i) % 12);
-
-  const addEvent = (monthIdx, text) => {
-    if (!text.trim()) return;
-    setFutureLog(prev => ({ ...prev, [monthIdx]: [...(prev[monthIdx] || []), text] }));
-  };
-
-  const deleteEvent = (monthIdx, evtIdx) => {
-    setFutureLog(prev => ({ ...prev, [monthIdx]: prev[monthIdx].filter((_, i) => i !== evtIdx) }));
-  };
-
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 16, fontStyle: 'italic' }}>
-        Vue sur 12 mois — notez vos grands événements à venir.
-      </p>
-      <div className="month-grid">
-        {months.map(m => (
-          <div key={m} className="month-card">
-            <h3>{MONTHS_FR[m]} <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--ink-light)', fontWeight: 400 }}>{m <= TODAY_MONTH ? TODAY_YEAR + 1 : TODAY_YEAR}</span></h3>
-            {(futureLog[m] || []).map((evt, i) => (
-              <div key={i} className="event-item">
-                <span>○</span>
-                <span style={{ flex: 1 }}>{evt}</span>
-                <span onClick={() => deleteEvent(m, i)} style={{ cursor: 'pointer', color: 'var(--brick)', opacity: 0.5, fontSize: 12 }}>×</span>
-              </div>
-            ))}
-            <button className="add-month-event" onClick={() => setModal(m)}>+ Ajouter</button>
-          </div>
-        ))}
-      </div>
-      {modal !== null && (
-        <Modal
-          title={`Ajouter à ${MONTHS_FR[modal]}`}
-          placeholder="Événement ou rappel…"
-          onSave={text => addEvent(modal, text)}
-          onClose={() => setModal(null)}
-        />
-      )}
-    </div>
-  );
+// FUTURE LOG
+function FuturePage(props){
+  var data=props.data, setData=props.setData;
+  var _m=useState(null); var modal=_m[0]; var setModal=_m[1];
+  var months=Array.from({length:12},function(_,i){return (T_MONTH+i)%12;});
+  function addEvt(m,txt){if(!txt.trim())return;setData(function(p){var n=Object.assign({},p);n[m]=(p[m]||[]).concat([txt]);return n;});}
+  function delEvt(m,i){setData(function(p){var n=Object.assign({},p);n[m]=p[m].filter(function(_,j){return j!==i;});return n;});}
+  return h('div',null,
+    h('p',{style:{color:'var(--ink-light)',fontSize:13,marginBottom:14,fontStyle:'italic'}},'Vue 12 mois — notez vos grands événements.'),
+    h('div',{className:'month-grid'},
+      months.map(function(m){
+        return h('div',{key:m,className:'month-card'},
+          h('h3',null,MONTHS_FR[m]),
+          (data[m]||[]).map(function(ev,i){
+            return h('div',{key:i,className:'m-evt'},
+              h('span',null,'○'),h('span',{style:{flex:1}},ev),
+              h('button',{className:'m-evt-del',onClick:function(){delEvt(m,i);}},'×'));
+          }),
+          h('button',{className:'m-add',onClick:function(){setModal(m);}},'+ Ajouter'));
+      })),
+    modal!==null&&h(Modal,{title:'Ajouter à '+MONTHS_FR[modal],placeholder:'Événement…',onSave:function(txt){addEvt(modal,txt);},onClose:function(){setModal(null);}}));
 }
 
-function MonthlyLogPage({ monthlyGoals, setMonthlyGoals, monthlyEvents, setMonthlyEvents }) {
-  const [viewMonth, setViewMonth] = useState(TODAY_MONTH);
-  const [viewYear, setViewYear] = useState(TODAY_YEAR);
-  const [modal, setModal] = useState(null);
-
-  const daysCount = getDaysInMonth(viewYear, viewMonth);
-  const firstDay = getFirstDayOfMonth(viewYear, viewMonth);
-  const cells = [...Array(firstDay).fill(null), ...Array.from({ length: daysCount }, (_, i) => i + 1)];
-  while (cells.length % 7 !== 0) cells.push(null);
-
-  const addGoal = entry => {
-    if (!entry.text) return;
-    setMonthlyGoals(prev => [...prev, { id: Date.now(), ...entry, done: false }]);
-  };
-
-  const toggleGoal = id => setMonthlyGoals(prev => prev.map(g => g.id === id ? { ...g, done: !g.done } : g));
-  const deleteGoal = id => setMonthlyGoals(prev => prev.filter(g => g.id !== id));
-
-  const addEvent = (day, text) => {
-    if (!text.trim()) return;
-    const key = `${viewYear}-${viewMonth}-${day}`;
-    setMonthlyEvents(prev => ({ ...prev, [key]: [...(prev[key] || []), text] }));
-  };
-
-  const prevMonth = () => { if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); } else setViewMonth(m => m - 1); };
-  const nextMonth = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); } else setViewMonth(m => m + 1); };
-
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-        <button onClick={prevMonth} style={{ background: 'none', border: '1px solid var(--ivory-dark)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer', fontSize: 14, color: 'var(--ink-light)' }}>‹</button>
-        <span style={{ fontFamily: 'Playfair Display, serif', fontSize: 18, color: 'var(--ink)', flex: 1, textAlign: 'center' }}>{MONTHS_FR[viewMonth]} {viewYear}</span>
-        <button onClick={nextMonth} style={{ background: 'none', border: '1px solid var(--ivory-dark)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer', fontSize: 14, color: 'var(--ink-light)' }}>›</button>
-      </div>
-
-      <div className="weekly-grid">
-        {DAYS_FR.map(d => <div key={d} className="day-header">{d}</div>)}
-        {cells.map((day, i) => {
-          const key = `${viewYear}-${viewMonth}-${day}`;
-          const evts = monthlyEvents[key] || [];
-          const isToday = day === TODAY_DAY && viewMonth === TODAY_MONTH && viewYear === TODAY_YEAR;
-          return (
-            <div
-              key={i}
-              className={`day-cell ${isToday ? 'today' : ''} ${day === null ? 'empty' : ''}`}
-              onClick={day ? () => setModal({ day, key }) : undefined}
-            >
-              {day && (
-                <>
-                  <div className="day-number">{isToday ? <span>{day}</span> : day}</div>
-                  {evts.slice(0, 2).map((e, ei) => <div key={ei} className="day-event">○ {e}</div>)}
-                  {evts.length > 2 && <div className="day-event" style={{ color: 'var(--ocre)' }}>+{evts.length - 2}</div>}
-                </>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="section-title">Objectifs du mois</div>
-      <BulletList entries={monthlyGoals} onToggle={toggleGoal} onDelete={deleteGoal} onAdd={addGoal} />
-
-      {modal && (
-        <Modal
-          title={`${modal.day} ${MONTHS_FR[viewMonth]}`}
-          placeholder="Événement ou note…"
-          onSave={text => addEvent(modal.day, text)}
-          onClose={() => setModal(null)}
-        />
-      )}
-    </div>
-  );
+// MONTHLY LOG
+function MonthlyPage(props){
+  var goals=props.goals, setGoals=props.setGoals, calEvts=props.calEvts, setCalEvts=props.setCalEvts;
+  var _vm=useState(T_MONTH); var vm=_vm[0]; var setVm=_vm[1];
+  var _vy=useState(T_YEAR); var vy=_vy[0]; var setVy=_vy[1];
+  var _mo=useState(null); var modal=_mo[0]; var setModal=_mo[1];
+  var dim=daysInMonth(vy,vm);
+  var fd=firstDayOfMonth(vy,vm);
+  var cells=Array(fd).fill(null).concat(Array.from({length:dim},function(_,i){return i+1;}));
+  while(cells.length%7!==0)cells.push(null);
+  function prevM(){if(vm===0){setVm(11);setVy(function(y){return y-1;});}else setVm(function(m){return m-1;});}
+  function nextM(){if(vm===11){setVm(0);setVy(function(y){return y+1;});}else setVm(function(m){return m+1;});}
+  function addCalEvt(day,txt){if(!txt.trim())return;var k=vy+'-'+vm+'-'+day;setCalEvts(function(p){var n=Object.assign({},p);n[k]=(p[k]||[]).concat([txt]);return n;});}
+  return h('div',null,
+    h('div',{className:'cal-nav'},
+      h('button',{className:'cal-btn',onClick:prevM},'‹'),
+      h('span',null,MONTHS_FR[vm]+' '+vy),
+      h('button',{className:'cal-btn',onClick:nextM},'›')),
+    h('div',{className:'cal-grid'},
+      DAYS.map(function(d){return h('div',{key:d,className:'cal-dh'},d);}),
+      cells.map(function(day,i){
+        var k=vy+'-'+vm+'-'+day;
+        var evs=calEvts[k]||[];
+        var isToday=day===TODAY&&vm===T_MONTH&&vy===T_YEAR;
+        var cls='cal-cell'+(isToday?' today':'')+(day===null?' empty':'');
+        return h('div',{key:i,className:cls,onClick:day?function(){setModal({day:day,k:k});}:undefined},
+          day&&h('div',{className:'cal-dn'},day),
+          evs.slice(0,2).map(function(ev,j){return h('div',{key:j,className:'cal-ev'},'○ '+ev);}),
+          evs.length>2&&h('div',{className:'cal-ev',style:{color:'var(--ocre)'}},'+'+( evs.length-2)));
+      })),
+    h('div',{className:'st'},'Objectifs du mois'),
+    h(BulletList,{entries:goals,
+      onToggle:function(id){setGoals(function(p){return p.map(function(g){return g.id===id?Object.assign({},g,{done:!g.done}):g;});});},
+      onDelete:function(id){setGoals(function(p){return p.filter(function(g){return g.id!==id;});});},
+      onAdd:function(o){setGoals(function(p){return p.concat([{id:Date.now(),sym:o.sym,text:o.text,done:false}]);});}}),
+    modal&&h(Modal,{title:modal.day+' '+MONTHS_FR[vm],placeholder:'Événement ou note…',onSave:function(txt){addCalEvt(modal.day,txt);},onClose:function(){setModal(null);}}));
 }
 
-function DailyLogPage({ dailyEntries, setDailyEntries }) {
-  const toggle = id => setDailyEntries(prev => prev.map(e => e.id === id ? { ...e, done: !e.done } : e));
-  const del = id => setDailyEntries(prev => prev.filter(e => e.id !== id));
-  const add = entry => setDailyEntries(prev => [...prev, { id: Date.now(), ...entry, done: false, type: entry.symbol === '•' ? 'task' : entry.symbol === '○' ? 'event' : 'note' }]);
-
-  const dateStr = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-
-  return (
-    <div>
-      <div style={{ fontFamily: 'Playfair Display, serif', fontStyle: 'italic', color: 'var(--ink-light)', fontSize: 14, marginBottom: 16 }}>
-        {dateStr}
-      </div>
-      <BulletList entries={dailyEntries} onToggle={toggle} onDelete={del} onAdd={add} />
-      <div style={{ marginTop: 20, padding: '12px 16px', background: 'rgba(91,127,166,0.06)', borderRadius: 8, borderLeft: '3px solid var(--slate)' }}>
-        <div style={{ fontSize: 11, color: 'var(--ink-light)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Migration</div>
-        <p style={{ fontSize: 12, color: 'var(--ink-light)', fontFamily: 'JetBrains Mono, monospace' }}>
-          › Tâches non terminées → reporter demain ou au future log<br />
-          &gt; Tâches planifiées → migrées dans le monthly log
-        </p>
-      </div>
-    </div>
-  );
+// DAILY
+function DailyPage(props){
+  var entries=props.entries, setEntries=props.setEntries;
+  var ds=now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  return h('div',null,
+    h('div',{style:{fontFamily:"'Playfair Display',serif",fontStyle:'italic',color:'var(--ink-light)',fontSize:14,marginBottom:14}},ds),
+    h(BulletList,{entries:entries,
+      onToggle:function(id){setEntries(function(p){return p.map(function(en){return en.id===id?Object.assign({},en,{done:!en.done}):en;});});},
+      onDelete:function(id){setEntries(function(p){return p.filter(function(en){return en.id!==id;});});},
+      onAdd:function(o){setEntries(function(p){return p.concat([{id:Date.now(),sym:o.sym,text:o.text,done:false}]);});}}),
+    h('div',{className:'info-box'},'› Tâches non terminées → reporter demain',h('br',null),'> Tâches planifiées → monthly log'));
 }
 
-function JournalPage({ journalText, setJournalText }) {
-  const dateStr = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  return (
-    <div>
-      <div style={{ fontFamily: 'Playfair Display, serif', fontStyle: 'italic', color: 'var(--ink-light)', fontSize: 14, marginBottom: 20 }}>
-        {dateStr}
-      </div>
-      <textarea
-        className="journal-textarea"
-        placeholder="Écris ici tes pensées, réflexions, gratitude du jour…&#10;&#10;Ce journal t'appartient."
-        value={journalText}
-        onChange={e => setJournalText(e.target.value)}
-      />
-      <div style={{ marginTop: 8, fontSize: 11, color: 'var(--ink-light)', textAlign: 'right', fontFamily: 'JetBrains Mono, monospace' }}>
-        {journalText.split(/\s+/).filter(Boolean).length} mots
-      </div>
-    </div>
-  );
+// JOURNAL
+function JournalPage(props){
+  var text=props.text, setText=props.setText;
+  var ds=now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  var wc=text.split(/\s+/).filter(function(w){return w.length>0;}).length;
+  return h('div',null,
+    h('div',{style:{fontFamily:"'Playfair Display',serif",fontStyle:'italic',color:'var(--ink-light)',fontSize:14,marginBottom:18}},ds),
+    h('textarea',{className:'j-area',placeholder:"Écris ici tes pensées, réflexions, gratitude du jour…\n\nCe journal t'appartient.",value:text,onChange:function(ev){setText(ev.target.value);}}),
+    h('div',{className:'j-wc'},wc+' mots'));
 }
 
-function SportPage({ sport, setSport }) {
-  const icons = ['🚶','🏊','🚴','🧘','🏋️','⛹️','🤸'];
-  const labels = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
-
-  const toggle = i => setSport(prev => prev.map((v, idx) => idx === i ? !v : v));
-  const totalDays = sport.filter(Boolean).length;
-
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 16, fontStyle: 'italic' }}>
-        Cette semaine — {totalDays}/7 jours actifs
-      </p>
-      <div className="sport-week">
-        {SPORT_DAYS.map((d, i) => (
-          <div key={i} className={`sport-day-cell ${sport[i] ? 'active' : ''}`} onClick={() => toggle(i)}>
-            <div className="sday-label">{labels[i].slice(0,3)}</div>
-            <div className="sday-icon">{sport[i] ? icons[i] : '○'}</div>
-            <div className="sday-num">{sport[i] ? '✓' : '—'}</div>
-          </div>
-        ))}
-      </div>
-      <div style={{ marginTop: 20 }}>
-        <div className="section-title">Progression</div>
-        <div style={{ height: 12, background: 'var(--ivory-dark)', borderRadius: 6, overflow: 'hidden' }}>
-          <div style={{
-            height: '100%',
-            width: `${(totalDays / 7) * 100}%`,
-            background: 'linear-gradient(90deg, var(--sage), #5A8C5E)',
-            borderRadius: 6,
-            transition: 'width 0.4s'
-          }} />
-        </div>
-        <div style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 6, fontFamily: 'JetBrains Mono, monospace', textAlign: 'right' }}>
-          {Math.round((totalDays / 7) * 100)}% de l'objectif hebdomadaire
-        </div>
-      </div>
-    </div>
-  );
+// SPORT
+function SportPage(props){
+  var sport=props.sport, setSport=props.setSport;
+  var icons=['🚶','🏊','🚴','🧘','🏋️','⛹️','🤸'];
+  var labels=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+  var total=sport.filter(Boolean).length;
+  return h('div',null,
+    h('p',{style:{color:'var(--ink-light)',fontSize:13,marginBottom:6,fontStyle:'italic'}},total+'/7 jours actifs cette semaine'),
+    h('div',{className:'sport-week'},
+      sport.map(function(on,i){
+        return h('div',{key:i,className:'sport-day'+(on?' on':''),onClick:function(){setSport(function(p){return p.map(function(v,j){return j===i?!v:v;});});}},
+          h('div',{className:'sd-l'},labels[i].slice(0,3)),
+          h('div',{className:'sd-i'},on?icons[i]:'○'),
+          h('div',{className:'sd-v'},on?'✓':'—'));
+      })),
+    h('div',{className:'st'},'Progression'),
+    h('div',{className:'prog-bar'},h('div',{className:'prog-fill',style:{width:(total/7*100)+'%'}})),
+    h('div',{style:{fontSize:12,color:'var(--ink-light)',marginTop:6,fontFamily:"'JetBrains Mono',monospace",textAlign:'right'}},Math.round(total/7*100)+'% objectif hebdomadaire'));
 }
 
-function WaterPage({ water, setWater }) {
-  const target = 8;
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 16, fontStyle: 'italic' }}>
-        Objectif : {target} verres par jour
-      </p>
-      <div className="water-glasses">
-        {Array.from({ length: target }).map((_, i) => (
-          <span key={i} className={`glass ${i < water ? 'filled' : ''}`} onClick={() => setWater(i < water ? i : i + 1)}>
-            💧
-          </span>
-        ))}
-      </div>
-      <div style={{ marginTop: 16, fontFamily: 'JetBrains Mono, monospace', fontSize: 14, color: 'var(--slate)' }}>
-        {water} / {target} verres
-      </div>
-      <div style={{ height: 10, background: 'var(--ivory-dark)', borderRadius: 5, overflow: 'hidden', marginTop: 10 }}>
-        <div style={{
-          height: '100%',
-          width: `${Math.min(water / target * 100, 100)}%`,
-          background: 'linear-gradient(90deg, #7AADD4, var(--slate))',
-          borderRadius: 5,
-          transition: 'width 0.3s'
-        }} />
-      </div>
-      <p style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 12, fontStyle: 'italic' }}>
-        {water === 0 ? '💤 Pense à boire !' : water < 4 ? '🌤️ Continue !' : water < 8 ? '👍 Bien parti !' : '🎉 Objectif atteint !'}
-      </p>
-    </div>
-  );
+// WATER
+function WaterPage(props){
+  var water=props.water, setWater=props.setWater;
+  var target=8;
+  var msg=water===0?'💤 Pense à boire !':water<4?'🌤️ Continue !':water<8?'👍 Bien parti !':'🎉 Objectif atteint !';
+  return h('div',null,
+    h('p',{style:{color:'var(--ink-light)',fontSize:13,marginBottom:4,fontStyle:'italic'}},'Objectif : '+target+' verres par jour'),
+    h('div',{className:'glasses'},
+      Array.from({length:target}).map(function(_,i){
+        return h('span',{key:i,className:'glass'+(i<water?' on':''),onClick:function(){setWater(i<water?i:i+1);}},'\uD83D\uDCA7');
+      })),
+    h('div',{style:{fontFamily:"'JetBrains Mono',monospace",fontSize:14,color:'var(--slate)',marginBottom:8}},water+' / '+target+' verres'),
+    h('div',{className:'prog-bar'},h('div',{className:'prog-fill',style:{width:Math.min(water/target*100,100)+'%',background:'linear-gradient(90deg,#7AADD4,var(--slate))'}})),
+    h('p',{style:{fontSize:13,color:'var(--ink-light)',marginTop:10,fontStyle:'italic'}},msg));
 }
 
-function SleepPage({ sleep, setSleep }) {
-  const days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-  const max = 10;
-
-  const handleClick = (i, e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const ratio = (e.clientX - rect.left) / rect.width;
-    const hours = Math.round(ratio * max * 2) / 2;
-    setSleep(prev => prev.map((v, idx) => idx === i ? Math.max(0, Math.min(max, hours)) : v));
-  };
-
-  const avg = (sleep.reduce((a, b) => a + b, 0) / sleep.length).toFixed(1);
-
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 16, fontStyle: 'italic' }}>
-        Moyenne : {avg}h/nuit — Objectif : 8h
-      </p>
-      {sleep.map((h, i) => (
-        <div key={i} className="sleep-bar-wrap">
-          <span className="sleep-day-label">{days[i]}</span>
-          <div className="sleep-bar-bg" onClick={e => handleClick(i, e)}>
-            <div className="sleep-bar-fill" style={{ width: `${(h / max) * 100}%` }} />
-          </div>
-          <span className="sleep-hours">{h}h</span>
-        </div>
-      ))}
-      <p style={{ fontSize: 11, color: 'var(--ink-light)', marginTop: 12, fontStyle: 'italic' }}>
-        Cliquez sur les barres pour ajuster les heures de sommeil
-      </p>
-    </div>
-  );
-}
-
-function ExpensesPage({ expenses, setExpenses }) {
-  const [desc, setDesc] = useState('');
-  const [amount, setAmount] = useState('');
-  const [cat, setCat] = useState('🍽️');
-
-  const addExpense = () => {
-    if (!desc.trim() || !amount) return;
-    setExpenses(prev => [...prev, { id: Date.now(), cat, desc, amount: parseFloat(amount) }]);
-    setDesc(''); setAmount('');
-  };
-
-  const del = id => setExpenses(prev => prev.filter(e => e.id !== id));
-  const total = expenses.reduce((s, e) => s + e.amount, 0);
-
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 16, fontStyle: 'italic' }}>
-        Total ce mois : <strong style={{ color: 'var(--brick)', fontFamily: 'JetBrains Mono, monospace' }}>{total.toFixed(2)} €</strong>
-      </p>
-      {expenses.map(e => (
-        <div key={e.id} className="expense-item">
-          <span className="expense-cat">{e.cat}</span>
-          <span className="expense-desc">{e.desc}</span>
-          <span className="expense-amount">{e.amount.toFixed(2)} €</span>
-          <span onClick={() => del(e.id)} style={{ cursor: 'pointer', color: 'var(--brick)', opacity: 0.5, marginLeft: 8, fontSize: 13 }}>×</span>
-        </div>
-      ))}
-      <div className="add-expense">
-        <select value={cat} onChange={e => setCat(e.target.value)}>
-          {EXPENSE_CATS.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-        <input placeholder="Description" value={desc} onChange={e => setDesc(e.target.value)} style={{ flex: 2 }} />
-        <input placeholder="Montant €" type="number" value={amount} onChange={e => setAmount(e.target.value)} style={{ flex: 1 }} onKeyDown={e => e.key === 'Enter' && addExpense()} />
-        <button onClick={addExpense}>+ Ajouter</button>
-      </div>
-    </div>
-  );
-}
-
-function HabitsPage({ habits, setHabits }) {
-  const daysCount = getDaysInMonth(TODAY_YEAR, TODAY_MONTH);
-  const days = Array.from({ length: daysCount }, (_, i) => i + 1);
-
-  const toggle = (habitId, dayIdx) => {
-    setHabits(prev => ({
-      ...prev,
-      [habitId]: prev[habitId].map((v, i) => i === dayIdx ? !v : v)
+// SLEEP
+function SleepPage(props){
+  var sleep=props.sleep, setSleep=props.setSleep;
+  var MAX=10;
+  var labels=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  var avg=(sleep.reduce(function(a,b){return a+b;},0)/sleep.length).toFixed(1);
+  function click(i,ev){
+    var rect=ev.currentTarget.getBoundingClientRect();
+    var ratio=(ev.clientX-rect.left)/rect.width;
+    var hrs=Math.round(ratio*MAX*2)/2;
+    setSleep(function(p){return p.map(function(v,j){return j===i?Math.max(0,Math.min(MAX,hrs)):v;});});
+  }
+  return h('div',null,
+    h('p',{style:{color:'var(--ink-light)',fontSize:13,marginBottom:12,fontStyle:'italic'}},'Moyenne : '+avg+'h — Objectif : 8h — Cliquez sur les barres pour ajuster'),
+    sleep.map(function(hrs,i){
+      return h('div',{key:i,className:'sleep-row'},
+        h('span',{className:'sleep-lbl'},labels[i]),
+        h('div',{className:'sleep-bg',onClick:function(ev){click(i,ev);}},h('div',{className:'sleep-fill',style:{width:(hrs/MAX*100)+'%'}})),
+        h('span',{className:'sleep-val'},hrs+'h'));
     }));
-  };
-
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 16, fontStyle: 'italic' }}>
-        {MONTHS_FR[TODAY_MONTH]} {TODAY_YEAR} — cochez chaque jour accompli
-      </p>
-      {HABIT_LIST.map(h => {
-        const checked = habits[h.id]?.filter(Boolean).length || 0;
-        return (
-          <div key={h.id} style={{ marginBottom: 16 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span style={{ fontSize: 13, color: 'var(--ink)', fontWeight: 500 }}>{h.label}</span>
-              <span style={{ fontSize: 11, color: 'var(--ink-light)', fontFamily: 'JetBrains Mono, monospace' }}>{checked}/{daysCount}</span>
-            </div>
-            <div className="habit-days">
-              {days.map(d => (
-                <div
-                  key={d}
-                  className={`habit-day ${habits[h.id]?.[d - 1] ? 'checked' : ''}`}
-                  onClick={() => toggle(h.id, d - 1)}
-                  title={`${d} ${MONTHS_FR[TODAY_MONTH]}`}
-                >
-                  {habits[h.id]?.[d - 1] ? '✓' : ''}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
 }
 
-function HappinessPage({ moods, setMoods }) {
-  const daysCount = getDaysInMonth(TODAY_YEAR, TODAY_MONTH);
-  const days = Array.from({ length: daysCount }, (_, i) => i + 1);
-
-  const setMood = (day, idx) => setMoods(prev => ({ ...prev, [day]: prev[day] === idx ? null : idx }));
-  const avgMood = (() => {
-    const filled = days.filter(d => moods[d] !== null && moods[d] !== undefined);
-    if (!filled.length) return null;
-    return (filled.reduce((s, d) => s + moods[d], 0) / filled.length).toFixed(1);
-  })();
-
-  return (
-    <div>
-      <p style={{ color: 'var(--ink-light)', fontSize: 13, marginBottom: 8, fontStyle: 'italic' }}>
-        {MONTHS_FR[TODAY_MONTH]} {TODAY_YEAR}
-        {avgMood !== null && <span style={{ marginLeft: 12 }}>Humeur moyenne : {MOODS[Math.round(avgMood)]} {avgMood}/4</span>}
-      </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginTop: 8 }}>
-        {DAYS_FR.map(d => <div key={d} style={{ textAlign: 'center', fontSize: 10, color: 'var(--ink-light)', fontWeight: 600, padding: '4px 0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{d}</div>)}
-        {Array.from({ length: (new Date(TODAY_YEAR, TODAY_MONTH, 1).getDay() + 6) % 7 }).map((_, i) => <div key={`e${i}`} />)}
-        {days.map(day => {
-          const mood = moods[day];
-          return (
-            <div key={day} style={{
-              background: mood !== null && mood !== undefined ? `rgba(196,135,58,${0.1 + mood * 0.2})` : 'white',
-              border: `1.5px solid ${day === TODAY_DAY ? 'var(--ocre)' : 'var(--ivory-dark)'}`,
-              borderRadius: 8,
-              padding: '6px 4px',
-              textAlign: 'center',
-              minHeight: 70,
-            }}>
-              <div style={{ fontSize: 10, color: day === TODAY_DAY ? 'var(--ocre)' : 'var(--ink-light)', fontWeight: day === TODAY_DAY ? 700 : 400, marginBottom: 4 }}>{day}</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
-                {MOODS.map((m, idx) => (
-                  <span
-                    key={idx}
-                    onClick={() => setMood(day, idx)}
-                    style={{
-                      fontSize: 13,
-                      cursor: 'pointer',
-                      opacity: mood === idx ? 1 : 0.25,
-                      transition: 'all 0.15s',
-                      transform: mood === idx ? 'scale(1.15)' : 'scale(1)',
-                    }}
-                    title={m}
-                  >
-                    {m}
-                  </span>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+// EXPENSES
+function ExpensesPage(props){
+  var expenses=props.expenses, setExpenses=props.setExpenses;
+  var _d=useState(''); var desc=_d[0]; var setDesc=_d[1];
+  var _a=useState(''); var amt=_a[0]; var setAmt=_a[1];
+  var _c=useState('🍽️'); var cat=_c[0]; var setCat=_c[1];
+  function add(){if(!desc.trim()||!amt)return;setExpenses(function(p){return p.concat([{id:Date.now(),cat:cat,desc:desc,amount:parseFloat(amt)}]);});setDesc('');setAmt('');}
+  var total=expenses.reduce(function(s,ex){return s+ex.amount;},0);
+  return h('div',null,
+    h('p',{style:{fontSize:13,color:'var(--ink-light)',marginBottom:12,fontStyle:'italic'}},
+      'Total ce mois : ',h('strong',{style:{color:'var(--brick)',fontFamily:"'JetBrains Mono',monospace"}},total.toFixed(2)+' €')),
+    expenses.map(function(ex){
+      return h('div',{key:ex.id,className:'exp-item'},
+        h('span',{className:'exp-cat'},ex.cat),
+        h('span',{className:'exp-desc'},ex.desc),
+        h('span',{className:'exp-amt'},ex.amount.toFixed(2)+' €'),
+        h('button',{className:'exp-del',onClick:function(){setExpenses(function(p){return p.filter(function(x){return x.id!==ex.id;});});}},'×'));
+    }),
+    h('div',{className:'add-exp'},
+      h('select',{value:cat,onChange:function(ev){setCat(ev.target.value);}},EXPENSE_CATS.map(function(c){return h('option',{key:c,value:c},c);})),
+      h('input',{placeholder:'Description',value:desc,onChange:function(ev){setDesc(ev.target.value);},style:{flex:2}}),
+      h('input',{placeholder:'Montant €',type:'number',value:amt,onChange:function(ev){setAmt(ev.target.value);},onKeyDown:function(ev){if(ev.key==='Enter')add();},style:{flex:1}}),
+      h('button',{onClick:add},'+ Ajouter')));
 }
 
-// ---- MAIN APP ----
-function App() {
-  const [page, setPage] = useState('index');
-  const [dailyEntries, setDailyEntries] = useState(initDailyEntries);
-  const [monthlyGoals, setMonthlyGoals] = useState(initMonthlyGoals);
-  const [monthlyEvents, setMonthlyEvents] = useState({});
-  const [futureLog, setFutureLog] = useState(initFutureLog);
-  const [journalText, setJournalText] = useState('');
-  const [sport, setSport] = useState(initSport);
-  const [water, setWater] = useState(initWater);
-  const [sleep, setSleep] = useState(initSleep);
-  const [expenses, setExpenses] = useState(initExpenses);
-  const [habits, setHabits] = useState(initHabits);
-  const [moods, setMoods] = useState(initMoods);
+// HABITS
+function HabitsPage(props){
+  var habits=props.habits, setHabits=props.setHabits;
+  var dim=daysInMonth(T_YEAR,T_MONTH);
+  var days=Array.from({length:dim},function(_,i){return i+1;});
+  function toggle(hid,di){setHabits(function(p){var n=Object.assign({},p);n[hid]=p[hid].map(function(v,j){return j===di?!v:v;});return n;});}
+  return h('div',null,
+    h('p',{style:{color:'var(--ink-light)',fontSize:13,marginBottom:14,fontStyle:'italic'}},MONTHS_FR[T_MONTH]+' '+T_YEAR+' — cochez chaque jour accompli'),
+    HABIT_LIST.map(function(hab){
+      var checked=(habits[hab.id]||[]).filter(Boolean).length;
+      return h('div',{key:hab.id,className:'habit-row'},
+        h('div',{className:'habit-hd'},h('span',null,hab.label),h('span',null,checked+'/'+dim)),
+        h('div',{className:'habit-days'},
+          days.map(function(d){
+            var on=habits[hab.id]&&habits[hab.id][d-1];
+            return h('div',{key:d,className:'hd'+(on?' on':''),onClick:function(){toggle(hab.id,d-1);},title:d+' '+MONTHS_FR[T_MONTH]},on?'✓':'');
+          })));
+    }));
+}
 
-  const currentNav = NAV.find(n => n.id === page);
+// HAPPINESS
+function HappinessPage(props){
+  var moods=props.moods, setMoods=props.setMoods;
+  var dim=daysInMonth(T_YEAR,T_MONTH);
+  var days=Array.from({length:dim},function(_,i){return i+1;});
+  var fd=firstDayOfMonth(T_YEAR,T_MONTH);
+  var filled=days.filter(function(d){return moods[d]!==null&&moods[d]!==undefined;});
+  var avg=filled.length?(filled.reduce(function(s,d){return s+moods[d];},0)/filled.length).toFixed(1):null;
+  function setM(day,idx){setMoods(function(p){var n=Object.assign({},p);n[day]=p[day]===idx?null:idx;return n;});}
+  return h('div',null,
+    h('p',{style:{color:'var(--ink-light)',fontSize:13,marginBottom:8,fontStyle:'italic'}},
+      MONTHS_FR[T_MONTH]+' '+T_YEAR+(avg!==null?' — Humeur moyenne : '+MOODS[Math.round(Number(avg))]+' ('+avg+'/4)':'')),
+    h('div',{className:'hap-grid'},
+      DAYS.map(function(d){return h('div',{key:d,className:'hap-dh'},d);}),
+      Array.from({length:fd}).map(function(_,i){return h('div',{key:'e'+i});}),
+      days.map(function(day){
+        var mval=moods[day];
+        var hasMood=mval!==null&&mval!==undefined;
+        return h('div',{key:day,className:'hap-cell'+(day===TODAY?' today-h':''),
+          style:{background:hasMood?'rgba(196,135,58,'+(0.08+mval*0.18)+')':'#fff'}},
+          h('div',{className:'hap-dn'+(day===TODAY?' td':'')},day),
+          MOODS.map(function(m,idx){
+            return h('span',{key:idx,className:'mood-btn'+(moods[day]===idx?' sel':''),onClick:function(){setM(day,idx);},title:m},m);
+          }));
+      })));
+}
 
-  const PAGE_TITLES = {
-    index: 'Index', future: 'Future Log', monthly: 'Monthly Log',
-    daily: 'Daily Log', journal: 'Journal Personnel',
-    sport: 'Tracker Sport', water: 'Tracker Hydratation',
-    sleep: 'Tracker Sommeil', expenses: 'Tracker Dépenses',
-    habits: 'Tracker Habitudes', happiness: 'Tracker Bonheur',
-  };
+// APP
+function App(){
+  var _p=useState('index'); var page=_p[0]; var setPage=_p[1];
+  var _de=useState(initDaily); var dailyEntries=_de[0]; var setDailyEntries=_de[1];
+  var _mg=useState(initMonthGoals); var monthGoals=_mg[0]; var setMonthGoals=_mg[1];
+  var _ce=useState({}); var calEvts=_ce[0]; var setCalEvts=_ce[1];
+  var _fd=useState(initFuture); var futureData=_fd[0]; var setFutureData=_fd[1];
+  var _jt=useState(''); var journalText=_jt[0]; var setJournalText=_jt[1];
+  var _sp=useState([false,true,false,true,false,true,false]); var sport=_sp[0]; var setSport=_sp[1];
+  var _wa=useState(4); var water=_wa[0]; var setWater=_wa[1];
+  var _sl=useState([7,6.5,8,7.5,6,7,8]); var sleep=_sl[0]; var setSleep=_sl[1];
+  var _ex=useState([{id:1,cat:'🍽️',desc:'Déjeuner boulangerie',amount:8.50},{id:2,cat:'🚗',desc:'Essence',amount:55},{id:3,cat:'📚',desc:'Atomic Habits',amount:18}]); var expenses=_ex[0]; var setExpenses=_ex[1];
+  var _ha=useState(initHabits); var habits=_ha[0]; var setHabits=_ha[1];
+  var _mo=useState(initMoods); var moods=_mo[0]; var setMoods=_mo[1];
 
-  const sections = [...new Set(NAV.map(n => n.section))];
+  var TITLES={index:'Index',future:'Future Log',monthly:'Monthly Log',daily:'Daily Log',journal:'Journal Personnel',sport:'Tracker Sport',water:'Tracker Hydratation',sleep:'Tracker Sommeil',expenses:'Tracker Dépenses',habits:'Tracker Habitudes',happiness:'Tracker Bonheur'};
+  var nav=NAV.find(function(n){return n.id===page;});
+  var sections=['Structure','Logs','Trackers'];
 
-  const renderPage = () => {
-    switch (page) {
-      case 'index': return <IndexPage onNavigate={setPage} />;
-      case 'future': return <FutureLogPage futureLog={futureLog} setFutureLog={setFutureLog} />;
-      case 'monthly': return <MonthlyLogPage monthlyGoals={monthlyGoals} setMonthlyGoals={setMonthlyGoals} monthlyEvents={monthlyEvents} setMonthlyEvents={setMonthlyEvents} />;
-      case 'daily': return <DailyLogPage dailyEntries={dailyEntries} setDailyEntries={setDailyEntries} />;
-      case 'journal': return <JournalPage journalText={journalText} setJournalText={setJournalText} />;
-      case 'sport': return <SportPage sport={sport} setSport={setSport} />;
-      case 'water': return <WaterPage water={water} setWater={setWater} />;
-      case 'sleep': return <SleepPage sleep={sleep} setSleep={setSleep} />;
-      case 'expenses': return <ExpensesPage expenses={expenses} setExpenses={setExpenses} />;
-      case 'habits': return <HabitsPage habits={habits} setHabits={setHabits} />;
-      case 'happiness': return <HappinessPage moods={moods} setMoods={setMoods} />;
-      default: return null;
+  function renderPage(){
+    switch(page){
+      case 'index': return h(IndexPage,{onNav:setPage});
+      case 'future': return h(FuturePage,{data:futureData,setData:setFutureData});
+      case 'monthly': return h(MonthlyPage,{goals:monthGoals,setGoals:setMonthGoals,calEvts:calEvts,setCalEvts:setCalEvts});
+      case 'daily': return h(DailyPage,{entries:dailyEntries,setEntries:setDailyEntries});
+      case 'journal': return h(JournalPage,{text:journalText,setText:setJournalText});
+      case 'sport': return h(SportPage,{sport:sport,setSport:setSport});
+      case 'water': return h(WaterPage,{water:water,setWater:setWater});
+      case 'sleep': return h(SleepPage,{sleep:sleep,setSleep:setSleep});
+      case 'expenses': return h(ExpensesPage,{expenses:expenses,setExpenses:setExpenses});
+      case 'habits': return h(HabitsPage,{habits:habits,setHabits:setHabits});
+      case 'happiness': return h(HappinessPage,{moods:moods,setMoods:setMoods});
     }
-  };
+  }
 
-  return (
-    <div className="journal">
-      <div className="spine">
-        {Array.from({ length: 14 }).map((_, i) => <div key={i} className="spine-ring" />)}
-      </div>
-
-      <div className="sidebar">
-        <div className="sidebar-title">
-          Mon Carnet
-          <span>Bullet Journal</span>
-        </div>
-
-        {sections.map(section => (
-          <div key={section}>
-            <div className="nav-section-label">{section}</div>
-            {NAV.filter(n => n.section === section).map(n => (
-              <button
-                key={n.id}
-                className={`nav-btn ${page === n.id ? 'active' : ''}`}
-                onClick={() => setPage(n.id)}
-              >
-                <span className="icon">{n.icon}</span>
-                {n.label}
-              </button>
-            ))}
-          </div>
-        ))}
-
-        <div style={{ flex: 1 }} />
-        <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(196,135,58,0.15)' }}>
-          <div style={{ fontSize: 10, color: '#6B5E4A', letterSpacing: '0.05em' }}>
-            {now.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
-          </div>
-          <div style={{ fontSize: 10, color: '#4A3F30', marginTop: 2, fontFamily: 'JetBrains Mono, monospace' }}>
-            p. {PAGE_NUMBERS[page]}
-          </div>
-        </div>
-      </div>
-
-      <div className="page">
-        <div className="page-header">
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-            <h1 className="page-title">{PAGE_TITLES[page]}</h1>
-            <span className="tag tag-page">p. {PAGE_NUMBERS[page]}</span>
-          </div>
-          <div className="page-subtitle">{currentNav?.icon} {currentNav?.section}</div>
-        </div>
-        <div className="page-body">
-          {renderPage()}
-        </div>
-      </div>
-    </div>
-  );
+  return h('div',{className:'journal'},
+    h('div',{className:'spine'},Array.from({length:14}).map(function(_,i){return h('div',{key:i,className:'ring'});})),
+    h('div',{className:'sidebar'},
+      h('div',{className:'sidebar-brand'},'Mon Carnet',h('small',null,'Bullet Journal')),
+      sections.map(function(sec){
+        return h('div',{key:sec},
+          h('div',{className:'sec-label'},sec),
+          NAV.filter(function(n){return n.sec===sec;}).map(function(n){
+            return h('button',{key:n.id,className:'nav-btn'+(page===n.id?' active':''),onClick:function(){setPage(n.id);}},
+              h('span',{className:'ni'},n.icon),n.label);
+          }));
+      }),
+      h('div',{className:'sidebar-foot'},
+        now.toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}),
+        h('br',null),'p. '+PAGE_NUM[page])),
+    h('div',{className:'page'},
+      h('div',{className:'page-head'},
+        h('h1',null,TITLES[page]),
+        h('p',null,(nav?nav.icon+' ':'')+(nav?nav.sec:''))),
+      h('div',{className:'page-body'},renderPage())));
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(h(App,null));
+})();
 </script>
 </body>
 </html>
