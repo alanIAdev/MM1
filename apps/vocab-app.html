@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VocaBox – Apprendre du vocabulaire</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --panel:#1e293b;
+    --panel2:#273449;
+    --accent:#6366f1;
+    --accent2:#8b5cf6;
+    --good:#22c55e;
+    --bad:#ef4444;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --border:#334155;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(160deg,#0f172a,#1e1b4b);
+    color:var(--text);
+    min-height:100vh;
+  }
+  header{
+    padding:20px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid var(--border);
+    background:rgba(15,23,42,0.6);
+    position:sticky;
+    top:0;
+    backdrop-filter:blur(6px);
+    z-index:10;
+  }
+  header h1{
+    margin:0;
+    font-size:1.4rem;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  nav{
+    display:flex;
+    gap:8px;
+  }
+  nav button{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--muted);
+    padding:8px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:0.9rem;
+    transition:.15s;
+  }
+  nav button.active, nav button:hover{
+    background:var(--accent);
+    color:white;
+    border-color:var(--accent);
+  }
+  nav a{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--muted);
+    padding:8px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:0.9rem;
+    transition:.15s;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+  }
+  nav a:hover{
+    background:var(--accent2);
+    color:white;
+    border-color:var(--accent2);
+  }
+  main{
+    max-width:1000px;
+    margin:0 auto;
+    padding:24px;
+  }
+  .view{display:none;}
+  .view.active{display:block;}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .card h2{margin-top:0;font-size:1.1rem;}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  input[type=text], input[type=number], select{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:9px 12px;
+    border-radius:8px;
+    font-size:0.95rem;
+  }
+  input::placeholder{color:var(--muted);}
+  button.btn{
+    background:var(--accent);
+    color:white;
+    border:none;
+    padding:9px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:0.9rem;
+    transition:.15s;
+  }
+  button.btn:hover{background:var(--accent2);}
+  button.btn.secondary{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+  button.btn.secondary:hover{border-color:var(--accent);}
+  button.btn.danger{background:var(--bad);}
+  button.btn.danger:hover{background:#dc2626;}
+  button.icon-btn{
+    background:transparent;
+    border:none;
+    color:var(--muted);
+    cursor:pointer;
+    font-size:1rem;
+    padding:4px 8px;
+    border-radius:6px;
+  }
+  button.icon-btn:hover{background:var(--panel2);color:var(--text);}
+  .course-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:14px;
+  }
+  .course-tile{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .course-tile:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .course-tile h3{margin:0 0 6px;font-size:1.05rem;}
+  .course-tile p{margin:0;color:var(--muted);font-size:0.85rem;}
+  .list-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 14px;
+    margin-bottom:8px;
+  }
+  .list-item .meta{font-size:0.8rem;color:var(--muted);}
+  table{width:100%;border-collapse:collapse;margin-top:10px;}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:0.9rem;}
+  th{color:var(--muted);font-weight:600;}
+  .word-row input{width:100%;}
+  .breadcrumb{color:var(--muted);font-size:0.85rem;margin-bottom:10px;cursor:pointer;}
+  .breadcrumb span:hover{color:var(--accent);text-decoration:underline;}
+  .quiz-box{
+    text-align:center;
+    padding:30px 20px;
+  }
+  .quiz-word{
+    font-size:2rem;
+    font-weight:700;
+    margin:10px 0 20px;
+  }
+  .quiz-progress{color:var(--muted);font-size:0.9rem;margin-bottom:6px;}
+  .feedback{
+    margin-top:14px;
+    font-weight:600;
+    min-height:24px;
+  }
+  .feedback.good{color:var(--good);}
+  .feedback.bad{color:var(--bad);}
+  .score-big{font-size:2.4rem;font-weight:800;margin:10px 0;}
+  .empty{color:var(--muted);font-style:italic;padding:10px 0;}
+  .badge{
+    display:inline-block;
+    padding:2px 8px;
+    border-radius:20px;
+    font-size:0.75rem;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    color:var(--muted);
+  }
+  .history-bar-wrap{
+    display:flex;
+    align-items:flex-end;
+    gap:6px;
+    height:120px;
+    border-bottom:1px solid var(--border);
+    padding-top:10px;
+    overflow-x:auto;
+  }
+  .history-bar{
+    min-width:34px;
+    background:linear-gradient(180deg,var(--accent),var(--accent2));
+    border-radius:6px 6px 0 0;
+    position:relative;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    color:white;
+    font-size:0.7rem;
+    padding-top:3px;
+  }
+  .history-dates{
+    display:flex;
+    gap:6px;
+    margin-top:4px;
+    overflow-x:auto;
+  }
+  .history-dates span{
+    min-width:34px;
+    font-size:0.65rem;
+    color:var(--muted);
+    text-align:center;
+  }
+  select, input{outline:none;}
+  .field-label{font-size:0.8rem;color:var(--muted);margin-bottom:4px;display:block;}
+  .toast{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--panel2);
+    border:1px solid var(--border);
+    padding:10px 18px;
+    border-radius:10px;
+    font-size:0.9rem;
+    opacity:0;
+    transition:.3s;
+    pointer-events:none;
+  }
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 VocaBox</h1>
+  <nav>
+    <button data-view="courses" class="active">Mes cours</button>
+    <button data-view="review">Réviser</button>
+    <a href="https://example.com" id="external-link-btn" target="_blank" rel="noopener noreferrer">Autre page</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- VUE COURS -->
+  <div class="view active" id="view-courses">
+    <div id="courses-list-view">
+      <div class="card">
+        <h2>Ajouter un cours (langue)</h2>
+        <div class="row">
+          <input type="text" id="new-course-name" placeholder="Nom du cours (ex: Japonais)">
+          <button class="btn" onclick="addCourse()">+ Ajouter</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Cours existants</h2>
+        <div class="course-grid" id="course-grid"></div>
+      </div>
+    </div>
+
+    <div id="course-detail-view" style="display:none;">
+      <div class="breadcrumb"><span onclick="showCourseList()">← Tous les cours</span></div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;">
+          <h2 id="course-detail-title" style="margin:0;"></h2>
+          <div class="row">
+            <button class="icon-btn" onclick="renameCurrentCourse()">✏️ Renommer</button>
+            <button class="icon-btn" onclick="deleteCurrentCourse()">🗑️ Supprimer</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Ajouter une liste de mots</h2>
+        <div class="row">
+          <input type="text" id="new-list-name" placeholder="Nom de la liste (ex: Animaux)">
+          <button class="btn" onclick="addList()">+ Ajouter</button>
+        </div>
+      </div>
+      <div class="card" id="lists-container">
+        <h2>Listes</h2>
+        <div id="lists-list"></div>
+      </div>
+    </div>
+
+    <div id="list-detail-view" style="display:none;">
+      <div class="breadcrumb"><span onclick="showCourseDetailFromList()">← <span id="bc-course-name"></span></span></div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;">
+          <h2 id="list-detail-title" style="margin:0;"></h2>
+          <div class="row">
+            <button class="icon-btn" onclick="renameCurrentList()">✏️ Renommer</button>
+            <button class="icon-btn" onclick="deleteCurrentList()">🗑️ Supprimer</button>
+            <button class="btn secondary" onclick="goReviewThisList()">🎯 Réviser cette liste</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Ajouter un mot</h2>
+        <div class="row">
+          <input type="text" id="new-word-term" placeholder="Mot (langue étrangère)">
+          <input type="text" id="new-word-translation" placeholder="Traduction (français)">
+          <button class="btn" onclick="addWord()">+ Ajouter</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Mots (<span id="word-count">0</span>)</h2>
+        <table id="words-table">
+          <thead><tr><th>Mot</th><th>Traduction</th><th></th></tr></thead>
+          <tbody id="words-tbody"></tbody>
+        </table>
+        <div class="empty" id="words-empty" style="display:none;">Aucun mot pour l'instant.</div>
+      </div>
+      <div class="card">
+        <h2>📈 Historique des scores</h2>
+        <div id="history-chart"></div>
+        <div class="empty" id="history-empty" style="display:none;">Pas encore de révision enregistrée.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VUE REVISION -->
+  <div class="view" id="view-review">
+
+    <div class="card" id="review-setup">
+      <h2>Paramétrer une révision</h2>
+      <div class="row" style="margin-bottom:12px;">
+        <div>
+          <span class="field-label">Cours</span>
+          <select id="review-course-select" onchange="onReviewCourseChange()"></select>
+        </div>
+        <div>
+          <span class="field-label">Liste</span>
+          <select id="review-list-select" onchange="onReviewListChange()"></select>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom:12px;">
+        <div>
+          <span class="field-label">Sens de traduction</span>
+          <select id="review-direction">
+            <option value="term-to-trans">Mot → Traduction</option>
+            <option value="trans-to-term">Traduction → Mot</option>
+            <option value="random">Aléatoire (mélange)</option>
+          </select>
+        </div>
+        <div>
+          <span class="field-label">Nombre de mots</span>
+          <input type="number" id="review-count" min="1" value="10" style="width:90px;">
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" onclick="startReview()">▶️ Démarrer la révision</button>
+      </div>
+      <p class="empty" id="review-warning" style="display:none;"></p>
+    </div>
+
+    <div class="card quiz-box" id="quiz-card" style="display:none;">
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div class="badge" id="quiz-direction-badge"></div>
+      <div class="quiz-word" id="quiz-word"></div>
+      <div class="row" style="justify-content:center;">
+        <input type="text" id="quiz-answer" placeholder="Votre réponse..." style="width:260px;text-align:center;" autocomplete="off">
+        <button class="btn" onclick="submitAnswer()">Valider</button>
+      </div>
+      <div class="feedback" id="quiz-feedback"></div>
+    </div>
+
+    <div class="card" id="quiz-result" style="display:none;">
+      <h2>Résultat</h2>
+      <div style="text-align:center;">
+        <div class="score-big" id="result-score"></div>
+        <p class="empty" id="result-detail"></p>
+        <button class="btn" onclick="backToSetup()">🔁 Nouvelle révision</button>
+      </div>
+      <div id="result-mistakes" style="margin-top:16px;"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= DATA LAYER ================= */
+const STORAGE_KEY = "vocabox_data_v1";
+
+function defaultData(){
+  return {
+    courses: [
+      mkCourse("Chinois"),
+      mkCourse("Turc"),
+      mkCourse("Russe"),
+      mkCourse("Allemand"),
+      mkCourse("Espagnol"),
+    ]
+  };
+}
+/* ================= DRAPEAUX ================= */
+const FLAG_MAP = [
+  [["chinois","chinese","mandarin","中文"], "🇨🇳"],
+  [["turc","turkish","türkçe"], "🇹🇷"],
+  [["russe","russian","русский"], "🇷🇺"],
+  [["allemand","german","deutsch"], "🇩🇪"],
+  [["espagnol","spanish","español","castillan"], "🇪🇸"],
+  [["anglais","english"], "🇬🇧"],
+  [["italien","italian","italiano"], "🇮🇹"],
+  [["portugais","portuguese","português"], "🇵🇹"],
+  [["japonais","japanese","日本語"], "🇯🇵"],
+  [["coreen","coréen","korean","한국어"], "🇰🇷"],
+  [["arabe","arabic","العربية"], "🇸🇦"],
+  [["neerlandais","néerlandais","dutch","nederlands"], "🇳🇱"],
+  [["polonais","polish","polski"], "🇵🇱"],
+  [["suedois","suédois","swedish","svenska"], "🇸🇪"],
+  [["norvegien","norvégien","norwegian"], "🇳🇴"],
+  [["danois","danish","dansk"], "🇩🇰"],
+  [["finnois","finlandais","finnish","suomi"], "🇫🇮"],
+  [["grec","greek","ελληνικά"], "🇬🇷"],
+  [["hebreu","hébreu","hebrew","עברית"], "🇮🇱"],
+  [["hindi"], "🇮🇳"],
+  [["vietnamien","vietnamese","tiếng việt"], "🇻🇳"],
+  [["thai","thaï","thaïlandais"], "🇹🇭"],
+  [["roumain","romanian","română"], "🇷🇴"],
+  [["hongrois","hungarian","magyar"], "🇭🇺"],
+  [["tcheque","tchèque","czech","čeština"], "🇨🇿"],
+  [["ukrainien","ukrainian","українська"], "🇺🇦"],
+  [["francais","français","french"], "🇫🇷"],
+  [["indonesien","indonésien","indonesian","bahasa"], "🇮🇩"],
+  [["persan","farsi","persian"], "🇮🇷"],
+  [["swahili"], "🇰🇪"],
+];
+function getFlagForCourse(name){
+  const n = String(name).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  for(const [keywords, flag] of FLAG_MAP){
+    for(const kw of keywords){
+      const kwNorm = kw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+      if(n.includes(kwNorm)) return flag;
+    }
+  }
+  return "🌐";
+}
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+function mkCourse(name){ return { id:uid(), name, lists:[] }; }
+function mkList(name){ return { id:uid(), name, words:[], history:[] }; } // history: [{date:'YYYY-MM-DD', score, total}]
+function mkWord(term, translation){ return { id:uid(), term, translation }; }
+
+let data = loadData();
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultData();
+    const parsed = JSON.parse(raw);
+    if(!parsed.courses) return defaultData();
+    return parsed;
+  }catch(e){
+    return defaultData();
+  }
+}
+function saveData(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+/* ================= NAV ================= */
+const navButtons = document.querySelectorAll("nav button");
+navButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=>switchView(btn.dataset.view));
+});
+function switchView(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-"+name).classList.add("active");
+  navButtons.forEach(b=>b.classList.toggle("active", b.dataset.view===name));
+  if(name==="courses") showCourseList();
+  if(name==="review") refreshReviewSelectors();
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* ================= STATE (current selection) ================= */
+let currentCourseId = null;
+let currentListId = null;
+
+/* ================= COURSES VIEW ================= */
+function showCourseList(){
+  document.getElementById("courses-list-view").style.display = "block";
+  document.getElementById("course-detail-view").style.display = "none";
+  document.getElementById("list-detail-view").style.display = "none";
+  renderCourseGrid();
+}
+function renderCourseGrid(){
+  const grid = document.getElementById("course-grid");
+  grid.innerHTML = "";
+  if(data.courses.length===0){
+    grid.innerHTML = '<p class="empty">Aucun cours. Ajoutez-en un ci-dessus.</p>';
+    return;
+  }
+  data.courses.forEach(c=>{
+    const totalWords = c.lists.reduce((s,l)=>s+l.words.length,0);
+    const div = document.createElement("div");
+    div.className = "course-tile";
+    div.onclick = ()=>openCourse(c.id);
+    div.innerHTML = `<h3>${getFlagForCourse(c.name)} ${escapeHtml(c.name)}</h3><p>${c.lists.length} liste(s) · ${totalWords} mot(s)</p>`;
+    grid.appendChild(div);
+  });
+}
+function addCourse(){
+  const input = document.getElementById("new-course-name");
+  const name = input.value.trim();
+  if(!name) return showToast("Donnez un nom au cours");
+  data.courses.push(mkCourse(name));
+  saveData();
+  input.value = "";
+  renderCourseGrid();
+  showToast("Cours ajouté");
+}
+function openCourse(id){
+  currentCourseId = id;
+  document.getElementById("courses-list-view").style.display = "none";
+  document.getElementById("course-detail-view").style.display = "block";
+  document.getElementById("list-detail-view").style.display = "none";
+  renderCourseDetail();
+}
+function getCourse(id){ return data.courses.find(c=>c.id===id); }
+function renderCourseDetail(){
+  const course = getCourse(currentCourseId);
+  if(!course) return showCourseList();
+  document.getElementById("course-detail-title").textContent = `${getFlagForCourse(course.name)} ${course.name}`;
+  const listsList = document.getElementById("lists-list");
+  listsList.innerHTML = "";
+  if(course.lists.length===0){
+    listsList.innerHTML = '<p class="empty">Aucune liste. Ajoutez-en une ci-dessus.</p>';
+    return;
+  }
+  course.lists.forEach(l=>{
+    const div = document.createElement("div");
+    div.className = "list-item";
+    const lastScore = l.history.length ? l.history[l.history.length-1] : null;
+    div.innerHTML = `
+      <div>
+        <strong style="cursor:pointer;" onclick="openList('${l.id}')">${escapeHtml(l.name)}</strong>
+        <div class="meta">${l.words.length} mot(s)${lastScore ? ` · dernier score: ${lastScore.score}/${lastScore.total} (${lastScore.date})` : ''}</div>
+      </div>
+      <div class="row">
+        <button class="icon-btn" onclick="openList('${l.id}')">👁️ Voir</button>
+        <button class="icon-btn" onclick="quickReview('${l.id}')">🎯 Réviser</button>
+      </div>
+    `;
+    listsList.appendChild(div);
+  });
+}
+function renameCurrentCourse(){
+  const course = getCourse(currentCourseId);
+  const name = prompt("Nouveau nom du cours :", course.name);
+  if(name && name.trim()){
+    course.name = name.trim();
+    saveData();
+    renderCourseDetail();
+  }
+}
+function deleteCurrentCourse(){
+  const course = getCourse(currentCourseId);
+  if(!confirm(`Supprimer le cours "${course.name}" et toutes ses listes ?`)) return;
+  data.courses = data.courses.filter(c=>c.id!==currentCourseId);
+  saveData();
+  showCourseList();
+  showToast("Cours supprimé");
+}
+function addList(){
+  const input = document.getElementById("new-list-name");
+  const name = input.value.trim();
+  if(!name) return showToast("Donnez un nom à la liste");
+  const course = getCourse(currentCourseId);
+  course.lists.push(mkList(name));
+  saveData();
+  input.value = "";
+  renderCourseDetail();
+}
+
+/* ================= LIST DETAIL VIEW ================= */
+function openList(listId){
+  currentListId = listId;
+  document.getElementById("course-detail-view").style.display = "none";
+  document.getElementById("list-detail-view").style.display = "block";
+  const course = getCourse(currentCourseId);
+  document.getElementById("bc-course-name").textContent = `${getFlagForCourse(course.name)} ${course.name}`;
+  renderListDetail();
+}
+function showCourseDetailFromList(){
+  document.getElementById("list-detail-view").style.display = "none";
+  document.getElementById("course-detail-view").style.display = "block";
+  renderCourseDetail();
+}
+function getList(){
+  const course = getCourse(currentCourseId);
+  return course ? course.lists.find(l=>l.id===currentListId) : null;
+}
+function renderListDetail(){
+  const list = getList();
+  if(!list) return showCourseDetailFromList();
+  document.getElementById("list-detail-title").textContent = list.name;
+  document.getElementById("word-count").textContent = list.words.length;
+  const tbody = document.getElementById("words-tbody");
+  tbody.innerHTML = "";
+  document.getElementById("words-empty").style.display = list.words.length ? "none":"block";
+  list.words.forEach(w=>{
+    const tr = document.createElement("tr");
+    tr.className = "word-row";
+    tr.innerHTML = `
+      <td><input type="text" value="${escapeAttr(w.term)}" onchange="updateWord('${w.id}','term',this.value)"></td>
+      <td><input type="text" value="${escapeAttr(w.translation)}" onchange="updateWord('${w.id}','translation',this.value)"></td>
+      <td><button class="icon-btn" onclick="deleteWord('${w.id}')">🗑️</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  renderHistoryChart(list);
+}
+function renameCurrentList(){
+  const list = getList();
+  const name = prompt("Nouveau nom de la liste :", list.name);
+  if(name && name.trim()){
+    list.name = name.trim();
+    saveData();
+    renderListDetail();
+  }
+}
+function deleteCurrentList(){
+  const list = getList();
+  if(!confirm(`Supprimer la liste "${list.name}" ?`)) return;
+  const course = getCourse(currentCourseId);
+  course.lists = course.lists.filter(l=>l.id!==currentListId);
+  saveData();
+  showCourseDetailFromList();
+  showToast("Liste supprimée");
+}
+function addWord(){
+  const termInput = document.getElementById("new-word-term");
+  const transInput = document.getElementById("new-word-translation");
+  const term = termInput.value.trim();
+  const translation = transInput.value.trim();
+  if(!term || !translation) return showToast("Remplissez le mot et sa traduction");
+  const list = getList();
+  list.words.push(mkWord(term, translation));
+  saveData();
+  termInput.value = "";
+  transInput.value = "";
+  termInput.focus();
+  renderListDetail();
+}
+function updateWord(wordId, field, value){
+  const list = getList();
+  const w = list.words.find(w=>w.id===wordId);
+  if(w){ w[field] = value.trim(); saveData(); }
+}
+function deleteWord(wordId){
+  const list = getList();
+  list.words = list.words.filter(w=>w.id!==wordId);
+  saveData();
+  renderListDetail();
+}
+
+/* ================= HISTORY CHART ================= */
+function renderHistoryChart(list){
+  const chart = document.getElementById("history-chart");
+  const empty = document.getElementById("history-empty");
+  chart.innerHTML = "";
+  if(!list.history.length){
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+  const sorted = [...list.history].sort((a,b)=>a.date.localeCompare(b.date));
+  const barsWrap = document.createElement("div");
+  barsWrap.className = "history-bar-wrap";
+  const datesWrap = document.createElement("div");
+  datesWrap.className = "history-dates";
+  sorted.forEach(h=>{
+    const pct = h.total>0 ? Math.round((h.score/h.total)*100) : 0;
+    const bar = document.createElement("div");
+    bar.className = "history-bar";
+    bar.style.height = Math.max(8, pct) + "%";
+    bar.title = `${h.date}: ${h.score}/${h.total}`;
+    bar.textContent = pct + "%";
+    barsWrap.appendChild(bar);
+    const dateLbl = document.createElement("span");
+    dateLbl.textContent = h.date.slice(5); // MM-DD
+    datesWrap.appendChild(dateLbl);
+  });
+  chart.appendChild(barsWrap);
+  chart.appendChild(datesWrap);
+}
+
+/* ================= REVIEW SETUP ================= */
+function refreshReviewSelectors(prefCourseId, prefListId){
+  const courseSel = document.getElementById("review-course-select");
+  courseSel.innerHTML = "";
+  data.courses.forEach(c=>{
+    const opt = document.createElement("option");
+    opt.value = c.id;
+    opt.textContent = `${getFlagForCourse(c.name)} ${c.name}`;
+    courseSel.appendChild(opt);
+  });
+  if(prefCourseId) courseSel.value = prefCourseId;
+  onReviewCourseChange(prefListId);
+}
+function onReviewCourseChange(prefListId){
+  const courseSel = document.getElementById("review-course-select");
+  const listSel = document.getElementById("review-list-select");
+  listSel.innerHTML = "";
+  const course = getCourse(courseSel.value);
+  if(!course){ updateReviewWarning(); return; }
+  course.lists.forEach(l=>{
+    const opt = document.createElement("option");
+    opt.value = l.id;
+    opt.textContent = `${l.name} (${l.words.length} mots)`;
+    listSel.appendChild(opt);
+  });
+  if(prefListId) listSel.value = prefListId;
+  updateReviewWarning();
+}
+function onReviewListChange(){ updateReviewWarning(); }
+function updateReviewWarning(){
+  const warn = document.getElementById("review-warning");
+  const list = currentReviewList();
+  if(!list || list.words.length===0){
+    warn.style.display = "block";
+    warn.textContent = "Cette liste ne contient aucun mot. Ajoutez des mots avant de réviser.";
+  } else {
+    warn.style.display = "none";
+  }
+}
+function currentReviewList(){
+  const courseSel = document.getElementById("review-course-select");
+  const listSel = document.getElementById("review-list-select");
+  const course = getCourse(courseSel.value);
+  if(!course) return null;
+  return course.lists.find(l=>l.id===listSel.value) || null;
+}
+function quickReview(listId){
+  switchView("review");
+  refreshReviewSelectors(currentCourseId, listId);
+}
+function goReviewThisList(){
+  switchView("review");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active", b.dataset.view==="review"));
+  refreshReviewSelectors(currentCourseId, currentListId);
+}
+
+/* ================= QUIZ ENGINE ================= */
+let quizState = null;
+
+function startReview(){
+  const list = currentReviewList();
+  if(!list || list.words.length===0) return showToast("Liste vide ou introuvable");
+  let count = parseInt(document.getElementById("review-count").value, 10);
+  if(isNaN(count) || count<1) count = 1;
+  count = Math.min(count, list.words.length);
+  const direction = document.getElementById("review-direction").value;
+
+  const shuffled = [...list.words].sort(()=>Math.random()-0.5).slice(0, count);
+  const questions = shuffled.map(w=>{
+    let dir = direction;
+    if(direction === "random") dir = Math.random()<0.5 ? "term-to-trans" : "trans-to-term";
+    return {
+      word: w,
+      direction: dir,
+      prompt: dir==="term-to-trans" ? w.term : w.translation,
+      answer: dir==="term-to-trans" ? w.translation : w.term,
+    };
+  });
+
+  quizState = {
+    listId: list.id,
+    courseId: getCourse(document.getElementById("review-course-select").value).id,
+    questions,
+    index: 0,
+    score: 0,
+    mistakes: [],
+  };
+
+  document.getElementById("review-setup").style.display = "none";
+  document.getElementById("quiz-result").style.display = "none";
+  document.getElementById("quiz-card").style.display = "block";
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = quizState.questions[quizState.index];
+  document.getElementById("quiz-progress").textContent = `Question ${quizState.index+1} / ${quizState.questions.length}`;
+  document.getElementById("quiz-direction-badge").textContent =
+    q.direction === "term-to-trans" ? "Mot → Traduction" : "Traduction → Mot";
+  document.getElementById("quiz-word").textContent = q.prompt;
+  const ans = document.getElementById("quiz-answer");
+  ans.value = "";
+  ans.disabled = false;
+  ans.focus();
+  document.getElementById("quiz-feedback").textContent = "";
+  document.getElementById("quiz-feedback").className = "feedback";
+}
+
+document.getElementById("quiz-answer").addEventListener("keydown", e=>{
+  if(e.key === "Enter") submitAnswer();
+});
+
+function normalize(str){
+  return str.trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,""); // remove accents for forgiving match
+}
+
+function submitAnswer(){
+  const ansInput = document.getElementById("quiz-answer");
+  if(ansInput.disabled) return;
+  const q = quizState.questions[quizState.index];
+  const userAnswer = ansInput.value;
+  const correct = normalize(userAnswer) === normalize(q.answer);
+  const feedback = document.getElementById("quiz-feedback");
+  if(correct){
+    quizState.score++;
+    feedback.textContent = "✅ Correct !";
+    feedback.className = "feedback good";
+  } else {
+    feedback.textContent = `❌ Faux. Réponse attendue : ${q.answer}`;
+    feedback.className = "feedback bad";
+    quizState.mistakes.push({prompt:q.prompt, expected:q.answer, given:userAnswer || "(vide)"});
+  }
+  ansInput.disabled = true;
+  setTimeout(()=>{
+    quizState.index++;
+    if(quizState.index < quizState.questions.length){
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }, 900);
+}
+
+function finishQuiz(){
+  document.getElementById("quiz-card").style.display = "none";
+  document.getElementById("quiz-result").style.display = "block";
+  const total = quizState.questions.length;
+  document.getElementById("result-score").textContent = `${quizState.score} / ${total}`;
+  const pct = Math.round((quizState.score/total)*100);
+  document.getElementById("result-detail").textContent = `Score : ${pct}%`;
+
+  // Save to history (only last value per date)
+  const course = getCourse(quizState.courseId);
+  const list = course.lists.find(l=>l.id===quizState.listId);
+  const today = new Date().toISOString().slice(0,10);
+  const existingIdx = list.history.findIndex(h=>h.date===today);
+  const entry = {date: today, score: quizState.score, total};
+  if(existingIdx >= 0) list.history[existingIdx] = entry;
+  else list.history.push(entry);
+  saveData();
+
+  const mistakesDiv = document.getElementById("result-mistakes");
+  if(quizState.mistakes.length){
+    let html = "<h3>Erreurs à revoir :</h3><table><thead><tr><th>Question</th><th>Réponse donnée</th><th>Bonne réponse</th></tr></thead><tbody>";
+    quizState.mistakes.forEach(m=>{
+      html += `<tr><td>${escapeHtml(m.prompt)}</td><td>${escapeHtml(m.given)}</td><td>${escapeHtml(m.expected)}</td></tr>`;
+    });
+    html += "</tbody></table>";
+    mistakesDiv.innerHTML = html;
+  } else {
+    mistakesDiv.innerHTML = "<p class='empty'>Aucune erreur, bravo ! 🎉</p>";
+  }
+}
+
+function backToSetup(){
+  document.getElementById("quiz-result").style.display = "none";
+  document.getElementById("review-setup").style.display = "block";
+  refreshReviewSelectors(quizState ? quizState.courseId : null, quizState ? quizState.listId : null);
+}
+
+/* ================= UTIL ================= */
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(str){ return escapeHtml(str); }
+
+/* ================= INIT ================= */
+saveData(); // ensure default data persisted on first load
+renderCourseGrid();
+</script>
+</body>
+</html>
