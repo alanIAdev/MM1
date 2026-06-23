@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turc — Cours Complet A1</title>
+<style>
+/* ================================================
+   TOKENS — académique & sobre
+   Signature : liseré rouge ottoman sur nav active
+   ================================================ */
+:root {
+  --navy:       #1b3358;
+  --navy-mid:   #254775;
+  --red:        #c0392b;
+  --green:      #1e6b3a;
+  --gold:       #9a7200;
+  --bg:         #ffffff;
+  --bg-section: #f7f7f5;
+  --bg-ex:      #f0f4fb;
+  --bg-corr:    #f0f7f2;
+  --border:     #cccccc;
+  --text:       #111111;
+  --muted:      #555555;
+  --sidebar-w:  256px;
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-sans:  system-ui, -apple-system, sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--font-serif);color:var(--text);background:var(--bg);line-height:1.7}
+
+/* === LAYOUT === */
+.layout{display:flex;min-height:100vh}
+
+/* === SIDEBAR === */
+.sidebar{
+  position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;
+  background:var(--navy);color:#fff;overflow-y:auto;z-index:200;
+  display:flex;flex-direction:column
+}
+.sidebar-logo{
+  padding:1.4rem 1.2rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,.12)
+}
+.sidebar-logo h1{
+  font-family:var(--font-sans);font-size:.82rem;
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.7
+}
+.sidebar-logo .level{
+  margin-top:.5rem;display:inline-block;
+  background:var(--red);color:#fff;
+  font-family:var(--font-sans);font-size:.72rem;font-weight:700;
+  letter-spacing:.05em;padding:.2rem .6rem;border-radius:2px
+}
+.sidebar-prog{padding:1rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.12)}
+.sidebar-prog label{
+  font-family:var(--font-sans);font-size:.68rem;
+  letter-spacing:.1em;text-transform:uppercase;opacity:.6
+}
+.prog-bar{background:rgba(255,255,255,.18);border-radius:2px;height:5px;margin:.4rem 0 .3rem}
+.prog-fill{background:#fff;height:5px;border-radius:2px;width:0%;transition:width .4s ease}
+.prog-pct{font-family:var(--font-sans);font-size:.72rem;opacity:.65}
+.sidebar-label{
+  padding:.9rem 1.2rem .3rem;
+  font-family:var(--font-sans);font-size:.63rem;
+  letter-spacing:.12em;text-transform:uppercase;opacity:.45
+}
+.sidebar nav a{
+  display:block;padding:.42rem 1.2rem;
+  font-family:var(--font-sans);font-size:.8rem;
+  color:rgba(255,255,255,.75);text-decoration:none;
+  border-left:3px solid transparent;transition:all .15s
+}
+.sidebar nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar nav a.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--red)}
+.sidebar nav a.locked{opacity:.3;pointer-events:none}
+.sidebar nav a .tag{
+  font-size:.62rem;background:rgba(255,255,255,.12);
+  padding:.05rem .35rem;border-radius:2px;margin-left:.4rem;vertical-align:middle
+}
+
+/* === MAIN === */
+.main{margin-left:var(--sidebar-w);flex:1;padding:2.2rem 3.5rem 5rem;max-width:900px}
+
+/* === PAGE HEADER === */
+.page-header{padding-bottom:1.5rem;margin-bottom:2.5rem;border-bottom:2px solid var(--navy)}
+.page-header h1{
+  font-size:2rem;font-weight:normal;color:var(--navy);letter-spacing:-.02em
+}
+.page-header p{font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-top:.4rem}
+.print-btn{
+  float:right;margin-top:.3rem;
+  background:var(--navy);color:#fff;border:none;
+  padding:.45rem 1.1rem;font-family:var(--font-sans);font-size:.78rem;
+  cursor:pointer;border-radius:2px;letter-spacing:.03em
+}
+.print-btn:hover{background:var(--navy-mid)}
+
+/* === MODULE === */
+.module{
+  margin-bottom:3rem;padding-bottom:2.5rem;
+  border-bottom:1px solid var(--border);scroll-margin-top:1.5rem
+}
+.mod-head{display:flex;align-items:baseline;gap:.9rem;margin-bottom:1.5rem}
+.mod-num{
+  font-family:var(--font-sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--navy);
+  background:var(--bg-section);border:1px solid var(--border);
+  padding:.18rem .6rem;border-radius:2px;white-space:nowrap
+}
+.module h2{font-size:1.3rem;color:var(--navy);font-weight:normal}
+
+/* === TYPOGRAPHY === */
+h3{font-size:1rem;color:var(--navy);margin:1.5rem 0 .7rem;font-weight:bold}
+h4{font-size:.92rem;margin:1.1rem 0 .5rem}
+p{margin-bottom:.7rem}
+ol,ul{margin:.5rem 0 .7rem 1.6rem;font-family:var(--font-sans);font-size:.87rem}
+li{margin-bottom:.3rem}
+
+.note{
+  font-family:var(--font-sans);font-size:.82rem;color:var(--muted);
+  background:var(--bg-section);border-left:3px solid var(--border);
+  padding:.6rem 1rem;margin:.7rem 0;border-radius:0 2px 2px 0
+}
+.key{
+  font-family:var(--font-sans);font-size:.84rem;color:var(--navy);
+  background:var(--bg-ex);border-left:3px solid var(--navy);
+  padding:.65rem 1rem;margin:.7rem 0;border-radius:0 2px 2px 0
+}
+
+/* === TABLES === */
+table{width:100%;border-collapse:collapse;margin:.6rem 0 1.2rem;font-size:.86rem}
+th{
+  background:var(--navy);color:#fff;
+  padding:.45rem .7rem;text-align:left;
+  font-family:var(--font-sans);font-size:.76rem;font-weight:600;letter-spacing:.03em
+}
+td{padding:.42rem .7rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--bg-section)}
+tr:hover td{background:#edf0f8}
+.tk{font-weight:700;color:var(--navy)}
+.ph{font-style:italic;color:var(--muted)}
+
+/* === STAR === */
+.star{
+  background:none;border:none;cursor:pointer;font-size:1rem;
+  color:#ccc;padding:0 .2rem;transition:color .15s;line-height:1
+}
+.star:hover{color:var(--gold)}
+.star.on{color:var(--gold)}
+
+/* === EXERCISE === */
+.ex{
+  background:var(--bg-ex);border-left:4px solid var(--navy);
+  border-radius:0 3px 3px 0;padding:1.2rem 1.4rem;margin:1.2rem 0
+}
+.ex h4{
+  color:var(--navy);margin-top:0;margin-bottom:.6rem;
+  font-family:var(--font-sans);font-size:.88rem;font-weight:700
+}
+.ex-instr{
+  font-family:var(--font-sans);font-size:.82rem;color:var(--muted);
+  font-style:italic;margin-bottom:.9rem
+}
+
+/* QCM */
+.qcm-q{margin-bottom:.9rem}
+.qcm-qt{font-family:var(--font-sans);font-size:.86rem;margin-bottom:.35rem}
+.opts{display:flex;flex-wrap:wrap;gap:.35rem}
+.opt{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-family:var(--font-sans);font-size:.8rem;cursor:pointer;
+  padding:.28rem .65rem;border:1px solid var(--border);border-radius:2px;
+  background:#fff;transition:all .12s;user-select:none
+}
+.opt:hover{border-color:var(--navy);color:var(--navy)}
+.opt.sel{border-color:var(--navy);background:var(--navy);color:#fff}
+.opt.ok{border-color:var(--green);background:#e6f4ec;color:var(--green);font-weight:600}
+.opt.ko{border-color:var(--red);background:#fbe9e9;color:var(--red)}
+.opt input{display:none}
+
+/* FILL */
+.fill-q{
+  display:flex;align-items:center;gap:.6rem;
+  flex-wrap:wrap;margin-bottom:.65rem;
+  font-family:var(--font-sans);font-size:.86rem
+}
+.fill-in{
+  border:1px solid var(--border);padding:.28rem .55rem;
+  font-family:var(--font-serif);font-size:.86rem;border-radius:2px;width:200px
+}
+.fill-in:focus{outline:none;border-color:var(--navy)}
+.fill-in.ok{border-color:var(--green);background:#e6f4ec;color:var(--green)}
+.fill-in.ko{border-color:var(--red);background:#fbe9e9}
+
+/* ACTIONS */
+.actions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-top:.9rem}
+.btn{
+  font-family:var(--font-sans);font-size:.78rem;padding:.4rem .95rem;
+  border-radius:2px;border:none;cursor:pointer;transition:all .12s;letter-spacing:.02em
+}
+.btn-p{background:var(--navy);color:#fff}
+.btn-p:hover{background:var(--navy-mid)}
+.btn-s{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+.btn-s:hover{background:var(--bg-ex)}
+.btn-r{background:#fff;color:#888;border:1px solid var(--border)}
+.btn-r:hover{background:var(--bg-section)}
+.score{font-family:var(--font-sans);font-size:.8rem;color:var(--muted)}
+.score strong{color:var(--navy)}
+
+/* CORRECTION */
+.corr{
+  background:var(--bg-corr);border-left:4px solid var(--green);
+  border-radius:0 3px 3px 0;padding:.9rem 1.4rem;margin-top:.8rem;
+  font-size:.84rem;display:none
+}
+.corr.show{display:block}
+.corr h5{
+  color:var(--green);font-family:var(--font-sans);
+  font-size:.73rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.55rem
+}
+.corr table{margin:.3rem 0}
+.corr th{background:var(--green)}
+
+/* VOCAB THEME */
+.vcat{margin-bottom:1.6rem}
+.vcat h4{font-size:.95rem;color:var(--navy);margin-bottom:.4rem}
+
+/* FAVORITES */
+.favs-wrap{
+  background:#fffdf0;border:1px solid #ddd090;
+  border-radius:3px;padding:1.2rem;margin:1rem 0
+}
+.favs-wrap h4{color:var(--gold);margin-bottom:.7rem;font-family:var(--font-sans);font-size:.88rem}
+
+/* TEST */
+.test-part{
+  background:#f9f7f1;border:1px solid #d8cfa0;
+  border-radius:3px;padding:1.3rem;margin-bottom:1.4rem
+}
+.test-part h3{color:#6b4f00;margin-top:0}
+
+/* ================================================
+   PRINT
+   ================================================ */
+@media print{
+  .sidebar,.print-btn,.actions,.star{display:none!important}
+  .main{margin-left:0;padding:1cm 1.5cm;max-width:100%}
+  body{font-size:10.5pt}
+  .module{page-break-after:auto}
+  .mod-head,.ex h4,h2,h3{page-break-after:avoid}
+  .ex{page-break-inside:avoid;background:none;border:1px solid #bbb}
+  .corr{display:block!important;background:none;border:1px solid #2d7a2d}
+  table{page-break-inside:avoid}
+  .opt,.opt.sel,.opt.ok,.opt.ko{background:none!important;border:1px solid #999}
+  .opt.ok{font-weight:700;text-decoration:underline}
+  .fill-in{border-bottom:1px solid #999;border-top:none;border-left:none;border-right:none}
+  .favs-wrap{display:none}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Cours de Turc</h1>
+    <span class="level">A1 — Débutant absolu</span>
+  </div>
+  <div class="sidebar-prog">
+    <label>PROGRESSION</label>
+    <div class="prog-bar"><div class="prog-fill" id="pFill"></div></div>
+    <div class="prog-pct" id="pPct">0 % complété</div>
+  </div>
+
+  <div class="sidebar-label">A1.1 — Fondations</div>
+  <nav>
+    <a href="#mod0">M0 · Phonétique &amp; alphabet</a>
+    <a href="#mod1">M1 · Harmonie vocalique</a>
+    <a href="#mod2">M2 · Pronoms et être</a>
+    <a href="#mod3">M3 · Possessifs &amp; izafet</a>
+    <a href="#mod4">M4 · Locatif et datif</a>
+    <a href="#mod5">M5 · Présent en -yor</a>
+    <a href="#vocab">Vocabulaire A1.1</a>
+    <a href="#test">Test A1.1</a>
+  </nav>
+
+  <div class="sidebar-label">A1.2 — Grammaire des cas</div>
+  <nav>
+    <a href="#mod6">M6 · Cas accusatif</a>
+    <a href="#mod7">M7 · Cas ablatif</a>
+    <a href="#mod8">M8 · Postpositions</a>
+    <a href="#mod9">M9 · Récapitulatif des cas</a>
+    <a href="#vocab2">Vocabulaire A1.2</a>
+    <a href="#test2">Test A1.2</a>
+    <a href="#revoir">★ Mots à revoir</a>
+  </nav>
+
+  <div class="sidebar-label">Niveaux suivants</div>
+  <nav>
+    <a class="locked" href="#">A2 · Bases solides <span class="tag">bientôt</span></a>
+    <a class="locked" href="#">B1 · Intermédiaire <span class="tag">bientôt</span></a>
+    <a class="locked" href="#">B2 · Avancé <span class="tag">bientôt</span></a>
+  </nav>
+</aside>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<main class="main">
+
+<div class="page-header">
+  <button class="print-btn" onclick="imprimerTout()">⎙ Imprimer tout</button>
+  <h1>Turc — Cours A1 Complet</h1>
+  <p>12 à 16 semaines · 6 modules · Exercices interactifs + corrections + test final</p>
+</div>
+
+<!-- ══════════ MODULE 0 ══════════ -->
+<section class="module" id="mod0">
+  <div class="mod-head"><span class="mod-num">Module 0</span><h2>Phonétique et écriture</h2></div>
+
+  <h3>L'alphabet turc — 29 lettres</h3>
+  <p>Depuis la réforme Atatürk de 1928, le turc utilise l'alphabet latin sans Q, W ni X, et ajoute six lettres spécifiques : <strong>Ç ç · Ğ ğ · I ı · İ i · Ö ö · Ş ş · Ü ü</strong>.</p>
+
+  <table>
+    <tr><th>Lettre</th><th>Prononciation</th><th>Exemple turc</th><th>Traduction</th></tr>
+    <tr><td class="tk">A a</td><td class="ph">a (« patte »)</td><td>araba</td><td>voiture</td></tr>
+    <tr><td class="tk">B b</td><td class="ph">b</td><td>baba</td><td>père</td></tr>
+    <tr><td class="tk">C c</td><td class="ph">dj (« djinn »)</td><td>cam</td><td>vitre</td></tr>
+    <tr><td class="tk">Ç ç</td><td class="ph">tch (« tchèque »)</td><td>çay</td><td>thé</td></tr>
+    <tr><td class="tk">D d</td><td class="ph">d</td><td>deniz</td><td>mer</td></tr>
+    <tr><td class="tk">E e</td><td class="ph">è ouvert</td><td>ev</td><td>maison</td></tr>
+    <tr><td class="tk">F f</td><td class="ph">f</td><td>fil</td><td>éléphant</td></tr>
+    <tr><td class="tk">G g</td><td class="ph">g dur (« gare »)</td><td>gül</td><td>rose</td></tr>
+    <tr><td class="tk">Ğ ğ</td><td class="ph">MUET — allonge la voyelle précédente</td><td>dağ</td><td>montagne</td></tr>
+    <tr><td class="tk">H h</td><td class="ph">h aspiré, toujours prononcé</td><td>hava</td><td>météo</td></tr>
+    <tr><td class="tk">I ı</td><td class="ph">« eu » fermé, lèvres non arrondies</td><td>kız</td><td>fille</td></tr>
+    <tr><td class="tk">İ i</td><td class="ph">i (« lit »)</td><td>iyi</td><td>bien</td></tr>
+    <tr><td class="tk">J j</td><td class="ph">j (comme en français)</td><td>jilet</td><td>rasoir</td></tr>
+    <tr><td class="tk">K k</td><td class="ph">k</td><td>kitap</td><td>livre</td></tr>
+    <tr><td class="tk">L l</td><td class="ph">l</td><td>limon</td><td>citron</td></tr>
+    <tr><td class="tk">M m</td><td class="ph">m</td><td>masa</td><td>table</td></tr>
+    <tr><td class="tk">N n</td><td class="ph">n</td><td>ne</td><td>quoi</td></tr>
+    <tr><td class="tk">O o</td><td class="ph">o</td><td>okul</td><td>école</td></tr>
+    <tr><td class="tk">Ö ö</td><td class="ph">eu (« peu »)</td><td>göz</td><td>œil</td></tr>
+    <tr><td class="tk">P p</td><td class="ph">p</td><td>para</td><td>argent</td></tr>
+    <tr><td class="tk">R r</td><td class="ph">r roulé léger, jamais muet</td><td>renk</td><td>couleur</td></tr>
+    <tr><td class="tk">S s</td><td class="ph">s toujours sourd</td><td>su</td><td>eau</td></tr>
+    <tr><td class="tk">Ş ş</td><td class="ph">ch</td><td>şehir</td><td>ville</td></tr>
+    <tr><td class="tk">T t</td><td class="ph">t</td><td>tatlı</td><td>sucré</td></tr>
+    <tr><td class="tk">U u</td><td class="ph">ou</td><td>uçak</td><td>avion</td></tr>
+    <tr><td class="tk">Ü ü</td><td class="ph">u (« lune »)</td><td>üzüm</td><td>raisin</td></tr>
+    <tr><td class="tk">V v</td><td class="ph">v (proche du w anglais)</td><td>ev</td><td>maison</td></tr>
+    <tr><td class="tk">Y y</td><td class="ph">y semi-voyelle (« yeux »)</td><td>yol</td><td>route</td></tr>
+    <tr><td class="tk">Z z</td><td class="ph">z</td><td>zaman</td><td>temps</td></tr>
+  </table>
+
+  <div class="key">⚑ Règles fondamentales : (1) Toutes les lettres se prononcent. (2) Le ğ ne se prononce jamais — il allonge la voyelle précédente. (3) Le R final est toujours prononcé. (4) Phonétique absolue : on écrit exactement ce qu'on entend.</div>
+
+  <!-- Ex 0.1 -->
+  <div class="ex" id="ex01">
+    <h4>Exercice 0.1 — Lecture à voix haute (30 mots)</h4>
+    <p class="ex-instr">Lisez chaque mot à voix haute. Enregistrez-vous si possible et comparez sur Forvo.com. Marquez ★ les mots sur lesquels vous hésitez.</p>
+    <table id="tbl-ex01">
+      <tr><th></th><th>Turc</th><th>Prononciation</th><th>Traduction</th></tr>
+    </table>
+    <div class="actions">
+      <button class="btn btn-s" onclick="montrerCorr('c01')">Voir toutes les prononciations</button>
+    </div>
+    <div class="corr" id="c01">
+      <h5>✓ Prononciations détaillées</h5>
+      <p style="font-family:var(--font-sans);font-size:.8rem;margin-bottom:.5rem;">Majuscule = syllabe accentuée · : = allongement · ğ = jamais prononcé</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 1 ══════════ -->
+<section class="module" id="mod1">
+  <div class="mod-head"><span class="mod-num">Module 1</span><h2>L'harmonie vocalique</h2></div>
+
+  <p>C'est <strong>la règle numéro un du turc</strong> : les voyelles d'un mot s'harmonisent, et tous les suffixes s'adaptent à la dernière voyelle du radical.</p>
+
+  <h3>Les 8 voyelles — deux groupes</h3>
+  <table>
+    <tr><th>Groupe</th><th>Voyelles</th><th>Position dans la bouche</th></tr>
+    <tr><td><strong>Avant (ince)</strong></td><td class="tk">e · i · ö · ü</td><td>Articulées à l'avant, vers les dents</td></tr>
+    <tr><td><strong>Arrière (kalın)</strong></td><td class="tk">a · ı · o · u</td><td>Articulées à l'arrière, vers la gorge</td></tr>
+  </table>
+
+  <h3>Harmonie à 2 formes — suffixes e / a</h3>
+  <p>Voyelle finale dans le groupe avant → suffixe en <strong>-e</strong> · Voyelle finale dans le groupe arrière → suffixe en <strong>-a</strong></p>
+  <table>
+    <tr><th>Mot</th><th>Dernière voyelle</th><th>Groupe</th><th>Locatif</th><th>Traduction</th></tr>
+    <tr><td class="tk">ev</td><td>e</td><td>Avant</td><td class="tk">evde</td><td>à la maison</td></tr>
+    <tr><td class="tk">okul</td><td>u</td><td>Arrière</td><td class="tk">okulda</td><td>à l'école</td></tr>
+    <tr><td class="tk">şehir</td><td>i</td><td>Avant</td><td class="tk">şehirde</td><td>en ville</td></tr>
+    <tr><td class="tk">araba</td><td>a</td><td>Arrière</td><td class="tk">arabada</td><td>dans la voiture</td></tr>
+  </table>
+
+  <h3>Harmonie à 4 formes — suffixes i / ı / u / ü</h3>
+  <table>
+    <tr><th>Dernière voyelle</th><th>Forme du suffixe</th><th>Exemple : possessif « mon »</th></tr>
+    <tr><td>e · i</td><td class="tk">-i</td><td class="tk">evim (ma maison)</td></tr>
+    <tr><td>a · ı</td><td class="tk">-ı</td><td class="tk">kızım (ma fille)</td></tr>
+    <tr><td>o · u</td><td class="tk">-u</td><td class="tk">okulum (mon école)</td></tr>
+    <tr><td>ö · ü</td><td class="tk">-ü</td><td class="tk">gözüm (mon œil)</td></tr>
+  </table>
+
+  <div class="key">⚑ Méthode : pour tout suffixe, posez-vous d'abord la question « quelle est la dernière voyelle du mot ? » puis appliquez la règle.</div>
+
+  <!-- Ex 1.1 -->
+  <div class="ex" id="ex11">
+    <h4>Exercice 1.1 — Classer le groupe vocalique (10 mots)</h4>
+    <p class="ex-instr">Pour chaque mot, identifiez la dernière voyelle et choisissez son groupe : Avant ou Arrière.</p>
+    <div id="q11"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('q11','c11','s11','ex11')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('q11','s11','ex11')">Recommencer</button>
+      <span class="score" id="s11"></span>
+    </div>
+    <div class="corr" id="c11"><h5>✓ Correction</h5></div>
+  </div>
+
+  <!-- Ex 1.2 -->
+  <div class="ex" id="ex12">
+    <h4>Exercice 1.2 — Choisir le suffixe pluriel : -ler ou -lar (15 mots)</h4>
+    <p class="ex-instr">Choisissez le suffixe pluriel correct selon le groupe vocalique.</p>
+    <div id="q12"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('q12','c12','s12','ex12')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('q12','s12','ex12')">Recommencer</button>
+      <span class="score" id="s12"></span>
+    </div>
+    <div class="corr" id="c12"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 2 ══════════ -->
+<section class="module" id="mod2">
+  <div class="mod-head"><span class="mod-num">Module 2</span><h2>Pronoms personnels et verbe être</h2></div>
+
+  <h3>Pronoms personnels</h3>
+  <table>
+    <tr><th>Turc</th><th>Prononciation</th><th>Français</th></tr>
+    <tr><td class="tk">Ben</td><td class="ph">bèn</td><td>Je</td></tr>
+    <tr><td class="tk">Sen</td><td class="ph">sèn</td><td>Tu</td></tr>
+    <tr><td class="tk">O</td><td class="ph">o</td><td>Il / Elle</td></tr>
+    <tr><td class="tk">Biz</td><td class="ph">biz</td><td>Nous</td></tr>
+    <tr><td class="tk">Siz</td><td class="ph">siz</td><td>Vous (pluriel ou formel)</td></tr>
+    <tr><td class="tk">Onlar</td><td class="ph">on-LAR</td><td>Ils / Elles</td></tr>
+  </table>
+
+  <h3>Le verbe être — suffixes personnels</h3>
+  <p>En turc, "être" n'est pas un verbe séparé : on ajoute un <strong>suffixe</strong> directement à l'adjectif ou au nom. L'harmonie vocalique s'applique à ces suffixes.</p>
+  <table>
+    <tr><th>Pronom</th><th>Suffixe (4 formes)</th><th>Exemple avec öğrenci (étudiant)</th><th>Prononciation</th></tr>
+    <tr><td class="tk">Ben</td><td class="tk">-(y)im/ım/um/üm</td><td class="tk">Ben öğrenciyim</td><td class="ph">bèn eu-rèn-dji-YIM</td></tr>
+    <tr><td class="tk">Sen</td><td class="tk">-sin/sın/sun/sün</td><td class="tk">Sen öğrencisin</td><td class="ph">sèn eu-rèn-dji-SIN</td></tr>
+    <tr><td class="tk">O</td><td class="tk">— (ou -dır/-dir formel)</td><td class="tk">O öğrenci</td><td class="ph">o eu-rèn-DJI</td></tr>
+    <tr><td class="tk">Biz</td><td class="tk">-(y)iz/ız/uz/üz</td><td class="tk">Biz öğrenciyiz</td><td class="ph">biz eu-rèn-dji-YIZ</td></tr>
+    <tr><td class="tk">Siz</td><td class="tk">-siniz/sınız/sunuz/sünüz</td><td class="tk">Siz öğrencisiniz</td><td class="ph">siz eu-rèn-dji-si-NIZ</td></tr>
+    <tr><td class="tk">Onlar</td><td class="tk">-ler/-lar</td><td class="tk">Onlar öğrenciler</td><td class="ph">on-LAR eu-rèn-dji-LÈR</td></tr>
+  </table>
+
+  <h3>Négation avec değil (ne pas être)</h3>
+  <table>
+    <tr><th>Turc</th><th>Prononciation</th><th>Traduction</th></tr>
+    <tr><td class="tk">Ben öğrenci değilim</td><td class="ph">dè-IL-im</td><td>Je ne suis pas étudiant</td></tr>
+    <tr><td class="tk">O yorgun değil</td><td class="ph">dè-IL</td><td>Il n'est pas fatigué</td></tr>
+  </table>
+
+  <h3>Interrogation avec mi / mı / mu / mü</h3>
+  <table>
+    <tr><th>Turc</th><th>Prononciation</th><th>Traduction</th></tr>
+    <tr><td class="tk">Sen öğrenci misin?</td><td class="ph">mi-SIN</td><td>Es-tu étudiant ?</td></tr>
+    <tr><td class="tk">O mutlu mu?</td><td class="ph">mout-LOU mou</td><td>Est-il content ?</td></tr>
+    <tr><td class="tk">Siz hazır mısınız?</td><td class="ph">ha-ZUR meu-seu-NEUZ</td><td>Êtes-vous prêts ?</td></tr>
+  </table>
+
+  <!-- Ex 2.1 -->
+  <div class="ex" id="ex21">
+    <h4>Exercice 2.1 — Conjuguer yorgun (fatigué) à toutes les personnes</h4>
+    <p class="ex-instr">Tapez la forme complète (pronom + adjectif + suffixe). Dernière voyelle de yorgun = u → groupe arrière.</p>
+    <div id="f21"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('f21','c21','s21','ex21')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('f21','s21','ex21')">Recommencer</button>
+      <span class="score" id="s21"></span>
+    </div>
+    <div class="corr" id="c21">
+      <h5>✓ Correction complète</h5>
+      <table>
+        <tr><th>Pronom</th><th>Forme correcte</th><th>Prononciation</th></tr>
+        <tr><td>Ben</td><td class="tk">Ben yorgunum</td><td class="ph">bèn yor-gou-NOUM</td></tr>
+        <tr><td>Sen</td><td class="tk">Sen yorgunsun</td><td class="ph">sèn yor-goun-SOUN</td></tr>
+        <tr><td>O</td><td class="tk">O yorgun</td><td class="ph">o yor-GOUN</td></tr>
+        <tr><td>Biz</td><td class="tk">Biz yorgunuz</td><td class="ph">biz yor-gou-NOUZ</td></tr>
+        <tr><td>Siz</td><td class="tk">Siz yorgunsunuz</td><td class="ph">siz yor-goun-sou-NOUZ</td></tr>
+        <tr><td>Onlar</td><td class="tk">Onlar yorgunlar</td><td class="ph">on-LAR yor-goun-LAR</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Ex 2.2 -->
+  <div class="ex" id="ex22">
+    <h4>Exercice 2.2 — Choisir le bon suffixe de « être »</h4>
+    <p class="ex-instr">Sélectionnez la terminaison correcte. Attention à l'harmonie vocalique.</p>
+    <div id="q22"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('q22','c22','s22','ex22')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('q22','s22','ex22')">Recommencer</button>
+      <span class="score" id="s22"></span>
+    </div>
+    <div class="corr" id="c22"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 3 ══════════ -->
+<section class="module" id="mod3">
+  <div class="mod-head"><span class="mod-num">Module 3</span><h2>Suffixes possessifs et structure izafet</h2></div>
+
+  <h3>Suffixes possessifs</h3>
+  <table>
+    <tr><th>Possesseur</th><th>Suffixe (4 formes)</th><th>Exemple avec kitap → livre</th><th>Traduction</th></tr>
+    <tr><td>Mon / ma</td><td class="tk">-(i/ı/u/ü)m</td><td class="tk">kitabım</td><td>mon livre</td></tr>
+    <tr><td>Ton / ta</td><td class="tk">-(i/ı/u/ü)n</td><td class="tk">kitabın</td><td>ton livre</td></tr>
+    <tr><td>Son / sa</td><td class="tk">-(s)(i/ı/u/ü)</td><td class="tk">kitabı</td><td>son livre</td></tr>
+    <tr><td>Notre</td><td class="tk">-(i/ı/u/ü)miz</td><td class="tk">kitabımız</td><td>notre livre</td></tr>
+    <tr><td>Votre</td><td class="tk">-(i/ı/u/ü)niz</td><td class="tk">kitabınız</td><td>votre livre</td></tr>
+    <tr><td>Leur</td><td class="tk">-leri / -ları</td><td class="tk">kitapları</td><td>leur livre</td></tr>
+  </table>
+  <div class="note">⚠ Mutation consonantique : certains mots voient leur dernière consonne changer devant une voyelle. Les couples les plus courants : p→b · ç→c · t→d · k→ğ. Ex : kitap → kitabım.</div>
+
+  <h3>La structure izafet (groupe nominal)</h3>
+  <p>Pour exprimer « le X de Y », le turc inverse l'ordre et marque les deux éléments :</p>
+  <ol>
+    <li>Le possesseur reçoit le suffixe génitif <strong>-in / -ın / -un / -ün</strong> (ou -nin / -nın... après voyelle)</li>
+    <li>L'objet possédé reçoit le suffixe possessif 3ᵉ personne <strong>-(s)i / -(s)ı / -(s)u / -(s)ü</strong></li>
+  </ol>
+  <table>
+    <tr><th>Turc</th><th>Analyse</th><th>Traduction</th></tr>
+    <tr><td class="tk">öğretmenin kitabı</td><td>öğretmen-<em>in</em> + kitab-<em>ı</em></td><td>le livre du professeur</td></tr>
+    <tr><td class="tk">Ali'nin evi</td><td>Ali-<em>nin</em> + ev-<em>i</em></td><td>la maison d'Ali</td></tr>
+    <tr><td class="tk">Türkiye'nin başkenti</td><td>Türkiye-<em>nin</em> + başkent-<em>i</em></td><td>la capitale de la Turquie</td></tr>
+    <tr><td class="tk">annemin çantası</td><td>anne-<em>min</em> + çanta-<em>sı</em></td><td>le sac de ma mère</td></tr>
+  </table>
+
+  <!-- Ex 3.1 -->
+  <div class="ex" id="ex31">
+    <h4>Exercice 3.1 — Former des groupes nominaux izafet</h4>
+    <p class="ex-instr">Tapez le groupe nominal complet. Exemple : voiture + Ali → Ali'nin arabası</p>
+    <div id="f31"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('f31','c31','s31','ex31')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('f31','s31','ex31')">Recommencer</button>
+      <span class="score" id="s31"></span>
+    </div>
+    <div class="corr" id="c31">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Éléments</th><th>Forme correcte</th><th>Traduction</th></tr>
+        <tr><td>maison + Ali</td><td class="tk">Ali'nin evi</td><td>la maison d'Ali</td></tr>
+        <tr><td>livre + professeur</td><td class="tk">öğretmenin kitabı</td><td>le livre du professeur</td></tr>
+        <tr><td>sac + mère</td><td class="tk">annenin çantası</td><td>le sac de la mère</td></tr>
+        <tr><td>capitale + Turquie</td><td class="tk">Türkiye'nin başkenti</td><td>la capitale de la Turquie</td></tr>
+        <tr><td>voiture + père</td><td class="tk">babanın arabası</td><td>la voiture du père</td></tr>
+        <tr><td>nom + chat</td><td class="tk">kedinin adı</td><td>le nom du chat</td></tr>
+        <tr><td>porte + maison</td><td class="tk">evin kapısı</td><td>la porte de la maison</td></tr>
+        <tr><td>parc + ville</td><td class="tk">şehrin parkı</td><td>le parc de la ville</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 4 ══════════ -->
+<section class="module" id="mod4">
+  <div class="mod-head"><span class="mod-num">Module 4</span><h2>Cas locatif et datif</h2></div>
+
+  <h3>Cas locatif — -de / -da : « à, dans, sur, en »</h3>
+  <p>Exprime une <strong>situation</strong> (où l'on est). Le suffixe s'assimile selon la sonorité de la consonne finale.</p>
+  <table>
+    <tr><th>Consonne finale</th><th>Groupe vocalique</th><th>Suffixe</th><th>Exemple</th></tr>
+    <tr><td>Sonore ou voyelle</td><td>Avant</td><td class="tk">-de</td><td class="tk">evde (à la maison)</td></tr>
+    <tr><td>Sonore ou voyelle</td><td>Arrière</td><td class="tk">-da</td><td class="tk">okulda (à l'école)</td></tr>
+    <tr><td>Sourde (ç f h k p s ş t)</td><td>Avant</td><td class="tk">-te</td><td class="tk">sokakta (dans la rue)</td></tr>
+    <tr><td>Sourde (ç f h k p s ş t)</td><td>Arrière</td><td class="tk">-ta</td><td class="tk">parkta (au parc)</td></tr>
+  </table>
+
+  <h3>Cas datif — -e / -a : « vers, à » (direction)</h3>
+  <p>Exprime un <strong>mouvement vers</strong>. Si le mot se termine par une voyelle, on intercale le -y- tampon.</p>
+  <table>
+    <tr><th>Terminaison du mot</th><th>Groupe vocalique</th><th>Suffixe</th><th>Exemple</th></tr>
+    <tr><td>Consonne</td><td>Avant</td><td class="tk">-e</td><td class="tk">eve (vers la maison)</td></tr>
+    <tr><td>Consonne</td><td>Arrière</td><td class="tk">-a</td><td class="tk">okula (vers l'école)</td></tr>
+    <tr><td>Voyelle</td><td>Avant</td><td class="tk">-ye</td><td class="tk">Türkiye'ye (vers la Turquie)</td></tr>
+    <tr><td>Voyelle</td><td>Arrière</td><td class="tk">-ya</td><td class="tk">arabaya (vers la voiture)</td></tr>
+  </table>
+  <div class="key">⚑ Astuce : Locatif = où je SUIS (station) · Datif = où je VAIS (direction).</div>
+
+  <!-- Ex 4.1 -->
+  <div class="ex" id="ex41">
+    <h4>Exercice 4.1 — Locatif ou datif ? (8 phrases)</h4>
+    <p class="ex-instr">Choisissez la forme correcte du nom avec son suffixe. Identifiez d'abord si la phrase exprime une situation ou un mouvement.</p>
+    <div id="q41"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('q41','c41','s41','ex41')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('q41','s41','ex41')">Recommencer</button>
+      <span class="score" id="s41"></span>
+    </div>
+    <div class="corr" id="c41"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 5 ══════════ -->
+<section class="module" id="mod5">
+  <div class="mod-head"><span class="mod-num">Module 5</span><h2>Le présent progressif en -yor</h2></div>
+
+  <p>Le présent progressif exprime une action en cours. Il correspond au français « je suis en train de… ».</p>
+  <div class="key">Formule : <strong>Radical + voyelle de liaison (i/ı/u/ü) + yor + suffixe personnel</strong></div>
+
+  <h3>Tableau de conjugaison</h3>
+  <table>
+    <tr><th>Pronom</th><th>gelmek (venir)</th><th>gitmek (aller)</th><th>yemek (manger)</th><th>çalışmak (travailler)</th></tr>
+    <tr><td>Ben</td><td class="tk">geliyorum</td><td class="tk">gidiyorum</td><td class="tk">yiyorum</td><td class="tk">çalışıyorum</td></tr>
+    <tr><td>Sen</td><td class="tk">geliyorsun</td><td class="tk">gidiyorsun</td><td class="tk">yiyorsun</td><td class="tk">çalışıyorsun</td></tr>
+    <tr><td>O</td><td class="tk">geliyor</td><td class="tk">gidiyor</td><td class="tk">yiyor</td><td class="tk">çalışıyor</td></tr>
+    <tr><td>Biz</td><td class="tk">geliyoruz</td><td class="tk">gidiyoruz</td><td class="tk">yiyoruz</td><td class="tk">çalışıyoruz</td></tr>
+    <tr><td>Siz</td><td class="tk">geliyorsunuz</td><td class="tk">gidiyorsunuz</td><td class="tk">yiyorsunuz</td><td class="tk">çalışıyorsunuz</td></tr>
+    <tr><td>Onlar</td><td class="tk">geliyorlar</td><td class="tk">gidiyorlar</td><td class="tk">yiyorlar</td><td class="tk">çalışıyorlar</td></tr>
+  </table>
+
+  <h3>Négation : insérer -mi/-mı/-mu/-mü avant -yor</h3>
+  <table>
+    <tr><th>Affirmatif</th><th>Négatif</th><th>Traduction négation</th></tr>
+    <tr><td class="tk">geliyorum</td><td class="tk">gelmiyorum</td><td>Je ne viens pas</td></tr>
+    <tr><td class="tk">gidiyorum</td><td class="tk">gitmiyorum</td><td>Je ne vais pas</td></tr>
+    <tr><td class="tk">yiyorum</td><td class="tk">yemiyorum</td><td>Je ne mange pas</td></tr>
+    <tr><td class="tk">çalışıyorum</td><td class="tk">çalışmıyorum</td><td>Je ne travaille pas</td></tr>
+  </table>
+
+  <h3>Verbes essentiels A1</h3>
+  <table>
+    <tr><th>Infinitif</th><th>Prononciation</th><th>Traduction</th><th>Ben (présent)</th></tr>
+    <tr><td class="tk">gitmek</td><td class="ph">guit-MÈK</td><td>aller</td><td class="tk">gidiyorum</td></tr>
+    <tr><td class="tk">gelmek</td><td class="ph">guèl-MÈK</td><td>venir</td><td class="tk">geliyorum</td></tr>
+    <tr><td class="tk">yemek</td><td class="ph">yè-MÈK</td><td>manger</td><td class="tk">yiyorum</td></tr>
+    <tr><td class="tk">içmek</td><td class="ph">itch-MÈK</td><td>boire</td><td class="tk">içiyorum</td></tr>
+    <tr><td class="tk">okumak</td><td class="ph">o-kou-MAK</td><td>lire</td><td class="tk">okuyorum</td></tr>
+    <tr><td class="tk">yazmak</td><td class="ph">yaz-MAK</td><td>écrire</td><td class="tk">yazıyorum</td></tr>
+    <tr><td class="tk">konuşmak</td><td class="ph">ko-nouch-MAK</td><td>parler</td><td class="tk">konuşuyorum</td></tr>
+    <tr><td class="tk">çalışmak</td><td class="ph">tcha-lich-MAK</td><td>travailler</td><td class="tk">çalışıyorum</td></tr>
+    <tr><td class="tk">istemek</td><td class="ph">is-tè-MÈK</td><td>vouloir</td><td class="tk">istiyorum</td></tr>
+    <tr><td class="tk">sevmek</td><td class="ph">sèv-MÈK</td><td>aimer</td><td class="tk">seviyorum</td></tr>
+  </table>
+
+  <!-- Ex 5.1 -->
+  <div class="ex" id="ex51">
+    <h4>Exercice 5.1 — Conjuguer au présent -yor (formes affirmative et négative)</h4>
+    <p class="ex-instr">Tapez la forme demandée pour « Ben » (1ʳᵉ personne du singulier).</p>
+    <div id="f51"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('f51','c51','s51','ex51')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('f51','s51','ex51')">Recommencer</button>
+      <span class="score" id="s51"></span>
+    </div>
+    <div class="corr" id="c51">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Verbe</th><th>Affirmatif (ben)</th><th>Négatif (ben)</th></tr>
+        <tr><td>içmek</td><td class="tk">içiyorum</td><td class="tk">içmiyorum</td></tr>
+        <tr><td>okumak</td><td class="tk">okuyorum</td><td class="tk">okumuyorum</td></tr>
+        <tr><td>yazmak</td><td class="tk">yazıyorum</td><td class="tk">yazmıyorum</td></tr>
+        <tr><td>sevmek</td><td class="tk">seviyorum</td><td class="tk">sevmiyorum</td></tr>
+        <tr><td>çalışmak</td><td class="tk">çalışıyorum</td><td class="tk">çalışmıyorum</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ VOCABULAIRE ══════════ -->
+<section class="module" id="vocab">
+  <div class="mod-head"><span class="mod-num">Vocabulaire</span><h2>Vocabulaire A1 par thème</h2></div>
+  <p style="font-family:var(--font-sans);font-size:.83rem;color:var(--muted);margin-bottom:1rem;">Cliquez sur ★ pour ajouter un mot à votre liste de révision. Vos favoris sont sauvegardés automatiquement.</p>
+  <div id="voc-themes"></div>
+</section>
+
+<!-- ══════════ TEST FINAL ══════════ -->
+<section class="module" id="test">
+  <div class="mod-head"><span class="mod-num">Test final</span><h2>Test final A1 — Auto-évaluation</h2></div>
+  <p style="font-family:var(--font-sans);font-size:.86rem;color:var(--muted);margin-bottom:1.3rem;">Durée estimée : 45 minutes. Effectuez ce test sans consulter vos notes. Il couvre l'ensemble des modules A1.</p>
+
+  <div class="test-part">
+    <h3>Partie 1 — Harmonie vocalique et pluriel</h3>
+    <div id="qt1"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qt1','ct1','st1','tst1')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qt1','st1','tst1')">Recommencer</button>
+      <span class="score" id="st1"></span>
+    </div>
+    <div class="corr" id="ct1"><h5>✓ Correction</h5></div>
+  </div>
+
+  <div class="test-part">
+    <h3>Partie 2 — Conjugaison (être et -yor)</h3>
+    <div id="ft2"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('ft2','ct2','st2','tst2')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('ft2','st2','tst2')">Recommencer</button>
+      <span class="score" id="st2"></span>
+    </div>
+    <div class="corr" id="ct2">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Phrase</th><th>Réponse correcte</th><th>Traduction</th></tr>
+        <tr><td>Ben hasta ___</td><td class="tk">hastayım</td><td>Je suis malade</td></tr>
+        <tr><td>O çalış___</td><td class="tk">çalışıyor</td><td>Il/elle travaille</td></tr>
+        <tr><td>Biz git___ (aller)</td><td class="tk">gidiyoruz</td><td>Nous allons</td></tr>
+        <tr><td>Siz içmiyor___</td><td class="tk">içmiyorsunuz</td><td>Vous ne buvez pas</td></tr>
+        <tr><td>Onlar oku___ (lire)</td><td class="tk">okuyorlar</td><td>Ils lisent</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="test-part">
+    <h3>Partie 3 — Traduction FR → TR</h3>
+    <div id="ft3"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('ft3','ct3','st3','tst3')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('ft3','st3','tst3')">Recommencer</button>
+      <span class="score" id="st3"></span>
+    </div>
+    <div class="corr" id="ct3">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Français</th><th>Turc</th><th>Prononciation</th></tr>
+        <tr><td>Bonjour</td><td class="tk">Merhaba</td><td class="ph">mèr-ha-BA</td></tr>
+        <tr><td>Merci</td><td class="tk">Teşekkür ederim</td><td class="ph">tè-chèk-kur è-dè-RIM</td></tr>
+        <tr><td>La maison</td><td class="tk">ev</td><td class="ph">èv</td></tr>
+        <tr><td>Lire (infinitif)</td><td class="tk">okumak</td><td class="ph">o-kou-MAK</td></tr>
+        <tr><td>Rouge</td><td class="tk">kırmızı</td><td class="ph">keur-meu-ZEU</td></tr>
+        <tr><td>La mère</td><td class="tk">anne</td><td class="ph">an-NÈ</td></tr>
+        <tr><td>Aujourd'hui</td><td class="tk">bugün</td><td class="ph">bou-GUN</td></tr>
+        <tr><td>Je suis étudiant</td><td class="tk">Ben öğrenciyim</td><td class="ph">eu-rèn-dji-YIM</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MOTS À REVOIR ══════════ -->
+<!-- ══════════ MODULE 6 ══════════ -->
+<section class="module" id="mod6">
+  <div class="mod-head"><span class="mod-num">Module 6 — A1.2</span><h2>Le cas accusatif</h2></div>
+
+  <div class="note">⚠ Erreur systématique des francophones : en français, le COD n'est pas marqué morphologiquement sur le nom. En turc, tout COD <strong>défini</strong> porte obligatoirement un suffixe. L'oubli de ce suffixe est la faute numéro un à ce stade.</div>
+
+  <h3>Défini vs. indéfini — la règle absolue</h3>
+  <p>La distinction est sans exception : le COD <strong>défini</strong> (« le / la / les / ce / mon... ») reçoit le suffixe accusatif. Le COD <strong>indéfini</strong> (« un / une / des ») reste au nominatif sans suffixe.</p>
+  <table>
+    <tr><th>Phrase française</th><th>Turc</th><th>Analyse</th></tr>
+    <tr><td>Je lis <em>un</em> livre</td><td class="tk">Kitap okuyorum</td><td>Indéfini → nominatif, aucun suffixe</td></tr>
+    <tr><td>Je lis <em>le</em> livre</td><td class="tk">Kitab<strong>ı</strong> okuyorum</td><td>Défini → accusatif obligatoire</td></tr>
+    <tr><td>Il cherche <em>une</em> maison</td><td class="tk">Ev arıyor</td><td>Indéfini → nominatif</td></tr>
+    <tr><td>Il cherche <em>sa</em> maison</td><td class="tk">Ev<strong>i</strong> arıyor</td><td>Défini → accusatif</td></tr>
+    <tr><td>Je vois <em>des</em> voitures</td><td class="tk">Araba görüyorum</td><td>Indéfini → nominatif</td></tr>
+    <tr><td>Je vois <em>les</em> voitures</td><td class="tk">Arabalar<strong>ı</strong> görüyorum</td><td>Défini + pluriel → accusatif</td></tr>
+  </table>
+
+  <h3>Formation — harmonie à 4 formes</h3>
+  <div class="key">Formule : radical + <strong>(y) + i / ı / u / ü</strong><br>Le (y) est un tampon inséré <em>uniquement</em> si le radical se termine par une voyelle.</div>
+
+  <table>
+    <tr><th>Mot</th><th>Traduction</th><th>Dern. voyelle</th><th>Accusatif</th><th>Note</th></tr>
+    <tr><td class="tk">ev</td><td>maison</td><td>e → avant</td><td class="tk">ev<strong>i</strong></td><td>—</td></tr>
+    <tr><td class="tk">gün</td><td>jour</td><td>ü → avant</td><td class="tk">gün<strong>ü</strong></td><td>—</td></tr>
+    <tr><td class="tk">kız</td><td>fille</td><td>ı → arrière</td><td class="tk">kız<strong>ı</strong></td><td>—</td></tr>
+    <tr><td class="tk">okul</td><td>école</td><td>u → arrière</td><td class="tk">okul<strong>u</strong></td><td>—</td></tr>
+    <tr><td class="tk">kedi</td><td>chat</td><td>i → avant</td><td class="tk">kedi<strong>yi</strong></td><td>Voyelle → tampon -y-</td></tr>
+    <tr><td class="tk">araba</td><td>voiture</td><td>a → arrière</td><td class="tk">araba<strong>yı</strong></td><td>Voyelle → tampon -y-</td></tr>
+    <tr><td class="tk">su</td><td>eau</td><td>u → arrière</td><td class="tk">su<strong>yu</strong></td><td>Voyelle → tampon -y-</td></tr>
+  </table>
+
+  <h3>Mutations consonantiques (ünsüz yumuşaması)</h3>
+  <p>Avant toute voyelle suffixée, quatre consonnes finales s'adoucissent dans les mots d'origine turque. À mémoriser impérativement :</p>
+  <table>
+    <tr><th>Consonne → mutation</th><th>Exemple (nominatif)</th><th>Accusatif</th><th>Traduction</th></tr>
+    <tr><td class="tk">p → b</td><td class="tk">kitap</td><td class="tk">kitab<strong>ı</strong></td><td>le livre</td></tr>
+    <tr><td class="tk">ç → c</td><td class="tk">ağaç</td><td class="tk">ağac<strong>ı</strong></td><td>l'arbre</td></tr>
+    <tr><td class="tk">k → ğ</td><td class="tk">köpek</td><td class="tk">köpeğ<strong>i</strong></td><td>le chien</td></tr>
+    <tr><td class="tk">t → d</td><td class="tk">kanat</td><td class="tk">kanad<strong>ı</strong></td><td>l'aile</td></tr>
+  </table>
+  <div class="note">Les mots empruntés (arabe, persan, français, anglais) ne mutent pas systématiquement. Exemples sans mutation : <span class="tk">otobüs → otobüsü</span>, <span class="tk">müzik → müziği</span> (k→ğ s'applique ici). En cas de doute : dictionnaire.</div>
+
+  <div class="ex" id="ex61">
+    <h4>Exercice 6.1 — Former l'accusatif correct</h4>
+    <p class="ex-instr">Choisissez la forme accusatif exacte. Appliquez l'harmonie vocalique ET les mutations consonantiques le cas échéant.</p>
+    <div id="q61"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('q61','c61','s61','ex61')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('q61','s61','ex61')">Recommencer</button>
+      <span class="score" id="s61"></span>
+    </div>
+    <div class="corr" id="c61"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 7 ══════════ -->
+<section class="module" id="mod7">
+  <div class="mod-head"><span class="mod-num">Module 7 — A1.2</span><h2>Le cas ablatif</h2></div>
+
+  <p>L'ablatif est le cas de l'<strong>éloignement, de l'origine et de la comparaison</strong>. Il correspond à « de, depuis, à partir de, que (comparatif) » en français.</p>
+
+  <h3>Formation — assimilation avec la consonne finale</h3>
+  <div class="key">Formule : radical + <strong>-den / -dan / -ten / -tan</strong><br>La règle : consonne sonore (ou voyelle) → <strong>-d-</strong> · consonne sourde → <strong>-t-</strong><br>Consonnes sourdes à retenir : ç · f · h · k · p · s · ş · t</div>
+
+  <table>
+    <tr><th>Mot</th><th>Traduction</th><th>Dern. consonne</th><th>Ablatif</th></tr>
+    <tr><td class="tk">ev</td><td>maison</td><td>v sonore / avant</td><td class="tk">ev<strong>den</strong></td></tr>
+    <tr><td class="tk">okul</td><td>école</td><td>l sonore / arrière</td><td class="tk">okul<strong>dan</strong></td></tr>
+    <tr><td class="tk">şehir</td><td>ville</td><td>r sonore / avant</td><td class="tk">şehir<strong>den</strong></td></tr>
+    <tr><td class="tk">araba</td><td>voiture</td><td>voyelle / arrière</td><td class="tk">araba<strong>dan</strong></td></tr>
+    <tr><td class="tk">kitap</td><td>livre</td><td>p sourd / arrière</td><td class="tk">kitap<strong>tan</strong></td></tr>
+    <tr><td class="tk">park</td><td>parc</td><td>k sourd / arrière</td><td class="tk">park<strong>tan</strong></td></tr>
+    <tr><td class="tk">ders</td><td>cours</td><td>s sourd / avant</td><td class="tk">ders<strong>ten</strong></td></tr>
+    <tr><td class="tk">otobüs</td><td>bus</td><td>s sourd / avant</td><td class="tk">otobüs<strong>ten</strong></td></tr>
+  </table>
+
+  <h3>Les quatre emplois essentiels de l'ablatif</h3>
+
+  <h4>1. Provenance / origine</h4>
+  <table>
+    <tr><th>Turc</th><th>Traduction</th></tr>
+    <tr><td class="tk">Evden geliyorum</td><td>Je viens de la maison</td></tr>
+    <tr><td class="tk">Türkiye'den geliyorum</td><td>Je viens de Turquie</td></tr>
+    <tr><td class="tk">Okuldan çıkıyorum</td><td>Je sors de l'école</td></tr>
+  </table>
+
+  <h4>2. Matière (« fait de »)</h4>
+  <table>
+    <tr><th>Turc</th><th>Traduction</th></tr>
+    <tr><td class="tk">tahtadan masa</td><td>table en bois</td></tr>
+    <tr><td class="tk">altından yüzük</td><td>bague en or</td></tr>
+  </table>
+
+  <h4>3. Comparatif (« que »)</h4>
+  <p>En turc, la comparaison se construit avec l'ablatif là où le français utilise « que » :</p>
+  <table>
+    <tr><th>Turc</th><th>Traduction</th><th>Structure</th></tr>
+    <tr><td class="tk">Sen<strong>den</strong> büyüğüm</td><td>Je suis plus grand que toi</td><td>toi-ABL + grand-je suis</td></tr>
+    <tr><td class="tk">İstanbul Ankara'<strong>dan</strong> büyük</td><td>Istanbul est plus grande qu'Ankara</td><td>Ankara-ABL + grande</td></tr>
+    <tr><td class="tk">Bu otobüs şehir<strong>den</strong> hızlı</td><td>Ce bus est plus rapide que la ville</td><td>—</td></tr>
+  </table>
+
+  <h4>4. En combinaison avec les postpositions (voir Module 8)</h4>
+  <table>
+    <tr><th>Turc</th><th>Traduction</th></tr>
+    <tr><td class="tk">Okul<strong>dan</strong> sonra</td><td>Après l'école (okuldan + sonra)</td></tr>
+    <tr><td class="tk">Ders<strong>ten</strong> önce</td><td>Avant le cours (dersten + önce)</td></tr>
+  </table>
+
+  <div class="ex" id="ex71">
+    <h4>Exercice 7.1 — Mettre à l'ablatif</h4>
+    <p class="ex-instr">Tapez la forme ablatif correcte. Attention : consonne sourde → -t-, consonne sonore ou voyelle → -d-.</p>
+    <div id="f71"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('f71','c71','s71','ex71')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('f71','s71','ex71')">Recommencer</button>
+      <span class="score" id="s71"></span>
+    </div>
+    <div class="corr" id="c71">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Nominatif</th><th>Ablatif</th><th>Règle appliquée</th></tr>
+        <tr><td class="tk">ev</td><td class="tk">evden</td><td>v sonore, e avant → -den</td></tr>
+        <tr><td class="tk">okul</td><td class="tk">okuldan</td><td>l sonore, u arrière → -dan</td></tr>
+        <tr><td class="tk">kitap</td><td class="tk">kitaptan</td><td>p sourd, a arrière → -tan</td></tr>
+        <tr><td class="tk">şehir</td><td class="tk">şehirden</td><td>r sonore, i avant → -den</td></tr>
+        <tr><td class="tk">park</td><td class="tk">parktan</td><td>k sourd, a arrière → -tan</td></tr>
+        <tr><td class="tk">İstanbul</td><td class="tk">İstanbul'dan</td><td>l sonore, u arrière → -dan</td></tr>
+        <tr><td class="tk">Türkiye</td><td class="tk">Türkiye'den</td><td>voyelle finale, e avant → -den</td></tr>
+        <tr><td class="tk">otobüs</td><td class="tk">otobüsten</td><td>s sourd, ü avant → -ten</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 8 ══════════ -->
+<section class="module" id="mod8">
+  <div class="mod-head"><span class="mod-num">Module 8 — A1.2</span><h2>Les postpositions essentielles</h2></div>
+
+  <div class="note">Contrairement aux <em>pré</em>positions françaises qui précèdent le nom, les <em>post</em>positions turques le suivent. De plus, certaines exigent un cas particulier sur le nom qui les précède. Ce n'est pas optionnel.</div>
+
+  <h3>Tableau des postpositions A1.2</h3>
+  <table>
+    <tr><th>Postposition</th><th>Prononciation</th><th>Cas requis sur le nom</th><th>Sens</th><th>Exemple</th></tr>
+    <tr><td class="tk">ile / -(y)le/-(y)la</td><td class="ph">i-LÈ</td><td>Nominatif</td><td>avec</td><td class="tk">Ali ile / Ali'yle</td></tr>
+    <tr><td class="tk">için</td><td class="ph">i-TCHIN</td><td>Nominatif</td><td>pour</td><td class="tk">sen için (pour toi)</td></tr>
+    <tr><td class="tk">gibi</td><td class="ph">gui-BI</td><td>Nominatif</td><td>comme</td><td class="tk">su gibi (comme l'eau)</td></tr>
+    <tr><td class="tk">kadar</td><td class="ph">ka-DAR</td><td>Datif ou Nominatif</td><td>jusqu'à / autant que</td><td class="tk">okula kadar</td></tr>
+    <tr><td class="tk">-den sonra</td><td class="ph">son-RA</td><td><strong>Ablatif</strong></td><td>après</td><td class="tk">okuldan sonra</td></tr>
+    <tr><td class="tk">-den önce</td><td class="ph">eun-DJÈ</td><td><strong>Ablatif</strong></td><td>avant</td><td class="tk">dersten önce</td></tr>
+    <tr><td class="tk">-e göre</td><td class="ph">geu-RÈ</td><td><strong>Datif</strong></td><td>selon, d'après</td><td class="tk">bana göre (selon moi)</td></tr>
+    <tr><td class="tk">-de karşı</td><td class="ph">kar-CHEU</td><td><strong>Datif</strong></td><td>en face de, contre</td><td class="tk">eve karşı (en face de la maison)</td></tr>
+  </table>
+
+  <h3>La postposition ile et ses formes suffixées</h3>
+  <p><span class="tk">ile</span> peut se suffixer directement au nom. La voyelle s'harmonise, et si le nom finit par une voyelle, on ajoute le tampon -(y)- :</p>
+  <table>
+    <tr><th>Forme libre</th><th>Forme suffixée</th><th>Traduction</th></tr>
+    <tr><td class="tk">Ali ile</td><td class="tk">Ali'yle</td><td>avec Ali</td></tr>
+    <tr><td class="tk">arkadaş ile</td><td class="tk">arkadaşla</td><td>avec l'ami</td></tr>
+    <tr><td class="tk">araba ile</td><td class="tk">arabayla</td><td>avec la voiture / en voiture</td></tr>
+    <tr><td class="tk">tren ile</td><td class="tk">trenle</td><td>avec le train / en train</td></tr>
+  </table>
+  <div class="key">⚑ Les deux formes (libre et suffixée) sont correctes et interchangeables. La forme suffixée est plus courante à l'oral.</div>
+
+  <h3>Exemples en contexte</h3>
+  <table>
+    <tr><th>Turc</th><th>Traduction</th><th>Postposition utilisée</th></tr>
+    <tr><td class="tk">Bu hediye senin için.</td><td>Ce cadeau est pour toi.</td><td>için (nominatif)</td></tr>
+    <tr><td class="tk">O, su gibi konuşuyor.</td><td>Il parle comme de l'eau (facilement).</td><td>gibi (nominatif)</td></tr>
+    <tr><td class="tk">Okuldan sonra parkta buluşalım.</td><td>Retrouvons-nous au parc après l'école.</td><td>-dan sonra (ablatif)</td></tr>
+    <tr><td class="tk">Bana göre o haklı.</td><td>Selon moi, il a raison.</td><td>-a göre (datif)</td></tr>
+    <tr><td class="tk">Evden okula kadar yürüyorum.</td><td>Je marche de la maison jusqu'à l'école.</td><td>-den (ablatif) + -a kadar (datif)</td></tr>
+  </table>
+
+  <div class="ex" id="ex81">
+    <h4>Exercice 8.1 — Choisir la bonne postposition</h4>
+    <p class="ex-instr">Sélectionnez la postposition correcte. Vérifiez aussi que le cas requis est bien présent dans la phrase.</p>
+    <div id="q81"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('q81','c81','s81','ex81')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('q81','s81','ex81')">Recommencer</button>
+      <span class="score" id="s81"></span>
+    </div>
+    <div class="corr" id="c81"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══════════ MODULE 9 ══════════ -->
+<section class="module" id="mod9">
+  <div class="mod-head"><span class="mod-num">Module 9 — A1.2</span><h2>Récapitulatif des six cas</h2></div>
+
+  <p>À ce stade du A1.2, vous avez étudié les six cas fondamentaux du turc. Ce module consolide l'ensemble. Il n'est pas optionnel : la maîtrise des cas est le socle de toute la grammaire turque.</p>
+
+  <h3>Tableau général des six cas</h3>
+  <table>
+    <tr><th>Cas</th><th>Suffixe type</th><th>Question-clé</th><th>Fonction principale</th><th>Exemple</th></tr>
+    <tr><td><strong>Nominatif</strong></td><td class="tk">—</td><td class="tk">Kim? / Ne?</td><td>Sujet · COD indéfini</td><td class="tk">Kitap var. (Il y a un livre.)</td></tr>
+    <tr><td><strong>Accusatif</strong></td><td class="tk">-(y)i/ı/u/ü</td><td class="tk">Kimi? / Neyi?</td><td>COD défini</td><td class="tk">Kitabı okuyor. (Il lit le livre.)</td></tr>
+    <tr><td><strong>Datif</strong></td><td class="tk">-(y)e/a</td><td class="tk">Kime? / Nereye?</td><td>Direction · COI</td><td class="tk">Eve gidiyor. (Il va à la maison.)</td></tr>
+    <tr><td><strong>Locatif</strong></td><td class="tk">-de/da · -te/ta</td><td class="tk">Kimde? / Nerede?</td><td>Situation · emplacement</td><td class="tk">Evde oturuyor. (Il habite à la maison.)</td></tr>
+    <tr><td><strong>Ablatif</strong></td><td class="tk">-den/dan · -ten/tan</td><td class="tk">Kimden? / Nereden?</td><td>Provenance · comparaison</td><td class="tk">Evden geliyor. (Il vient de la maison.)</td></tr>
+    <tr><td><strong>Génitif</strong></td><td class="tk">-(n)in/ın/un/ün</td><td class="tk">Kimin? / Neyin?</td><td>Possession (izafet)</td><td class="tk">Evin kapısı. (La porte de la maison.)</td></tr>
+  </table>
+
+  <h3>Le même mot — les six cas comparés</h3>
+  <p>Paradigme complet sur le mot <span class="tk"><strong>ev</strong></span> (maison, dern. voyelle e → groupe avant) :</p>
+  <table>
+    <tr><th>Cas</th><th>Forme</th><th>Prononciation</th><th>Emploi type</th></tr>
+    <tr><td>Nominatif</td><td class="tk">ev</td><td class="ph">èv</td><td class="tk">Ev güzel. (La maison est belle.)</td></tr>
+    <tr><td>Accusatif</td><td class="tk">evi</td><td class="ph">è-VI</td><td class="tk">Evi seviyorum. (J'aime la maison.)</td></tr>
+    <tr><td>Datif</td><td class="tk">eve</td><td class="ph">è-VÈ</td><td class="tk">Eve gidiyorum. (Je vais à la maison.)</td></tr>
+    <tr><td>Locatif</td><td class="tk">evde</td><td class="ph">èv-DÈ</td><td class="tk">Evde kalıyorum. (Je reste à la maison.)</td></tr>
+    <tr><td>Ablatif</td><td class="tk">evden</td><td class="ph">èv-DÈN</td><td class="tk">Evden çıkıyorum. (Je sors de la maison.)</td></tr>
+    <tr><td>Génitif</td><td class="tk">evin</td><td class="ph">è-VIN</td><td class="tk">Evin kapısı. (La porte de la maison.)</td></tr>
+  </table>
+
+  <div class="key">⚑ Méthode pratique : face à une phrase turque, identifiez d'abord la question que pose le suffixe (Où est-il ? → locatif / Vers où ? → datif / D'où ? → ablatif). Cela vous permet de décoder n'importe quelle phrase.</div>
+
+  <div class="ex" id="ex91">
+    <h4>Exercice 9.1 — Identifier le cas</h4>
+    <p class="ex-instr">Pour chaque suffixe mis en gras dans la phrase, identifiez le cas grammatical. Raisonnez à partir de la question-clé.</p>
+    <div id="q91"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('q91','c91','s91','ex91')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('q91','s91','ex91')">Recommencer</button>
+      <span class="score" id="s91"></span>
+    </div>
+    <div class="corr" id="c91"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══════════ VOCAB A1.2 ══════════ -->
+<section class="module" id="vocab2">
+  <div class="mod-head"><span class="mod-num">Vocabulaire — A1.2</span><h2>Vocabulaire A1.2 par thème</h2></div>
+  <p style="font-family:var(--font-sans);font-size:.83rem;color:var(--muted);margin-bottom:1rem;">Ces trois champs lexicaux sont indispensables pour construire des phrases en situation réelle. Marquez ★ les mots que vous ne savez pas encore.</p>
+  <div id="voc-themes2"></div>
+</section>
+
+<!-- ══════════ TEST A1.2 ══════════ -->
+<section class="module" id="test2">
+  <div class="mod-head"><span class="mod-num">Test final — A1.2</span><h2>Test A1.2 — Cas, postpositions et vocabulaire</h2></div>
+  <p style="font-family:var(--font-sans);font-size:.86rem;color:var(--muted);margin-bottom:1.3rem;">Durée estimée : 40 minutes. Aucune note autorisée. Ce test est exigeant : une note inférieure à 70 % indique qu'il faut retravailler les modules 6 à 8 avant de passer en A2.</p>
+
+  <div class="test-part">
+    <h3>Partie 1 — Accusatif et ablatif</h3>
+    <div id="qt21"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qt21','ct21','st21','tst21')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qt21','st21','tst21')">Recommencer</button>
+      <span class="score" id="st21"></span>
+    </div>
+    <div class="corr" id="ct21"><h5>✓ Correction</h5></div>
+  </div>
+
+  <div class="test-part">
+    <h3>Partie 2 — Postpositions en contexte</h3>
+    <div id="ft22"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('ft22','ct22','st22','tst22')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('ft22','st22','tst22')">Recommencer</button>
+      <span class="score" id="st22"></span>
+    </div>
+    <div class="corr" id="ct22">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Phrase</th><th>Réponse</th><th>Traduction</th></tr>
+        <tr><td>Bu hediye Ali ___</td><td class="tk">için</td><td>Ce cadeau est pour Ali.</td></tr>
+        <tr><td>Ailem ___ geliyorum</td><td class="tk">ile / ailemle</td><td>Je viens avec ma famille.</td></tr>
+        <tr><td>Ders___ sonra ne yapıyorsun?</td><td class="tk">ten → dersten</td><td>Que fais-tu après le cours ?</td></tr>
+        <tr><td>O, aslan ___ güçlü</td><td class="tk">gibi</td><td>Il est fort comme un lion.</td></tr>
+        <tr><td>İş___ önce kahve içiyorum</td><td class="tk">ten → işten</td><td>Je bois un café avant le travail.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="test-part">
+    <h3>Partie 3 — Vocabulaire A1.2 (FR → TR)</h3>
+    <div id="ft23"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('ft23','ct23','st23','tst23')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('ft23','st23','tst23')">Recommencer</button>
+      <span class="score" id="st23"></span>
+    </div>
+    <div class="corr" id="ct23">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Français</th><th>Turc</th><th>Prononciation</th></tr>
+        <tr><td>Le bus</td><td class="tk">otobüs</td><td class="ph">o-to-BUS</td></tr>
+        <tr><td>L'aéroport</td><td class="tk">havalimanı</td><td class="ph">ha-va-li-ma-NEU</td></tr>
+        <tr><td>La chemise</td><td class="tk">gömlek</td><td class="ph">geum-LÈK</td></tr>
+        <tr><td>Pas cher</td><td class="tk">ucuz</td><td class="ph">ou-DJOUZ</td></tr>
+        <tr><td>Le médecin</td><td class="tk">doktor</td><td class="ph">dok-TOR</td></tr>
+        <tr><td>La bibliothèque</td><td class="tk">kütüphane</td><td class="ph">ku-tup-ha-NÈ</td></tr>
+        <tr><td>Le billet / ticket</td><td class="tk">bilet</td><td class="ph">bi-LÈT</td></tr>
+        <tr><td>Le magasin</td><td class="tk">mağaza</td><td class="ph">ma-a-ZA</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="revoir">
+  <div class="mod-head"><span class="mod-num">★ Révision</span><h2>Mes mots à revoir</h2></div>
+  <div id="fav-display"></div>
+  <div style="margin-top:1rem">
+    <button class="btn btn-r" onclick="clearFavs()">Effacer tous les favoris</button>
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+// ─── DATA ──────────────────────────────────────
+
+const EX01_WORDS = [
+  {t:"merhaba",p:"mèr-ha-BA",f:"bonjour"},{t:"ev",p:"èv",f:"maison"},{t:"su",p:"sou",f:"eau"},
+  {t:"kitap",p:"ki-TAP",f:"livre"},{t:"araba",p:"a-ra-BA",f:"voiture"},{t:"okul",p:"o-KOUL",f:"école"},
+  {t:"kapı",p:"ka-PEU",f:"porte"},{t:"pencere",p:"pèn-djè-RÈ",f:"fenêtre"},{t:"güneş",p:"gu-NÈCH",f:"soleil"},
+  {t:"deniz",p:"dè-NIZ",f:"mer"},{t:"dağ",p:"da: (allongé)",f:"montagne"},{t:"şehir",p:"chè-HIR",f:"ville"},
+  {t:"çay",p:"tchaï",f:"thé"},{t:"köpek",p:"keu-PÈK",f:"chien"},{t:"kedi",p:"kè-DI",f:"chat"},
+  {t:"masa",p:"ma-SA",f:"table"},{t:"sandalye",p:"san-dal-YÈ",f:"chaise"},{t:"gül",p:"gul",f:"rose"},
+  {t:"yol",p:"yol",f:"route"},{t:"renk",p:"rènk",f:"couleur"},{t:"zaman",p:"za-MAN",f:"temps"},
+  {t:"para",p:"pa-RA",f:"argent"},{t:"tatlı",p:"tat-LEU",f:"sucré"},{t:"hava",p:"ha-VA",f:"météo"},
+  {t:"iyi",p:"i-YI",f:"bien"},{t:"kız",p:"keuz",f:"fille"},{t:"oğlan",p:"o-LAN",f:"garçon"},
+  {t:"ekmek",p:"èk-MÈK",f:"pain"},{t:"süt",p:"sut",f:"lait"},{t:"uçak",p:"ou-TCHAK",f:"avion"}
+];
+
+const QCM11 = [
+  {q:"ev",h:"e",c:"Avant",o:["Avant","Arrière"],expl:"e → groupe avant"},
+  {q:"araba",h:"a",c:"Arrière",o:["Avant","Arrière"],expl:"a → groupe arrière"},
+  {q:"okul",h:"u",c:"Arrière",o:["Avant","Arrière"],expl:"u → groupe arrière"},
+  {q:"kapı",h:"ı",c:"Arrière",o:["Avant","Arrière"],expl:"ı → groupe arrière"},
+  {q:"güneş",h:"e",c:"Avant",o:["Avant","Arrière"],expl:"e → avant (ü aussi avant)"},
+  {q:"deniz",h:"i",c:"Avant",o:["Avant","Arrière"],expl:"i → groupe avant"},
+  {q:"şehir",h:"i",c:"Avant",o:["Avant","Arrière"],expl:"i → groupe avant"},
+  {q:"çay",h:"a",c:"Arrière",o:["Avant","Arrière"],expl:"a → groupe arrière"},
+  {q:"köpek",h:"e",c:"Avant",o:["Avant","Arrière"],expl:"e → avant (ö aussi avant)"},
+  {q:"uçak",h:"a",c:"Arrière",o:["Avant","Arrière"],expl:"a → groupe arrière"},
+];
+
+const QCM12 = [
+  {q:"ev (maison)",c:"-ler",o:["-ler","-lar"],full:"evler"},
+  {q:"araba (voiture)",c:"-lar",o:["-ler","-lar"],full:"arabalar"},
+  {q:"kitap (livre)",c:"-lar",o:["-ler","-lar"],full:"kitaplar"},
+  {q:"kedi (chat)",c:"-ler",o:["-ler","-lar"],full:"kediler"},
+  {q:"köpek (chien)",c:"-ler",o:["-ler","-lar"],full:"köpekler"},
+  {q:"çocuk (enfant)",c:"-lar",o:["-ler","-lar"],full:"çocuklar"},
+  {q:"okul (école)",c:"-lar",o:["-ler","-lar"],full:"okullar"},
+  {q:"masa (table)",c:"-lar",o:["-ler","-lar"],full:"masalar"},
+  {q:"pencere (fenêtre)",c:"-ler",o:["-ler","-lar"],full:"pencereler"},
+  {q:"şehir (ville)",c:"-ler",o:["-ler","-lar"],full:"şehirler"},
+  {q:"gül (rose)",c:"-ler",o:["-ler","-lar"],full:"güller"},
+  {q:"kapı (porte)",c:"-lar",o:["-ler","-lar"],full:"kapılar"},
+  {q:"gün (jour)",c:"-ler",o:["-ler","-lar"],full:"günler"},
+  {q:"ay (mois)",c:"-lar",o:["-ler","-lar"],full:"aylar"},
+  {q:"kız (fille)",c:"-lar",o:["-ler","-lar"],full:"kızlar"},
+];
+
+const FILL21 = [
+  {l:"Ben ___",a:"Ben yorgunum",h:"u→um (arrière)"},
+  {l:"Sen ___",a:"Sen yorgunsun",h:"u→sun"},
+  {l:"O ___",a:"O yorgun",h:"pas de suffixe à la 3e pers. sing."},
+  {l:"Biz ___",a:"Biz yorgunuz",h:"u→uz"},
+  {l:"Siz ___",a:"Siz yorgunsunuz",h:"u→sunuz"},
+  {l:"Onlar ___",a:"Onlar yorgunlar",h:"arrière→lar"},
+];
+
+const QCM22 = [
+  {q:"Ben Fransız___ (je suis français)",c:"-ım",o:["-ım","-im","-um","-üm"],expl:"ı → arrière → -ım"},
+  {q:"Sen öğrenci___ (tu es étudiant)",c:"-sin",o:["-sin","-sın","-sun","-sün"],expl:"i → avant → -sin"},
+  {q:"Biz mutlu___ (nous sommes contents)",c:"-yuz",o:["-yuz","-yüz","-yiz","-yız"],expl:"u → arrière → -yuz"},
+  {q:"Siz Türk___ (vous êtes turcs)",c:"-sünüz",o:["-siniz","-sınız","-sunuz","-sünüz"],expl:"ü → avant → -sünüz"},
+  {q:"Ben hasta___ (je suis malade)",c:"-yım",o:["-yım","-yim","-yum","-yüm"],expl:"a → arrière → -yım"},
+  {q:"Onlar genç___ (ils sont jeunes)",c:"-ler",o:["-ler","-lar","-iz","-ız"],expl:"e → avant → -ler"},
+];
+
+const FILL31 = [
+  {l:"La maison d'Ali",a:"Ali'nin evi",h:"Ali-nin + ev-i"},
+  {l:"Le livre du professeur",a:"öğretmenin kitabı",h:"öğretmen-in + kitab-ı"},
+  {l:"Le sac de la mère",a:"annenin çantası",h:"anne-nin + çanta-sı"},
+  {l:"La capitale de la Turquie",a:"Türkiye'nin başkenti",h:"Türkiye-nin + başkent-i"},
+  {l:"La voiture du père",a:"babanın arabası",h:"baba-nın + araba-sı"},
+];
+
+const QCM41 = [
+  {q:"Ev___ oturuyorum. (J'habite à la maison)",c:"evde",o:["evde","eve","evden","evin"],expl:"Locatif (situation) → -de"},
+  {q:"Okul___ gidiyorum. (Je vais à l'école)",c:"okula",o:["okulda","okula","okuldan","okulun"],expl:"Datif (direction) → -a"},
+  {q:"Masa___ kitap var. (Il y a un livre sur la table)",c:"masada",o:["masada","masaya","masadan","masanın"],expl:"Locatif → -da (a arrière)"},
+  {q:"Araba___ biniyorum. (Je monte dans la voiture)",c:"arabaya",o:["arabada","arabaya","arabadan","arabanın"],expl:"Datif → -ya (voyelle finale, tampon y)"},
+  {q:"Park___ yürüyorum. (Je marche dans le parc)",c:"parkta",o:["parkta","parka","parkda","parktan"],expl:"Locatif → -ta (k = consonne sourde)"},
+  {q:"Şehir___ yaşıyorum. (J'habite en ville)",c:"şehirde",o:["şehirde","şehire","şehirden","şehirin"],expl:"Locatif → -de (i avant, r sonore)"},
+  {q:"Türkiye'___ gidiyorum. (Je vais en Turquie)",c:"Türkiye'ye",o:["Türkiye'de","Türkiye'ye","Türkiye'den","Türkiye'nin"],expl:"Datif → -ye (voyelle finale, tampon y, e avant)"},
+  {q:"Restoran___ bekliyorum. (J'attends au restaurant)",c:"restoranda",o:["restoranda","restorana","restorandan","restoranın"],expl:"Locatif → -da (a arrière, n sonore)"},
+];
+
+const FILL51 = [
+  {l:"içmek — affirmatif, ben",a:"içiyorum",h:"iç+iyor+um"},
+  {l:"içmek — négatif, ben",a:"içmiyorum",h:"iç+mi+yor+um"},
+  {l:"okumak — affirmatif, ben",a:"okuyorum",h:"oku+yor+um"},
+  {l:"yazmak — affirmatif, ben",a:"yazıyorum",h:"yaz+ıyor+um"},
+  {l:"sevmek — affirmatif, ben",a:"seviyorum",h:"sev+iyor+um"},
+  {l:"çalışmak — négatif, ben",a:"çalışmıyorum",h:"çalış+mı+yor+um"},
+];
+
+const VOCAB_THEMES = [
+  {title:"Salutations et politesse",words:[
+    {t:"Merhaba",p:"mèr-ha-BA",f:"Bonjour / Salut"},
+    {t:"Günaydın",p:"gun-aï-DEUN",f:"Bonjour (matin)"},
+    {t:"İyi akşamlar",p:"i-yi ak-cham-LAR",f:"Bonsoir"},
+    {t:"Nasılsın?",p:"na-seul-SEUN",f:"Comment vas-tu ?"},
+    {t:"İyiyim",p:"i-yi-YIM",f:"Je vais bien"},
+    {t:"Teşekkür ederim",p:"tè-chèk-kur è-dè-RIM",f:"Merci"},
+    {t:"Rica ederim",p:"ri-dja è-dè-RIM",f:"De rien"},
+    {t:"Lütfen",p:"lut-FÈN",f:"S'il vous plaît"},
+    {t:"Özür dilerim",p:"eu-zur di-lè-RIM",f:"Désolé(e)"},
+    {t:"Hoşça kal",p:"hoch-TJA kal",f:"Au revoir (dit au partant)"},
+    {t:"Güle güle",p:"gu-LÈ gu-LÈ",f:"Au revoir (dit au restant)"},
+  ]},
+  {title:"Nombres 0–100",words:[
+    {t:"sıfır",p:"seu-FEUR",f:"0"},{t:"bir",p:"bir",f:"1"},{t:"iki",p:"i-KI",f:"2"},
+    {t:"üç",p:"utch",f:"3"},{t:"dört",p:"deurt",f:"4"},{t:"beş",p:"bèch",f:"5"},
+    {t:"altı",p:"al-TEU",f:"6"},{t:"yedi",p:"yè-DI",f:"7"},{t:"sekiz",p:"sè-KIZ",f:"8"},
+    {t:"dokuz",p:"do-KOUZ",f:"9"},{t:"on",p:"on",f:"10"},{t:"yirmi",p:"yir-MI",f:"20"},
+    {t:"otuz",p:"o-TOUZ",f:"30"},{t:"kırk",p:"keurk",f:"40"},{t:"elli",p:"èl-LI",f:"50"},
+    {t:"altmış",p:"alt-MEUCH",f:"60"},{t:"yetmiş",p:"yèt-MICH",f:"70"},
+    {t:"seksen",p:"sèk-SÈN",f:"80"},{t:"doksan",p:"dok-SAN",f:"90"},{t:"yüz",p:"yuz",f:"100"},
+  ]},
+  {title:"Famille",words:[
+    {t:"anne",p:"an-NÈ",f:"mère"},{t:"baba",p:"ba-BA",f:"père"},
+    {t:"kardeş",p:"kar-DÈCH",f:"frère / sœur"},{t:"abla",p:"ab-LA",f:"grande sœur"},
+    {t:"abi",p:"a-BI",f:"grand frère"},{t:"çocuk",p:"tcho-DJOUK",f:"enfant"},
+    {t:"aile",p:"a-i-LÈ",f:"famille"},{t:"eş",p:"èch",f:"conjoint(e)"},
+    {t:"dede",p:"dè-DÈ",f:"grand-père"},{t:"babaanne",p:"ba-ba-an-NÈ",f:"grand-mère (côté père)"},
+  ]},
+  {title:"Jours de la semaine",words:[
+    {t:"Pazartesi",p:"pa-zar-tè-SI",f:"Lundi"},{t:"Salı",p:"sa-LEU",f:"Mardi"},
+    {t:"Çarşamba",p:"tchar-cham-BA",f:"Mercredi"},{t:"Perşembe",p:"pèr-chèm-BÈ",f:"Jeudi"},
+    {t:"Cuma",p:"djou-MA",f:"Vendredi"},{t:"Cumartesi",p:"djou-mar-tè-SI",f:"Samedi"},
+    {t:"Pazar",p:"pa-ZAR",f:"Dimanche"},
+  ]},
+  {title:"Mois de l'année",words:[
+    {t:"Ocak",p:"o-DJAK",f:"Janvier"},{t:"Şubat",p:"chou-BAT",f:"Février"},
+    {t:"Mart",p:"mart",f:"Mars"},{t:"Nisan",p:"ni-SAN",f:"Avril"},
+    {t:"Mayıs",p:"ma-YEUS",f:"Mai"},{t:"Haziran",p:"ha-zi-RAN",f:"Juin"},
+    {t:"Temmuz",p:"tèm-MOUZ",f:"Juillet"},{t:"Ağustos",p:"a-ous-TOS",f:"Août"},
+    {t:"Eylül",p:"èï-LUL",f:"Septembre"},{t:"Ekim",p:"è-KIM",f:"Octobre"},
+    {t:"Kasım",p:"ka-SEUM",f:"Novembre"},{t:"Aralık",p:"a-ra-LEUK",f:"Décembre"},
+  ]},
+  {title:"Couleurs",words:[
+    {t:"kırmızı",p:"keur-meu-ZEU",f:"rouge"},{t:"mavi",p:"ma-VI",f:"bleu"},
+    {t:"yeşil",p:"yè-CHIL",f:"vert"},{t:"sarı",p:"sa-REU",f:"jaune"},
+    {t:"siyah",p:"si-YAH",f:"noir"},{t:"beyaz",p:"bè-YAZ",f:"blanc"},
+    {t:"turuncu",p:"tou-roun-DJOU",f:"orange"},{t:"mor",p:"mor",f:"violet"},
+    {t:"pembe",p:"pèm-BÈ",f:"rose"},{t:"kahverengi",p:"kah-vè-rèn-GUI",f:"marron"},
+  ]},
+  {title:"Nourriture et boissons",words:[
+    {t:"ekmek",p:"èk-MÈK",f:"pain"},{t:"su",p:"sou",f:"eau"},{t:"çay",p:"tchaï",f:"thé"},
+    {t:"kahve",p:"kah-VÈ",f:"café"},{t:"et",p:"èt",f:"viande"},{t:"sebze",p:"sèb-ZÈ",f:"légume"},
+    {t:"meyve",p:"mèï-VÈ",f:"fruit"},{t:"süt",p:"sut",f:"lait"},
+    {t:"peynir",p:"pèï-NIR",f:"fromage"},{t:"yumurta",p:"you-mour-TA",f:"œuf"},
+  ]},
+  {title:"Temps et dates",words:[
+    {t:"gün",p:"gun",f:"jour"},{t:"hafta",p:"haf-TA",f:"semaine"},
+    {t:"ay",p:"aï",f:"mois"},{t:"yıl",p:"yeul",f:"année"},
+    {t:"sabah",p:"sa-BAH",f:"matin"},{t:"öğle",p:"eu-LÈ",f:"midi"},
+    {t:"akşam",p:"ak-CHAM",f:"soir"},{t:"gece",p:"guè-DJÈ",f:"nuit"},
+    {t:"bugün",p:"bou-GUN",f:"aujourd'hui"},{t:"yarın",p:"ya-REUN",f:"demain"},
+    {t:"dün",p:"dun",f:"hier"},
+  ]},
+];
+
+const QCM_T1 = [
+  {q:'Groupe vocalique de "gün" (jour) ?',c:"Avant",o:["Avant","Arrière"],expl:"ü → avant"},
+  {q:'Pluriel de "çocuk" (enfant) ?',c:"çocuklar",o:["çocuklar","çocukler","çocuktar"],expl:"u → arrière → -lar"},
+  {q:'Pluriel de "pencere" (fenêtre) ?',c:"pencereler",o:["pencereler","penceralar","pencerelər"],expl:"e → avant → -ler"},
+  {q:'Groupe vocalique de "uçak" (avion) ?',c:"Arrière",o:["Avant","Arrière"],expl:"a → arrière"},
+  {q:'Pluriel de "köpek" (chien) ?',c:"köpekler",o:["köpeklar","köpekler","köpekter"],expl:"e → avant → -ler"},
+  {q:'Suffixe « mon/ma » pour "göz" (œil) ?',c:"gözüm",o:["gözüm","gözım","gözum","gözim"],expl:"ö → avant → ü-type → gözüm"},
+];
+
+const FILL_T2 = [
+  {l:"Ben hasta ___ (je suis malade)",a:"hastayım|Ben hastayım",h:"a→yım"},
+  {l:"O çalış___ (il travaille)",a:"çalışıyor|O çalışıyor",h:"ş+ıyor"},
+  {l:"Biz git___ (nous allons)",a:"gidiyoruz|Biz gidiyoruz",h:"git→gid+iyor+uz"},
+  {l:"Siz içmiyor___ (vous ne buvez pas)",a:"içmiyorsunuz|Siz içmiyorsunuz",h:"içmiyor+sunuz"},
+  {l:"Onlar oku___ (ils lisent)",a:"okuyorlar|Onlar okuyorlar",h:"oku+yor+lar"},
+];
+
+const FILL_T3 = [
+  {l:"Bonjour",a:"merhaba|Merhaba",h:"salutation standard"},
+  {l:"Merci",a:"teşekkür ederim|Teşekkür ederim",h:"expression complète"},
+  {l:"La maison",a:"ev",h:"èv"},
+  {l:"Lire (infinitif)",a:"okumak",h:"o-kou-MAK"},
+  {l:"Rouge",a:"kırmızı",h:"keur-meu-ZEU"},
+  {l:"La mère",a:"anne",h:"an-NÈ"},
+  {l:"Aujourd'hui",a:"bugün",h:"bou-GUN"},
+  {l:"Je suis étudiant",a:"ben öğrenciyim|Ben öğrenciyim",h:"eu-rèn-dji-YIM"},
+];
+
+// ─── EXERCISE IDS & PROGRESS ───────────────────
+
+const EX_IDS = ['ex11','ex12','ex21','ex22','ex31','ex41','ex51','tst1','tst2','tst3','ex61','ex71','ex81','ex91','tst21','tst22','tst23'];
+let progress = {};
+
+function loadProgress(){
+  try{ const s=localStorage.getItem('tk_prog'); if(s) progress=JSON.parse(s); }catch(e){}
+}
+function saveProgress(){
+  try{ localStorage.setItem('tk_prog',JSON.stringify(progress)); }catch(e){}
+}
+function markDone(id,done){
+  progress[id]=done; saveProgress(); updateProgress();
+}
+function updateProgress(){
+  const done=EX_IDS.filter(id=>progress[id]).length;
+  const pct=Math.round(done/EX_IDS.length*100);
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pPct').textContent=pct+' % complété';
+}
+
+// ─── FAVORITES ─────────────────────────────────
+
+function getFavs(){ try{ return JSON.parse(localStorage.getItem('tk_favs')||'[]'); }catch(e){ return []; } }
+function getFavData(){ try{ return JSON.parse(localStorage.getItem('tk_fav_data')||'{}'); }catch(e){ return {}; } }
+function saveFavs(f){ try{ localStorage.setItem('tk_favs',JSON.stringify(f)); }catch(e){} }
+function saveFavData(d){ try{ localStorage.setItem('tk_fav_data',JSON.stringify(d)); }catch(e){} }
+
+function toggleFav(id,t,p,f,btn){
+  let favs=getFavs(); const data=getFavData();
+  if(favs.includes(id)){
+    favs=favs.filter(x=>x!==id); delete data[id]; btn.classList.remove('on');
+  } else {
+    favs.push(id); data[id]={t,p,f}; btn.classList.add('on');
+  }
+  saveFavs(favs); saveFavData(data); renderFavs();
+}
+
+function renderFavs(){
+  const el=document.getElementById('fav-display'); if(!el) return;
+  const favs=getFavs(); const data=getFavData();
+  if(!favs.length){
+    el.innerHTML='<p style="font-family:var(--font-sans);font-size:.86rem;color:var(--muted);">Aucun mot marqué. Cliquez sur ★ dans les tableaux de vocabulaire pour les ajouter ici.</p>';
+    return;
+  }
+  let h=`<p style="font-family:var(--font-sans);font-size:.82rem;color:var(--muted);margin-bottom:.7rem;">${favs.length} mot(s) à revoir :</p>
+  <table><tr><th>Turc</th><th>Prononciation</th><th>Traduction</th><th>Retirer</th></tr>`;
+  favs.forEach(id=>{ const w=data[id]; if(!w) return;
+    h+=`<tr><td class="tk">${w.t}</td><td class="ph">${w.p}</td><td>${w.f}</td>
+    <td><button class="btn btn-r" style="padding:.15rem .45rem;font-size:.73rem" onclick="removeFav('${id}')">✕</button></td></tr>`;
+  });
+  h+='</table>';
+  el.innerHTML=h;
+}
+
+function removeFav(id){
+  let favs=getFavs().filter(x=>x!==id); const data=getFavData();
+  delete data[id]; saveFavs(favs); saveFavData(data);
+  document.querySelectorAll('.star[data-id="'+id+'"]').forEach(b=>b.classList.remove('on'));
+  renderFavs();
+}
+
+function clearFavs(){
+  if(!confirm('Effacer tous les favoris ?')) return;
+  saveFavs([]); saveFavData({});
+  document.querySelectorAll('.star.on').forEach(b=>b.classList.remove('on'));
+  renderFavs();
+}
+
+// ─── RENDER HELPERS ────────────────────────────
+
+function starBtn(id,t,p,f){
+  const on=getFavs().includes(id)?'on':'';
+  return `<button class="star ${on}" data-id="${id}" onclick="toggleFav('${id}','${escQ(t)}','${escQ(p)}','${escQ(f)}',this)">★</button>`;
+}
+function escQ(s){ return (s||'').replace(/'/g,"\\'"); }
+
+function renderVocabTable(containerId, words, tablePrefix){
+  const el=document.getElementById(containerId); if(!el) return;
+  let h='<table><tr><th></th><th>Turc</th><th>Prononciation</th><th>Traduction</th></tr>';
+  words.forEach((w,i)=>{
+    const id=tablePrefix+'_'+i;
+    h+=`<tr><td>${starBtn(id,w.t,w.p,w.f)}</td><td class="tk">${w.t}</td><td class="ph">${w.p}</td><td>${w.f}</td></tr>`;
+  });
+  h+='</table>';
+  el.innerHTML=h;
+}
+
+function renderQCMBlock(containerId, data){
+  const el=document.getElementById(containerId); if(!el) return;
+  let h='';
+  data.forEach((q,qi)=>{
+    h+=`<div class="qcm-q" data-qi="${qi}" data-correct="${q.c}">
+      <div class="qcm-qt"><strong>${qi+1}.</strong> <span class="tk">${q.q}</span>
+      ${q.h?`<span style="font-size:.76rem;color:#888"> — dern. voyelle : ${q.h}</span>`:''}
+      </div><div class="opts">`;
+    q.o.forEach(opt=>{
+      h+=`<label class="opt" data-val="${opt}"><input type="radio" name="${containerId}_q${qi}" value="${opt}">${opt}</label>`;
+    });
+    h+=`</div></div>`;
+  });
+  el.innerHTML=h;
+  el.querySelectorAll('.opt').forEach(lbl=>{
+    lbl.addEventListener('click',function(){
+      const nm=this.querySelector('input').name;
+      el.querySelectorAll(`input[name="${nm}"]`).forEach(r=>r.parentElement.classList.remove('sel'));
+      this.classList.add('sel'); this.querySelector('input').checked=true;
+    });
+  });
+}
+
+function renderFillBlock(containerId, data){
+  const el=document.getElementById(containerId); if(!el) return;
+  let h='';
+  data.forEach((q,qi)=>{
+    h+=`<div class="fill-q" data-qi="${qi}">
+      <strong>${qi+1}.</strong> ${q.l} :
+      <input class="fill-in" type="text" placeholder="votre réponse…" data-answer="${q.a}" data-hint="${q.h||''}">
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+
+// ─── CHECK FUNCTIONS ───────────────────────────
+
+function checkQCM(containerId, corrId, scoreId, exId){
+  const el=document.getElementById(containerId); if(!el) return;
+  const qs=el.querySelectorAll('.qcm-q');
+  let ok=0, total=qs.length;
+  qs.forEach(qDiv=>{
+    const correct=qDiv.dataset.correct;
+    qDiv.querySelectorAll('.opt').forEach(opt=>{ opt.classList.remove('ok','ko'); });
+    const sel=qDiv.querySelector('.opt.sel');
+    qDiv.querySelectorAll('.opt').forEach(opt=>{ if(opt.dataset.val===correct) opt.classList.add('ok'); });
+    if(sel){ if(sel.dataset.val===correct){ ok++; sel.classList.remove('ko'); } else sel.classList.add('ko'); }
+  });
+  document.getElementById(scoreId).innerHTML=`Score : <strong>${ok}/${total}</strong>`;
+  montrerCorr(corrId);
+  markDone(exId, ok===total);
+}
+
+function checkFill(containerId, corrId, scoreId, exId){
+  const el=document.getElementById(containerId); if(!el) return;
+  const inputs=el.querySelectorAll('.fill-in');
+  let ok=0;
+  inputs.forEach(inp=>{
+    inp.classList.remove('ok','ko');
+    const answers=inp.dataset.answer.toLowerCase().split('|').map(s=>s.trim());
+    const val=inp.value.trim().toLowerCase();
+    if(val && answers.some(a=>a===val)){ inp.classList.add('ok'); ok++; }
+    else if(val) inp.classList.add('ko');
+  });
+  document.getElementById(scoreId).innerHTML=`Score : <strong>${ok}/${inputs.length}</strong>`;
+  montrerCorr(corrId);
+  markDone(exId, ok===inputs.length);
+}
+
+function resetQCM(containerId, scoreId, exId){
+  const el=document.getElementById(containerId); if(!el) return;
+  el.querySelectorAll('.opt').forEach(o=>{ o.classList.remove('sel','ok','ko'); o.querySelector('input').checked=false; });
+  document.getElementById(scoreId).innerHTML='';
+  markDone(exId,false);
+}
+
+function resetFill(containerId, scoreId, exId){
+  const el=document.getElementById(containerId); if(!el) return;
+  el.querySelectorAll('.fill-in').forEach(i=>{ i.value=''; i.classList.remove('ok','ko'); });
+  document.getElementById(scoreId).innerHTML='';
+  markDone(exId,false);
+}
+
+function montrerCorr(id){ const el=document.getElementById(id); if(el) el.classList.add('show'); }
+
+// ─── CORRECTION CONTENT ────────────────────────
+
+function buildCorr11(){
+  const el=document.getElementById('c11'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Mot</th><th>Dernière voyelle</th><th>Groupe</th></tr>';
+  QCM11.forEach(q=>{ h+=`<tr><td class="tk">${q.q}</td><td>${q.h}</td><td><strong>${q.c}</strong> — ${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function buildCorr12(){
+  const el=document.getElementById('c12'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Singulier</th><th>Pluriel</th></tr>';
+  QCM12.forEach(q=>{ h+=`<tr><td class="tk">${q.q.split(' ')[0]}</td><td class="tk">${q.full}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function buildCorr22(){
+  const el=document.getElementById('c22'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Phrase</th><th>Réponse</th><th>Explication</th></tr>';
+  QCM22.forEach(q=>{ h+=`<tr><td style="font-family:var(--font-sans);font-size:.82rem">${q.q}</td><td class="tk">${q.c}</td><td style="font-family:var(--font-sans);font-size:.79rem;color:var(--muted)">${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function buildCorr41(){
+  const el=document.getElementById('c41'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Phrase</th><th>Réponse</th><th>Explication</th></tr>';
+  QCM41.forEach(q=>{ h+=`<tr><td style="font-family:var(--font-sans);font-size:.81rem">${q.q}</td><td class="tk">${q.c}</td><td style="font-family:var(--font-sans);font-size:.78rem;color:var(--muted)">${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function buildCorrT1(){
+  const el=document.getElementById('ct1'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Question</th><th>Réponse</th><th>Explication</th></tr>';
+  QCM_T1.forEach(q=>{ h+=`<tr><td style="font-family:var(--font-sans);font-size:.81rem">${q.q}</td><td class="tk">${q.c}</td><td style="font-family:var(--font-sans);font-size:.78rem;color:var(--muted)">${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+// ─── VOCAB THEMES RENDER ───────────────────────
+
+function renderVocabThemes(){
+  const el=document.getElementById('voc-themes'); if(!el) return;
+  let h='';
+  VOCAB_THEMES.forEach((theme,ti)=>{
+    h+=`<div class="vcat"><h4>${theme.title}</h4><table><tr><th></th><th>Turc</th><th>Prononciation</th><th>Traduction</th></tr>`;
+    theme.words.forEach((w,wi)=>{
+      const id=`vt${ti}_${wi}`;
+      h+=`<tr><td>${starBtn(id,w.t,w.p,w.f)}</td><td class="tk">${w.t}</td><td class="ph">${w.p}</td><td>${w.f}</td></tr>`;
+    });
+    h+='</table></div>';
+  });
+  el.innerHTML=h;
+}
+
+// ─── PRINT ─────────────────────────────────────
+
+function imprimerTout(){
+  document.querySelectorAll('.corr').forEach(el=>el.classList.add('show'));
+  setTimeout(()=>window.print(), 250);
+}
+
+// ─── NAV HIGHLIGHT ─────────────────────────────
+
+function initNav(){
+  const sections=document.querySelectorAll('section.module');
+  const links=document.querySelectorAll('.sidebar nav a');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));
+      }
+    });
+  },{threshold:0.25});
+  sections.forEach(s=>obs.observe(s));
+}
+
+// ─── EX01 TABLE ────────────────────────────────
+
+function buildEx01(){
+  const tbl=document.getElementById('tbl-ex01'); if(!tbl) return;
+  const corr=document.getElementById('c01');
+  let corrH='<h5>✓ Prononciations détaillées</h5><p style="font-family:var(--font-sans);font-size:.8rem;margin-bottom:.5rem;">Majuscule = syllabe accentuée</p>';
+  corrH+='<table><tr><th>Turc</th><th>Prononciation</th><th>Traduction</th></tr>';
+  EX01_WORDS.forEach((w,i)=>{
+    const id='ex01_'+i; const on=getFavs().includes(id)?'on':'';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><button class="star ${on}" data-id="${id}" onclick="toggleFav('${id}','${escQ(w.t)}','${escQ(w.p)}','${escQ(w.f)}',this)">★</button></td>
+    <td class="tk">${w.t}</td><td class="ph">${w.p}</td><td>${w.f}</td>`;
+    tbl.appendChild(tr);
+    corrH+=`<tr><td class="tk">${w.t}</td><td class="ph">${w.p}</td><td>${w.f}</td></tr>`;
+  });
+  corrH+='</table>';
+  if(corr) corr.innerHTML=corrH;
+}
+
+// ─── DATA A1.2 ────────────────────────────────
+
+const QCM61 = [
+  {q:"ev (maison)",c:"evi",o:["evi","evı","evu","eve"],expl:"e → avant → -i. Aucune mutation (v est sonore)"},
+  {q:"okul (école)",c:"okulu",o:["okulu","okülü","okuli","okulı"],expl:"u → arrière → -u. Aucune mutation"},
+  {q:"kitap (livre)",c:"kitabı",o:["kitabı","kitapı","kitabi","kitabu"],expl:"p → b (mutation), a → arrière → -ı"},
+  {q:"araba (voiture)",c:"arabayı",o:["arabayı","arabai","arabaı","arabaya"],expl:"Finit par voyelle → tampon -y-, a → arrière → -ı"},
+  {q:"gün (jour)",c:"günü",o:["günü","günı","gunu","güni"],expl:"ü → avant → -ü. Aucune mutation"},
+  {q:"köpek (chien)",c:"köpeği",o:["köpeği","köpeki","köpekü","köpeku"],expl:"k → ğ (mutation), e → avant → -i"},
+  {q:"su (eau)",c:"suyu",o:["suyu","sui","suu","suı"],expl:"Finit par voyelle → tampon -y-, u → arrière → -u"},
+  {q:"masa (table)",c:"masayı",o:["masayı","masai","masayi","masae"],expl:"Finit par voyelle → tampon -y-, a → arrière → -ı"},
+];
+
+const FILL71 = [
+  {l:"ev (maison) → ablatif",a:"evden",h:"v sonore, e avant → -den"},
+  {l:"okul (école) → ablatif",a:"okuldan",h:"l sonore, u arrière → -dan"},
+  {l:"kitap (livre) → ablatif",a:"kitaptan",h:"p sourd, a arrière → -tan"},
+  {l:"şehir (ville) → ablatif",a:"şehirden",h:"r sonore, i avant → -den"},
+  {l:"park → ablatif",a:"parktan",h:"k sourd, a arrière → -tan"},
+  {l:"İstanbul → ablatif",a:"İstanbul'dan",h:"l sonore, u arrière → -dan"},
+  {l:"Türkiye → ablatif",a:"Türkiye'den",h:"voyelle finale, e avant → -den"},
+  {l:"otobüs (bus) → ablatif",a:"otobüsten",h:"s sourd, ü avant → -ten"},
+];
+
+const QCM81 = [
+  {q:"Je travaille avec Ali — Ali ___ çalışıyorum",c:"ile",o:["ile","için","gibi","kadar"],expl:"ile = avec. Forme libre (Ali ile) ou suffixée (Ali'yle)"},
+  {q:"Ce livre est pour toi — Bu kitap sen ___",c:"için",o:["ile","için","gibi","kadar"],expl:"için = pour. Se place après le nominatif"},
+  {q:"Il court comme le vent — Rüzgar ___ koşuyor",c:"gibi",o:["ile","için","gibi","kadar"],expl:"gibi = comme. Comparaison de manière"},
+  {q:"Jusqu'à la maison — Eve ___",c:"kadar",o:["ile","için","gibi","kadar"],expl:"kadar = jusqu'à. Ici avec le datif (eve)"},
+  {q:"Après l'école — Okul___ sonra",c:"dan",o:["dan","da","dan","a"],expl:"okuldan sonra : ablatif requis avant sonra (u arrière, l sonore → -dan)"},
+  {q:"Avant le cours — Ders___ önce",c:"ten",o:["ten","te","den","de"],expl:"dersten önce : ablatif requis avant önce (e avant, s sourd → -ten)"},
+  {q:"Selon moi — Ben___ göre",c:"e → bana",o:["e → bana","den → benden","de → bende","in → benim"],expl:"göre exige le datif. Ben → datif irrégulier = bana. Donc : bana göre"},
+  {q:"En train — Tren ___",c:"le",o:["le","ile","için","gibi"],expl:"Forme suffixée de ile : tren + le = trenle (e avant, n sonore, pas de tampon)"},
+];
+
+const QCM91 = [
+  {q:"Sen-i seviyorum. (Je t'aime.) — Quel cas est -i dans seni ?",c:"Accusatif",o:["Nominatif","Accusatif","Datif","Locatif"],expl:"sen + -i = seni → accusatif. 'Toi' est le COD défini"},
+  {q:"Eve gidiyorum. (Je vais à la maison.) — Quel cas est -e dans eve ?",c:"Datif",o:["Nominatif","Accusatif","Datif","Ablatif"],expl:"ev + -e = eve → datif. Direction (vers où ?)"},
+  {q:"Evde oturuyorum. (J'habite à la maison.) — Quel cas est -de dans evde ?",c:"Locatif",o:["Datif","Locatif","Ablatif","Génitif"],expl:"ev + -de = evde → locatif. Situation (où ?)"},
+  {q:"Evden geliyorum. (Je viens de la maison.) — Quel cas est -den dans evden ?",c:"Ablatif",o:["Datif","Locatif","Ablatif","Génitif"],expl:"ev + -den = evden → ablatif. Provenance (d'où ?)"},
+  {q:"Evin kapısı. (La porte de la maison.) — Quel cas est -in dans evin ?",c:"Génitif",o:["Datif","Accusatif","Ablatif","Génitif"],expl:"ev + -in = evin → génitif. Possession (de qui ?)"},
+  {q:"Kitap okuyorum. (Je lis un livre.) — Quel cas porte kitap ?",c:"Nominatif",o:["Nominatif","Accusatif","Datif","Locatif"],expl:"Aucun suffixe = nominatif. COD indéfini : 'un livre', pas 'le livre'"},
+];
+
+const QCM_T21 = [
+  {q:"Je vois LE chien — Köpek___",c:"köpeği",o:["köpeği","köpeke","köpekten","köpekte"],expl:"k→ğ (mutation), e avant → -i : köpeği"},
+  {q:"Je viens de la ville — Şehir___",c:"şehirden",o:["şehirden","şehire","şehirde","şehirin"],expl:"r sonore, i avant → -den : şehirden"},
+  {q:"Je bois l'eau — Su___",c:"suyu",o:["suyu","sui","sudan","suya"],expl:"Voyelle finale → tampon -y-, u arrière → -u : suyu"},
+  {q:"Il sort du parc — Park___",c:"parktan",o:["parktan","parkta","parka","parkın"],expl:"k sourd, a arrière → -tan : parktan"},
+  {q:"Je mange LE pain — Ekmek___",c:"ekmeği",o:["ekmeği","ekmeğe","ekmeğin","ekmeğde"],expl:"k→ğ (mutation), e avant → -i : ekmeği"},
+  {q:"Il rentre de l'école — Okul___",c:"okuldan",o:["okuldan","okulda","okula","okulun"],expl:"l sonore, u arrière → -dan : okuldan"},
+];
+
+const FILL_T22 = [
+  {l:"Ce cadeau est pour Ali — Bu hediye Ali ___",a:"için",h:"pour = için (nominatif)"},
+  {l:"Je viens avec ma famille — Ailem ___ geliyorum",a:"ile|ailemle",h:"avec = ile ou forme suffixée ailemle"},
+  {l:"Que fais-tu après l'école ? — Okul___ sonra ne yapıyorsun?",a:"dan|okuldan",h:"ablatif obligatoire : okuldan (l sonore, u arrière → -dan)"},
+  {l:"Il est fort comme un lion — Aslan ___ güçlü",a:"gibi",h:"comme = gibi (nominatif)"},
+  {l:"Je bois un café avant le travail — İş___ önce kahve içiyorum",a:"ten|işten",h:"ablatif obligatoire : işten (ş sourd, i avant → -ten)"},
+];
+
+const FILL_T23 = [
+  {l:"Le bus",a:"otobüs",h:"o-to-BUS"},
+  {l:"L'aéroport",a:"havalimanı",h:"ha-va-li-ma-NEU"},
+  {l:"La chemise",a:"gömlek",h:"geum-LÈK"},
+  {l:"Pas cher",a:"ucuz",h:"ou-DJOUZ"},
+  {l:"Le médecin",a:"doktor",h:"dok-TOR"},
+  {l:"La bibliothèque",a:"kütüphane",h:"ku-tup-ha-NÈ"},
+  {l:"Le billet / ticket",a:"bilet",h:"bi-LÈT"},
+  {l:"Le magasin",a:"mağaza",h:"ma-a-ZA"},
+];
+
+const VOCAB_THEMES_2 = [
+  {title:"Ville et transports",words:[
+    {t:"otobüs",p:"o-to-BUS",f:"bus"},{t:"metro",p:"mèt-ro",f:"métro"},
+    {t:"taksi",p:"tak-SI",f:"taxi"},{t:"tren",p:"trèn",f:"train"},
+    {t:"bisiklet",p:"bi-sik-LÈT",f:"vélo"},{t:"cadde",p:"djad-DÈ",f:"avenue"},
+    {t:"sokak",p:"so-KAK",f:"rue"},{t:"köprü",p:"keu-PRU",f:"pont"},
+    {t:"istasyon",p:"is-tas-YON",f:"gare"},{t:"havalimanı",p:"ha-va-li-ma-NEU",f:"aéroport"},
+    {t:"durak",p:"dou-RAK",f:"arrêt de bus"},{t:"bilet",p:"bi-LÈT",f:"billet / ticket"},
+    {t:"harita",p:"ha-ri-TA",f:"carte / plan"},{t:"sağ",p:"sa: (allongé)",f:"droite"},
+    {t:"sol",p:"sol",f:"gauche"},{t:"düz",p:"duz",f:"tout droit"},
+    {t:"yakın",p:"ya-KEUN",f:"proche"},{t:"uzak",p:"ou-ZAK",f:"loin"},
+  ]},
+  {title:"Vêtements et achats",words:[
+    {t:"gömlek",p:"geum-LÈK",f:"chemise"},{t:"pantolon",p:"pan-to-LON",f:"pantalon"},
+    {t:"etek",p:"è-TÈK",f:"jupe"},{t:"ayakkabı",p:"a-yak-ka-BEU",f:"chaussure"},
+    {t:"ceket",p:"djè-KÈT",f:"veste"},{t:"elbise",p:"èl-bi-SÈ",f:"robe"},
+    {t:"şapka",p:"chap-KA",f:"chapeau"},{t:"çanta",p:"tchan-TA",f:"sac"},
+    {t:"mağaza",p:"ma-a-ZA",f:"magasin"},{t:"fiyat",p:"fi-YAT",f:"prix"},
+    {t:"indirim",p:"in-di-RIM",f:"réduction / solde"},{t:"ucuz",p:"ou-DJOUZ",f:"pas cher"},
+    {t:"pahalı",p:"pa-ha-LEU",f:"cher (coûteux)"},{t:"kaç para?",p:"katch pa-RA",f:"combien ça coûte ?"},
+    {t:"satın almak",p:"sa-teun al-MAK",f:"acheter"},{t:"ödeme",p:"eu-dè-MÈ",f:"paiement"},
+  ]},
+  {title:"Métiers et lieux publics",words:[
+    {t:"öğretmen",p:"eu-rèt-MÈN",f:"professeur"},{t:"doktor",p:"dok-TOR",f:"médecin"},
+    {t:"mühendis",p:"mu-hèn-DIS",f:"ingénieur"},{t:"avukat",p:"a-vou-KAT",f:"avocat"},
+    {t:"aşçı",p:"ach-TCHEU",f:"cuisinier"},{t:"polis",p:"po-LIS",f:"policier"},
+    {t:"eczacı",p:"èdj-za-DJEU",f:"pharmacien"},{t:"hemşire",p:"hèm-chi-RÈ",f:"infirmière"},
+    {t:"hastane",p:"has-ta-NÈ",f:"hôpital"},{t:"eczane",p:"èdj-za-NÈ",f:"pharmacie"},
+    {t:"kütüphane",p:"ku-tup-ha-NÈ",f:"bibliothèque"},{t:"postane",p:"pos-ta-NÈ",f:"bureau de poste"},
+    {t:"belediye",p:"bè-lè-di-YÈ",f:"mairie"},{t:"müze",p:"mu-ZÈ",f:"musée"},
+    {t:"market",p:"mar-KÈT",f:"supermarché"},{t:"banka",p:"ban-KA",f:"banque"},
+  ]},
+];
+
+// ─── CORRECTIONS DYNAMIQUES A1.2 ──────────────
+
+function buildCorr61(){
+  const el=document.getElementById('c61'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Mot</th><th>Accusatif</th><th>Explication</th></tr>';
+  QCM61.forEach(q=>{ h+=`<tr><td class="tk">${q.q.split(' ')[0]}</td><td class="tk">${q.c}</td><td style="font-family:var(--font-sans);font-size:.79rem;color:var(--muted)">${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function buildCorr81(){
+  const el=document.getElementById('c81'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Phrase</th><th>Réponse</th><th>Explication</th></tr>';
+  QCM81.forEach(q=>{ h+=`<tr><td style="font-family:var(--font-sans);font-size:.8rem">${q.q}</td><td class="tk">${q.c}</td><td style="font-family:var(--font-sans);font-size:.78rem;color:var(--muted)">${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function buildCorr91(){
+  const el=document.getElementById('c91'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Phrase</th><th>Cas</th><th>Explication</th></tr>';
+  QCM91.forEach(q=>{ h+=`<tr><td style="font-family:var(--font-sans);font-size:.8rem">${q.q}</td><td class="tk">${q.c}</td><td style="font-family:var(--font-sans);font-size:.78rem;color:var(--muted)">${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function buildCorrT21(){
+  const el=document.getElementById('ct21'); if(!el) return;
+  let h='<h5>✓ Correction</h5><table><tr><th>Phrase</th><th>Réponse</th><th>Explication</th></tr>';
+  QCM_T21.forEach(q=>{ h+=`<tr><td style="font-family:var(--font-sans);font-size:.8rem">${q.q}</td><td class="tk">${q.c}</td><td style="font-family:var(--font-sans);font-size:.78rem;color:var(--muted)">${q.expl}</td></tr>`; });
+  h+='</table>'; el.innerHTML=h;
+}
+
+function renderVocabThemes2(){
+  const el=document.getElementById('voc-themes2'); if(!el) return;
+  let h='';
+  VOCAB_THEMES_2.forEach((theme,ti)=>{
+    h+=`<div class="vcat"><h4>${theme.title}</h4><table><tr><th></th><th>Turc</th><th>Prononciation</th><th>Traduction</th></tr>`;
+    theme.words.forEach((w,wi)=>{
+      const id=`vt2_${ti}_${wi}`;
+      h+=`<tr><td>${starBtn(id,w.t,w.p,w.f)}</td><td class="tk">${w.t}</td><td class="ph">${w.p}</td><td>${w.f}</td></tr>`;
+    });
+    h+='</table></div>';
+  });
+  el.innerHTML=h;
+}
+
+// ─── INIT ──────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded',function(){
+  loadProgress();
+  // A1.1
+  buildEx01();
+  renderQCMBlock('q11', QCM11);  buildCorr11();
+  renderQCMBlock('q12', QCM12);  buildCorr12();
+  renderFillBlock('f21', FILL21);
+  renderQCMBlock('q22', QCM22);  buildCorr22();
+  renderFillBlock('f31', FILL31);
+  renderQCMBlock('q41', QCM41);  buildCorr41();
+  renderFillBlock('f51', FILL51);
+  renderVocabThemes();
+  renderQCMBlock('qt1', QCM_T1); buildCorrT1();
+  renderFillBlock('ft2', FILL_T2);
+  renderFillBlock('ft3', FILL_T3);
+  // A1.2
+  renderQCMBlock('q61', QCM61);  buildCorr61();
+  renderFillBlock('f71', FILL71);
+  renderQCMBlock('q81', QCM81);  buildCorr81();
+  renderQCMBlock('q91', QCM91);  buildCorr91();
+  renderVocabThemes2();
+  renderQCMBlock('qt21', QCM_T21); buildCorrT21();
+  renderFillBlock('ft22', FILL_T22);
+  renderFillBlock('ft23', FILL_T23);
+  // Global
+  renderFavs();
+  updateProgress();
+  initNav();
+});
+</script>
+</body>
+</html>
