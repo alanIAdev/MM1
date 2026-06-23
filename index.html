@@ -507,6 +507,57 @@
       .toggle-wrap { align-self: flex-end; }
       .bottom-row { grid-template-columns: 1fr; }
     }
+
+    <!-- Water tracker -->
+  #meteo-paris {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: sans-serif;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    min-width: 160px;
+  }
+
+  #meteo-paris .meteo-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  #meteo-paris .meteo-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #meteo-paris .meteo-ville {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  #meteo-paris .meteo-temp {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.2;
+  }
+
+  #meteo-paris .meteo-desc {
+    font-size: 0.75rem;
+    color: #555;
+  }
+      <!-- Meteo -->
+    
   </style>
 </head>
 <body>
@@ -536,7 +587,18 @@
       </div>
     </div>
   </header>
+  <div id="meteo-paris">
+    <div class="meteo-icon" id="meteo-icon">⏳</div>
+    <div class="meteo-info">
+      <span class="meteo-ville">Paris</span>
+      <span class="meteo-temp" id="meteo-temp">--°C</span>
+      <span class="meteo-desc" id="meteo-desc">Chargement...</span>
+    </div>
+  </div>
 
+
+
+  
   <div class="rule"></div>
   <p class="section-label">Applications disponibles</p>
 
@@ -777,6 +839,51 @@
   </footer>
 </div>
 
+<script>
+  async function chargerMeteo() {
+    try {
+      const url = "https://api.open-meteo.com/v1/forecast"
+        + "?latitude=48.8566&longitude=2.3522"
+        + "&current=temperature_2m,weathercode"
+        + "&timezone=Europe%2FParis";
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const temp = Math.round(data.current.temperature_2m);
+      const code = data.current.weathercode;
+
+      // Correspondance code météo → icône + description
+      function interpreterCode(wmo) {
+        if (wmo === 0)               return { icon: "☀️",  desc: "Ciel dégagé" };
+        if (wmo <= 2)                return { icon: "🌤️", desc: "Partiellement nuageux" };
+        if (wmo === 3)               return { icon: "☁️",  desc: "Nuageux" };
+        if (wmo <= 49)               return { icon: "🌫️", desc: "Brouillard" };
+        if (wmo <= 59)               return { icon: "🌦️", desc: "Bruine" };
+        if (wmo <= 69)               return { icon: "🌧️", desc: "Pluie" };
+        if (wmo <= 79)               return { icon: "🌨️", desc: "Neige" };
+        if (wmo <= 82)               return { icon: "🌧️", desc: "Averses" };
+        if (wmo <= 86)               return { icon: "🌨️", desc: "Averses de neige" };
+        if (wmo >= 95)               return { icon: "⛈️",  desc: "Orage" };
+        return                              { icon: "🌡️", desc: "Conditions variables" };
+      }
+
+      const { icon, desc } = interpreterCode(code);
+
+      document.getElementById("meteo-icon").textContent = icon;
+      document.getElementById("meteo-temp").textContent = temp + "°C";
+      document.getElementById("meteo-desc").textContent  = desc;
+
+    } catch (err) {
+      document.getElementById("meteo-desc").textContent = "Indisponible";
+      console.error("Météo error:", err);
+    }
+  }
+
+  chargerMeteo();
+</script>
+
+  
 <script>
   const toggle = document.getElementById('themeToggle');
   const html = document.documentElement;
