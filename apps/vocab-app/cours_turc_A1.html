@@ -260,39 +260,29 @@ tr:hover td{background:#edf0f8}
 }
 
 /* ── EXERCICES IA ── */
-.ai-vocab-box{
-  background:#f0f4fb;border:1px solid #c5d3f0;border-radius:3px;
+.rnd-vocab-box{
+  background:#f0f7f0;border:1px solid #a8d5b5;border-radius:3px;
   padding:1rem 1.2rem;margin-bottom:1rem
 }
-.ai-vocab-box h4{
-  color:#1a73e8;font-family:var(--font-sans);font-size:.82rem;
+.rnd-vocab-box h4{
+  color:var(--green);font-family:var(--font-sans);font-size:.82rem;
   text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem
 }
-.ai-vocab-box table{margin:0;font-size:.82rem}
-.ai-vocab-box th{background:#1a73e8}
-.ai-qcm-ia{margin-bottom:1rem;padding:.7rem;background:#fff;border:1px solid var(--border);border-radius:2px}
-.ai-qcm-qt{font-family:var(--font-sans);font-size:.86rem;margin-bottom:.5rem;font-weight:600}
-.ai-opts{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
-.ai-opt{
+.rnd-vocab-box table{margin:0;font-size:.82rem}
+.rnd-vocab-box th{background:var(--green)}
+.rnd-qcm{margin-bottom:1rem;padding:.7rem;background:#fff;border:1px solid var(--border);border-radius:2px}
+.rnd-qt{font-family:var(--font-sans);font-size:.86rem;margin-bottom:.5rem;font-weight:600}
+.rnd-opts{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
+.rnd-opt{
   font-family:var(--font-sans);font-size:.8rem;cursor:pointer;
   padding:.28rem .7rem;border:1px solid var(--border);border-radius:2px;
   background:#fff;transition:all .12s;user-select:none
 }
-.ai-opt:hover{border-color:#1a73e8;color:#1a73e8}
-.ai-opt.sel{border-color:#1a73e8;background:#1a73e8;color:#fff}
-.ai-opt.ok{border-color:var(--green);background:#e6f4ec;color:var(--green);font-weight:600}
-.ai-opt.ko{border-color:var(--red);background:#fbe9e9;color:var(--red)}
-.ai-loading{
-  display:flex;align-items:center;gap:.7rem;padding:1.2rem;
-  font-family:var(--font-sans);font-size:.84rem;color:var(--muted)
-}
-.ai-spinner{
-  width:18px;height:18px;border:2px solid #c5d3f0;
-  border-top-color:#1a73e8;border-radius:50%;
-  animation:spin .7s linear infinite;flex-shrink:0
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ai-expl{font-family:var(--font-sans);font-size:.77rem;color:var(--muted);margin-top:.35rem;font-style:italic}
+.rnd-opt:hover{border-color:var(--navy);color:var(--navy)}
+.rnd-opt.sel{border-color:var(--navy);background:var(--navy);color:#fff}
+.rnd-opt.ok{border-color:var(--green);background:#e6f4ec;color:var(--green);font-weight:600}
+.rnd-opt.ko{border-color:var(--red);background:#fbe9e9;color:var(--red)}
+.rnd-expl{font-family:var(--font-sans);font-size:.77rem;color:var(--muted);margin-top:.35rem;font-style:italic}
 </style>
 </head>
 <body>
@@ -342,7 +332,7 @@ tr:hover td{background:#edf0f8}
     <a href="#mod14">M14 · Impératif</a>
     <a href="#voca21">Vocabulaire A2.1</a>
     <a href="#testa21">Test A2.1</a>
-    <a href="#ia-a21">✦ Exercices IA A2.1</a>
+    <a href="#ia-a21">🎲 Exercices aléatoires A2.1</a>
   </nav>
   <div class="sidebar-label">A2.2 — Syntaxe avancée</div>
   <nav>
@@ -352,7 +342,7 @@ tr:hover td{background:#edf0f8}
     <a href="#mod18">M18 · Complétives</a>
     <a href="#voca22">Vocabulaire A2.2</a>
     <a href="#testa22">Test A2.2</a>
-    <a href="#ia-a22">✦ Exercices IA A2.2</a>
+    <a href="#ia-a22">🎲 Exercices aléatoires A2.2</a>
   </nav>
   <div class="sidebar-label">B1.1 — Voix et gérondifs</div>
   <nav>
@@ -362,7 +352,7 @@ tr:hover td{background:#edf0f8}
     <a href="#mod22">M22 · Discours rapporté</a>
     <a href="#vocb11">Vocabulaire B1.1</a>
     <a href="#testb11">Test B1.1</a>
-    <a href="#ia-b11">✦ Exercices IA B1.1</a>
+    <a href="#ia-b11">🎲 Exercices aléatoires B1.1</a>
   </nav>
   <div class="sidebar-label">B1.2 — Structures complexes</div>
   <nav>
@@ -372,7 +362,7 @@ tr:hover td{background:#edf0f8}
     <a href="#mod26">M26 · Registres de langue</a>
     <a href="#vocb12">Vocabulaire B1.2</a>
     <a href="#testb12">Test B1.2</a>
-    <a href="#ia-b12">✦ Exercices IA B1.2</a>
+    <a href="#ia-b12">🎲 Exercices aléatoires B1.2</a>
   </nav>
   <div class="sidebar-label">B2 — Maîtrise avancée</div>
   <nav>
@@ -381,7 +371,7 @@ tr:hover td{background:#edf0f8}
     <a href="#mod29">M29 · Style académique</a>
     <a href="#vocb2">Vocabulaire B2</a>
     <a href="#testb2">Test B2 final</a>
-    <a href="#ia-b2">✦ Exercices IA B2</a>
+    <a href="#ia-b2">🎲 Exercices aléatoires B2</a>
   </nav>
 </aside>
 
@@ -1143,39 +1133,29 @@ tr:hover td{background:#edf0f8}
   margin:3.5rem 0 2rem;border-radius:2px;scroll-margin-top:1.5rem}
 
 /* ── EXERCICES IA ── */
-.ai-vocab-box{
-  background:#f0f4fb;border:1px solid #c5d3f0;border-radius:3px;
+.rnd-vocab-box{
+  background:#f0f7f0;border:1px solid #a8d5b5;border-radius:3px;
   padding:1rem 1.2rem;margin-bottom:1rem
 }
-.ai-vocab-box h4{
-  color:#1a73e8;font-family:var(--font-sans);font-size:.82rem;
+.rnd-vocab-box h4{
+  color:var(--green);font-family:var(--font-sans);font-size:.82rem;
   text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem
 }
-.ai-vocab-box table{margin:0;font-size:.82rem}
-.ai-vocab-box th{background:#1a73e8}
-.ai-qcm-ia{margin-bottom:1rem;padding:.7rem;background:#fff;border:1px solid var(--border);border-radius:2px}
-.ai-qcm-qt{font-family:var(--font-sans);font-size:.86rem;margin-bottom:.5rem;font-weight:600}
-.ai-opts{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
-.ai-opt{
+.rnd-vocab-box table{margin:0;font-size:.82rem}
+.rnd-vocab-box th{background:var(--green)}
+.rnd-qcm{margin-bottom:1rem;padding:.7rem;background:#fff;border:1px solid var(--border);border-radius:2px}
+.rnd-qt{font-family:var(--font-sans);font-size:.86rem;margin-bottom:.5rem;font-weight:600}
+.rnd-opts{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
+.rnd-opt{
   font-family:var(--font-sans);font-size:.8rem;cursor:pointer;
   padding:.28rem .7rem;border:1px solid var(--border);border-radius:2px;
   background:#fff;transition:all .12s;user-select:none
 }
-.ai-opt:hover{border-color:#1a73e8;color:#1a73e8}
-.ai-opt.sel{border-color:#1a73e8;background:#1a73e8;color:#fff}
-.ai-opt.ok{border-color:var(--green);background:#e6f4ec;color:var(--green);font-weight:600}
-.ai-opt.ko{border-color:var(--red);background:#fbe9e9;color:var(--red)}
-.ai-loading{
-  display:flex;align-items:center;gap:.7rem;padding:1.2rem;
-  font-family:var(--font-sans);font-size:.84rem;color:var(--muted)
-}
-.ai-spinner{
-  width:18px;height:18px;border:2px solid #c5d3f0;
-  border-top-color:#1a73e8;border-radius:50%;
-  animation:spin .7s linear infinite;flex-shrink:0
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ai-expl{font-family:var(--font-sans);font-size:.77rem;color:var(--muted);margin-top:.35rem;font-style:italic}
+.rnd-opt:hover{border-color:var(--navy);color:var(--navy)}
+.rnd-opt.sel{border-color:var(--navy);background:var(--navy);color:#fff}
+.rnd-opt.ok{border-color:var(--green);background:#e6f4ec;color:var(--green);font-weight:600}
+.rnd-opt.ko{border-color:var(--red);background:#fbe9e9;color:var(--red)}
+.rnd-expl{font-family:var(--font-sans);font-size:.77rem;color:var(--muted);margin-top:.35rem;font-style:italic}
 </style>
 
 <!-- ═══════════════ A2.1 ═══════════════ -->
@@ -1421,23 +1401,23 @@ tr:hover td{background:#edf0f8}
 
 <!-- ═══════════ EXERCICES IA — A2.1 ═══════════ -->
 <section class="module" id="ia-a21">
-<div class="mod-head"><span class="mod-num" style="background:#e8f0fe;border-color:#4285f4;color:#1a73e8">✦ IA</span><h2>Exercices générés par IA — A2.1</h2></div>
-<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">L'IA génère 5 questions aléatoires à partir de la leçon A2.1 (passé -di/-miş, futur -ecek, aoriste, impératif) et du vocabulaire ci-dessous. Chaque génération est unique.</p>
-<div class="ai-vocab-box" id="ai-vocab-a21"></div>
+<div class="mod-head"><span class="mod-num" style="background:#f0f7f0;border-color:#1e6b3a;color:#1e6b3a">🎲</span><h2>Exercices aléatoires — A2.1</h2></div>
+<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Tirage aléatoire de 5 questions parmi une banque de 15+ questions couvrant la leçon A2.1 (passé -di/-miş, futur -ecek, aoriste, impératif) et le vocabulaire ci-dessous. Chaque clic sur <strong>Recommencer</strong> tire un nouveau jeu.</p>
+<div class="rnd-vocab-box" id="rnd-vocab-a21"></div>
 <div class="ex" id="ia-a21-ex">
-  <h4>Questions aléatoires — Temps verbaux A2.1</h4>
+  <h4>Tirage aléatoire — Temps verbaux A2.1</h4>
   <p class="ex-instr">5 questions QCM générées par l'IA à partir de la leçon et du vocabulaire A2.1.</p>
   <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem">
-    <button class="btn btn-p" onclick="genererExIA('a21')">✦ Générer des questions</button>
-    <span id="ia-a21-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
+    <button class="btn btn-p" onclick="tirerExRandom('a21')">🎲 Tirer 5 questions</button>
+    <span id="rnd-a21-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
   </div>
-  <div id="ia-a21-questions"></div>
-  <div class="actions" id="ia-a21-actions" style="display:none">
-    <button class="btn btn-p" onclick="verifierIA('a21')">Vérifier mes réponses</button>
-    <button class="btn btn-r" onclick="genererExIA('a21')">↺ Nouvelles questions</button>
-    <span class="score" id="ia-a21-score"></span>
+  <div id="rnd-a21-questions"></div>
+  <div class="actions" id="rnd-a21-actions" style="display:none">
+    <button class="btn btn-p" onclick="verifierRandom('a21')">Vérifier mes réponses</button>
+    <button class="btn btn-r" onclick="tirerExRandom('a21')">↺ Nouvelles questions</button>
+    <span class="score" id="rnd-a21-score"></span>
   </div>
-  <div class="corr" id="ia-a21-corr"></div>
+  <div class="corr" id="rnd-a21-corr"></div>
 </div>
 </section>
 
@@ -1603,23 +1583,23 @@ tr:hover td{background:#edf0f8}
 
 <!-- ═══════════ EXERCICES IA — A2.2 ═══════════ -->
 <section class="module" id="ia-a22">
-<div class="mod-head"><span class="mod-num" style="background:#e8f0fe;border-color:#4285f4;color:#1a73e8">✦ IA</span><h2>Exercices générés par IA — A2.2</h2></div>
-<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">L'IA génère 5 questions aléatoires à partir de la leçon A2.2 (relatives participiales, conditionnel, nécessité, complétives) et du vocabulaire ci-dessous.</p>
-<div class="ai-vocab-box" id="ai-vocab-a22"></div>
+<div class="mod-head"><span class="mod-num" style="background:#f0f7f0;border-color:#1e6b3a;color:#1e6b3a">🎲</span><h2>Exercices aléatoires — A2.2</h2></div>
+<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Tirage aléatoire de 5 questions parmi une banque de 15+ questions couvrant la leçon A2.2 (relatives, conditionnel, nécessité, complétives) et le vocabulaire ci-dessous.</p>
+<div class="rnd-vocab-box" id="rnd-vocab-a22"></div>
 <div class="ex" id="ia-a22-ex">
-  <h4>Questions aléatoires — Syntaxe A2.2</h4>
+  <h4>Tirage aléatoire — Syntaxe A2.2</h4>
   <p class="ex-instr">5 questions QCM générées par l'IA à partir de la leçon et du vocabulaire A2.2.</p>
   <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem">
-    <button class="btn btn-p" onclick="genererExIA('a22')">✦ Générer des questions</button>
-    <span id="ia-a22-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
+    <button class="btn btn-p" onclick="tirerExRandom('a22')">🎲 Tirer 5 questions</button>
+    <span id="rnd-a22-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
   </div>
-  <div id="ia-a22-questions"></div>
-  <div class="actions" id="ia-a22-actions" style="display:none">
-    <button class="btn btn-p" onclick="verifierIA('a22')">Vérifier mes réponses</button>
-    <button class="btn btn-r" onclick="genererExIA('a22')">↺ Nouvelles questions</button>
-    <span class="score" id="ia-a22-score"></span>
+  <div id="rnd-a22-questions"></div>
+  <div class="actions" id="rnd-a22-actions" style="display:none">
+    <button class="btn btn-p" onclick="verifierRandom('a22')">Vérifier mes réponses</button>
+    <button class="btn btn-r" onclick="tirerExRandom('a22')">↺ Nouvelles questions</button>
+    <span class="score" id="rnd-a22-score"></span>
   </div>
-  <div class="corr" id="ia-a22-corr"></div>
+  <div class="corr" id="rnd-a22-corr"></div>
 </div>
 </section>
 
@@ -1773,23 +1753,23 @@ tr:hover td{background:#edf0f8}
 
 <!-- ═══════════ EXERCICES IA — B1.1 ═══════════ -->
 <section class="module" id="ia-b11">
-<div class="mod-head"><span class="mod-num" style="background:#e8f0fe;border-color:#4285f4;color:#1a73e8">✦ IA</span><h2>Exercices générés par IA — B1.1</h2></div>
-<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">L'IA génère 5 questions aléatoires à partir de la leçon B1.1 (gérondifs, voix passive, causative, discours rapporté) et du vocabulaire ci-dessous.</p>
-<div class="ai-vocab-box" id="ai-vocab-b11"></div>
+<div class="mod-head"><span class="mod-num" style="background:#f0f7f0;border-color:#1e6b3a;color:#1e6b3a">🎲</span><h2>Exercices aléatoires — B1.1</h2></div>
+<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Tirage aléatoire de 5 questions parmi une banque de 15+ questions couvrant la leçon B1.1 (gérondifs, voix passive, causative, discours rapporté) et le vocabulaire ci-dessous.</p>
+<div class="rnd-vocab-box" id="rnd-vocab-b11"></div>
 <div class="ex" id="ia-b11-ex">
-  <h4>Questions aléatoires — Voix et gérondifs B1.1</h4>
+  <h4>Tirage aléatoire — Voix et gérondifs B1.1</h4>
   <p class="ex-instr">5 questions QCM générées par l'IA à partir de la leçon et du vocabulaire B1.1.</p>
   <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem">
-    <button class="btn btn-p" onclick="genererExIA('b11')">✦ Générer des questions</button>
-    <span id="ia-b11-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
+    <button class="btn btn-p" onclick="tirerExRandom('b11')">🎲 Tirer 5 questions</button>
+    <span id="rnd-b11-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
   </div>
-  <div id="ia-b11-questions"></div>
-  <div class="actions" id="ia-b11-actions" style="display:none">
-    <button class="btn btn-p" onclick="verifierIA('b11')">Vérifier mes réponses</button>
-    <button class="btn btn-r" onclick="genererExIA('b11')">↺ Nouvelles questions</button>
-    <span class="score" id="ia-b11-score"></span>
+  <div id="rnd-b11-questions"></div>
+  <div class="actions" id="rnd-b11-actions" style="display:none">
+    <button class="btn btn-p" onclick="verifierRandom('b11')">Vérifier mes réponses</button>
+    <button class="btn btn-r" onclick="tirerExRandom('b11')">↺ Nouvelles questions</button>
+    <span class="score" id="rnd-b11-score"></span>
   </div>
-  <div class="corr" id="ia-b11-corr"></div>
+  <div class="corr" id="rnd-b11-corr"></div>
 </div>
 </section>
 
@@ -1951,23 +1931,23 @@ tr:hover td{background:#edf0f8}
 
 <!-- ═══════════ EXERCICES IA — B1.2 ═══════════ -->
 <section class="module" id="ia-b12">
-<div class="mod-head"><span class="mod-num" style="background:#e8f0fe;border-color:#4285f4;color:#1a73e8">✦ IA</span><h2>Exercices générés par IA — B1.2</h2></div>
-<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">L'IA génère 5 questions aléatoires à partir de la leçon B1.2 (réfléchi/réciproque, nominalisation, hypothétique passé, registres) et du vocabulaire ci-dessous.</p>
-<div class="ai-vocab-box" id="ai-vocab-b12"></div>
+<div class="mod-head"><span class="mod-num" style="background:#f0f7f0;border-color:#1e6b3a;color:#1e6b3a">🎲</span><h2>Exercices aléatoires — B1.2</h2></div>
+<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Tirage aléatoire de 5 questions parmi une banque de 15+ questions couvrant la leçon B1.2 (réfléchi/réciproque, nominalisation, hypothétique passé, registres) et le vocabulaire ci-dessous.</p>
+<div class="rnd-vocab-box" id="rnd-vocab-b12"></div>
 <div class="ex" id="ia-b12-ex">
-  <h4>Questions aléatoires — Structures complexes B1.2</h4>
+  <h4>Tirage aléatoire — Structures complexes B1.2</h4>
   <p class="ex-instr">5 questions QCM générées par l'IA à partir de la leçon et du vocabulaire B1.2.</p>
   <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem">
-    <button class="btn btn-p" onclick="genererExIA('b12')">✦ Générer des questions</button>
-    <span id="ia-b12-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
+    <button class="btn btn-p" onclick="tirerExRandom('b12')">🎲 Tirer 5 questions</button>
+    <span id="rnd-b12-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
   </div>
-  <div id="ia-b12-questions"></div>
-  <div class="actions" id="ia-b12-actions" style="display:none">
-    <button class="btn btn-p" onclick="verifierIA('b12')">Vérifier mes réponses</button>
-    <button class="btn btn-r" onclick="genererExIA('b12')">↺ Nouvelles questions</button>
-    <span class="score" id="ia-b12-score"></span>
+  <div id="rnd-b12-questions"></div>
+  <div class="actions" id="rnd-b12-actions" style="display:none">
+    <button class="btn btn-p" onclick="verifierRandom('b12')">Vérifier mes réponses</button>
+    <button class="btn btn-r" onclick="tirerExRandom('b12')">↺ Nouvelles questions</button>
+    <span class="score" id="rnd-b12-score"></span>
   </div>
-  <div class="corr" id="ia-b12-corr"></div>
+  <div class="corr" id="rnd-b12-corr"></div>
 </div>
 </section>
 
@@ -2089,23 +2069,23 @@ tr:hover td{background:#edf0f8}
 
 <!-- ═══════════ EXERCICES IA — B2 ═══════════ -->
 <section class="module" id="ia-b2">
-<div class="mod-head"><span class="mod-num" style="background:#e8f0fe;border-color:#4285f4;color:#1a73e8">✦ IA</span><h2>Exercices générés par IA — B2</h2></div>
-<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">L'IA génère 5 questions aléatoires à partir de la leçon B2 (aspects verbaux, concessives, style académique) et du vocabulaire ci-dessous. Niveau CECRL B2.</p>
-<div class="ai-vocab-box" id="ai-vocab-b2"></div>
+<div class="mod-head"><span class="mod-num" style="background:#f0f7f0;border-color:#1e6b3a;color:#1e6b3a">🎲</span><h2>Exercices aléatoires — B2</h2></div>
+<p style="font-family:var(--font-sans);font-size:.85rem;color:var(--muted);margin-bottom:.8rem">Tirage aléatoire de 5 questions parmi une banque de 15+ questions couvrant la leçon B2 (aspects verbaux, concessives, style académique) et le vocabulaire ci-dessous. Niveau CECRL B2.</p>
+<div class="rnd-vocab-box" id="rnd-vocab-b2"></div>
 <div class="ex" id="ia-b2-ex">
-  <h4>Questions aléatoires — Maîtrise avancée B2</h4>
+  <h4>Tirage aléatoire — Maîtrise avancée B2</h4>
   <p class="ex-instr">5 questions QCM générées par l'IA à partir de la leçon et du vocabulaire B2.</p>
   <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem">
-    <button class="btn btn-p" onclick="genererExIA('b2')">✦ Générer des questions</button>
-    <span id="ia-b2-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
+    <button class="btn btn-p" onclick="tirerExRandom('b2')">🎲 Tirer 5 questions</button>
+    <span id="rnd-b2-status" style="font-family:var(--font-sans);font-size:.8rem;color:var(--muted)"></span>
   </div>
-  <div id="ia-b2-questions"></div>
-  <div class="actions" id="ia-b2-actions" style="display:none">
-    <button class="btn btn-p" onclick="verifierIA('b2')">Vérifier mes réponses</button>
-    <button class="btn btn-r" onclick="genererExIA('b2')">↺ Nouvelles questions</button>
-    <span class="score" id="ia-b2-score"></span>
+  <div id="rnd-b2-questions"></div>
+  <div class="actions" id="rnd-b2-actions" style="display:none">
+    <button class="btn btn-p" onclick="verifierRandom('b2')">Vérifier mes réponses</button>
+    <button class="btn btn-r" onclick="tirerExRandom('b2')">↺ Nouvelles questions</button>
+    <span class="score" id="rnd-b2-score"></span>
   </div>
-  <div class="corr" id="ia-b2-corr"></div>
+  <div class="corr" id="rnd-b2-corr"></div>
 </div>
 </section>
 
@@ -3191,249 +3171,278 @@ function renderVocabSet(data,containerId,prefix){
   initNav();
 });
 
+
+
 // ═══════════════════════════════════════════════════════════
-// SYSTÈME D'EXERCICES IA — Génération via API Anthropic
+// EXERCICES ALÉATOIRES — Banques de questions prédéfinies
+// Tirage de 5 questions au hasard parmi 15-18 à chaque clic
 // ═══════════════════════════════════════════════════════════
 
-const IA_CONFIG = {
-  a21: {
-    niveau: "A2.1",
-    lecon: `Leçon A2.1 — Temps verbaux turcs :
-1. Passé déterminé (-di/-dı/-du/-dü/-ti/-tı/-tu/-tü) : témoin direct, événements vécus. Ex: gittim (je suis allé), geldi (il est venu).
-2. Passé narratif (-miş/-mış/-muş/-müş) : ouï-dire, contes, découvertes, récits historiques. Ex: gelmiş (il serait venu / il est venu dit-on).
-3. Futur (-ecek/-acak + personnel) : mutation k→ğ devant voyelle. Ex: gideceğim, yazacağız.
-4. Aoriste / présent habituel : monosyllabiques → -er/-ar, polysyllabiques voyelle finale → -r, polysyllabiques consonne finale → -er/-ar selon harmonie. 13 irréguliers : gelmek→gelir, vermek→verir, etc. Négatif 1sg: gitmem (pas gitmezim).
-5. Impératif : 2sg=radical seul, 2pl=+in/-ın, 1pl=+elim/-alım, 3sg=+sin/-sın, négatif=+ma/-me.`,
-    vocabKey: 'VOCAB_A21',
-  },
-  a22: {
-    niveau: "A2.2",
-    lecon: `Leçon A2.2 — Syntaxe avancée :
-1. Relatives participiales : sujet → -en/-an (gelen=qui vient, koşan=qui court, négatif: gelmeyen). Objet → -dik+possessif (okuduğum kitap=le livre que j'ai lu). Futur relatif : gelecek ay.
-2. Conditionnel : réel → aoriste+se/sa (gelirsen=si tu viens). Hypothétique passé → radical+se+y+di (gelseydi=s'il était venu). Même si : gelse bile / gelse de.
-3. Nécessité/obligation : -meli/-malı + personnel (gitmeliyim=je dois partir, sigara içmemelisin=tu ne dois pas fumer).
-4. Complétives : présent/passé → -dik+possessif+accusatif (geldiğini biliyorum=je sais qu'il vient). Futur → -ecek+possessif+acc (geleceğini biliyorum).`,
-    vocabKey: 'VOCAB_A22',
-  },
-  b11: {
-    niveau: "B1.1",
-    lecon: `Leçon B1.1 — Voix et gérondifs :
-1. Gérondifs : -erek/-arak (manière: en faisant), -ken (pendant que, sur aoriste), -meden/-madan (sans faire), -(y)ince/-(y)ınca (dès que), -dikten sonra (après avoir fait), -ıp/-ip (séquence: et puis).
-2. Voix passive : consonne finale → +ıl/+il/+ul/+ül; voyelle finale → +n. Ex: yapılıyor (est fait), okunuyor (est lu). Agent: tarafından.
-3. Voix causative : +t, +tır, +dır selon le verbe. Ex: okutmak (faire lire), yıkatmak (faire laver).
-4. Discours rapporté : direct= "..." dedi. Indirect présent/passé= -dik+poss+acc+söyledi. Indirect futur= -ecek+poss+acc+söyledi. Citation= diye.`,
-    vocabKey: 'VOCAB_B11',
-  },
-  b12: {
-    niveau: "B1.2",
-    lecon: `Leçon B1.2 — Structures complexes :
-1. Voix réfléchie : +n après voyelle (hazırlanmak=se préparer), +ın après consonne.
-2. Voix réciproque : +ş (görüşmek=se voir mutuellement, tanışmak=faire connaissance, anlaşmak=s'entendre).
-3. Nominalisation verbale : -mek/-mak (sujet/infinitif: yüzmek=nager), -me/-ma (après postpositions: yüzmeyi severim=j'aime nager, -den bıkmak), -ış (manière: bakış=regard, gidiş=départ).
-4. Hypothétique passé (irréel) : protase= radical+se+y+dı/di (gelseydi=s'il était venu), apodose= aoriste+-dı (gelirdi=il serait venu).
-5. Registres : académique (-acaktır, passif, söz konusu, ancak, dolayısıyla), courant (-ecek, aoriste), familier (contractions: nerde, napı-).`,
-    vocabKey: 'VOCAB_B12',
-  },
-  b2: {
-    niveau: "B2",
-    lecon: `Leçon B2 — Maîtrise avancée :
-1. Aspects verbaux : habitude passée (aoriste+-dı: koşardım=je courais), progressif passé (-yor+-du: okuyordum=j'étais en train de lire), plus-que-parfait (-miş+-ti: gelmişti=il était venu), futur dans le passé (-ecek+-ti: gelecekti=il allait venir).
-2. Aspect terminatif : -ip bitirmek (okuyup bitirdim=j'ai fini de lire). Ingressif : -e başlamak. Continuatif : -e devam etmek.
-3. Concessives et logiques : -(s)e bile (même si), rağmen+datif (malgré), oysa/halbuki (alors que), -diği için (parce que), hem...hem (et...et), ya...ya (soit...soit), ne...ne (ni...ni).
-4. Style académique : -ecektir/-acaktır (futur assertif formel), -miştir (passé formel/citation), söz konusu (ledit), ancak (cependant soutenu), dolayısıyla (par conséquent), bununla birlikte (en outre), öte yandan (d'autre part), passif massif, nominalisations.`,
-    vocabKey: 'VOCAB_B2',
-  }
+// ─── BANQUE A2.1 — Temps verbaux (18 questions) ───────────
+const BANK_A21 = [
+  // Passé -di vs -miş
+  {q:"Tu as vu toi-même Ali tomber. → Ali düş___.",c:"tü",o:["tü (-di)","müş (-miş)","ecek (-ecek)","üyor"],expl:"Témoin direct → -di. düş+tü (ş sourd, ü avant)"},
+  {q:"On t'a raconté que le train est parti. → Tren git___.",c:"miş (-miş)",o:["ti (-di)","miş (-miş)","ecek","iyor"],expl:"Ouï-dire → -miş"},
+  {q:"Tu réalises soudain que tu as grossi ! → Kilo al___!",c:"mışım",o:["dım","-mışım","acağım","malıyım"],expl:"Découverte/réalisation de son propre état → -miş + 1sg"},
+  {q:"Conte : Il était une fois... → Bir zamanlar bir prenses var___.",c:"mış",o:["dı","mış","acak","ıyor"],expl:"Genre du conte turc → toujours -miş"},
+  {q:"Manuel scolaire : Atatürk 1938'de vefat et___.",c:"miş",o:["ti","miş","ecek","iyor"],expl:"Récit historique écrit → -miş académique"},
+  {q:"Tu décris ta propre journée d'hier. → Dün sinemaya git___.",c:"tim",o:["tim (-di)","mişim (-miş)","eceğim","iyor"],expl:"Expérience vécue directement par le locuteur → -di"},
+  // Futur -ecek
+  {q:"gelmek — Biz (nous viendrons)",c:"geleceğiz",o:["geleceğiz","gelecekiz","gelecekbiz","geliyoruz"],expl:"gel+ecek → k→ğ devant -iz : geleceğiz"},
+  {q:"yazmak — Sen (tu écriras)",c:"yazacaksın",o:["yazacaksın","yazacaksin","yazacakın","yazıyorsun"],expl:"yaz+acak+sın (a arrière)"},
+  {q:"okumak — Onlar (ils liront)",c:"okuyacaklar",o:["okuyacaklar","okuyacakler","okuyacaksınlar","okuyorlar"],expl:"oku (voyelle) + y+acak+lar"},
+  // Aoriste
+  {q:"beklemek (attendre) — aoriste 3sg (il attend toujours)",c:"bekler",o:["bekler","bekliyor","bekledi","beklir"],expl:"bekle = polysyllabique voyelle → -r : bekler"},
+  {q:"içmek (boire) — aoriste 1sg (je bois habituellement)",c:"içerim",o:["içerim","içirim","içiyorum","içtim"],expl:"iç = monosyllabique, e avant → içer+im. Irrégulier de la liste."},
+  {q:"koşmak (courir) — aoriste 3pl (ils courent toujours)",c:"koşarlar",o:["koşarlar","koşerler","koşurlar","koşuyorlar"],expl:"koş = monosyllabique, o arrière → koşar+lar"},
+  {q:"vermek (donner) — aoriste 3sg",c:"verir",o:["verir","verer","veryor","verdi"],expl:"vermek est dans la liste des 13 irréguliers → verir"},
+  {q:"gitmek (aller) — aoriste négatif 1sg (je ne vais jamais)",c:"gitmem",o:["gitmem","gitmezim","gitmiyorum","gitmedim"],expl:"Forme spéciale : négatif aoriste 1sg = radical+me+m = gitmem"},
+  // Impératif
+  {q:"gel (venir) — 2sg affirmatif",c:"Gel!",o:["Gel!","Gelin!","Gelelim!","Gelsin!"],expl:"2sg = radical seul"},
+  {q:"ye (manger) — 2pl affirmatif",c:"Yiyin!",o:["Ye!","Yiyin!","Yiyelim!","Yesin!"],expl:"2pl : ye + yin (e avant, y tampon) = Yiyin!"},
+  {q:"git (aller) — 1pl (allons !)",c:"Gidelim!",o:["Git!","Gidin!","Gidelim!","Gitsin!"],expl:"1pl : git+edelim → gidelim (e avant)"},
+  {q:"çalış (travailler) — 3sg (qu'il travaille)",c:"Çalışsın!",o:["Çalış!","Çalışın!","Çalışalım!","Çalışsın!"],expl:"3sg : çalış+sın (ı arrière) = Çalışsın!"},
+];
+
+// ─── BANQUE A2.2 — Syntaxe (17 questions) ─────────────────
+const BANK_A22 = [
+  // Relatives -en/-an
+  {q:"La femme qui travaille : çalış___ kadın",c:"çalışan",o:["çalışan","çalışen","çalışıyor","çalıştı"],expl:"çalış + an (a arrière) = çalışan"},
+  {q:"L'enfant qui pleure : ağla___ çocuk",c:"ağlayan",o:["ağlayan","ağlaan","ağlayıyor","ağladı"],expl:"ağla (voyelle) + y+an = ağlayan"},
+  {q:"Le film que j'ai regardé : benim izle___ film",c:"izlediğim",o:["izlediğim","izliyorum","izleyeceğim","izleyen"],expl:"-dik+possessif 1sg : izle+di+ğ+im = izlediğim (k→ğ)"},
+  {q:"La semaine prochaine (litt. la semaine qui vient) : ___ hafta",c:"gelecek",o:["gelen","gelecek","geldi","geliyor"],expl:"Futur relatif : gel+ecek = gelecek (hafta)"},
+  {q:"L'étudiant qui ne parle pas : konuş___ öğrenci",c:"konuşmayan",o:["konuşmayan","konuşmeyen","konuşmadı","konuşmuyor"],expl:"Négatif participial arrière : konuş+ma+yan = konuşmayan"},
+  {q:"La lettre qu'il a écrite : onun yaz___ mektup",c:"yazdığı",o:["yazdığı","yazacağı","yazan","yazıyor"],expl:"-dik+poss 3sg : yaz+dı+ğ+ı = yazdığı"},
+  // Conditionnel
+  {q:"Si tu viens, je serai content. → Sen gel___, mutlu olurum.",c:"irsen",o:["irsen","sen","seydim","miyim"],expl:"Réel : gel+ir (aoriste)+se+n = gelirsen"},
+  {q:"S'il faisait beau, je sortirais. → Hava güzel ol___, çıkardım.",c:"saydı",o:["saydı","sa","se","ursa"],expl:"Hypothétique : ol+sa+y+dı = olsaydı (a arrière)"},
+  {q:"Même si elle vient, je ne pars pas. → O gelse ___ gitmem.",c:"bile",o:["bile","için","gibi","da"],expl:"bile après conditionnel = même si"},
+  {q:"Si tu ne pars pas (négatif conditionnel) : git___",c:"mezsen",o:["mezsen","mesen","mesin","meyecek"],expl:"Négatif : git+me+z+se+n = gitmezsen"},
+  // Nécessité -meli
+  {q:"Nous devons partir. → Git___.",c:"meliyiz",o:["meliyiz","ecektik","tik","iyoruz"],expl:"-meli+yiz (e avant)"},
+  {q:"Tu ne devrais pas mentir. → Yalan söyle___.",c:"memelisin",o:["memelisin","meyeceksin","medisin","miyorsun"],expl:"Négatif obligation : söyle+me+meli+sin"},
+  {q:"Ils doivent étudier. → Çalış___.",c:"malılar",o:["malılar","malıyız","malıyım","malısınız"],expl:"-malı+lar (a arrière, 3pl = +lar, pas +yız)"},
+  // Complétives
+  {q:"Je sais qu'elle viendra. → Onun gel___ biliyorum.",c:"eceğini",o:["eceğini","diğini","mesini","sin"],expl:"Futur indirect : gel+ecek+i+ni = geleceğini"},
+  {q:"Je pense qu'ils sont partis. → Onların git___ düşünüyorum.",c:"tiklerini",o:["tiklerini","eceklerini","melilerini","diler"],expl:"Passé indirect 3pl : git+tik+leri+ni = gittiklerini"},
+  {q:"Il dit qu'il ne viendra pas. → Gel___ söyledi.",c:"meyeceğini",o:["meyeceğini","mediğini","mesini","mez"],expl:"Futur négatif indirect : gel+me+yeceğini"},
+  {q:"Je sais qu'elle travaille. → Onun çalış___ biliyorum.",c:"tığını",o:["tığını","acağını","malıdır","ıyor"],expl:"Présent/passé indirect : çalış+tık(ş→t sourd)+ı+nı = çalıştığını"},
+];
+
+// ─── BANQUE B1.1 — Voix et gérondifs (17 questions) ───────
+const BANK_B11 = [
+  // Gérondifs
+  {q:"Il est entré en chantant. → Şarkı söyle___ girdi.",c:"-yerek",o:["-yerek","-rken","-meden","-yince"],expl:"söyle (voyelle) + yerek = söyleyerek (-erek = manière)"},
+  {q:"Pendant qu'il lisait, le téléphone a sonné. → O oku___, telefon çaldı.",c:"-rken",o:["-rken","-arak","-madan","-dikten sonra"],expl:"-ken sur l'aoriste : oku+r+ken = okurken"},
+  {q:"Il est parti sans dire au revoir. → Vedalaş___ gitti.",c:"-madan",o:["-madan","-arak","-ince","-dikten sonra"],expl:"vedalaş+madan (a arrière) = sans se dire au revoir"},
+  {q:"Dès qu'il arrivera, appelle-moi. → O gel___, beni ara.",c:"-ince",o:["-ince","-erek","-madan","-dikten sonra"],expl:"gel+(y)ince (e avant) = dès qu'il arrivera"},
+  {q:"Après avoir mangé, il a dormi. → Ye___, uyudu.",c:"-dikten sonra",o:["-dikten sonra","-erek","-madan","-ince"],expl:"-dikten sonra = après avoir fait (e avant)"},
+  {q:"Elle a pris son manteau et est sortie. → Montunu al___, çıktı.",c:"-ıp",o:["-ıp","-arak","-madan","-ince"],expl:"-ıp (a arrière) = séquence 'et puis'"},
+  // Passif
+  {q:"Passif de açmak (ouvrir) au présent : la porte est ouverte",c:"açılıyor",o:["açılıyor","açıyor","açtırıyor","açıldı"],expl:"aç + ıl + ıyor = açılıyor"},
+  {q:"Passif de görmek (voir) — il a été vu",c:"görüldü",o:["görüldü","gördü","görüldük","görünüyor"],expl:"gör + ül + dü = görüldü"},
+  {q:"Passif de satmak (vendre) — la maison a été vendue",c:"satıldı",o:["satıldı","sattı","satılıyor","satıldık"],expl:"sat + ıl + dı = satıldı"},
+  {q:"Agent passif 'par les étudiants' : öğrenciler ___",c:"tarafından",o:["tarafından","tarafta","tarafına","tarafından"],expl:"tarafından = par (agent dans une phrase passive)"},
+  {q:"Passif de yazmak (écrire) — voyelle ou consonne finale ?",c:"yazılmak (consonne → +ıl)",o:["yazılmak (consonne → +ıl)","yazınmak (voyelle → +n)","yazmamak","yazılmamak"],expl:"yaz se termine par une consonne → suffixe passif -ıl"},
+  // Causatif
+  {q:"J'ai fait lire les élèves. → Öğrencilere kitap oku___.",c:"ttum",o:["ttum","dum","lerim","mişim"],expl:"oku (voyelle) + t (causatif) + tum = okuttum"},
+  {q:"J'ai fait laver la voiture. → Arabamı yıka___.",c:"ttım",o:["ttım","dım","tım","ndım"],expl:"yıka (voyelle) + t + tım = yıkattım"},
+  // Discours rapporté
+  {q:"Discours indirect passé : Il a dit qu'il était venu. → Gel___ söyledi.",c:"diğini",o:["diğini","eceğini","mesini","sin"],expl:"Passé indirect : gel+dik+i+ni = geldiğini"},
+  {q:"Citation avec diye : Ali a crié qu'il avait faim. → Ali 'Açım' ___ bağırdı.",c:"diye",o:["diye","dedi","söyledi","gibi"],expl:"diye = particule citationnelle entre la citation et le verbe déclaratif"},
+  {q:"Discours direct — forme correcte ?",c:"Ayşe 'Geliyorum' dedi.",o:["Ayşe 'Geliyorum' dedi.","Ayşe geldiğini dedi.","Ayşe geleceğini dedi.","Ayşe gelince dedi."],expl:"Discours direct = citation verbatim entre guillemets + dedi/söyledi"},
+  {q:"Il a dit qu'il partirait. → Git___ söyledi.",c:"eceğini",o:["eceğini","tiğini","mesini","meli"],expl:"Futur indirect : git+ecek+i+ni = gideceğini"},
+];
+
+// ─── BANQUE B1.2 — Structures complexes (17 questions) ────
+const BANK_B12 = [
+  // Réfléchi / réciproque
+  {q:"Se préparer (réfléchi de hazırlamak)",c:"hazırlanmak",o:["hazırlanmak","hazırlatmak","hazırlaşmak","hazırlanılmak"],expl:"hazırla + n (réfléchi) = hazırlanmak"},
+  {q:"Faire connaissance (réciproque de tanımak)",c:"tanışmak",o:["tanınmak","tanışmak","tanıtmak","tanımlamak"],expl:"tanı + ş (réciproque) = tanışmak"},
+  {q:"Se voir mutuellement (réciproque de görmek)",c:"görüşmek",o:["görünmek","görüşmek","görülmek","göstermek"],expl:"gör + üş (réciproque) = görüşmek"},
+  {q:"S'habiller (réfléchi de giydirmek)",c:"giyinmek",o:["giyinmek","giyişmek","giyilmek","giydirmek"],expl:"giyin = réfléchi (s'habiller soi-même)"},
+  {q:"Voix de anlaşmak ?",c:"Réciproque",o:["Réfléchie","Réciproque","Passive","Causative"],expl:"anla + ş = réciproque → se comprendre mutuellement = s'entendre"},
+  // Nominalisation
+  {q:"J'aime nager. (acc.) → Yüz___ severim.",c:"meyi",o:["meyi","mek","mekten","mekte"],expl:"-meyi = accusatif de -me (e avant) : yüzmeyi"},
+  {q:"Courir est bon pour la santé. (sujet) → ___ sağlık için iyidir.",c:"Koşmak",o:["Koşmak","Koşma","Koşarak","Koşarken"],expl:"-mak = infinitif-sujet (nominalisé)"},
+  {q:"Je suis fatigué de travailler. → Çalış___ bıktım.",c:"maktan",o:["maktan","mayı","mak","madan"],expl:"-maktan = ablatif de -mak : cause/origine"},
+  {q:"Il est allé courir. (but) → Koş___ gitti.",c:"maya",o:["maya","may","mak","madan"],expl:"-maya = datif de -ma : but du déplacement"},
+  {q:"Le regard d'Ali → Ali'nin ___",c:"bakışı",o:["bakışı","bakması","baktığı","bakacağı"],expl:"-ış = manière de faire : bak+ış = bakış"},
+  // Hypothétique passé
+  {q:"S'il était venu (il n'est pas venu) → ___, mutlu olurdum.",c:"Gelseydi",o:["Gelseydi","Gelse","Gelirse","Geldi"],expl:"Irréel passé 3sg : gel+se+y+di = gelseydi"},
+  {q:"Si j'avais travaillé plus, j'aurais réussi. → Daha çok çalışsay___, başarırdım.",c:"dım",o:["dım","dın","dı","dık"],expl:"Irréel passé 1sg : çalışsay+dım"},
+  {q:"Conséquence irréelle 3sg : Il serait parti. → Gid___.",c:"erdi",o:["erdi","erdim","erdik","erdiniz"],expl:"Apodose 3sg : git+er+di = giderdi"},
+  {q:"Si nous avions su, nous n'aurions pas fait ça. → Bilseydik, yap___.",c:"mazdık",o:["mazdık","mazdın","mazdı","mazdılar"],expl:"Apodose 1pl négatif : yap+ma+z+dık = yapmazdık"},
+  // Registres
+  {q:"'Araştırma sonuçları açıklanacaktır.' — registre ?",c:"Académique / formel",o:["Familier","Académique / formel","Oral courant","Argotique"],expl:"-acaktır + passif = double marqueur formel/académique"},
+  {q:"'Nerdesin?' vs 'Neredesin?' — lequel est familier ?",c:"Nerdesin?",o:["Neredesin?","Nerdesin?"],expl:"Nerde = contraction orale/familière de nerede"},
+  {q:"'Napıyorsun?' — forme standard ?",c:"Ne yapıyorsun?",o:["Ne yapıyorsun?","Ne yaparsın?","Neden yapıyorsun?","Ne yaptın?"],expl:"Na- = contraction familière de ne ya- (élision de 'ye')"},
+];
+
+// ─── BANQUE B2 — Maîtrise avancée (17 questions) ──────────
+const BANK_B2 = [
+  // Aspects verbaux complexes
+  {q:"Her sabah koşardım. — Valeur temporelle ?",c:"Habitude passée",o:["Habitude passée","Passé ponctuel","Futur","Présent habituel"],expl:"Aoriste + -dı = habitude passée (imparfait d'habitude)"},
+  {q:"Okuyordum. — Valeur ?",c:"Progressif passé",o:["Progressif passé","Habitude passée","Plus-que-parfait","Futur dans le passé"],expl:"-yor + -du = action en cours dans le passé"},
+  {q:"Gelmişti. — Valeur ?",c:"Plus-que-parfait",o:["Passé simple","Plus-que-parfait","Habitude passée","Passé narratif"],expl:"-miş + -ti = antériorité par rapport à un autre passé"},
+  {q:"Gelecekti. — Valeur ?",c:"Futur dans le passé",o:["Futur simple","Habitude passée","Plus-que-parfait","Futur dans le passé"],expl:"-ecek + -ti = il allait venir (mais ne l'a pas fait)"},
+  {q:"Kitabı okuyup bitirdim. — Aspect ?",c:"Terminatif",o:["Terminatif","Ingressif","Habituel","Progressif"],expl:"-ip + bitirmek = aspect terminatif (j'ai fini de lire)"},
+  {q:"Çalışmaya başladı. — Aspect ?",c:"Ingressif",o:["Ingressif","Terminatif","Habituel","Concessif"],expl:"-maya başlamak = commencer à faire = aspect ingressif"},
+  {q:"Müziği dinlemeye devam etti. — Aspect ?",c:"Continuatif",o:["Continuatif","Terminatif","Ingressif","Passif"],expl:"-meye devam etmek = continuer à faire = aspect continuatif"},
+  // Concessives et logiques
+  {q:"Même s'il vient, je ne pars pas. → Gelse ___ gitmem.",c:"bile",o:["bile","için","gibi","da"],expl:"bile après conditionnel = même si"},
+  {q:"Malgré la pluie, je suis sorti. → Yağmur___ rağmen çıktım.",c:"a",o:["a","dan","da","un"],expl:"rağmen exige le datif : yağmur+a = yağmura rağmen"},
+  {q:"D'autre part, ce n'est pas simple. → ___, bu kolay değil.",c:"Öte yandan",o:["Öte yandan","Dolayısıyla","Oysa","Hem"],expl:"Öte yandan = d'autre part (connecteur soutenu)"},
+  {q:"Ni lui ni moi ne sommes venus. → ___ o ___ ben geldik.",c:"Ne … ne",o:["Ne … ne","Hem … hem","Ya … ya","Ama … ama"],expl:"Ne…ne = ni…ni"},
+  {q:"Soit tu viens, soit tu pars. → ___ gel ___ git.",c:"Ya … ya",o:["Ya … ya","Hem … hem","Ne … ne","Ama … ama"],expl:"Ya…ya = soit…soit"},
+  {q:"Par conséquent, le projet est annulé. → ___, proje iptal edildi.",c:"Dolayısıyla",o:["Dolayısıyla","Oysa","Bununla birlikte","Rağmen"],expl:"Dolayısıyla = par conséquent (formel)"},
+  // Style académique
+  {q:"'Veriler analiz edilmiştir.' — double marqueur formel ?",c:"Passif + -miştir",o:["Passif + -miştir","Aoriste + passif","Passif + -acaktır","Actif + -tır"],expl:"edilmiştir = passif + -miştir = double marque académique"},
+  {q:"'ancak' vs 'ama' — lequel est soutenu/académique ?",c:"ancak",o:["ancak","ama"],expl:"ancak = mais/cependant soutenu ; ama = mais courant/oral"},
+  {q:"Nominalisation en -lık/-lik : 'égalité' ?",c:"eşitlik",o:["eşitlik","eşitmek","eşitce","eşiti"],expl:"eşit (égal) + lik (e avant) = eşitlik"},
+  {q:"'Söz konusu raporda belirtildiği gibi…' — style ?",c:"Académique / journalistique",o:["Familier","Académique / journalistique","Oral","Argotique"],expl:"Söz konusu = ledit (formel) + passif -dik + gérondif gibi = style formel"},
+];
+
+// ─── MOTEUR DE TIRAGE ALÉATOIRE ───────────────────────────
+
+const BANKS = {a21: BANK_A21, a22: BANK_A22, b11: BANK_B11, b12: BANK_B12, b2: BANK_B2};
+const VOCAB_KEYS = {
+  a21: () => typeof VOCAB_A21 !== 'undefined' ? VOCAB_A21 : [],
+  a22: () => typeof VOCAB_A22 !== 'undefined' ? VOCAB_A22 : [],
+  b11: () => typeof VOCAB_B11 !== 'undefined' ? VOCAB_B11 : [],
+  b12: () => typeof VOCAB_B12 !== 'undefined' ? VOCAB_B12 : [],
+  b2:  () => typeof VOCAB_B2  !== 'undefined' ? VOCAB_B2  : [],
+};
+const LEVEL_LABELS = {
+  a21: 'Temps verbaux A2.1', a22: 'Syntaxe A2.2',
+  b11: 'Voix et gérondifs B1.1', b12: 'Structures complexes B1.2',
+  b2:  'Maîtrise avancée B2'
 };
 
-// État des exercices IA
-const iaState = {};
+// État courant des tirages
+const rndState = {};
 
-function getVocabForIA(vocabKey) {
-  const vocabMap = {
-    'VOCAB_A21': typeof VOCAB_A21 !== 'undefined' ? VOCAB_A21 : [],
-    'VOCAB_A22': typeof VOCAB_A22 !== 'undefined' ? VOCAB_A22 : [],
-    'VOCAB_B11': typeof VOCAB_B11 !== 'undefined' ? VOCAB_B11 : [],
-    'VOCAB_B12': typeof VOCAB_B12 !== 'undefined' ? VOCAB_B12 : [],
-    'VOCAB_B2':  typeof VOCAB_B2  !== 'undefined' ? VOCAB_B2  : [],
-  };
-  return vocabMap[vocabKey] || [];
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
-function renderVocabIA(level) {
-  const cfg = IA_CONFIG[level];
-  const vocab = getVocabForIA(cfg.vocabKey);
-  const el = document.getElementById('ai-vocab-' + level);
+function renderRndVocab(level) {
+  const vocab = VOCAB_KEYS[level]();
+  const el = document.getElementById('rnd-vocab-' + level);
   if (!el || !vocab.length) return;
-  let h = '<h4>📚 Vocabulaire utilisé pour la génération</h4>';
+  let h = '<h4>📚 Vocabulaire associé à cet exercice</h4>';
   vocab.forEach(theme => {
-    h += `<strong style="font-family:var(--font-sans);font-size:.79rem;color:var(--navy)">${theme.title}</strong> — `;
-    h += theme.words.slice(0, 8).map(w => `<span class="tk">${w.t}</span> (${w.f})`).join(', ');
-    if (theme.words.length > 8) h += ` <em style="color:var(--muted)">+${theme.words.length - 8} autres</em>`;
+    h += `<strong style="font-family:var(--font-sans);font-size:.79rem;color:var(--navy)">${theme.title}</strong> : `;
+    const words = theme.words.slice(0, 10);
+    h += words.map(w => `<span class="tk">${w.t}</span>&nbsp;(${w.f})`).join(' · ');
+    if (theme.words.length > 10) h += ` <em style="color:var(--muted)">+${theme.words.length - 10}</em>`;
     h += '<br>';
   });
   el.innerHTML = h;
 }
 
-function buildVocabList(vocabKey) {
-  const vocab = getVocabForIA(vocabKey);
-  const all = [];
-  vocab.forEach(theme => {
-    theme.words.forEach(w => all.push(`${w.t} = ${w.f}`));
-  });
-  // Pick random 20 words
-  const shuffled = all.sort(() => Math.random() - 0.5).slice(0, 20);
-  return shuffled.join('\n');
-}
-
-async function genererExIA(level) {
-  const cfg = IA_CONFIG[level];
-  const statusEl = document.getElementById('ia-' + level + '-status');
-  const questionsEl = document.getElementById('ia-' + level + '-questions');
-  const actionsEl = document.getElementById('ia-' + level + '-actions');
-  const corrEl = document.getElementById('ia-' + level + '-corr');
+function tirerExRandom(level) {
+  const bank = BANKS[level];
+  const statusEl = document.getElementById('rnd-' + level + '-status');
+  const questionsEl = document.getElementById('rnd-' + level + '-questions');
+  const actionsEl = document.getElementById('rnd-' + level + '-actions');
+  const corrEl = document.getElementById('rnd-' + level + '-corr');
+  const scoreEl = document.getElementById('rnd-' + level + '-score');
 
   // Reset
   corrEl.classList.remove('show');
   corrEl.innerHTML = '';
-  actionsEl.style.display = 'none';
-  document.getElementById('ia-' + level + '-score').innerHTML = '';
-  statusEl.textContent = '';
-  questionsEl.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Génération en cours…</div>';
+  scoreEl.innerHTML = '';
 
-  const vocabList = buildVocabList(cfg.vocabKey);
+  // Shuffle + pick 5
+  const picked = shuffle(bank).slice(0, 5);
+  rndState[level] = picked;
 
-  const prompt = `Tu es un professeur de turc expert. Génère exactement 5 questions QCM pour des apprenants de niveau ${cfg.niveau}.
-
-LEÇON :
-${cfg.lecon}
-
-VOCABULAIRE DISPONIBLE (utilise ces mots dans tes questions) :
-${vocabList}
-
-CONSIGNES STRICTES :
-- Exactement 5 questions
-- Chaque question a exactement 3 ou 4 options de réponse
-- Varie les types : conjugaison, traduction, choix de suffixe, sens d'un mot, construction de phrase
-- Utilise le vocabulaire fourni dans les questions et options
-- Les questions doivent couvrir différents points de la leçon
-- Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks
-
-FORMAT JSON OBLIGATOIRE :
-[
-  {
-    "q": "texte de la question (peut contenir du turc en italique)",
-    "opts": ["option A", "option B", "option C"],
-    "correct": 0,
-    "expl": "explication courte de la bonne réponse"
-  }
-]
-
-Le champ "correct" est l'INDEX (0, 1, 2 ou 3) de la bonne réponse dans le tableau "opts".`;
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    if (!response.ok) throw new Error('Erreur API: ' + response.status);
-    const data = await response.json();
-    const text = data.content.map(b => b.text || '').join('');
-    
-    // Clean JSON
-    let json = text.trim();
-    json = json.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
-    
-    const questions = JSON.parse(json);
-    if (!Array.isArray(questions) || questions.length === 0) throw new Error('Format invalide');
-
-    iaState[level] = questions;
-    renderQuestionsIA(level, questions);
-    actionsEl.style.display = 'flex';
-    statusEl.textContent = `✓ ${questions.length} questions générées`;
-  } catch (err) {
-    questionsEl.innerHTML = `<div style="font-family:var(--font-sans);font-size:.84rem;color:var(--red);padding:.8rem">
-      Erreur lors de la génération : ${err.message}. Réessayez dans quelques secondes.
-    </div>`;
-    statusEl.textContent = '';
-    console.error(err);
-  }
-}
-
-function renderQuestionsIA(level, questions) {
-  const el = document.getElementById('ia-' + level + '-questions');
+  // Render
   let h = '';
-  questions.forEach((q, qi) => {
-    h += `<div class="ai-qcm-ia" id="ia-${level}-q${qi}">
-      <div class="ai-qcm-qt"><strong>${qi + 1}.</strong> ${q.q}</div>
-      <div class="ai-opts">`;
-    q.opts.forEach((opt, oi) => {
-      h += `<button class="ai-opt" data-qi="${qi}" data-oi="${oi}" onclick="selectOptIA('${level}',${qi},${oi},this)">${opt}</button>`;
+  picked.forEach((q, qi) => {
+    // Shuffle options but track correct answer
+    const indexed = q.o.map((opt, i) => ({opt, correct: opt === q.c}));
+    const shuffledOpts = shuffle(indexed);
+    const correctIdx = shuffledOpts.findIndex(x => x.correct);
+
+    // Store shuffled correct index
+    rndState[level][qi]._shuffledOpts = shuffledOpts;
+    rndState[level][qi]._correctIdx = correctIdx;
+
+    h += `<div class="rnd-qcm" id="rnd-${level}-q${qi}">
+      <div class="rnd-qt"><strong>${qi + 1}.</strong> ${q.q}</div>
+      <div class="rnd-opts">`;
+    shuffledOpts.forEach((item, oi) => {
+      h += `<button class="rnd-opt" data-oi="${oi}" onclick="selectRndOpt('${level}',${qi},${oi},this)">${item.opt}</button>`;
     });
     h += `</div></div>`;
   });
-  el.innerHTML = h;
+  questionsEl.innerHTML = h;
+  actionsEl.style.display = 'flex';
+  statusEl.textContent = `5 questions tirées parmi ${bank.length}`;
 }
 
-function selectOptIA(level, qi, oi, btn) {
-  const qDiv = document.getElementById('ia-' + level + '-q' + qi);
-  qDiv.querySelectorAll('.ai-opt').forEach(b => b.classList.remove('sel'));
+function selectRndOpt(level, qi, oi, btn) {
+  const qDiv = document.getElementById('rnd-' + level + '-q' + qi);
+  qDiv.querySelectorAll('.rnd-opt').forEach(b => {
+    b.classList.remove('sel');
+    b.dataset.selected = '';
+  });
   btn.classList.add('sel');
   btn.dataset.selected = 'true';
 }
 
-function verifierIA(level) {
-  const questions = iaState[level];
+function verifierRandom(level) {
+  const questions = rndState[level];
   if (!questions) return;
   let ok = 0;
   let corrHtml = '<h5>✓ Correction</h5><table><tr><th>#</th><th>Bonne réponse</th><th>Explication</th></tr>';
 
   questions.forEach((q, qi) => {
-    const qDiv = document.getElementById('ia-' + level + '-q' + qi);
-    const opts = qDiv.querySelectorAll('.ai-opt');
-    const correct = q.correct;
-    
-    // Remove previous states
+    const qDiv = document.getElementById('rnd-' + level + '-q' + qi);
+    const opts = qDiv.querySelectorAll('.rnd-opt');
+    const correctIdx = q._correctIdx;
+
     opts.forEach(b => b.classList.remove('ok', 'ko'));
-    // Mark correct
-    opts[correct] && opts[correct].classList.add('ok');
-    // Check selected
-    const sel = qDiv.querySelector('.ai-opt.sel');
+    if (opts[correctIdx]) opts[correctIdx].classList.add('ok');
+
+    const sel = qDiv.querySelector('.rnd-opt[data-selected="true"]');
     if (sel) {
       const selIdx = parseInt(sel.dataset.oi);
-      if (selIdx === correct) { ok++; sel.classList.remove('ko'); }
+      if (selIdx === correctIdx) { ok++; }
       else { sel.classList.add('ko'); }
     }
-    // Show explanation
-    const explDiv = qDiv.querySelector('.ai-expl') || document.createElement('div');
-    explDiv.className = 'ai-expl';
-    explDiv.textContent = `✓ ${q.opts[correct]} — ${q.expl}`;
-    if (!qDiv.querySelector('.ai-expl')) qDiv.appendChild(explDiv);
+
+    // Show explanation inline
+    let explDiv = qDiv.querySelector('.rnd-expl');
+    if (!explDiv) { explDiv = document.createElement('div'); explDiv.className = 'rnd-expl'; qDiv.appendChild(explDiv); }
+    explDiv.textContent = `✓ ${q.c} — ${q.expl}`;
 
     corrHtml += `<tr>
-      <td style="font-family:var(--font-sans);font-size:.78rem;font-weight:600">${qi + 1}</td>
-      <td class="tk">${q.opts[correct]}</td>
+      <td style="font-family:var(--font-sans);font-size:.78rem;font-weight:600;color:var(--navy)">${qi + 1}</td>
+      <td class="tk">${q.c}</td>
       <td style="font-family:var(--font-sans);font-size:.77rem;color:var(--muted)">${q.expl}</td>
     </tr>`;
   });
 
   corrHtml += '</table>';
-  const scoreEl = document.getElementById('ia-' + level + '-score');
-  scoreEl.innerHTML = `Score : <strong>${ok}/${questions.length}</strong>`;
+  const scoreEl = document.getElementById('rnd-' + level + '-score');
+  scoreEl.innerHTML = `Score : <strong>${ok}/5</strong>`;
 
-  const corrEl = document.getElementById('ia-' + level + '-corr');
+  const corrEl = document.getElementById('rnd-' + level + '-corr');
   corrEl.innerHTML = corrHtml;
   corrEl.classList.add('show');
 }
 
-// Init vocab boxes for all IA sections
+// Init vocab display on load
 document.addEventListener('DOMContentLoaded', function() {
-  ['a21','a22','b11','b12','b2'].forEach(lvl => renderVocabIA(lvl));
+  ['a21','a22','b11','b12','b2'].forEach(lvl => renderRndVocab(lvl));
 });
 
 </script>
