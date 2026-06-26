@@ -136,6 +136,64 @@
     border-radius:6px;
   }
   button.icon-btn:hover{background:var(--panel2);color:var(--text);}
+  /* ---- Cours disponibles ---- */
+  .available-courses-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .available-course-card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    text-decoration:none;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:20px 28px;
+    min-width:120px;
+    transition:transform .15s, border-color .15s, box-shadow .15s;
+    position:relative;
+    overflow:hidden;
+  }
+  .available-course-card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.08));
+    opacity:0;
+    transition:opacity .2s;
+  }
+  .available-course-card:hover{
+    transform:translateY(-3px);
+    border-color:var(--accent);
+    box-shadow:0 8px 24px rgba(99,102,241,0.2);
+  }
+  .available-course-card:hover::before{ opacity:1; }
+  .available-course-flag{
+    font-size:2.4rem;
+    line-height:1;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+  .available-course-name{
+    color:var(--text);
+    font-size:1rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .available-course-level{
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:white;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    padding:2px 8px;
+    border-radius:20px;
+  }
+  /* ---- /Cours disponibles ---- */
   .course-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
@@ -266,6 +324,22 @@
   <!-- VUE COURS -->
   <div class="view active" id="view-courses">
     <div id="courses-list-view">
+      <div class="card" id="available-courses-card">
+        <h2>Cours disponibles</h2>
+        <p style="color:var(--muted);font-size:0.88rem;margin:0 0 16px;">Accédez directement à un cours structuré et guidé.</p>
+        <div class="available-courses-grid">
+          <a href="https://alaniadev.github.io/MM1/apps/vocab-app/cours_turc_A1.html" class="available-course-card">
+            <span class="available-course-flag">🇹🇷</span>
+            <span class="available-course-name">Turc</span>
+            <span class="available-course-level">A1</span>
+          </a>
+          <a href="https://alaniadev.github.io/MM1/apps/vocab-app/cours_espagnol.html" class="available-course-card">
+            <span class="available-course-flag">🇪🇸</span>
+            <span class="available-course-name">Espagnol</span>
+            <span class="available-course-level">A1</span>
+          </a>
+        </div>
+      </div>
       <div class="card">
         <h2>Ajouter un cours (langue)</h2>
         <div class="row">
