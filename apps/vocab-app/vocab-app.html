@@ -230,65 +230,6 @@
     color:var(--muted);
     text-align:center;
   }
-  /* ── Boutons d'accès aux cours ── */
-  .course-access-btn{
-    background:var(--panel2);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:18px 14px;
-    text-align:center;
-    cursor:pointer;
-    transition:.2s;
-    position:relative;
-    overflow:hidden;
-  }
-  .course-access-btn:not(.disabled):hover{
-    border-color:var(--accent);
-    transform:translateY(-3px);
-    box-shadow:0 8px 24px rgba(99,102,241,0.25);
-    background:linear-gradient(135deg,var(--panel2),#2d2060);
-  }
-  .course-access-btn.disabled{
-    opacity:0.45;
-    cursor:default;
-    filter:grayscale(30%);
-  }
-  .course-access-flag{
-    font-size:2.4rem;
-    line-height:1;
-    margin-bottom:10px;
-    filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-  }
-  .course-access-name{
-    font-size:1rem;
-    font-weight:700;
-    color:var(--text);
-    margin-bottom:2px;
-  }
-  .course-access-level{
-    font-size:0.78rem;
-    color:var(--muted);
-    margin-bottom:10px;
-  }
-  .course-access-badge{
-    display:inline-block;
-    padding:3px 10px;
-    border-radius:20px;
-    font-size:0.72rem;
-    font-weight:600;
-    letter-spacing:.03em;
-  }
-  .course-access-badge.available{
-    background:rgba(34,197,94,0.15);
-    color:#22c55e;
-    border:1px solid rgba(34,197,94,0.3);
-  }
-  .course-access-badge.soon{
-    background:rgba(148,163,184,0.1);
-    color:var(--muted);
-    border:1px solid var(--border);
-  }
-
   select, input{outline:none;}
   .field-label{font-size:0.8rem;color:var(--muted);margin-bottom:4px;display:block;}
   .toast{
@@ -313,7 +254,7 @@
 <header>
   <h1>📚 VocaBox</h1>
   <nav>
-    <button data-view="courses" class="active">Liste de vocabulaire</button>
+    <button data-view="courses" class="active">Mes cours</button>
     <button data-view="review">Réviser</button>
     <a href="https://alaniadev.github.io/MM1/index.html" id="external-link-btn" target="_blank" rel="noopener noreferrer">Accueil</a>
 
@@ -321,50 +262,6 @@
 </header>
 
 <main>
-
-  <!-- ACCÈS AU COURS -->
-  <div class="card" style="margin-bottom:20px;">
-    <h2 style="margin-top:0; margin-bottom:16px;">📖 Accès au cours</h2>
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:12px;">
-
-      <!-- Turc A1 — disponible -->
-      <a href="https://alaniadev.github.io/MM1/apps/vocab-app/cours_turc_A1.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-        <div class="course-access-btn">
-          <div class="course-access-flag">🇹🇷</div>
-          <div class="course-access-name">Turc</div>
-          <div class="course-access-level">Niveau A1-B2</div>
-          <div class="course-access-badge available">Mevcut</div>
-        </div>
-      </a>
-
-      <!-- Espagnol — bientôt -->
-        <a href="https://alaniadev.github.io/MM1/apps/vocab-app/cours_XXXXXXX1.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-        <div class="course-access-btn">
-          <div class="course-access-flag">🇪🇸</div>
-          <div class="course-access-name">Espagnol</div>
-          <div class="course-access-level">Niveau A1</div>
-          <div class="course-access-badge soon">asequible</div>
-        </div>
-      </a>
-
-      <!-- Chinois — bientôt -->
-      <div class="course-access-btn disabled">
-        <div class="course-access-flag">🇨🇳</div>
-        <div class="course-access-name">Chinois</div>
-        <div class="course-access-level">Niveau A1</div>
-        <div class="course-access-badge soon">Bientôt</div>
-      </div>
-
-      <!-- Allemand — bientôt -->
-      <div class="course-access-btn disabled">
-        <div class="course-access-flag">🇩🇪</div>
-        <div class="course-access-name">Allemand</div>
-        <div class="course-access-level">Niveau A1</div>
-        <div class="course-access-badge soon">Bientôt</div>
-      </div>
-
-    </div>
-  </div>
 
   <!-- VUE COURS -->
   <div class="view active" id="view-courses">
@@ -399,6 +296,15 @@
           <input type="text" id="new-list-name" placeholder="Nom de la liste (ex: Animaux)">
           <button class="btn" onclick="addList()">+ Ajouter</button>
         </div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+          <span class="field-label">Importer depuis un fichier CSV (col 1 : mot étranger, col 2 : traduction)</span>
+          <div class="row" style="margin-top:6px;">
+            <label class="btn secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+              📂 Importer un CSV
+              <input type="file" id="csv-import-input" accept=".csv" style="display:none;" onchange="importCSV(this)">
+            </label>
+          </div>
+        </div>
       </div>
       <div class="card" id="lists-container">
         <h2>Listes</h2>
@@ -414,6 +320,7 @@
           <div class="row">
             <button class="icon-btn" onclick="renameCurrentList()">✏️ Renommer</button>
             <button class="icon-btn" onclick="deleteCurrentList()">🗑️ Supprimer</button>
+            <button class="btn secondary" onclick="exportCSV()">⬇️ Exporter CSV</button>
             <button class="btn secondary" onclick="goReviewThisList()">🎯 Réviser cette liste</button>
           </div>
         </div>
@@ -997,6 +904,80 @@ function backToSetup(){
   document.getElementById("quiz-result").style.display = "none";
   document.getElementById("review-setup").style.display = "block";
   refreshReviewSelectors(quizState ? quizState.courseId : null, quizState ? quizState.listId : null);
+}
+
+/* ================= CSV IMPORT / EXPORT ================= */
+function importCSV(input){
+  const file = input.files[0];
+  if(!file) return;
+
+  // Nom de la liste = nom du fichier sans extension
+  const listName = file.name.replace(/\.csv$/i, "").trim() || "Import CSV";
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/);
+    const words = [];
+    lines.forEach((line, idx) => {
+      if(!line.trim()) return;
+      // Support virgule et point-virgule comme séparateur
+      const sep = line.includes(";") ? ";" : ",";
+      const cols = line.split(sep);
+      const term = (cols[0] || "").trim();
+      const translation = (cols[1] || "").trim();
+      if(term && translation){
+        words.push(mkWord(term, translation));
+      }
+    });
+    if(words.length === 0){
+      showToast("Aucun mot valide trouvé dans le fichier CSV");
+      input.value = "";
+      return;
+    }
+    const course = getCourse(currentCourseId);
+    const newList = mkList(listName);
+    newList.words = words;
+    course.lists.push(newList);
+    saveData();
+    renderCourseDetail();
+    showToast(`✅ "${listName}" importée — ${words.length} mot(s)`);
+    input.value = ""; // reset input pour permettre re-import du même fichier
+  };
+  reader.onerror = function(){
+    showToast("Erreur lors de la lecture du fichier");
+    input.value = "";
+  };
+  reader.readAsText(file, "UTF-8");
+}
+
+function exportCSV(){
+  const list = getList();
+  if(!list) return;
+  if(list.words.length === 0){
+    showToast("La liste est vide, rien à exporter");
+    return;
+  }
+  // Construction du CSV : séparateur point-virgule, encodage UTF-8
+  const rows = list.words.map(w => {
+    const term = w.term.replace(/"/g, '""');
+    const translation = w.translation.replace(/"/g, '""');
+    return `"${term}";"${translation}"`;
+  });
+  const csvContent = rows.join("\r\n");
+  // Ajout BOM UTF-8 pour compatibilité Excel
+  const bom = "\uFEFF";
+  const blob = new Blob([bom + csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  // Nom du fichier = nom de la liste
+  a.download = list.name.replace(/[<>:"/\\|?*]/g, "_") + ".csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast(`✅ "${list.name}.csv" exporté`);
 }
 
 /* ================= UTIL ================= */
