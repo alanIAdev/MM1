@@ -37,6 +37,7 @@ body{font-family:var(--font-serif);color:var(--text);background:var(--bg);line-h
 .sidebar{
   position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;
   background:var(--navy);color:#fff;overflow-y:auto;z-index:200;
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
   display:flex;flex-direction:column
 }
 .sidebar-logo{
@@ -81,7 +82,7 @@ body{font-family:var(--font-serif);color:var(--text);background:var(--bg);line-h
 }
 
 /* === MAIN === */
-.main{margin-left:var(--sidebar-w);flex:1;padding:2.2rem 3.5rem 5rem;max-width:900px}
+.main{margin-left:var(--sidebar-w);flex:1;padding:2.2rem 3.5rem 5rem;max-width:900px;transition:margin-left .28s cubic-bezier(.4,0,.2,1)}
 
 /* === PAGE HEADER === */
 .page-header{padding-bottom:1.5rem;margin-bottom:2.5rem;border-bottom:2px solid var(--navy)}
@@ -244,6 +245,40 @@ tr:hover td{background:#edf0f8}
 /* ================================================
    PRINT
    ================================================ */
+
+/* === MOBILE === */
+.hamburger{
+  display:none;position:fixed;top:.75rem;left:.75rem;z-index:300;
+  background:var(--navy);color:#fff;border:none;border-radius:4px;
+  width:2.4rem;height:2.4rem;cursor:pointer;font-size:1.1rem;
+  align-items:center;justify-content:center;line-height:1;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:199;
+}
+@media(max-width:767px){
+  :root{--sidebar-w:256px}
+  .hamburger{display:flex}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0!important;padding:3.8rem 1.1rem 4rem}
+  .page-header{padding-top:.5rem}
+  table{font-size:.78rem}
+  table th,table td{padding:.3rem .45rem}
+  .opt{font-size:.82rem;padding:.35rem .6rem}
+  .fill-in{font-size:.88rem}
+  .module{padding:1.2rem 1rem}
+  .mod-head{flex-direction:column;gap:.25rem}
+  .actions{flex-wrap:wrap;gap:.4rem}
+  .btn{font-size:.78rem;padding:.35rem .7rem}
+}
+@media(min-width:768px){
+  .hamburger{display:none!important}
+}
+
 @media print{
   .sidebar,.print-btn,.actions,.star{display:none!important}
   .main{margin-left:0;padding:1cm 1.5cm;max-width:100%}
@@ -261,6 +296,8 @@ tr:hover td{background:#edf0f8}
 </style>
 </head>
 <body>
+<button class="hamburger" id="menuBtn" aria-label="Menu" onclick="toggleSidebar()">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <div class="layout">
 
 <!-- ══════════════════════ SIDEBAR ══════════════════════ -->
@@ -1924,6 +1961,782 @@ tr:hover td{background:#edf0f8}
 </section>
 
 
+
+<!-- ══════════════════════════════════════════
+     NIVEAU C1
+════════════════════════════════════════════ -->
+<style>
+.level-sep{background:var(--navy);color:#fff;font-family:var(--font-sans);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1.4rem;margin:3rem 0 2rem;border-radius:2px;scroll-margin-top:1.5rem}
+</style>
+
+<div class="level-sep" id="niv_c11">C1.1 — Nuances grammaticales avancées</div>
+
+<!-- ══ MOD 30 ══ -->
+<section class="module" id="mod30">
+  <div class="mod-head"><span class="mod-num">Module 30 — C1.1</span><h2>Évidentialités avancées — combinaisons et nuances</h2></div>
+  <p>À ce stade, vous maîtrisez la distinction -di / -miş. Ce module traite des <strong>combinaisons aspectuo-évidentielles</strong> qui permettent d'exprimer des nuances absentes en français et qui caractérisent le niveau C1.</p>
+
+  <h3>1. Le plus-que-parfait narratif : -mişti</h3>
+  <p><span class="tk">-miş + -ti</span> = antériorité dans un récit au passé, vu de l'extérieur. Le locuteur rapporte que quelque chose s'était passé avant un autre événement passé, sans en avoir été témoin direct.</p>
+  <table>
+    <tr><th>Forme</th><th>Exemple</th><th>Traduction et nuance</th></tr>
+    <tr><td class="tk">gelmiş + ti = gelmişti</td><td class="tk">O, ben varmadan önce gelmişti.</td><td>Il était (apparemment) arrivé avant que j'arrive. — antériorité + indirection</td></tr>
+    <tr><td class="tk">gitmiş + ti = gitmişti</td><td class="tk">Haber geldiğinde, çoktan gitmişti.</td><td>Quand la nouvelle arriva, il était déjà parti (d'après les témoins).</td></tr>
+  </table>
+  <div class="note">Contraste capital : <span class="tk">gelmişti</span> (il était venu — récit indirect) vs <span class="tk">gelmişmiş</span> (il paraît qu'il était venu — double indirection : on me rapporte un récit).</div>
+
+  <h3>2. La double indirection : -mişmiş</h3>
+  <p>Construction rare mais authentiquement turque : le locuteur rapporte qu'une source a elle-même rapporté un fait. Double distance évidentiaire.</p>
+  <table>
+    <tr><th>Exemple</th><th>Analyse</th><th>Traduction</th></tr>
+    <tr><td class="tk">Ali hasta<strong>ymış</strong>.</td><td>-miş simple : on m'a dit qu'Ali était malade</td><td>Il paraît qu'Ali est malade.</td></tr>
+    <tr><td class="tk">Ali hasta<strong>ymışmış</strong>.</td><td>-miş + -miş : quelqu'un m'a rapporté qu'on lui avait dit qu'Ali était malade</td><td>Il paraîtrait qu'Ali soit malade. (rumeur de seconde main)</td></tr>
+    <tr><td class="tk">Kitap çok iyi<strong>ymiş</strong>.</td><td>-miş : ouï-dire direct</td><td>Il paraît que le livre est très bien.</td></tr>
+  </table>
+
+  <h3>3. Surprise et déduction au -miş</h3>
+  <p>Outre l'ouï-dire, le -miş exprime la <strong>découverte étonnée</strong> d'un état de choses et la <strong>déduction logique</strong> (inférence).</p>
+  <table>
+    <tr><th>Emploi</th><th>Exemple</th><th>Traduction</th></tr>
+    <tr><td>Découverte (on réalise)</td><td class="tk">Vay, sen de burada<strong>ymışsın</strong>!</td><td>Tiens, toi aussi tu es ici ! (je réalise à l'instant)</td></tr>
+    <tr><td>Inférence (on déduit)</td><td class="tk">Kapı açık; içeride biri var<strong>mış</strong>.</td><td>La porte est ouverte ; il doit y avoir quelqu'un à l'intérieur.</td></tr>
+    <tr><td>Ironie / distance</td><td class="tk">Tabii, sen her şeyi bilir<strong>miş</strong>sin.</td><td>Bien sûr, toi tu saurais tout. (ironie — distance sarcastique)</td></tr>
+  </table>
+  <div class="key">⚑ L'emploi ironique du -miş est une marque du C1 oral. Il indique que le locuteur prend de la distance avec ce que son interlocuteur vient d'affirmer.</div>
+
+  <div class="ex" id="c1e1">
+    <h4>Exercice 30.1 — Identifier la valeur du -miş</h4>
+    <p class="ex-instr">Pour chaque phrase, identifiez la valeur exacte du suffixe -miş : ouï-dire, découverte, inférence, ironie ou double indirection.</p>
+    <div id="qc1e1"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e1','cc1e1','sc1e1','c1e1')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e1','sc1e1','c1e1')">Recommencer</button>
+      <span class="score" id="sc1e1"></span>
+    </div>
+    <div class="corr" id="cc1e1"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 31 ══ -->
+<section class="module" id="mod31">
+  <div class="mod-head"><span class="mod-num">Module 31 — C1.1</span><h2>Aspect et Aktionsart — verbes aspectuels composés</h2></div>
+  <p>Le turc dispose d'un système d'auxiliaires aspectuels suffixés qui affinent considérablement le sens du verbe principal. Ces formes sont absentes des manuels de niveau intermédiaire et constituent un marqueur fort de la compétence C1.</p>
+  <div class="note">Formation générale : V1 (gérondif en -e/-a ou -ip) + auxiliaire aspectuel conjugué. L'auxiliaire porte la flexion temporelle et personnelle.</div>
+
+  <h3>Tableau des verbes aspectuels composés</h3>
+  <table>
+    <tr><th>Construction</th><th>Valeur</th><th>Exemple</th><th>Traduction</th></tr>
+    <tr><td class="tk">-e durmak</td><td>Persistance, action qui continue sans interruption</td><td class="tk">Yağmur yağa durdu.</td><td>La pluie n'arrêtait pas de tomber.</td></tr>
+    <tr><td class="tk">-e kalmak</td><td>Résultat figé, situation qui s'impose suite à une action</td><td class="tk">Öyle söylemeye kaldı.</td><td>Il en est réduit à dire ça. / Il n'a plus qu'à dire ça.</td></tr>
+    <tr><td class="tk">-e yazmak</td><td>Quasi-accomplissement, action frôlée (= faillir)</td><td class="tk">Düşmeye yazdım.</td><td>J'ai failli tomber.</td></tr>
+    <tr><td class="tk">-iver- (gidivermek)</td><td>Soudaineté, action accomplie vite et facilement</td><td class="tk">Söyleyiverdi.</td><td>Il l'a dit comme ça, sans réfléchir. / D'un seul coup il a dit.</td></tr>
+    <tr><td class="tk">-agel- (söylegelmek)</td><td>Continuité depuis un passé lointain jusqu'au présent</td><td class="tk">Halk bunu söylegeliyor.</td><td>Le peuple dit cela depuis toujours.</td></tr>
+    <tr><td class="tk">-e koymak</td><td>Début brusque, passage soudain à l'action</td><td class="tk">Ağlamaya koyuldu.</td><td>Il s'est mis à pleurer (brusquement).</td></tr>
+    <tr><td class="tk">-ip durmak</td><td>Répétition agaçante, insistance</td><td class="tk">Aynı şeyi sorup duruyor.</td><td>Il n'arrête pas de poser la même question. (avec connotation d'agacement)</td></tr>
+  </table>
+  <div class="warn">⚠ Distinction subtile à maîtriser : <span class="tk">-e devam etmek</span> (continuer à — neutre, choix délibéré) vs <span class="tk">-e durmak</span> (continuer sans s'arrêter — aspectuel, souvent involontaire ou indépendant de la volonté) vs <span class="tk">-ip durmak</span> (répéter en boucle — connotation d'agacement).</div>
+
+  <div class="ex" id="c1e2">
+    <h4>Exercice 31.1 — Choisir le verbe aspectuel correct</h4>
+    <p class="ex-instr">Sélectionnez le verbe aspectuel composé qui correspond exactement à la nuance indiquée. Chaque option a une valeur différente — lisez attentivement.</p>
+    <div id="qc1e2"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e2','cc1e2','sc1e2','c1e2')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e2','sc1e2','c1e2')">Recommencer</button>
+      <span class="score" id="sc1e2"></span>
+    </div>
+    <div class="corr" id="cc1e2"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 32 ══ -->
+<section class="module" id="mod32">
+  <div class="mod-head"><span class="mod-num">Module 32 — C1.1</span><h2>Modalité épistémique et déontique fine</h2></div>
+  <p>Le système modal turc est plus riche que sa contrepartie française. Ce module traite des gradations de certitude, d'obligation et de probabilité qui distinguent le locuteur C1.</p>
+
+  <h3>Gradient de certitude épistémique</h3>
+  <table>
+    <tr><th>Forme</th><th>Degré de certitude</th><th>Exemple</th><th>Traduction</th></tr>
+    <tr><td class="tk">-dır (assertif)</td><td>Affirmation forte, vérité générale</td><td class="tk">İstanbul büyük bir şehirdir.</td><td>Istanbul est une grande ville. (fait établi)</td></tr>
+    <tr><td class="tk">-miş olmalı</td><td>Déduction logique forte (≈ doit avoir)</td><td class="tk">Bu kadar çalışmış olmalı.</td><td>Il doit avoir beaucoup travaillé. (j'en déduis)</td></tr>
+    <tr><td class="tk">-mış olabilir</td><td>Possibilité déductive (≈ a pu)</td><td class="tk">Erken gitmiş olabilir.</td><td>Il est peut-être parti tôt.</td></tr>
+    <tr><td class="tk">-ebilir</td><td>Possibilité non déductive (≈ peut)</td><td class="tk">Yarın yağmur yağabilir.</td><td>Il peut pleuvoir demain.</td></tr>
+    <tr><td class="tk">galiba / herhalde</td><td>Supposition personnelle</td><td class="tk">Galiba yorulmuş.</td><td>Il est probablement fatigué. (je suppose)</td></tr>
+    <tr><td class="tk">sanırım / sanki</td><td>Impression subjective</td><td class="tk">Sanırım geç kalacak.</td><td>J'ai l'impression qu'il va être en retard.</td></tr>
+  </table>
+
+  <h3>Incapacité vs interdiction : -ama- et ses nuances</h3>
+  <table>
+    <tr><th>Forme</th><th>Nuance</th><th>Exemple</th><th>Traduction</th></tr>
+    <tr><td class="tk">gelemiyor</td><td>Incapacité actuelle (circonstances)</td><td class="tk">Hasta olduğu için gelemiyor.</td><td>Il ne peut pas venir parce qu'il est malade.</td></tr>
+    <tr><td class="tk">gelemiyor</td><td>Interdiction implicite (contexte)</td><td class="tk">Buraya gelemiyor. (règlement)</td><td>Il ne peut pas venir ici. (= il n'a pas le droit)</td></tr>
+    <tr><td class="tk">gelemiz (gelememek)</td><td>Incapacité absolue, nature des choses</td><td class="tk">Ölüler konuşamaz.</td><td>Les morts ne peuvent pas parler.</td></tr>
+    <tr><td class="tk">-mama gerek</td><td>Interdiction déontique explicite</td><td class="tk">Buraya girmemen gerek.</td><td>Tu ne dois pas entrer ici.</td></tr>
+  </table>
+  <div class="key">⚑ En turc, le contexte détermine si -ama- exprime une incapacité ou une interdiction. C'est la pragmatique, non la morphologie, qui tranche. Un locuteur C1 maîtrise cette ambiguïté et sait la lever par intonation ou contexte additionnel.</div>
+
+  <div class="ex" id="c1e3">
+    <h4>Exercice 32.1 — Nuances modales</h4>
+    <p class="ex-instr">Pour chaque contexte, choisissez la forme modale qui exprime exactement le degré de certitude ou d'obligation indiqué.</p>
+    <div id="qc1e3"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e3','cc1e3','sc1e3','c1e3')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e3','sc1e3','c1e3')">Recommencer</button>
+      <span class="score" id="sc1e3"></span>
+    </div>
+    <div class="corr" id="cc1e3"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 33 ══ -->
+<section class="module" id="mod33">
+  <div class="mod-head"><span class="mod-num">Module 33 — C1.1</span><h2>Relatives complexes et enchâssements multiples</h2></div>
+  <p>Le turc n'a pas de pronom relatif. Toute proposition relative est un <strong>participe nominalisé</strong> qui précède son antécédent. À C1, les enchâssements peuvent atteindre 3 niveaux, produisant des groupes nominaux denses typiques de l'écrit formel turc.</p>
+
+  <h3>Récapitulatif : les trois participes relatifs</h3>
+  <table>
+    <tr><th>Participe</th><th>Valeur</th><th>Accord possessif requis ?</th></tr>
+    <tr><td class="tk">-en/-an</td><td>Sujet de la relative (présent ou passé)</td><td>Non (si sujet = sujet principal)</td></tr>
+    <tr><td class="tk">-dik/-dığ- + possessif</td><td>COD, COI, sujet différent — présent/passé</td><td>Oui — accord avec le sujet de la relative</td></tr>
+    <tr><td class="tk">-ecek/-acak + possessif</td><td>COD, COI, sujet différent — futur</td><td>Oui</td></tr>
+  </table>
+
+  <h3>Enchâssements à deux niveaux</h3>
+  <table>
+    <tr><th>Phrase complexe</th><th>Analyse</th><th>Traduction</th></tr>
+    <tr><td class="tk">Benim <u>okuduğum kitabı yazan</u> adam burada.</td><td>[okuduğum kitabı yazan] = relative à 2 niveaux : [okuduğum kitab-ı] = COD de yazan</td><td>L'homme qui a écrit le livre que j'ai lu est ici.</td></tr>
+    <tr><td class="tk"><u>Senin söylediğini duyduğum</u> haber doğru çıktı.</td><td>senin söylediği = ce que tu as dit (1ᵉʳ niveau) · duyduğum = que j'ai entendu (2ᵉ niveau)</td><td>La nouvelle que j'avais entendu que tu avais dite s'est avérée vraie.</td></tr>
+  </table>
+
+  <h3>Enchâssement à trois niveaux (style académique et juridique)</h3>
+  <p class="tk" style="line-height:2.2"><u>Toplantıya katılmaya karar veren kişilerin listesini hazırlayan</u> sekreter bugün izinli.</p>
+  <p style="font-family:var(--font-sans);font-size:.83rem;color:var(--muted)">Analyse : [toplantıya katılmaya karar veren kişiler] → [bu kişilerin listesini hazırlayan] → sekreter<br>Traduction : La secrétaire qui a préparé la liste des personnes ayant décidé de participer à la réunion est en congé aujourd'hui.</p>
+
+  <div class="key">⚑ Stratégie de lecture : dans un groupe nominal dense, repérer d'abord le NOM TÊTE (dernier mot du groupe), puis remonter vers la gauche pour dénouer les couches de modification.</div>
+
+  <div class="ex" id="c1e4">
+    <h4>Exercice 33.1 — Dénouer les relatives enchâssées</h4>
+    <p class="ex-instr">Pour chaque phrase complexe, choisissez la traduction française correcte qui reflète la structure d'enchâssement exacte.</p>
+    <div id="qc1e4"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e4','cc1e4','sc1e4','c1e4')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e4','sc1e4','c1e4')">Recommencer</button>
+      <span class="score" id="sc1e4"></span>
+    </div>
+    <div class="corr" id="cc1e4"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<div class="level-sep" id="niv_c12">C1.2 — Registres, styles et pragmatique</div>
+
+<!-- ══ MOD 34 ══ -->
+<section class="module" id="mod34">
+  <div class="mod-head"><span class="mod-num">Module 34 — C1.2</span><h2>Pragmatique de la politesse</h2></div>
+  <h3>Stratégies d'atténuation</h3>
+  <table>
+    <tr><th>Stratégie</th><th>Forme</th><th>Exemple</th><th>Traduction</th></tr>
+    <tr><td>Interrogation indirecte</td><td class="tk">acaba + conditionnel</td><td class="tk">Acaba gelebilir misiniz?</td><td>Je me demande si vous pourriez venir… (très atténué)</td></tr>
+    <tr><td>Potentiel + conditionnel</td><td class="tk">-ebilir misiniz?</td><td class="tk">Bana yardım edebilir misiniz?</td><td>Pourriez-vous m'aider ?</td></tr>
+    <tr><td>Conditionnel de politesse</td><td class="tk">-se(y)diniz iyi olurdu</td><td class="tk">Erken gelseydiniz iyi olurdu.</td><td>Il aurait été préférable que vous veniez tôt. (reproche poli)</td></tr>
+    <tr><td>Hedging (galiba, sanki)</td><td class="tk">galiba / herhalde</td><td class="tk">Galiba bir hata oldu.</td><td>Il semble qu'il y ait eu une erreur. (critique atténuée)</td></tr>
+  </table>
+  <h3>Formules d'adresse en turc</h3>
+  <table>
+    <tr><th>Contexte</th><th>Formule</th><th>Exemple</th></tr>
+    <tr><td>Formel professionnel</td><td class="tk">Unvan + Bey/Hanım</td><td class="tk">Müdür Bey · Doktor Hanım</td></tr>
+    <tr><td>Égaux adultes</td><td class="tk">Prénom + Bey/Hanım</td><td class="tk">Ahmet Bey · Ayşe Hanım</td></tr>
+    <tr><td>Familier respectueux</td><td class="tk">Abi / Abla (grand frère/sœur fictif)</td><td class="tk">Sizi bekledim, abi.</td><td>Je vous ai attendu. (à un inconnu de même génération ou plus âgé)</td></tr>
+    <tr><td>Très formel / écrit officiel</td><td class="tk">Sayın + titre</td><td class="tk">Sayın Cumhurbaşkanı</td><td>Monsieur le Président</td></tr>
+  </table>
+  <div class="note">En turc, le tutoiement (sen) et le vouvoiement (siz) sont contextuels. Le siz n'est pas uniquement formel — il peut exprimer de la distance même entre personnes qui se connaissent. Certains couples mariés se vouvoyent encore en Anatolie rurale.</div>
+  <div class="ex" id="c1e5">
+    <h4>Exercice 34.1 — Registre de politesse</h4>
+    <p class="ex-instr">Pour chaque situation, choisissez la formulation correcte en termes de registre et de stratégie de politesse.</p>
+    <div id="qc1e5"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e5','cc1e5','sc1e5','c1e5')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e5','sc1e5','c1e5')">Recommencer</button>
+      <span class="score" id="sc1e5"></span>
+    </div>
+    <div class="corr" id="cc1e5"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 35 ══ -->
+<section class="module" id="mod35">
+  <div class="mod-head"><span class="mod-num">Module 35 — C1.2</span><h2>Style journalistique et médiatique</h2></div>
+  <h3>Syntaxe du titre de presse (başlık)</h3>
+  <p>Les titres de presse turcs ont leurs propres conventions syntaxiques : ellipse du verbe, nominalisations massives, usage du -miş rapportatif.</p>
+  <table>
+    <tr><th>Titre authentique</th><th>Structure</th><th>Traduction</th></tr>
+    <tr><td class="tk">Bakan: "Ekonomi güçleniyor"</td><td>Citation directe + deux points</td><td>Le ministre : « L'économie se renforce »</td></tr>
+    <tr><td class="tk">İstanbul'da büyük deprem endişesi</td><td>Groupe nominal pur, pas de verbe</td><td>Grande inquiétude sismique à Istanbul</td></tr>
+    <tr><td class="tk">Müzakere çökmüş, taraflar ayrılmış</td><td>-miş rapportatif : source non citée</td><td>Les négociations auraient échoué, les parties se seraient séparées</td></tr>
+    <tr><td class="tk">Yeni yasa meclisten geçti</td><td>-di : fait officiel, confirmé</td><td>La nouvelle loi a été adoptée par le parlement</td></tr>
+  </table>
+  <h3>Verbes déclaratifs du discours journalistique</h3>
+  <table>
+    <tr><th>Turc</th><th>Traduction</th><th>Nuance</th></tr>
+    <tr><td class="tk">açıkladı</td><td>a déclaré / a annoncé</td><td>Déclaration officielle publique</td></tr>
+    <tr><td class="tk">öne sürdü</td><td>a avancé / a allégué</td><td>Affirmation non encore vérifiée</td></tr>
+    <tr><td class="tk">iddia etti</td><td>a prétendu / a affirmé</td><td>Connotation de doute, contestable</td></tr>
+    <tr><td class="tk">belirtti</td><td>a précisé / a souligné</td><td>Information complémentaire officielle</td></tr>
+    <tr><td class="tk">aktardı</td><td>a rapporté / a transmis</td><td>Relais d'une information tierce</td></tr>
+    <tr><td class="tk">vurguladı</td><td>a insisté / a mis l'accent</td><td>Emphase délibérée du locuteur</td></tr>
+  </table>
+  <div class="ex" id="c1e6">
+    <h4>Exercice 35.1 — Lire la presse turque</h4>
+    <p class="ex-instr">Pour chaque extrait de presse authentique, identifiez la valeur du suffixe ou du verbe déclaratif utilisé.</p>
+    <div id="qc1e6"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e6','cc1e6','sc1e6','c1e6')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e6','sc1e6','c1e6')">Recommencer</button>
+      <span class="score" id="sc1e6"></span>
+    </div>
+    <div class="corr" id="cc1e6"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 36 ══ -->
+<section class="module" id="mod36">
+  <div class="mod-head"><span class="mod-num">Module 36 — C1.2</span><h2>Style littéraire et narratif</h2></div>
+  <h3>-miş narratif dans la fiction</h3>
+  <p>Les contes, romans et récits à la troisième personne utilisent quasi-exclusivement le -miş. C'est une convention stylistique, non une marque d'incertitude : le narrateur prend une distance esthétique avec les événements.</p>
+  <table>
+    <tr><th>Extrait littéraire</th><th>Traduction</th><th>Note stylistique</th></tr>
+    <tr><td class="tk">Bir varmış bir yokmuş, evvel zaman içinde...</td><td>Il était une fois, autrefois dans le temps...</td><td>Formule d'ouverture canonique des contes</td></tr>
+    <tr><td class="tk">Adam sessizce odaya girmiş, pencereye yaklaşmış.</td><td>L'homme entra silencieusement dans la pièce, s'approcha de la fenêtre.</td><td>Narration littéraire : -miş crée une distance poétique</td></tr>
+  </table>
+  <h3>Présent historique narratif</h3>
+  <p>Dans le récit oral vivant et certains textes, le présent progressif -iyor est utilisé pour un effet d'immédiateté dramatique (équivalent du présent de narration français).</p>
+  <table>
+    <tr><th>Exemple</th><th>Traduction naturelle</th></tr>
+    <tr><td class="tk">Adam kapıyı açıyor, içeri giriyor, bir de ne görsün!</td><td>L'homme ouvre la porte, entre — et qu'est-ce qu'il voit !</td></tr>
+  </table>
+  <h3>Figures de style propres au turc</h3>
+  <table>
+    <tr><th>Figure</th><th>Turc</th><th>Explication</th></tr>
+    <tr><td>Ikileme (doublement)</td><td class="tk">yavaş yavaş · ağır ağır · tek tek</td><td>Répétition d'un mot pour l'intensité ou la distributivité</td></tr>
+    <tr><td>Ses taklidi (onomatopée)</td><td class="tk">gümbür gümbür · tıkır tıkır</td><td>Redoublement onomatopéique très présent dans la prose turque</td></tr>
+    <tr><td>Paralélisme syntaxique</td><td class="tk">Gelen gelir, gitmeyen kalır.</td><td>Proverbe à structure parallèle : qui vient vient, qui ne part pas reste</td></tr>
+  </table>
+  <div class="ex" id="c1e7">
+    <h4>Exercice 36.1 — Analyser le style d'un texte turc</h4>
+    <p class="ex-instr">Lisez l'extrait et répondez aux questions sur les choix stylistiques de l'auteur.</p>
+    <div id="qc1e7"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e7','cc1e7','sc1e7','c1e7')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e7','sc1e7','c1e7')">Recommencer</button>
+      <span class="score" id="sc1e7"></span>
+    </div>
+    <div class="corr" id="cc1e7"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 37 ══ -->
+<section class="module" id="mod37">
+  <div class="mod-head"><span class="mod-num">Module 37 — C1.2</span><h2>Variation linguistique — dialectes et registres oraux</h2></div>
+  <h3>Marqueurs d'oralité familière</h3>
+  <table>
+    <tr><th>Marqueur</th><th>Valeur</th><th>Exemple</th><th>Registre standard équivalent</th></tr>
+    <tr><td class="tk">yani</td><td>C'est-à-dire, en fait, bref (marqueur discursif)</td><td class="tk">Yani... ne demek istiyorum ki...</td><td>—</td></tr>
+    <tr><td class="tk">işte</td><td>Voilà, justement, eh bien (marqueur d'évidence)</td><td class="tk">İşte bu yüzden gemedim.</td><td>İşte = voilà, c'est précisément pour ça</td></tr>
+    <tr><td class="tk">falan filan</td><td>Et cætera, et tout ça (liste ouverte)</td><td class="tk">Kitap, defter, kalem falan aldım.</td><td>...ve benzeri şeyler</td></tr>
+    <tr><td class="tk">hani</td><td>Tu sais, tu vois (appel à la mémoire partagée)</td><td class="tk">Hani o arkadaşım var ya?</td><td>Bildiğin gibi / Hatırladığın...</td></tr>
+    <tr><td class="tk">ya</td><td>N'est-ce pas ?, hein (recherche confirmation)</td><td class="tk">Güzel oldu, ya?</td><td>—</td></tr>
+  </table>
+  <h3>Contractions phonétiques de l'oral rapide</h3>
+  <table>
+    <tr><th>Forme standard</th><th>Forme orale</th><th>Transcription phonétique</th></tr>
+    <tr><td class="tk">ne yapıyorsun?</td><td class="tk">napıyon? / ne yapıyon?</td><td class="ph">na-peu-yon</td></tr>
+    <tr><td class="tk">geliyorum</td><td class="tk">geliyom</td><td class="ph">gue-li-yom</td></tr>
+    <tr><td class="tk">nereye gidiyorsun?</td><td class="tk">nereye gidion?</td><td class="ph">nè-rè-yè gui-dion</td></tr>
+    <tr><td class="tk">bir şey</td><td class="tk">bişey</td><td class="ph">bi-chè</td></tr>
+    <tr><td class="tk">değil mi?</td><td class="tk">dimi? / di mi?</td><td class="ph">di-mi</td></tr>
+    <tr><td class="tk">şimdi</td><td class="tk">şindi / şimdi</td><td class="ph">chin-di</td></tr>
+  </table>
+  <div class="note">Ces contractions sont à reconnaître à l'oral, jamais à reproduire à l'écrit. Un locuteur étranger qui les utilise à l'écrit crée une impression d'incorrection.</div>
+  <div class="ex" id="c1e8">
+    <h4>Exercice 37.1 — Registre oral vs standard</h4>
+    <p class="ex-instr">Pour chaque forme orale contractée, trouvez la forme standard équivalente.</p>
+    <div id="fc1e8"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('fc1e8','cc1e8','sc1e8','c1e8')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('fc1e8','sc1e8','c1e8')">Recommencer</button>
+      <span class="score" id="sc1e8"></span>
+    </div>
+    <div class="corr" id="cc1e8">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Oral</th><th>Standard</th></tr>
+        <tr><td class="tk">napıyon?</td><td class="tk">ne yapıyorsun?</td></tr>
+        <tr><td class="tk">geliyom</td><td class="tk">geliyorum</td></tr>
+        <tr><td class="tk">dimi?</td><td class="tk">değil mi?</td></tr>
+        <tr><td class="tk">bişey</td><td class="tk">bir şey</td></tr>
+        <tr><td class="tk">şindi</td><td class="tk">şimdi</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="level-sep" id="niv_c13">C1.3 — Lexique, compétences et test</div>
+
+<!-- ══ MOD 38 ══ -->
+<section class="module" id="mod38">
+  <div class="mod-head"><span class="mod-num">Module 38 — C1.3</span><h2>Lexique académique et suffixation savante</h2></div>
+  <h3>Suffixes productifs du registre soutenu</h3>
+  <table>
+    <tr><th>Suffixe</th><th>Sens</th><th>Exemples</th></tr>
+    <tr><td class="tk">-sal / -sel</td><td>Adjectif relationnel (≈ -al/-iel en français)</td><td class="tk">toplumsal (social) · kültürel (culturel) · ekonomik (économique)</td></tr>
+    <tr><td class="tk">-imsi / -ımsı</td><td>Qui ressemble à, légèrement (atténuatif)</td><td class="tk">yeşilimsi (verdâtre) · tatlımsı (légèrement sucré) · ekşimsi (acidulé)</td></tr>
+    <tr><td class="tk">-laş- / -leş-</td><td>Devenir, processus de transformation</td><td class="tk">normalleşmek (se normaliser) · kentleşmek (s'urbaniser)</td></tr>
+    <tr><td class="tk">-lık / -lik</td><td>Abstraction, fonction, état</td><td class="tk">özgürlük (liberté) · yalnızlık (solitude) · başkanlık (présidence)</td></tr>
+  </table>
+  <h3>Emprunts arabo-persans actifs dans le registre soutenu</h3>
+  <table>
+    <tr><th>Mot soutenu</th><th>Équivalent courant</th><th>Traduction</th></tr>
+    <tr><td class="tk">mütalaa etmek</td><td class="tk">düşünmek</td><td>réfléchir à, considérer (contexte formel)</td></tr>
+    <tr><td class="tk">istişare etmek</td><td class="tk">danışmak</td><td>consulter, se concerter</td></tr>
+    <tr><td class="tk">mütevazı</td><td class="tk">alçakgönüllü</td><td>humble, modeste</td></tr>
+    <tr><td class="tk">hususen</td><td class="tk">özellikle</td><td>particulièrement, surtout</td></tr>
+    <tr><td class="tk">bilhassa</td><td class="tk">özellikle</td><td>notamment, surtout (encore plus soutenu)</td></tr>
+    <tr><td class="tk">netice itibarıyla</td><td class="tk">sonuç olarak</td><td>en définitive, au bout du compte</td></tr>
+  </table>
+  <div class="ex" id="c1e9">
+    <h4>Exercice 38.1 — Registre soutenu vs courant</h4>
+    <p class="ex-instr">Remplacez le terme courant par son équivalent soutenu, ou l'inverse, selon l'indication.</p>
+    <div id="fc1e9"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('fc1e9','cc1e9','sc1e9','c1e9')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('fc1e9','sc1e9','c1e9')">Recommencer</button>
+      <span class="score" id="sc1e9"></span>
+    </div>
+    <div class="corr" id="cc1e9">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Courant</th><th>Soutenu</th></tr>
+        <tr><td class="tk">danışmak</td><td class="tk">istişare etmek</td></tr>
+        <tr><td class="tk">özellikle</td><td class="tk">bilhassa / hususen</td></tr>
+        <tr><td class="tk">sonuç olarak</td><td class="tk">netice itibarıyla</td></tr>
+        <tr><td class="tk">düşünmek (formel)</td><td class="tk">mütalaa etmek</td></tr>
+        <tr><td class="tk">alçakgönüllü</td><td class="tk">mütevazı</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MOD 39 ══ -->
+<section class="module" id="mod39">
+  <div class="mod-head"><span class="mod-num">Module 39 — C1.3</span><h2>Deyimler et atasözleri — expressions idiomatiques et proverbes</h2></div>
+  <p>Les <span class="tk">deyimler</span> (expressions idiomatiques) et <span class="tk">atasözleri</span> (proverbes) sont omniprésents dans la langue quotidienne et la presse turques. Les ignorer revient à comprendre les mots sans comprendre le sens.</p>
+  <h3>Deyimler essentiels par champ sémantique</h3>
+  <table>
+    <tr><th>Deyim</th><th>Littéral</th><th>Sens réel</th></tr>
+    <tr><td class="tk">ağzı sıkı olmak</td><td>avoir la bouche serrée</td><td>savoir garder un secret, être discret</td></tr>
+    <tr><td class="tk">eli açık olmak</td><td>avoir la main ouverte</td><td>être généreux</td></tr>
+    <tr><td class="tk">kulak vermek</td><td>donner l'oreille</td><td>prêter attention, écouter</td></tr>
+    <tr><td class="tk">göze girmek</td><td>entrer dans l'œil</td><td>se faire remarquer favorablement, plaire à</td></tr>
+    <tr><td class="tk">tepesi atmak</td><td>le sommet part</td><td>perdre son sang-froid, exploser de colère</td></tr>
+    <tr><td class="tk">burnunun dikine gitmek</td><td>aller droit sur son nez</td><td>n'en faire qu'à sa tête</td></tr>
+    <tr><td class="tk">kılı kırk yarmak</td><td>couper un poil en quarante</td><td>couper les cheveux en quatre, être minutieux à l'extrême</td></tr>
+    <tr><td class="tk">dili tutulmak</td><td>la langue se bloquer</td><td>rester sans voix, être abasourdi</td></tr>
+    <tr><td class="tk">gözden düşmek</td><td>tomber de l'œil</td><td>perdre la faveur de quelqu'un, être discrédité</td></tr>
+    <tr><td class="tk">ayakları yere basmamak</td><td>les pieds ne touchent pas le sol</td><td>être aux anges, ne plus se sentir de joie</td></tr>
+  </table>
+  <h3>Atasözleri classiques</h3>
+  <table>
+    <tr><th>Proverbe</th><th>Traduction</th><th>Équivalent français</th></tr>
+    <tr><td class="tk">Damlaya damlaya göl olur.</td><td>Goutte à goutte, un lac se forme.</td><td>Petit à petit l'oiseau fait son nid.</td></tr>
+    <tr><td class="tk">Söz gümüşse, sükût altındır.</td><td>Si la parole est argent, le silence est or.</td><td>La parole est d'argent, le silence est d'or.</td></tr>
+    <tr><td class="tk">Komşu komşunun külüne muhtaçtır.</td><td>Le voisin a besoin de la cendre de son voisin.</td><td>Un bon voisin vaut mieux qu'un lointain parent.</td></tr>
+    <tr><td class="tk">İt ürür, kervan yürür.</td><td>Le chien aboie, la caravane avance.</td><td>Le chien aboie, la caravane passe.</td></tr>
+    <tr><td class="tk">Düşünce düşünce, akıl bir karış uzar.</td><td>À force de réfléchir, l'esprit s'allonge d'un empan.</td><td>La réflexion développe l'intelligence.</td></tr>
+  </table>
+  <div class="ex" id="c1e10">
+    <h4>Exercice 39.1 — Employer les deyimler en contexte</h4>
+    <p class="ex-instr">Choisissez le deyim qui correspond à la situation décrite. Attention : le sens figuré est souvent éloigné du sens littéral.</p>
+    <div id="qc1e10"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc1e10','cc1e10','sc1e10','c1e10')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc1e10','sc1e10','c1e10')">Recommencer</button>
+      <span class="score" id="sc1e10"></span>
+    </div>
+    <div class="corr" id="cc1e10"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 40 ══ -->
+<section class="module" id="mod40">
+  <div class="mod-head"><span class="mod-num">Module 40 — C1.3</span><h2>Stratégies de compréhension orale authentique</h2></div>
+  <h3>Marqueurs discursifs de l'oral turc</h3>
+  <table>
+    <tr><th>Marqueur</th><th>Fonction</th><th>Exemple en contexte</th></tr>
+    <tr><td class="tk">yani</td><td>Reformulation, explication</td><td class="tk">Yani, şunu demek istiyorum ki...</td></tr>
+    <tr><td class="tk">şey</td><td>Chercher ses mots, hésitation</td><td class="tk">Ben... şey... ne diyeyim...</td></tr>
+    <tr><td class="tk">efendim</td><td>Pardon ?, marque d'attention, politesse</td><td class="tk">Efendim? Ne dediniz?</td></tr>
+    <tr><td class="tk">tamam mı?</td><td>Appel à la confirmation, n'est-ce pas ?</td><td class="tk">Saat üçte buluşalım, tamam mı?</td></tr>
+    <tr><td class="tk">ne bileyim</td><td>Hésitation, approximation</td><td class="tk">Yirmi, ne bileyim, belki otuz kişi vardı.</td></tr>
+    <tr><td class="tk">bir de</td><td>Ajout inattendu, « et puis »</td><td class="tk">Bir de bak, ne yaptı!</td></tr>
+  </table>
+  <h3>Stratégies d'inférence à l'oral</h3>
+  <ol>
+    <li><strong>Repérer le verbe principal</strong> : en turc, il est toujours en fin de phrase. Dans un discours rapide, l'identifier stabilise la structure.</li>
+    <li><strong>Identifier les suffixes de cas</strong> : -de/-da, -e/-a, -den/-dan donnent les relations syntaxiques même si le lexique est inconnu.</li>
+    <li><strong>S'appuyer sur les cognats</strong> : le turc contemporain contient de nombreux emprunts directs au français, à l'anglais et à l'arabe.</li>
+    <li><strong>Exploiter le contexte évidential</strong> : -miş indique une information rapportée, -di un fait direct. Cette distinction aide à suivre la structure du discours.</li>
+  </ol>
+  <div class="key">⚑ Conseil de pratique C1 : écouter quotidiennement les journaux télévisés turcs (TRT, CNN Türk), les podcasts Türkçe Öğreniyorum (niveau avancé) et des émissions de débat politique. Ne pas viser la compréhension totale — viser la compréhension des points saillants et de la structure argumentative.</div>
+</section>
+
+<!-- ══ VOCAB C1 ══ -->
+<section class="module" id="vocc1">
+  <div class="mod-head"><span class="mod-num">Vocabulaire — C1</span><h2>Vocabulaire C1 — Abstrait · Académique · Idiomatique</h2></div>
+  <div id="vocc1-themes"></div>
+</section>
+
+<!-- ══ TEST C1 ══ -->
+<section class="module" id="testc1">
+  <div class="mod-head"><span class="mod-num">Test C1</span><h2>Test C1 — Évaluation transversale</h2></div>
+  <p style="font-family:var(--font-sans);font-size:.86rem;color:var(--muted);margin-bottom:1.3rem;">60 min · sans notes · critère : 75 %. Ce test couvre l'ensemble des modules C1.</p>
+  <div class="test-part">
+    <h3>Partie 1 — Grammaire C1 (QCM)</h3>
+    <div id="qtc1_1"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qtc1_1','ctc1_1','stc1_1','c1t1')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qtc1_1','stc1_1','c1t1')">Recommencer</button>
+      <span class="score" id="stc1_1"></span>
+    </div>
+    <div class="corr" id="ctc1_1"><h5>✓ Correction</h5></div>
+  </div>
+  <div class="test-part">
+    <h3>Partie 2 — Production écrite C1</h3>
+    <p style="font-family:var(--font-sans);font-size:.84rem;color:var(--muted)">Rédigez un paragraphe argumentatif de 120-150 mots en turc sur l'un des sujets suivants : (a) Teknolojinin dil öğrenimine etkisi — (b) Türkiye'de kentleşmenin sonuçları — (c) Çevre sorunlarına çözüm önerileri. Comparez avec le texte modèle.</p>
+    <div class="actions"><button class="btn btn-s" onclick="montrerCorr('ctc1_2')">Voir texte modèle C1</button></div>
+    <div class="corr" id="ctc1_2">
+      <h5>✓ Texte modèle C1 — Teknolojinin dil öğrenimine etkisi (~130 kelime)</h5>
+      <p class="tk" style="line-height:2.1">Günümüzde teknoloji, dil öğrenimini kökten dönüştürmüş bulunmaktadır. Bir yandan dijital uygulamalar sayesinde öğrenciler özgün materyallere kolaylıkla ulaşabilmekte; öte yandan yapay zeka destekli platformlar kişiselleştirilmiş öğrenme deneyimleri sunmaktadır. Ne var ki yüz yüze iletişimin yerini tamamen alamayan bu araçların, özellikle konuşma becerileri açısından yetersiz kaldığı görülmektedir. Nitekim araştırmalar, teknoloji destekli öğrenmenin en verimli biçimde geleneksel yöntemlerle bütünleştirildiğinde işe yaradığını ortaya koymaktadır. Sonuç olarak, teknolojiyi bir araç olarak kullanan; ancak bunu nitelikli insan etkileşimiyle dengeleyen bir yaklaşım, günümüzde en etkili dil öğrenimi modelini oluşturmaktadır.</p>
+      <p style="font-family:var(--font-sans);font-size:.78rem;color:var(--muted);margin-top:.8rem">Structures C1 utilisées : <span class="tk">-mış bulunmaktadır</span> (assertif formel) · <span class="tk">-maktadır</span> (présent formel) · <span class="tk">ne var ki</span> (connecteur concessif) · <span class="tk">nitekim</span> (en effet) · <span class="tk">öte yandan</span> (d'autre part) · nominalisations en -me/-ma · subordonnée en -dığında.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     NIVEAU C2
+════════════════════════════════════════════ -->
+<div class="level-sep" id="niv_c21">C2.1 — Maîtrise de pointe</div>
+
+<!-- ══ MOD 41 ══ -->
+<section class="module" id="mod41">
+  <div class="mod-head"><span class="mod-num">Module 41 — C2.1</span><h2>Subordination extrême et style académique pur</h2></div>
+  <h3>Connecteurs de subordination du registre soutenu</h3>
+  <table>
+    <tr><th>Connecteur</th><th>Sens</th><th>Exemple</th><th>Traduction</th></tr>
+    <tr><td class="tk">-dığı takdirde</td><td>Dans le cas où, si (condition formelle)</td><td class="tk">Başvurunun kabul edildiği takdirde...</td><td>Dans le cas où la candidature serait acceptée...</td></tr>
+    <tr><td class="tk">-mak kaydıyla</td><td>À condition que, sous réserve de</td><td class="tk">Belgeleri eksiksiz sunmak kaydıyla...</td><td>À condition de fournir les documents complets...</td></tr>
+    <tr><td class="tk">-dığı müddetçe</td><td>Aussi longtemps que, tant que</td><td class="tk">Bu politika uygulandığı müddetçe...</td><td>Aussi longtemps que cette politique sera appliquée...</td></tr>
+    <tr><td class="tk">-dığı hâlde</td><td>Bien que, alors même que (concession)</td><td class="tk">Uyarıldığı hâlde devam etti.</td><td>Bien qu'il ait été averti, il a continué.</td></tr>
+    <tr><td class="tk">-masına karşın</td><td>Malgré, en dépit de</td><td class="tk">Tüm çabalara karşın...</td><td>Malgré tous les efforts...</td></tr>
+    <tr><td class="tk">-mek üzere</td><td>Dans le but de, sur le point de</td><td class="tk">Anlaşmayı imzalamak üzere...</td><td>Dans le but de signer l'accord... / Sur le point de signer...</td></tr>
+  </table>
+  <h3>Nominalisations en cascade</h3>
+  <p>L'écrit académique turc empile les nominalisations jusqu'à des densités absentes en français. Voici une phrase-type de rapport universitaire :</p>
+  <p class="tk" style="line-height:2.3;font-size:.9rem">Bu çalışmada, <u>kentsel dönüşüm süreçlerinin dezavantajlı gruplara olan etkilerinin</u> <u>mekânsal adalet perspektifinden</u> <u>değerlendirilmesi</u> amaçlanmaktadır.</p>
+  <p style="font-family:var(--font-sans);font-size:.82rem;color:var(--muted)">Analyse : [kentsel dönüşüm süreçleri] + [-nin] + [dezavantajlı gruplara olan etkileri] + [-nin] + [mekânsal adalet perspektifinden] + [değerlendirilmesi] — quatre niveaux de dépendance avant le verbe principal.<br>Traduction : Cette étude vise à évaluer, dans une perspective de justice spatiale, les effets des processus de renouvellement urbain sur les groupes défavorisés.</p>
+  <div class="ex" id="c2e1">
+    <h4>Exercice 41.1 — Décoder les nominalisations académiques</h4>
+    <p class="ex-instr">Choisissez la traduction française qui reflète correctement la structure d'enchâssement de la phrase turque académique.</p>
+    <div id="qc2e1"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc2e1','cc2e1','sc2e1','c2e1')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc2e1','sc2e1','c2e1')">Recommencer</button>
+      <span class="score" id="sc2e1"></span>
+    </div>
+    <div class="corr" id="cc2e1"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 42 ══ -->
+<section class="module" id="mod42">
+  <div class="mod-head"><span class="mod-num">Module 42 — C2.1</span><h2>Formes archaïques et osmanismes résiduels</h2></div>
+  <h3>Suffixes et formes archaïques à reconnaître</h3>
+  <table>
+    <tr><th>Forme</th><th>Valeur</th><th>Emploi actuel</th><th>Exemple</th></tr>
+    <tr><td class="tk">-ası / -esi</td><td>Désidératif (qu'il/elle…) ou prospectif</td><td>Rare · littéraire · malédictions figées</td><td class="tk">Kahrolası! (Maudit sois-tu !)</td></tr>
+    <tr><td class="tk">-dık (-dığı değil)</td><td>Nominalisé passé actif dans tournures figées</td><td>Locutions figées</td><td class="tk">şimdiye dek (jusqu'à maintenant)</td></tr>
+    <tr><td class="tk">-gıl / -gil</td><td>Maison de, chez (famille de)</td><td>Usage oral familier</td><td class="tk">Ahmetgillerden geliyor (il vient de chez Ahmet)</td></tr>
+  </table>
+  <h3>Mots d'origine ottomane encore actifs en turc soutenu</h3>
+  <table>
+    <tr><th>Terme soutenu</th><th>Origine</th><th>Sens</th><th>Équivalent courant</th></tr>
+    <tr><td class="tk">meclis</td><td>Arabe</td><td>assemblée, parlement</td><td class="tk">Türkiye Büyük Millet Meclisi (TBMM)</td></tr>
+    <tr><td class="tk">mesele</td><td>Arabe</td><td>question, problème, affaire</td><td class="tk">sorun / konu</td></tr>
+    <tr><td class="tk">mühim</td><td>Arabe</td><td>important</td><td class="tk">önemli</td></tr>
+    <tr><td class="tk">lazım</td><td>Arabe</td><td>nécessaire, il faut</td><td class="tk">gerek / gerekli</td></tr>
+    <tr><td class="tk">müşkül</td><td>Arabe</td><td>difficile, problématique</td><td class="tk">zor / sorunlu</td></tr>
+    <tr><td class="tk">zira</td><td>Arabe</td><td>car, parce que (soutenu)</td><td class="tk">çünkü</td></tr>
+  </table>
+  <div class="note">La réforme linguistique kémaliste (1928-1940) a remplacé une grande partie du lexique ottomano-arabo-persan par des néologismes turco-chaïques. Mais les termes archaïques perdurent dans la littérature, le droit, la religion et le registre très soutenu. Les reconnaître est indispensable pour lire des textes d'avant 1960.</div>
+  <div class="ex" id="c2e2">
+    <h4>Exercice 42.1 — Termes archaïques et soutenu</h4>
+    <p class="ex-instr">Reliez chaque terme soutenu ou archaïque à son équivalent contemporain courant.</p>
+    <div id="qc2e2"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc2e2','cc2e2','sc2e2','c2e2')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc2e2','sc2e2','c2e2')">Recommencer</button>
+      <span class="score" id="sc2e2"></span>
+    </div>
+    <div class="corr" id="cc2e2"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 43 ══ -->
+<section class="module" id="mod43">
+  <div class="mod-head"><span class="mod-num">Module 43 — C2.1</span><h2>Ironie, implicite et sous-entendu culturel</h2></div>
+  <h3>Marqueurs d'ironie propres au turc</h3>
+  <table>
+    <tr><th>Marqueur</th><th>Mécanisme</th><th>Exemple</th><th>Sens réel</th></tr>
+    <tr><td class="tk">-miş (sarcastique)</td><td>Distance évidentiaire ironique</td><td class="tk">Tabii, sen her şeyi bilirmişsin.</td><td>Bien sûr, comme si toi tu savais tout ! (sarcasme)</td></tr>
+    <tr><td class="tk">ne kadar + adj. (ironique)</td><td>Hyperbole sarcastique</td><td class="tk">Ne kadar zekice bir fikir!</td><td>Quelle idée brillante ! (= c'est stupide)</td></tr>
+    <tr><td class="tk">Hay aksi!</td><td>Fausse contrariété ou ironie légère</td><td class="tk">Hay aksi, yine geç kaldı.</td><td>Évidemment, il est encore en retard. (comme prévu)</td></tr>
+  </table>
+  <h3>Implicite culturel — ce que le turc ne dit pas</h3>
+  <table>
+    <tr><th>Situation</th><th>Ce qui est dit</th><th>Ce qui est compris</th></tr>
+    <tr><td>Refus d'invitation</td><td class="tk">Bakarız, inşallah geliriz.</td><td>Nous verrons, inch'Allah nous viendrons. (= refus poli probable)</td></tr>
+    <tr><td>Critique indirecte</td><td class="tk">Çok ilginç bir fikir.</td><td>C'est une idée très intéressante. (= je n'y crois pas)</td></tr>
+    <tr><td>Hospitalité</td><td class="tk">Buyrun, buyrun! / Buyurun içeri!</td><td>Entrez, je vous en prie ! (insistance obligatoire par politesse)</td></tr>
+    <tr><td>Modestie rhétorique</td><td class="tk">Hâşâ! Estağfurullah!</td><td>Dieu m'en préserve ! / Quelle idée ! (refus d'un compliment)</td></tr>
+  </table>
+  <div class="ex" id="c2e3">
+    <h4>Exercice 43.1 — Déchiffrer l'implicite</h4>
+    <p class="ex-instr">Pour chaque échange, choisissez l'interprétation qui rend compte du sens réel (implicite, ironie ou convention culturelle).</p>
+    <div id="qc2e3"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc2e3','cc2e3','sc2e3','c2e3')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc2e3','sc2e3','c2e3')">Recommencer</button>
+      <span class="score" id="sc2e3"></span>
+    </div>
+    <div class="corr" id="cc2e3"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 44 ══ -->
+<section class="module" id="mod44">
+  <div class="mod-head"><span class="mod-num">Module 44 — C2.1</span><h2>Variation diatopique et sociolectale</h2></div>
+  <h3>Traits saillants des principaux accents régionaux</h3>
+  <table>
+    <tr><th>Région</th><th>Traits caractéristiques</th><th>Exemple</th></tr>
+    <tr><td>Karadeniz (Mer Noire)</td><td>Intonation montante · -yi → -gi · accent sur pénultième inhabituel</td><td class="tk">Gidiyorum → Gidiyog (oral)</td></tr>
+    <tr><td>Ege (Égée)</td><td>Rythme lent · -yor → -yo · accent final atténué</td><td class="tk">Geliyorum → Geliyo</td></tr>
+    <tr><td>Güneydoğu (Sud-Est)</td><td>Influence araméenne/kurde · prosodies différentes · vocalisme modifié</td><td>—</td></tr>
+    <tr><td>İstanbul (standard)</td><td>Référence de prestige · contractions -yor → -yo à l'oral familier</td><td>Turc standard enseigné</td></tr>
+  </table>
+  <h3>Argot contemporain (gençlik dili)</h3>
+  <table>
+    <tr><th>Argot</th><th>Sens</th><th>Origine</th></tr>
+    <tr><td class="tk">süper / harika</td><td>super, génial</td><td>Turc standard elevé au rang d'interjection</td></tr>
+    <tr><td class="tk">lan</td><td>mec, man (appellatif familier)</td><td>Contraction de <span class="tk">oğlan</span> (garçon)</td></tr>
+    <tr><td class="tk">çok bok</td><td>très mauvais, nul (vulgaire)</td><td>—</td></tr>
+    <tr><td class="tk">fiyakalı</td><td>classe, stylé</td><td><span class="tk">fiyaka</span> = show, ostentation</td></tr>
+    <tr><td class="tk">sallamak</td><td>s'en ficher, se moquer</td><td>Litt. : balancer, agiter</td></tr>
+    <tr><td class="tk">bi dakka</td><td>une seconde (attends)</td><td>Contraction de <span class="tk">bir dakika</span></td></tr>
+  </table>
+  <div class="ex" id="c2e4">
+    <h4>Exercice 44.1 — Identifier la variété linguistique</h4>
+    <p class="ex-instr">Pour chaque extrait, identifiez s'il s'agit de turc standard, d'un régionalisme, de l'argot ou d'un registre soutenu.</p>
+    <div id="qc2e4"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc2e4','cc2e4','sc2e4','c2e4')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc2e4','sc2e4','c2e4')">Recommencer</button>
+      <span class="score" id="sc2e4"></span>
+    </div>
+    <div class="corr" id="cc2e4"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<div class="level-sep" id="niv_c22">C2.2 — Compétences expertes</div>
+
+<!-- ══ MOD 45 ══ -->
+<section class="module" id="mod45">
+  <div class="mod-head"><span class="mod-num">Module 45 — C2.2</span><h2>Traduction FR↔TR — pièges structurels</h2></div>
+  <h3>Les dix pièges de traduction FR→TR</h3>
+  <table>
+    <tr><th>Piège</th><th>Mauvaise traduction</th><th>Traduction correcte</th><th>Règle</th></tr>
+    <tr><td>Relatif « qui/que »</td><td class="tk"><span style="color:#a02020">✗ Adam, ki geldi...</span></td><td class="tk">✓ Gelen adam...</td><td>Pas de pronom relatif en turc → participe antéposé</td></tr>
+    <tr><td>« Il y a 2 ans »</td><td class="tk"><span style="color:#a02020">✗ 2 yıl içinde geldi</span></td><td class="tk">✓ 2 yıl önce geldi</td><td>Il y a = önce (pas içinde qui = en l'espace de)</td></tr>
+    <tr><td>Passif agent « par »</td><td class="tk"><span style="color:#a02020">✗ ...için yazıldı</span></td><td class="tk">✓ ...tarafından yazıldı</td><td>Agent passif = tarafından (non pour = için)</td></tr>
+    <tr><td>« Depuis »</td><td class="tk"><span style="color:#a02020">✗ Dan beri geliyorum</span></td><td class="tk">✓ İki yıldır buradayım</td><td>Durée depuis = -dır suffixe au nom de durée</td></tr>
+    <tr><td>Ordre des mots</td><td class="tk"><span style="color:#a02020">✗ Kitabı okudu ben</span></td><td class="tk">✓ Ben kitabı okudum</td><td>Verbe toujours en fin de phrase</td></tr>
+  </table>
+  <h3>Exercice de traduction guidée</h3>
+  <div class="ex" id="c2e5">
+    <h4>Exercice 45.1 — Traduire en évitant les pièges</h4>
+    <p class="ex-instr">Tapez la traduction turque correcte. Chaque phrase cible un piège de traduction spécifique.</p>
+    <div id="fc2e5"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('fc2e5','cc2e5','sc2e5','c2e5')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('fc2e5','sc2e5','c2e5')">Recommencer</button>
+      <span class="score" id="sc2e5"></span>
+    </div>
+    <div class="corr" id="cc2e5">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Français</th><th>Turc correct</th><th>Piège évité</th></tr>
+        <tr><td>L'homme qui est venu hier</td><td class="tk">Dün gelen adam</td><td>Relatif → participe -en antéposé</td></tr>
+        <tr><td>Il y a deux ans, je vivais à Paris.</td><td class="tk">İki yıl önce Paris'te yaşıyordum.</td><td>Il y a = önce (non içinde)</td></tr>
+        <tr><td>Ce rapport a été rédigé par le directeur.</td><td class="tk">Bu rapor müdür tarafından hazırlandı.</td><td>Agent passif = tarafından</td></tr>
+        <tr><td>J'habite ici depuis trois ans.</td><td class="tk">Üç yıldır burada oturuyorum.</td><td>Depuis + durée = -dır</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MOD 46 ══ -->
+<section class="module" id="mod46">
+  <div class="mod-head"><span class="mod-num">Module 46 — C2.2</span><h2>Rédaction experte en turc</h2></div>
+  <h3>Structure d'un texte argumentatif turc formel</h3>
+  <table>
+    <tr><th>Partie</th><th>Formules d'ouverture typiques</th></tr>
+    <tr><td>Introduction</td><td class="tk">Günümüzde... · Son yıllarda... · ...meselesi giderek önem kazanmaktadır.</td></tr>
+    <tr><td>Thèse</td><td class="tk">Bu çalışmada / Bu yazıda ... savunulmaktadır.</td></tr>
+    <tr><td>Premier argument</td><td class="tk">Her şeyden önce, ... · Öncelikle belirtmek gerekir ki...</td></tr>
+    <tr><td>Argument suivant</td><td class="tk">Bunun yanı sıra... · Öte yandan... · Buna ek olarak...</td></tr>
+    <tr><td>Concession</td><td class="tk">Her ne kadar... olsa da... · ...e karşın...</td></tr>
+    <tr><td>Conclusion</td><td class="tk">Sonuç olarak... · Tüm bu değerlendirmeler ışığında... · Netice itibarıyla...</td></tr>
+  </table>
+  <h3>Lettre formelle — formules clés</h3>
+  <table>
+    <tr><th>Élément</th><th>Formule</th></tr>
+    <tr><td>Ouverture</td><td class="tk">Sayın [Unvan], / İlgili Makama,</td></tr>
+    <tr><td>Objet</td><td class="tk">Konu: [başlık]</td></tr>
+    <tr><td>Corps — référence</td><td class="tk">...tarihli yazınıza / başvurunuza istinaden...</td></tr>
+    <tr><td>Demande formelle</td><td class="tk">...hususunda bilgilerinizi arz ederim.</td></tr>
+    <tr><td>Clôture</td><td class="tk">Saygılarımla, / Saygılarımızla,</td></tr>
+  </table>
+  <div class="ex" id="c2e6">
+    <h4>Exercice 46.1 — Compléter une lettre formelle</h4>
+    <p class="ex-instr">Tapez la formule de clôture ou d'ouverture correcte selon le contexte indiqué.</p>
+    <div id="fc2e6"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkFill('fc2e6','cc2e6','sc2e6','c2e6')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetFill('fc2e6','sc2e6','c2e6')">Recommencer</button>
+      <span class="score" id="sc2e6"></span>
+    </div>
+    <div class="corr" id="cc2e6">
+      <h5>✓ Correction</h5>
+      <table>
+        <tr><th>Contexte</th><th>Formule correcte</th></tr>
+        <tr><td>Ouverture lettre au directeur d'une université</td><td class="tk">Sayın Rektör,</td></tr>
+        <tr><td>Clôture standard, registre formel</td><td class="tk">Saygılarımla,</td></tr>
+        <tr><td>Destinataire inconnu, institution</td><td class="tk">İlgili Makama,</td></tr>
+        <tr><td>Premier argument dans un essai</td><td class="tk">Her şeyden önce, / Öncelikle belirtmek gerekir ki,</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MOD 47 ══ -->
+<section class="module" id="mod47">
+  <div class="mod-head"><span class="mod-num">Module 47 — C2.2</span><h2>Analyse littéraire — auteurs majeurs</h2></div>
+  <h3>Repères d'auteurs canoniques</h3>
+  <table>
+    <tr><th>Auteur</th><th>Époque</th><th>Œuvre clé</th><th>Style et apport linguistique</th></tr>
+    <tr><td>Nazım Hikmet</td><td>1902-1963</td><td class="tk">Memleketimden İnsan Manzaraları</td><td>Vers libre révolutionnaire · syntaxe brisée · lexique populaire</td></tr>
+    <tr><td>Yaşar Kemal</td><td>1923-2015</td><td class="tk">İnce Memed</td><td>Épopée anatolienne · langue orale transposée · narration orale traditionnelle</td></tr>
+    <tr><td>Orhan Pamuk</td><td>1952-</td><td class="tk">Benim Adım Kırmızı · Kar</td><td>Postmodernisme · métafiction · langue urbaine stambouliote raffinée</td></tr>
+    <tr><td>Latife Tekin</td><td>1957-</td><td class="tk">Sevgili Arsız Ölüm</td><td>Réalisme magique · syntaxe expérimentale · langue des marges urbaines</td></tr>
+  </table>
+  <h3>Vocabulaire de la critique littéraire en turc</h3>
+  <table>
+    <tr><th>Terme</th><th>Traduction</th></tr>
+    <tr><td class="tk">anlatıcı</td><td>narrateur</td></tr>
+    <tr><td class="tk">bakış açısı</td><td>point de vue</td></tr>
+    <tr><td class="tk">imgelem</td><td>imaginaire (littéraire)</td></tr>
+    <tr><td class="tk">söylem</td><td>discours</td></tr>
+    <tr><td class="tk">metafor</td><td>métaphore</td></tr>
+    <tr><td class="tk">simge</td><td>symbole</td></tr>
+    <tr><td class="tk">tema</td><td>thème</td></tr>
+    <tr><td class="tk">alt metin</td><td>sous-texte</td></tr>
+  </table>
+  <div class="ex" id="c2e7">
+    <h4>Exercice 47.1 — Analyse d'un extrait littéraire</h4>
+    <p class="ex-instr">Lisez l'extrait et répondez aux questions d'analyse littéraire.</p>
+    <div id="qc2e7"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc2e7','cc2e7','sc2e7','c2e7')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc2e7','sc2e7','c2e7')">Recommencer</button>
+      <span class="score" id="sc2e7"></span>
+    </div>
+    <div class="corr" id="cc2e7"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ MOD 48 ══ -->
+<section class="module" id="mod48">
+  <div class="mod-head"><span class="mod-num">Module 48 — C2.2</span><h2>Civilisation — réforme linguistique et identité turque</h2></div>
+  <h3>La révolution linguistique kémaliste (1928-1940)</h3>
+  <table>
+    <tr><th>Date</th><th>Événement</th><th>Impact linguistique</th></tr>
+    <tr><td>1928</td><td>Adoption de l'alphabet latin</td><td>Remplacement de l'écriture ottomane arabe · rupture avec le passé écrit</td></tr>
+    <tr><td>1932</td><td>Fondation de la Türk Dil Kurumu (TDK)</td><td>Purification lexicale : remplacement des mots arabo-persans par des néologismes turcs</td></tr>
+    <tr><td>1934-1936</td><td>Güneş-Dil Teorisi</td><td>Théorie pseudo-scientifique affirmant que toutes les langues dérivent du turc — abandonnée</td></tr>
+    <tr><td>Années 1950+</td><td>Retour partiel des emprunts</td><td>Réaction conservatrice : réintroduction de certains termes osmanlis dans la presse religieuse et la politique</td></tr>
+  </table>
+  <h3>Le débat öztürkçe vs emprunts — encore vif aujourd'hui</h3>
+  <table>
+    <tr><th>Terme öztürkçe (puriste)</th><th>Terme ottoman ou emprunté</th><th>Traduction</th></tr>
+    <tr><td class="tk">uçak</td><td class="tk">tayyare</td><td>avion</td></tr>
+    <tr><td class="tk">yasa</td><td class="tk">kanun</td><td>loi</td></tr>
+    <tr><td class="tk">özgürlük</td><td class="tk">hürriyet</td><td>liberté</td></tr>
+    <tr><td class="tk">bilinç</td><td class="tk">şuur</td><td>conscience</td></tr>
+    <tr><td class="tk">ulusal</td><td class="tk">millî</td><td>national</td></tr>
+  </table>
+  <div class="note">Les deux termes de chaque paire coexistent encore. La presse laïque et les milieux universitaires privilégient l'öztürkçe ; la presse religieuse et conservatrice préfère souvent les termes ottomans. Cette variation est un indicateur sociolinguistique de positionnement politique.</div>
+  <div class="ex" id="c2e8">
+    <h4>Exercice 48.1 — Réforme linguistique et positionnement lexical</h4>
+    <p class="ex-instr">Pour chaque paire de termes (öztürkçe vs ottoman), identifiez lequel appartient à quel registre et quelle connotation politique il porte.</p>
+    <div id="qc2e8"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qc2e8','cc2e8','sc2e8','c2e8')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qc2e8','sc2e8','c2e8')">Recommencer</button>
+      <span class="score" id="sc2e8"></span>
+    </div>
+    <div class="corr" id="cc2e8"><h5>✓ Correction</h5></div>
+  </div>
+</section>
+
+<!-- ══ VOCAB C2 ══ -->
+<section class="module" id="vocc2">
+  <div class="mod-head"><span class="mod-num">Vocabulaire — C2</span><h2>Vocabulaire C2 — Expert · Littéraire · Civilisation</h2></div>
+  <div id="vocc2-themes"></div>
+</section>
+
+<!-- ══ TEST C2 FINAL ══ -->
+<section class="module" id="testc2">
+  <div class="mod-head"><span class="mod-num">Test C2 Final</span><h2>Test C2 — Évaluation globale A1→C2 · TÖMER équivalent</h2></div>
+  <p style="font-family:var(--font-sans);font-size:.86rem;color:var(--muted);margin-bottom:1.3rem;">90 min · sans notes · critère : 85 %. Ce test valide l'intégralité du parcours. Il simule le format de l'examen officiel TÖMER C2 / YDS.</p>
+  <div class="test-part">
+    <h3>Partie 1 — QCM C2 (grammaire, lexique, civilisation)</h3>
+    <div id="qtc2_1"></div>
+    <div class="actions">
+      <button class="btn btn-p" onclick="checkQCM('qtc2_1','ctc2_1','stc2_1','c2t1')">Vérifier</button>
+      <button class="btn btn-r" onclick="resetQCM('qtc2_1','stc2_1','c2t1')">Recommencer</button>
+      <span class="score" id="stc2_1"></span>
+    </div>
+    <div class="corr" id="ctc2_1"><h5>✓ Correction</h5></div>
+  </div>
+  <div class="test-part">
+    <h3>Partie 2 — Production écrite C2 (texte argumentatif soutenu)</h3>
+    <p style="font-family:var(--font-sans);font-size:.84rem;color:var(--muted)">Rédigez un texte argumentatif de 200-250 mots en turc soutenu sur l'un des sujets suivants. Utilisez des connecteurs de niveau C2, des nominalisations, et évitez les registres familiers.<br><br>(a) Yapay zekanın Türkçe üzerindeki olası etkileri · (b) Türkiye'de dil politikasının toplumsal boyutları · (c) Küreselleşme sürecinde Türk kültürel kimliğinin korunması</p>
+    <div class="actions"><button class="btn btn-s" onclick="montrerCorr('ctc2_2')">Voir texte modèle C2</button></div>
+    <div class="corr" id="ctc2_2">
+      <h5>✓ Texte modèle C2 — Yapay zeka ve Türkçe (~220 kelime)</h5>
+      <p class="tk" style="line-height:2.1">Yapay zekanın dil teknolojileri alanındaki hızlı gelişimi, Türkçe üzerinde hem olumlu hem de olumsuz etkiler doğurma potansiyeli taşımaktadır. Bir yandan, doğal dil işleme sistemlerinin Türkçeyi giderek daha iyi modellemesi, bu dilin dijital ortamlardaki varlığını güçlendirmektedir. Öte yandan, söz konusu sistemlerin eğitim verilerinin büyük ölçüde İngilizce ağırlıklı olması, Türkçe yapay zeka çıktılarının kalitesini sınırlandırmakta; dolayısıyla dil normlarını olumsuz etkileyebilecek hatalar üretilmesine zemin hazırlamaktadır. Nitekim bazı araştırmacılar, büyük dil modellerinin Türkçe sözdizimini yanlış aktardığını ve bu durumun özellikle genç kullanıcılar üzerinde olumsuz bir model etkisi yaratabileceğini öne sürmektedir. Bu bağlamda, yapay zeka sistemlerinin Türkçe doğal dil işleme kapasitelerinin geliştirilmesi için nitelikli ve denetimli veri kümelerinin oluşturulması büyük önem kazanmaktadır. Sonuç olarak, teknolojik ilerleme ile dilsel bütünlüğün bir arada sürdürülmesi, yalnızca bireysel kullanıcıların değil, kurum ve araştırmacıların da ortak sorumluluğunu gerektiren bir mesele olarak karşımıza çıkmaktadır.</p>
+      <p style="font-family:var(--font-sans);font-size:.78rem;color:var(--muted);margin-top:.8rem">Structures C2 : <span class="tk">-maktadır</span> (présent assertif formel, répété) · <span class="tk">söz konusu</span> · <span class="tk">dolayısıyla</span> · <span class="tk">bu bağlamda</span> · <span class="tk">nitekim</span> · <span class="tk">öne sürmek</span> · nominalisations en -ması · enchâssement -ebilecek + -e zemin hazırlamak · <span class="tk">netice itibarıyla</span> remplacé par la formule équivalente finale.</p>
+    </div>
+  </div>
+</section>
+
 </main>
 </div>
 
@@ -2120,7 +2933,7 @@ const FILL_T3 = [
 
 // ─── EXERCISE IDS & PROGRESS ───────────────────
 
-const EX_IDS = ['ex11','ex12','ex21','ex22','ex31','ex41','ex51','tst1','tst2','tst3','ex61','ex71','ex81','ex91','tst21','tst22','tst23','a21e1','a21e2','a21e3','a21e4','a21e5','a21t1','a21t2','a21t3','a22e1','a22e2','a22e3','a22e4','a22t1','a22t2','b11e1','b11e2','b11e3','b11e4','b11t1','b12e1','b12e2','b12e3','b12e4','b12t1','b12t2','b2e1','b2e2','b2e3','b2t1'];
+const EX_IDS = ['ex11','ex12','ex21','ex22','ex31','ex41','ex51','tst1','tst2','tst3','ex61','ex71','ex81','ex91','tst21','tst22','tst23','a21e1','a21e2','a21e3','a21e4','a21e5','a21t1','a21t2','a21t3','a22e1','a22e2','a22e3','a22e4','a22t1','a22t2','b11e1','b11e2','b11e3','b11e4','b11t1','b12e1','b12e2','b12e3','b12e4','b12t1','b12t2','b2e1','b2e2','b2e3','b2t1','c1e1','c1e2','c1e3','c1e4','c1e5','c1e6','c1e7','c1e8','c1e9','c1e10','c1t1','c1t2','c2e1','c2e2','c2e3','c2e4','c2e5','c2e6','c2e7','c2e8','c2t1','c2t2'];
 let progress = {};
 
 function loadProgress(){
@@ -3214,6 +4027,811 @@ const VOCAB_B2 = [
 // FONCTIONS — Corrections génériques et rendu vocabulaire
 // ════════════════════════════════════════════════════════
 
+
+// ═══════════════════════════════════════════════════
+// DONNÉES C1-C2
+// ═══════════════════════════════════════════════════
+
+// ── C1E1 : Valeurs du -miş ─────────────────────────
+const QCM_C1E1 = [
+  {
+    q:"« Vay, sen de buradaymışsın! » — Quelle est la valeur du -mış ici ?",
+    c:"Découverte étonnée (le locuteur réalise à l'instant)",
+    o:["Ouï-dire (on m'a rapporté que tu étais là)","Découverte étonnée (le locuteur réalise à l'instant)","Inférence logique (je déduis que tu es là)","Double indirection (rumeur de seconde main)"],
+    expl:"Vay (interjection de surprise) + -mış = réalisation soudaine. Le locuteur voit la personne et constate à l'instant même. Aucune source tierce n'est impliquée."
+  },
+  {
+    q:"« Tabii, sen her şeyi bilirmişsin. » — Ton de cette phrase ?",
+    c:"Ironique / sarcastique — distance évidentiaire moqueuse",
+    o:["Informatif neutre","Ironique / sarcastique — distance évidentiaire moqueuse","Inférence déductive sérieuse","Ouï-dire bienveillant"],
+    expl:"-mış utilisé sur une affirmation que le locuteur conteste implicitement. La structure 'Tabii + -mış' est le marqueur classique de l'ironie orale en turc contemporain."
+  },
+  {
+    q:"« Kapı açık; içeride biri varmış. » — Valeur du -mış ?",
+    c:"Inférence logique (le locuteur déduit d'un indice visible)",
+    o:["Ouï-dire direct","Découverte étonnée","Inférence logique (le locuteur déduit d'un indice visible)","Double indirection"],
+    expl:"Le locuteur voit la porte ouverte et EN DÉDUIT qu'il y a quelqu'un. Il n'y a pas de source humaine — c'est une inférence depuis un indice physique."
+  },
+  {
+    q:"« O, ben varmadan önce gelmişti. » — Quelle construction est-ce ?",
+    c:"Plus-que-parfait narratif indirect (-mış + -ti)",
+    o:["Passé direct simple (-di)","Plus-que-parfait narratif indirect (-mış + -ti)","Double indirection (-mış + -mış)","Inférence au présent"],
+    expl:"-mışti = -miş + -ti. Antériorité dans un récit indirect : le locuteur rapporte qu'un événement s'était produit avant un autre, sans en avoir été témoin direct."
+  },
+  {
+    q:"« Komşum dedi ki, adam çoktan gitmiş. » Reformuler en discours indirect pur avec -mış : le locuteur rapporte ce que son voisin lui a rapporté qu'une autre source avait dit. Quelle forme ?",
+    c:"gitmişmiş",
+    o:["gitmiş","gitmişti","gitmişmiş","gidecekmiş"],
+    expl:"Double indirection : le locuteur tient l'information de son voisin, qui lui-même la tenait d'une source. Deux couches d'évidentialité = -mış + -mış = -mışmış (ou dans ce cas -mişmiş selon harmonie)."
+  },
+  {
+    q:"Dans un roman turc : « Adam sessizce odaya girmiş, pencereye yaklaşmış. » — Pourquoi -miş dans un roman ?",
+    c:"-mış narratif littéraire : convention esthétique, non marque d'incertitude",
+    o:["L'auteur doute de ce qu'il écrit","L'auteur rapporte des rumeurs","Mauvaise grammaire corrigée à éviter","-mış narratif littéraire : convention esthétique, non marque d'incertitude"],
+    expl:"Dans la fiction turque, le -mış crée une distance poétique entre narrateur et événements. C'est une convention stylistique héritée des contes oraux (bir varmış bir yokmuş). Aucune incertitude réelle n'est impliquée."
+  },
+];
+
+// ── C1E2 : Verbes aspectuels composés ─────────────
+const QCM_C1E2 = [
+  {
+    q:"La pluie n'arrêtait pas de tomber (persistance continue, sans intention). → Yağmur ___.",
+    c:"yağa durdu",
+    o:["yağıp durdu","yağa durdu","yağmaya koyuldu","yağıverdi"],
+    expl:"-e durmak = persistance d'un processus continu. Yağa durdu = continuait sans s'arrêter. -ip durmak (yağıp durdu) aurait une connotation d'agacement — ici c'est une observation neutre."
+  },
+  {
+    q:"Il s'est mis à pleurer brusquement. → ___.",
+    c:"Ağlamaya koyuldu.",
+    o:["Ağlamaya durdu.","Ağlamaya koyuldu.","Ağlayıverdi.","Ağlayageldi."],
+    expl:"-e koymak / koyulmak = début brusque, soudain d'une action. Ağlamaya koyuldu = il s'est mis à pleurer (soudainement, presque malgré lui)."
+  },
+  {
+    q:"Il a tout dit comme ça, d'un seul coup, sans réfléchir. → ___.",
+    c:"Hepsini söyleyiverdi.",
+    o:["Hepsini söyleye durdu.","Hepsini söyleyegeldi.","Hepsini söyleyiverdi.","Hepsini söylemeye yazdı."],
+    expl:"-iver- = action accomplie soudainement et facilement, parfois de façon irréfléchie. Söyleyiverdi capture exactement ce côté 'lâché d'un coup'."
+  },
+  {
+    q:"J'ai failli tomber (= presque tombé, action frôlée). → ___.",
+    c:"Düşmeye yazdım.",
+    o:["Düşebildim.","Düşmeye yazdım.","Düşe kaldım.","Düşüp durdum."],
+    expl:"-e yazmak = quasi-accomplissement, frôler un événement. Düşmeye yazdım = j'ai failli tomber. Construction idiomatique fréquente dans la langue quotidienne."
+  },
+  {
+    q:"Il n'arrête pas de répéter la même question (avec une connotation d'agacement). → ___.",
+    c:"Aynı soruyu sorup duruyor.",
+    o:["Aynı soruyu sora duruyor.","Aynı soruyu sorup duruyor.","Aynı soruyu soruveriyor.","Aynı soruyu soraya kaldı."],
+    expl:"-ip durmak = répétition agaçante, en boucle. Sora duruyor (-e durmak) exprimerait une simple persistance sans irritation implicite. La nuance d'agacement est portée par -ip durmak."
+  },
+  {
+    q:"Le peuple perpétue cette tradition depuis des générations (continuité ancienne jusqu'au présent). → ___.",
+    c:"Halk bu geleneği sürdüregelmiş.",
+    o:["Halk bu geleneği sürdürüp durmuş.","Halk bu geleneği sürdüregelmiş.","Halk bu geleneği sürdürmüş kalmış.","Halk bu geleneği sürdüre yazmış."],
+    expl:"-agel- (-egelMek) = continuité ininterrompue depuis un passé lointain. C'est la forme qui encode 'depuis toujours / de tout temps'. Sürdüregelmiş = perpétué de génération en génération."
+  },
+];
+
+// ── C1E3 : Modalité fine ───────────────────────────
+const QCM_C1E3 = [
+  {
+    q:"Vous souhaitez exprimer une déduction logique forte : 'Il doit avoir beaucoup travaillé' (je vois le résultat). →",
+    c:"Çok çalışmış olmalı.",
+    o:["Çok çalışabilir.","Çok çalışmış olmalı.","Çok çalışmıştır.","Çok çalışıyor olabilir."],
+    expl:"-mış olmalı = déduction sur un fait passé dont on observe le résultat. Plus fort et plus analysé que galiba. -mıştır serait une simple assertion formelle sans nuance déductive explicite."
+  },
+  {
+    q:"Vous devez exprimer une possibilité hypothétique future neutre : 'Il peut pleuvoir demain.' →",
+    c:"Yarın yağmur yağabilir.",
+    o:["Yarın yağmur yağmalı.","Yarın yağmur yağabilir.","Yarın yağmur yağmış olmalı.","Yarın yağmur yağacaktır."],
+    expl:"-ebilir = possibilité ouverte. -malı = obligation ou déduction forte (il DOIT pleuvoir — non voulu ici). -mış olmalı porte sur le passé. -acaktır = assertion certaine du futur."
+  },
+  {
+    q:"Dans un exposé académique, vous affirmez une vérité générale établie : 'Le turc est une langue agglutinante.' →",
+    c:"Türkçe eklemeli bir dildir.",
+    o:["Türkçe eklemeli bir dil gibi görünüyor.","Türkçe eklemeli bir dildir.","Türkçe eklemeli bir dil olabilir.","Türkçe galiba eklemeli bir dildir."],
+    expl:"-dır assertif = vérité établie, fait objectif. C'est la forme appropriée pour les définitions et assertions académiques. galiba ou olabilir introduiraient un doute inadéquat ici."
+  },
+  {
+    q:"« Buraya giremezsiniz. » dans un contexte de règlement institutionnel. Quelle nuance ?",
+    c:"Interdiction (vous n'avez pas le droit d'entrer)",
+    o:["Incapacité physique (vous êtes physiquement incapables d'entrer)","Interdiction (vous n'avez pas le droit d'entrer)","Déduction (vous ne sembleriez pas pouvoir entrer)","Politesse indirecte (je préfère que vous n'entriez pas)"],
+    expl:"Le même -ama- peut exprimer incapacité ou interdiction. Ici le contexte institutionnel (panneau, règlement) rend l'interprétation comme interdiction univoque. C'est la pragmatique qui tranche, non la morphologie."
+  },
+  {
+    q:"'Je suppose qu'il est fatigué.' (impression subjective personnelle, non déductive) →",
+    c:"Galiba yorulmuş.",
+    o:["Yorulmuş olmalı.","Galiba yorulmuş.","Yorulduğu kesin.","Yorulmaktadır."],
+    expl:"galiba = supposition personnelle sans raisonnement déductif explicite. -mış olmalı impliquerait que je déduis d'indices observables — plus analytique. galiba est plus spontané et subjectif."
+  },
+];
+
+// ── C1E4 : Relatives enchâssées ────────────────────
+const QCM_C1E4 = [
+  {
+    q:"« Benim okuduğum kitabı yazan adam burada. » — Traduction correcte ?",
+    c:"L'homme qui a écrit le livre que j'ai lu est ici.",
+    o:[
+      "L'homme que j'ai lu est ici, il a écrit un livre.",
+      "L'homme qui a écrit le livre que j'ai lu est ici.",
+      "J'ai lu le livre de l'homme qui est ici.",
+      "Le livre que l'homme a écrit, je l'ai lu ici."
+    ],
+    expl:"Structure : [benim okuduğum kitabı] = COD de yazan → [kitabı yazan adam] = l'homme qui a écrit le livre. Deux niveaux : relative sur kitap (okuduğum) + relative sur adam (yazan)."
+  },
+  {
+    q:"« Toplantıya katılmaya karar veren kişilerin listesini hazırlayan sekreter bugün izinli. » — Qui est en congé ?",
+    c:"La secrétaire qui a préparé la liste des personnes ayant décidé de participer à la réunion.",
+    o:[
+      "Les personnes qui ont décidé de participer à la réunion.",
+      "La personne qui a organisé la réunion.",
+      "La secrétaire qui a préparé la liste des personnes ayant décidé de participer à la réunion.",
+      "La secrétaire dont la liste de réunion a été approuvée."
+    ],
+    expl:"Nom tête : sekreter. Modificateur 1 : [listesini hazırlayan]. Modificateur 2 (du listesi) : [kişilerin]. Modificateur 3 (des kişiler) : [toplantıya katılmaya karar veren]. Lire de droite à gauche."
+  },
+  {
+    q:"« Senin söylediğini duyduğum haber doğru çıktı. » — Que signifie cette phrase ?",
+    c:"La nouvelle que j'avais entendu que tu avais dite s'est avérée vraie.",
+    o:[
+      "Tu as entendu la nouvelle que j'ai dite et elle s'est avérée vraie.",
+      "La nouvelle que j'avais entendu que tu avais dite s'est avérée vraie.",
+      "J'ai dit la vérité que tu avais entendue.",
+      "La nouvelle vraie que tu avais dite, je l'ai entendue."
+    ],
+    expl:"[senin söylediğin] = ce que tu as dit (1er niveau, COD de duyduğum) · [duyduğum haber] = la nouvelle que j'ai entendue (2e niveau, modificateur de haber) · doğru çıktı = s'est avérée vraie."
+  },
+  {
+    q:"Pour traduire 'le rapport que le directeur a demandé que nous préparions', quelle structure turque utilise-t-on ?",
+    c:"müdürün hazırlamamızı istediği rapor",
+    o:[
+      "müdür hazırlanan rapor",
+      "müdürün hazırlamamızı istediği rapor",
+      "rapor ki müdür istedi biz hazırlayalım",
+      "müdürün hazırladığı rapor"
+    ],
+    expl:"[müdürün] + [hazırlamamızı istediği] + [rapor] : istediği = participe -dik de istemek accordé à müdür (son sujet). hazırlamamızı = notre fait de préparer (COD de istedi). Enchâssement à deux niveaux avec sujets différents."
+  },
+];
+
+// ── C1E5 : Politesse ───────────────────────────────
+const QCM_C1E5 = [
+  {
+    q:"Vous souhaitez demander très poliment à votre professeur s'il pourrait vous recevoir. Quelle formulation est la plus appropriée ?",
+    c:"Acaba sizi rahatsız etmeden bir görüşme ayarlayabilir miyim?",
+    o:[
+      "Benimle konuşur musun?",
+      "Görüşmek istiyorum.",
+      "Acaba sizi rahatsız etmeden bir görüşme ayarlayabilir miyim?",
+      "Müsait olduğunuzda görüşelim."
+    ],
+    expl:"Acaba (atténuateur) + rahatsız etmeden (excuse préalable) + -ebilir miyim (potentiel interrogatif) = triple atténuation. C'est le registre attendu avec un supérieur hiérarchique."
+  },
+  {
+    q:"Vous souhaitez formuler une critique polie à un collègue : son rapport contient des erreurs. Laquelle de ces formulations est la plus appropriée en contexte professionnel turc ?",
+    c:"Raporunuzda bazı noktalara dikkat etmek gerekebilir gibi görünüyor.",
+    o:[
+      "Raporunuz yanlış.",
+      "Raporda hatalar var.",
+      "Raporunuzda bazı noktalara dikkat etmek gerekebilir gibi görünüyor.",
+      "Raporu düzeltin lütfen."
+    ],
+    expl:"Accumulation de mitigateurs : gerekebilir (conditionnel de nécessité) + gibi görünüyor (il semble que). En turc professionnel, une critique directe est perçue comme agressive. La critique doit être voilée sous plusieurs couches d'atténuation."
+  },
+  {
+    q:"Comment désigneriez-vous correctement un médecin femme en vous adressant à elle dans un couloir d'hôpital ?",
+    c:"Doktor Hanım",
+    o:["Doktor","Hanım Doktor","Doktor Hanım","Hanım"],
+    expl:"La formule correcte est unvan + Hanım (titre + marque de respect féminine). 'Hanım Doktor' est incorrect. 'Doktor' seul est trop abrupt. 'Hanım' seul efface le titre professionnel."
+  },
+  {
+    q:"Quelqu'un vous complimente sur votre turc en disant 'Türkçeniz çok güzel!' Comment répondez-vous selon les codes de la politesse turque ?",
+    c:"Estağfurullah, hâlâ çok eksiklerim var.",
+    o:[
+      "Evet, teşekkür ederim, gerçekten iyi konuşuyorum.",
+      "Estağfurullah, hâlâ çok eksiklerim var.",
+      "Hayır, konuşamıyorum.",
+      "Biliyorum, çok çalıştım."
+    ],
+    expl:"La modestie rhétorique est un impératif social en turc. Accepter un compliment directement est perçu comme de l'arrogance. Estağfurullah (formule de modestie islamique) + minimisation de ses compétences = réponse canonique."
+  },
+];
+
+// ── C1E6 : Style journalistique ────────────────────
+const QCM_C1E6 = [
+  {
+    q:"Titre de presse : « Bakan: Enflasyon düşüyor. » — Quel est le mode d'attribution de la citation ?",
+    c:"Citation directe attribuée à une source nommée (deux-points)",
+    o:[
+      "Affirmation du journaliste présentée comme fait",
+      "Citation directe attribuée à une source nommée (deux-points)",
+      "Rumeur non vérifiée (–mış rapportatif)",
+      "Déduction du journaliste depuis des données"
+    ],
+    expl:"Structure titre turc : Source + deux-points + citation directe entre guillemets ou non. Bakan = la source. C'est la forme la plus directe d'attribution, sans distanciation évidentiaire."
+  },
+  {
+    q:"Dans l'article : « Yetkililer, müzakerelerin çöktüğünü belirtti. » — Que signifie 'belirtti' par rapport à 'söyledi' ?",
+    c:"belirtti indique une précision apportée — plus formel et institutionnel que söyledi",
+    o:[
+      "belirtti et söyledi sont parfaitement synonymes dans ce contexte",
+      "belirtti suggère que l'information est douteuse",
+      "belirtti indique une précision apportée — plus formel et institutionnel que söyledi",
+      "belirtti implique que le journaliste a vérifié l'information lui-même"
+    ],
+    expl:"belirtmek = préciser, souligner. Dans la presse turque, il implique une déclaration officielle précise, souvent technique ou administrative. söylemek est plus neutre. iddia etmek impliquerait un doute sur la véracité."
+  },
+  {
+    q:"Titre : « Müzakereler çökmüş, taraflar ayrılmış. » — Pourquoi -mış ici plutôt que -dı ?",
+    c:"-mış rapportatif : le journaliste n'était pas témoin direct, il relaie une information de source",
+    o:[
+      "C'est une erreur de style — -dı serait correct",
+      "-mış exprime le doute total du journaliste sur les faits",
+      "-mış rapportatif : le journaliste n'était pas témoin direct, il relaie une information de source",
+      "-mış indique que les faits se sont produits il y a longtemps"
+    ],
+    expl:"Usage journalistique du -mış : le rédacteur n'a pas assisté aux faits. Cette forme crée une distance évidentiaire professionnelle — analogue au conditionnel journalistique français ('les négociations auraient échoué')."
+  },
+  {
+    q:"« Muhalefet, tasarının anayasaya aykırı olduğunu öne sürdü. » — La nuance de 'öne sürdü' vs 'açıkladı' ?",
+    c:"öne sürdü = a allégué / a avancé (affirmation contestée ou non encore prouvée)",
+    o:[
+      "öne sürdü et açıkladı sont synonymes parfaits",
+      "öne sürdü = a allégué / a avancé (affirmation contestée ou non encore prouvée)",
+      "öne sürdü = a confirmé officiellement",
+      "öne sürdü = a découvert (connotation investigative)"
+    ],
+    expl:"öne sürmek porte une connotation de contestation ou d'allégation : l'information n'est pas établie ou est disputée. açıklamak = déclaration officielle neutre. iddia etmek serait encore plus fort dans le sens du doute."
+  },
+];
+
+// ── C1E7 : Style littéraire ────────────────────────
+const QCM_C1E7 = [
+  {
+    q:"Extrait : « Bir varmış bir yokmuş, evvel zaman içinde, kalbur saman içinde... » — Fonction du -mış dans cette ouverture ?",
+    c:"Convention narrative des contes : distance esthétique, non incertitude réelle",
+    o:[
+      "Le conteur doute de la véracité de son récit",
+      "Le conteur rapporte ce qu'on lui a dit",
+      "Convention narrative des contes : distance esthétique, non incertitude réelle",
+      "Emploi archaïque du -mış remplacé plus tard par -dı"
+    ],
+    expl:"'Bir varmış bir yokmuş' est la formule d'ouverture canonique des contes turcs (masal). Le -mış y crée un espace de fiction, d'irréel bienveillant. C'est une convention, non une marque épistémique."
+  },
+  {
+    q:"« Yavaş yavaş ilerledi. » vs « İlerledi. » — Quel effet stylistique produit 'yavaş yavaş' ?",
+    c:"Ikileme (doublement) : intensification de la lenteur et création d'un effet de durée",
+    o:[
+      "Simple répétition par erreur typographique",
+      "Ikileme (doublement) : intensification de la lenteur et création d'un effet de durée",
+      "Forme d'insistance équivalente à 'çok yavaş'",
+      "Doublement nécessaire par règle grammaticale obligatoire"
+    ],
+    expl:"L'ikileme (doublement) est une figure de style turque majeure. yavaş yavaş ≠ çok yavaş : le doublement crée un effet de processus graduel, continu, presque cinématographique. Impossible à rendre ainsi en français."
+  },
+  {
+    q:"Dans un roman d'Orhan Pamuk : « Adam kapıyı açtı, içeri girdi, bir de ne görsün — karısı orada oturuyordu. » — Quel procédé stylistique est utilisé ?",
+    c:"Présent de narration dramatique (-iyor) après passé (-di) pour créer un effet de choc",
+    o:[
+      "Erreur de concordance des temps",
+      "Présent de narration dramatique (-iyor) après passé (-di) pour créer un effet de choc",
+      "Passage du style indirect au style direct",
+      "Utilisation du progressif pour marquer une habitude"
+    ],
+    expl:"Le basculement de -di au -iyor lors du 'coup de théâtre' (bir de ne görsün!) est un procédé narratif conscient. Le présent soudain crée une immersion dramatique — le lecteur vit la scène en temps réel."
+  },
+  {
+    q:"« İt ürür, kervan yürür. » — Comment qualifier cette structure linguistique ?",
+    c:"Parallélisme syntaxique à valeur proverbiale : deux propositions indépendantes de structure identique",
+    o:[
+      "Phrase causale : le chien aboie parce que la caravane avance",
+      "Parallélisme syntaxique à valeur proverbiale : deux propositions indépendantes de structure identique",
+      "Structure concessive : bien que le chien aboie, la caravane avance",
+      "Coordination simple sans valeur stylistique particulière"
+    ],
+    expl:"Deux GN + verbe, structure parfaitement parallèle, sans connecteur. Ce parallélisme crée un effet de vérité générale, d'évidence. La parataxe est caractéristique des proverbes turcs. Le sens implicite est concessif mais la structure ne l'exprime pas."
+  },
+];
+
+// ── C1E8 : Oral→Standard (FILL) ────────────────────
+const FILL_C1E8 = [
+  {l:"napıyon? → forme standard", a:"ne yapıyorsun", h:"na-peu-yon = ne yapıyorsun (2ᵉ sg. présent progressif de yapmak)"},
+  {l:"geliyom → forme standard", a:"geliyorum", h:"geliyom = geliyorum (1ʳᵉ sg., -um → m à l'oral)"},
+  {l:"dimi? → forme standard", a:"değil mi", h:"di-mi = değil mi (négation interrogative)"},
+  {l:"bişey → forme standard", a:"bir şey", h:"bişey = bir şey (un truc, quelque chose — fusion orale)"},
+  {l:"şindi → forme standard", a:"şimdi", h:"şindi = şimdi (maintenant — contraction du -m-)"},
+];
+
+// ── C1E9 : Courant→Soutenu (FILL) ──────────────────
+const FILL_C1E9 = [
+  {l:"danışmak → équivalent soutenu (verbe arabo-persan)", a:"istişare etmek", h:"istişare etmek = se concerter, consulter (registre formel et institutionnel)"},
+  {l:"özellikle → équivalent le plus soutenu", a:"bilhassa", h:"bilhassa (arabe) > hususen > özellikle. Bilhassa est le plus formel des trois."},
+  {l:"sonuç olarak → équivalent administratif-légal", a:"netice itibarıyla", h:"netice itibarıyla = en définitive, au bout du compte (registre très soutenu, légal)"},
+  {l:"düşünmek (en contexte formel académique) → équivalent savant", a:"mütalaa etmek", h:"mütalaa etmek = réfléchir à, examiner (terme d'origine arabe, registre académique classique)"},
+  {l:"zor → équivalent soutenu", a:"müşkül", h:"müşkül (arabe) = difficile, problématique. Actif dans la presse conservatrice et la littérature."},
+];
+
+// ── C1E10 : Deyimler ──────────────────────────────
+const QCM_C1E10 = [
+  {
+    q:"Votre collègue est extrêmement discret — il ne divulgue jamais d'informations confidentielles. Quel deyim le décrit ?",
+    c:"Ağzı sıkı biri.",
+    o:["Dili tutulmuş biri.","Ağzı sıkı biri.","Kulak veren biri.","Tepesi atan biri."],
+    expl:"ağzı sıkı olmak = avoir la bouche serrée → être discret, savoir garder un secret. dili tutulmak = rester sans voix (stupéfaction). Attention : deux deyimler impliquent la bouche mais avec des sens très différents."
+  },
+  {
+    q:"Le directeur a complètement perdu son sang-froid lors de la réunion. →",
+    c:"Müdürün tepesi attı.",
+    o:["Müdürün dili tutuldu.","Müdürün tepesi attı.","Müdür gözden düştü.","Müdürün eli açık."],
+    expl:"tepesi atmak = le sommet (de la tête) s'envole → exploser de colère, sortir de ses gonds. gözden düşmek = perdre la faveur (pas la colère). eli açık = être généreux."
+  },
+  {
+    q:"Elle est aux anges depuis qu'elle a obtenu son doctorat. →",
+    c:"Ayakları yere basmıyor.",
+    o:["Kulak veriyor.","Burnunun dikine gidiyor.","Ayakları yere basmıyor.","Göze girmiş."],
+    expl:"ayakları yere basmamak = les pieds ne touchent pas le sol → être aux anges, ne plus se sentir de joie. burnunun dikine gitmek = n'en faire qu'à sa tête (indépendance/entêtement, pas de joie)."
+  },
+  {
+    q:"Il analyse chaque contrat avec une minutie extrême, parfois irritante. →",
+    c:"Kılı kırk yaran biri.",
+    o:["Ağzı sıkı biri.","Eli açık biri.","Kılı kırk yaran biri.","Gözden düşmüş biri."],
+    expl:"kılı kırk yarmak = couper un poil en quarante → couper les cheveux en quatre, être d'une minutie excessive. Connotation légèrement négative (jusqu'à l'agacement). Ne pas confondre avec ağzı sıkı (discrétion)."
+  },
+  {
+    q:"Depuis sa faute publique, il a complètement perdu la faveur du comité. →",
+    c:"Komiteden gözden düştü.",
+    o:["Komitede tepesi attı.","Komiteden gözden düştü.","Komiteye kulak verdi.","Komitede göze girdi."],
+    expl:"gözden düşmek = tomber de l'œil → perdre la faveur, être discrédité. göze girmek est l'antonyme : se faire remarquer favorablement. Paire à maîtriser ensemble."
+  },
+];
+
+// ── TEST C1 QCM ────────────────────────────────────
+const QCM_TC1_1 = [
+  {
+    q:"« Rapor hazırlanmış olmalı. » — Quelle est la valeur exacte de cette forme ?",
+    c:"Déduction logique : le locuteur infère que le rapport a probablement été préparé",
+    o:["Obligation passée : le rapport aurait dû être préparé","Ouï-dire : on m'a dit que le rapport avait été préparé","Déduction logique : le locuteur infère que le rapport a probablement été préparé","Simple passé indirect équivalent à -mış"],
+    expl:"-mış olmalı = déduction sur un état passé. La combinaison de l'évidentialité (-mış) et de la modalité déontique/épistémique (olmalı) produit l'inférence. Ce n'est pas un simple ouï-dire."
+  },
+  {
+    q:"Complétez : « ___ durmadan çalışıyor. » pour exprimer 'il travaille sans s'arrêter en boucle' (avec connotation d'agacement). →",
+    c:"Çalışıp duruyor.",
+    o:["Çalışa duruyor.","Çalışıp duruyor.","Çalışıverdi.","Çalışa kaldı."],
+    expl:"-ip durmak = répétition agaçante, insistance perçue négativement. -e durmak exprime la persistance neutre (çalışa durdu = continuait à travailler). La différence de sens est portée par la forme du gérondif."
+  },
+  {
+    q:"« Kılı kırk yaran » décrit quelqu'un qui...",
+    c:"analyse les choses avec une minutie excessive, coupe les cheveux en quatre",
+    o:["garde tous ses secrets avec soin","analyse les choses avec une minutie excessive, coupe les cheveux en quatre","ne supporte pas les critiques","perd facilement son sang-froid"],
+    expl:"kılı kırk yarmak = couper un poil en quarante → exactement l'équivalent de 'couper les cheveux en quatre'. Minutie pointilleuse parfois perçue comme agaçante."
+  },
+  {
+    q:"Quel connecteur soutenu équivaut à 'özellikle' mais dans le registre légal-administratif ?",
+    c:"bilhassa",
+    o:["yani","işte","bilhassa","ama"],
+    expl:"bilhassa (arabe) = notamment, particulièrement — registre formel/légal. Hiérarchie : bilhassa (très soutenu) > hususen > özellikle (courant). yani et işte sont des marqueurs oraux discursifs, pas des équivalents."
+  },
+  {
+    q:"Dans la presse turque, le -mış dans un titre comme « Görüşmeler çökmüş » correspond à quoi en français journalistique ?",
+    c:"Conditionnel de distanciation ('les négociations auraient échoué')",
+    o:["Passé composé ordinaire","Conditionnel de distanciation ('les négociations auraient échoué')","Imparfait narratif","Futur antérieur"],
+    expl:"Le -mış rapportatif journalistique turc est l'exact équivalent du conditionnel de distanciation français. Les deux marquent que le journaliste n'était pas témoin direct et prend ses distances vis-à-vis de l'information."
+  },
+  {
+    q:"« Buyrun, buyrun! » dit à l'entrée d'un magasin signifie réellement...",
+    c:"Entrez, je vous en prie / Puis-je vous aider ? (hospitalité / invitation à entrer)",
+    o:["Allez-vous-en !","C'est à vous de décider","Entrez, je vous en prie / Puis-je vous aider ? (hospitalité / invitation à entrer)","Attention, vous êtes dans le chemin"],
+    expl:"buyurmak = vouloir bien (honorifique). buyrun est une formule de courtoisie polyvalente : invitation à entrer, à s'asseoir, à prendre quelque chose. La répétition renforce la sincérité de l'accueil — convention culturelle forte."
+  },
+];
+
+// ── C2E1 : Nominalisations académiques ────────────
+const QCM_C2E1 = [
+  {
+    q:"Décodez : « kentsel dönüşüm süreçlerinin dezavantajlı gruplara olan etkilerinin mekânsal adalet perspektifinden değerlendirilmesi » — Quel est le nœud nominal de ce groupe ?",
+    c:"değerlendirilmesi (l'évaluation — nominalisation du verbe değerlendirmek)",
+    o:[
+      "kentsel dönüşüm (la transformation urbaine)",
+      "dezavantajlı gruplar (les groupes défavorisés)",
+      "değerlendirilmesi (l'évaluation — nominalisation du verbe değerlendirmek)",
+      "mekânsal adalet (la justice spatiale)"
+    ],
+    expl:"Le nœud d'un groupe nominal turc est toujours le DERNIER élément. Ici : değerlendirilmesi = l'évaluation (de quoi ? des effets → etkilerinin). Tout ce qui précède le modifie. C'est la nominalisation principale qui porte le sens de l'action."
+  },
+  {
+    q:"Quel suffixe transforme 'kentleşmek' (s'urbaniser) en 'le processus d'urbanisation' pour usage académique ?",
+    c:"-me : kentleşme",
+    o:["-mış : kentleşmiş","-me : kentleşme","-miş olma : kentleşmiş olma","-ecek : kentleşecek"],
+    expl:"-me/-ma est le principal suffixe de nominalisation verbale en turc académique. kentleşme = l'urbanisation (processus). -miş olma impliquerait 'le fait d'avoir été urbanisé' — valeur aspectuelle différente."
+  },
+  {
+    q:"Traduisez la structure : « Bu politikanın uygulanmasının sonuçlarının analizi » →",
+    c:"L'analyse des résultats de l'application de cette politique",
+    o:[
+      "L'analyse de cette politique et ses résultats d'application",
+      "L'analyse des résultats de l'application de cette politique",
+      "Cette politique a été appliquée — analysons les résultats",
+      "Les résultats de la politique ont été analysés lors de l'application"
+    ],
+    expl:"Lecture de droite à gauche : analiz (l'analyse) ← sonuçların (des résultats ←) ← uygulanmasının (de l'application ←) ← bu politikanın (de cette politique). Chaque -nın signale un génitif liant les nominalisations en chaîne."
+  },
+  {
+    q:"Quel connecteur formel turc équivaut à 'par conséquent' dans un texte académique ?",
+    c:"dolayısıyla / bu nedenle / bu itibarla",
+    o:["yani","dolayısıyla / bu nedenle / bu itibarla","ama","sanki"],
+    expl:"dolayısıyla (en conséquence) · bu nedenle (pour cette raison) · bu itibarla (à cet égard, légèrement différent mais souvent employé). yani = c'est-à-dire (reformulation, oral). ama = mais (opposition simple)."
+  },
+];
+
+// ── C2E2 : Termes archaïques ──────────────────────
+const QCM_C2E2 = [
+  {
+    q:"Quel est l'équivalent öztürkçe contemporain de 'mühim' ?",
+    c:"önemli",
+    o:["güçlü","önemli","büyük","eski"],
+    expl:"mühim (arabe) = önemli (turc). Paire classique de la réforme. mühim reste actif dans la presse conservatrice, dans les titres de romans anciens et dans la langue parlée des générations plus âgées."
+  },
+  {
+    q:"« Zira bu meselede ihtiyatlı olmak lazımdır. » — Traduisez en turc courant contemporain.",
+    c:"Çünkü bu konuda dikkatli olmak gereklidir.",
+    o:[
+      "Zira bu meselede ihtiyatlı olmak gerekmektedir. (inchangé)",
+      "Çünkü bu konuda dikkatli olmak gereklidir.",
+      "Bu yüzden dikkatli olmalısınız.",
+      "Ama bu konuda siz dikkatli olun."
+    ],
+    expl:"zira → çünkü (car) · mesele → konu/sorun · ihtiyatlı → dikkatli · lazım → gerek/gerekli. Quatre remplacements nécessaires. Le registre passe du style soutenu ottomanisant au turc standard contemporain."
+  },
+  {
+    q:"Kahrolası est un exemple de forme en -ası. Que signifie-t-il et dans quel registre est-il employé ?",
+    c:"'Maudit !' — forme désidérative archaïque figée, registre exclamatif populaire",
+    o:[
+      "'Très bien !' — superlatif archaïque",
+      "'Maudit !' — forme désidérative archaïque figée, registre exclamatif populaire",
+      "'Autrefois' — adverbe de temps archaïque",
+      "'Il vient' — forme verbale du passé ottoman"
+    ],
+    expl:"-ası est un suffixe désidératif archaïque (que... soit). kahrolası = que ça brûle/maudisse → maudit ! Survit uniquement dans des malédictions et exclamations figées. Ne jamais l'utiliser en contexte neutre ou formel."
+  },
+  {
+    q:"'hürriyet' vs 'özgürlük' — Quelle nuance sociolinguistique distingue ces deux termes ?",
+    c:"hürriyet : emprunt arabe, connotation conservatrice/islamique · özgürlük : néologisme öztürkçe, connotation laïque/kémaliste",
+    o:[
+      "hürriyet est plus récent que özgürlük",
+      "hürriyet : emprunt arabe, connotation conservatrice/islamique · özgürlük : néologisme öztürkçe, connotation laïque/kémaliste",
+      "Ils sont parfaitement interchangeables sans aucune nuance",
+      "özgürlük est archaïque, hürriyet est contemporain"
+    ],
+    expl:"Ce couple lexical est un des marqueurs sociolinguistiques les plus saillants en turc contemporain. Hürriyet Gazetesi a choisi ce nom délibérément. Özgürlük a été créé par la TDK pour remplacer hürriyet. Les deux coexistent mais signalent des positionnements identitaires différents."
+  },
+];
+
+// ── C2E3 : Ironie et implicite ────────────────────
+const QCM_C2E3 = [
+  {
+    q:"Quelqu'un vous propose une idée clairement mauvaise. Votre interlocuteur dit : « Ne kadar zekice bir fikir! » avec un ton plat. Comment interpréter ?",
+    c:"Ironie sarcastique : l'idée est en réalité perçue comme médiocre",
+    o:[
+      "Compliment sincère et enthousiaste",
+      "Ironie sarcastique : l'idée est en réalité perçue comme médiocre",
+      "Question rhétorique sur le degré d'intelligence",
+      "Expression de surprise positive"
+    ],
+    expl:"Ne kadar + adjectif mélioratif + contexte contradictoire = ironie classique en turc. L'hyperbole appuyée sur un ton plat ou légèrement exagéré est le marqueur principal. Aucun suffixe spécial n'est nécessaire — c'est la prosodie et le contexte qui portent l'ironie."
+  },
+  {
+    q:"Vous invitez un ami à venir chez vous. Il répond : « Bakarız, inşallah geliriz. » Quelle est l'interprétation la plus probable ?",
+    c:"Refus poli et indirect — il est très probable qu'il ne vienne pas",
+    o:[
+      "Acceptation enthousiaste avec une touche de piété",
+      "Refus poli et indirect — il est très probable qu'il ne vienne pas",
+      "Demande d'informations supplémentaires avant de décider",
+      "Acceptation ferme mais conditionnelle au temps"
+    ],
+    expl:"bakarız (nous verrons) + inşallah (si Dieu le veut) = formule de refus indirect canonique en turc. L'usage de inşallah dans ce contexte n'est pas religieux — c'est un marqueur pragmatique de distancement. Un locuteur natif comprend immédiatement qu'il ne faut pas compter sur cette personne."
+  },
+  {
+    q:"Un Turc vous offre du thé pour la troisième fois en insistant fortement : « Yok yok, bir tane daha için! » Quelle est la convention culturelle en jeu ?",
+    c:"Hospitalité obligatoire : refuser une première fois est une politesse attendue — il faut accepter à la deuxième ou troisième insistance",
+    o:[
+      "L'hôte doute de votre satisfaction et vous force réellement à boire",
+      "C'est une formule rhétorique sans attente réelle de réponse",
+      "Hospitalité obligatoire : refuser une première fois est une politesse attendue — il faut accepter à la deuxième ou troisième insistance",
+      "La troisième offre signifie poliment qu'il est temps de partir"
+    ],
+    expl:"L'insistance dans l'hospitalité turque est codifiée. Un premier refus est interprété comme de la politesse (obligation sociale de ne pas sembler gourmand). L'hôte DOIT insister. L'invité peut accepter à la 2e ou 3e proposition. Refuser jusqu'au bout peut offenser."
+  },
+  {
+    q:"Vous recevez un compliment sur votre travail. Votre collègue répond à votre place : « Estağfurullah, sizin sayenizde. » Que signifie cette réponse ?",
+    c:"Modestie rhétorique obligatoire + attribution du mérite à l'interlocuteur (convention sociale)",
+    o:[
+      "Il reconnaît sincèrement que c'est grâce à vous",
+      "Il exprime de la honte",
+      "Modestie rhétorique obligatoire + attribution du mérite à l'interlocuteur (convention sociale)",
+      "Il demande pardon pour une erreur passée"
+    ],
+    expl:"estağfurullah (que Dieu me pardonne / quelle idée !) = refus du compliment par modestie rhétorique. sizin sayenizde (grâce à vous) = attribution fictive du mérite. C'est une formule entièrement conventionnelle — elle ne signifie pas que la personne croit vraiment que vous êtes responsable."
+  },
+];
+
+// ── C2E4 : Variété linguistique ───────────────────
+const QCM_C2E4 = [
+  {
+    q:"« Gidiyog, ne bakyorsun? » — Quelle variété ?",
+    c:"Régionalisme / oral populaire (Karadeniz ou parler populaire d'Istanbul) — -yor → -og",
+    o:[
+      "Turc standard contemporain",
+      "Argot de la jeunesse stambouliote",
+      "Régionalisme / oral populaire (Karadeniz ou parler populaire d'Istanbul) — -yor → -og",
+      "Turc ottoman archaïque"
+    ],
+    expl:"-yor → -og/-yo est une réduction vocalique caractéristique de certains accents régionaux (Karadeniz notamment) et du parler populaire rapide d'Istanbul. À reconnaître, jamais à reproduire à l'écrit."
+  },
+  {
+    q:"« Bu mesele mühim, zira ihmal edilemez. » — Quel registre ?",
+    c:"Soutenu / ottomanisant — mühim (arabe) + zira (arabe) signalent le registre élevé ou conservateur",
+    o:[
+      "Argot contemporain",
+      "Turc standard courant",
+      "Soutenu / ottomanisant — mühim (arabe) + zira (arabe) signalent le registre élevé ou conservateur",
+      "Régionalisme du Sud-Est"
+    ],
+    expl:"mühim + zira = double marqueur de registre ottomanisant. En turc standard contemporain : önemli + çünkü. Ce registre apparaît dans la presse conservatrice, les textes religieux et la littérature d'avant 1960."
+  },
+  {
+    q:"« Lan, o adam çok fiyakalı, sallamıyorum. » — Quel registre ?",
+    c:"Argot de la jeunesse (gençlik dili) — lan + fiyakalı + sallamak",
+    o:[
+      "Turc standard familier",
+      "Argot de la jeunesse (gençlik dili) — lan + fiyakalı + sallamak",
+      "Registre académique informel",
+      "Dialecte anatolien"
+    ],
+    expl:"lan (appellatif vulgaire) + fiyakalı (classe, stylé — argot) + sallamıyorum (je ne plaisante pas / je m'en fiche pas — ambigu selon contexte). Trois marqueurs d'argot jeune simultanés. Ne jamais employer à l'écrit formel."
+  },
+  {
+    q:"« Bu bağlamda, söz konusu politikanın etkinliği sorgulanabilir. » — Registre ?",
+    c:"Académique formel — bu bağlamda + söz konusu + sorgulanabilir (passif potentiel)",
+    o:[
+      "Journalistique neutre",
+      "Oral cultivé",
+      "Académique formel — bu bağlamda + söz konusu + sorgulanabilir (passif potentiel)",
+      "Registre juridique pur"
+    ],
+    expl:"bu bağlamda (dans ce contexte) · söz konusu (en question, ledit) · passif potentiel -abilir = trois marqueurs du registre académique formel. Ce niveau de langue est attendu dans les articles de revues et les rapports institutionnels."
+  },
+];
+
+// ── C2E5 : Traduction FR→TR (FILL) ────────────────
+const FILL_C2E5 = [
+  {l:"FR→TR : 'L'homme qui est venu hier' (piège relatif)", a:"dün gelen adam", h:"Pas de pronom relatif en turc → participe antéposé : dün gelen + adam. Jamais 'adam ki dün geldi'"},
+  {l:"FR→TR : 'Il y a deux ans, je vivais à Paris.'", a:"iki yıl önce Paris'te yaşıyordum", h:"Il y a = önce (pas içinde !) · imparfait français → -iyor+du en turc"},
+  {l:"FR→TR : 'Ce livre a été écrit par Orhan Pamuk.'", a:"bu kitap Orhan Pamuk tarafından yazıldı", h:"Agent passif = tarafından (par). Jamais için (pour). Passif turc = radical + -ıl-/-il-"},
+  {l:"FR→TR : 'J'habite ici depuis trois ans.'", a:"üç yıldır burada oturuyorum", h:"Depuis + durée en cours = -dır suffixé au nom de durée (üç yıldır). Jamais 'den beri' seul sans durée précédente."},
+];
+
+// ── C2E6 : Lettres formelles (FILL) ───────────────
+const FILL_C2E6 = [
+  {l:"Ouverture lettre au recteur d'une université", a:"Sayın Rektör", h:"Sayın + titre : formule standard pour supérieur hiérarchique nommé. Jamais prénom seul."},
+  {l:"Clôture standard d'une lettre formelle personnelle", a:"Saygılarımla", h:"Saygılarımla = avec mes respects (sg. → mla). Saygılarımızla = pluriel institutionnel. L'oublier est une faute de protocole grave."},
+  {l:"Destinataire institutionnel inconnu (à qui de droit)", a:"İlgili Makama", h:"İlgili Makama = À l'instance compétente / À qui de droit. Formule obligatoire quand le destinataire n'est pas individualisé."},
+  {l:"Formule de premier argument en essai académique turc", a:"Her şeyden önce", h:"Her şeyden önce = tout d'abord / en premier lieu. Équivalents : Öncelikle belirtmek gerekir ki · Birinci olarak."},
+];
+
+// ── C2E7 : Analyse littéraire ─────────────────────
+const QCM_C2E7 = [
+  {
+    q:"Extrait de Yaşar Kemal (İnce Memed) : « Memet koştu, koştu, koştu. Ardına bakmadı bile. » — Quel procédé stylistique domine ?",
+    c:"Répétition (tekrir) à valeur d'intensité et d'urgence dramatique",
+    o:[
+      "Ikileme (doublement) régulier",
+      "Répétition (tekrir) à valeur d'intensité et d'urgence dramatique",
+      "Parallélisme syntaxique à valeur proverbiale",
+      "Style indirect libre"
+    ],
+    expl:"La répétition triple de koştu (il courut) n'est pas un ikileme (qui implique un adjectif ou adverbe doublé). C'est un tekrir (répétition) à valeur expressive : l'accumulation mime la durée et l'urgence de la fuite. 'Ardına bakmadı bile' clôt par l'asyndète."
+  },
+  {
+    q:"Orhan Pamuk, Kar : « Kar, geceyle birlikte başladı. Şehir uyurken... » — Quel effet produit l'incipit météorologique ?",
+    c:"Instauration d'une atmosphère (sokağa çıkma yasağı thème central) — le décor naturel comme symbole politique",
+    o:[
+      "Simple description objective du temps",
+      "Instauration d'une atmosphère (sokağa çıkma yasağı thème central) — le décor naturel comme symbole politique",
+      "Faute stylistique — un roman ne devrait pas commencer par la météo",
+      "Référence à un fait historique précis daté"
+    ],
+    expl:"Dans Kar (Neige), la neige est le symbole central : isolement de Kars, enfermement politique, blancheur de la répression. L'incipit météorologique n'est pas anodin — il pose le symbol central dès la première phrase. Technique postmoderne : le réel comme métaphore."
+  },
+  {
+    q:"« Bir varmış bir yokmuş » dans les contes turcs vs « Il était une fois » en français — Quelle différence fondamentale ?",
+    c:"Le turc encode l'incertitude évidentiaire (-mış) : 'il PARAÎT qu'il y avait' — le conte se présente comme récit de seconde main, non comme vérité",
+    o:[
+      "Aucune différence — ce sont des traductions exactes l'un de l'autre",
+      "Le turc encode l'incertitude évidentiaire (-mış) : 'il PARAÎT qu'il y avait' — le conte se présente comme récit de seconde main, non comme vérité",
+      "Le français est plus précis sur la temporalité",
+      "Le turc implique que le conte est vrai, le français non"
+    ],
+    expl:"'Il était une fois' utilise l'imparfait factuel. 'Bir varmış' utilise le -mış évidentiaire. Le conte turc se présente LINGUISTIQUEMENT comme récit de seconde main : 'il paraîtrait qu'il existait'. Cette distance évidentiaire crée l'espace de la fiction dans la langue même — nuance intraduisible parfaitement en français."
+  },
+];
+
+// ── C2E8 : Réforme linguistique ───────────────────
+const QCM_C2E8 = [
+  {
+    q:"Quel terme öztürkçe la TDK a-t-elle créé pour remplacer 'tayyare' (arabe) ?",
+    c:"uçak",
+    o:["uçuş","uçak","uçucu","gökyüzü"],
+    expl:"uçak (de uçmak = voler) a remplacé tayyare dans les années 1930. uçak est maintenant universel. tayyare survit dans des chansons folkloriques et chez les générations les plus âgées dans certaines régions. uçuş = vol (le trajet), non l'appareil."
+  },
+  {
+    q:"La presse islamique-conservatrice contemporaine préfère employer 'millî' plutôt que 'ulusal'. Pourquoi ?",
+    c:"millî (arabe mille = nation) porte une connotation religieuse et ottomane · ulusal est un néologisme laïque de la TDK",
+    o:[
+      "millî est plus récent et moderne",
+      "ulusal est un emprunt occidental considéré impropre",
+      "millî (arabe mille = nation) porte une connotation religieuse et ottomane · ulusal est un néologisme laïque de la TDK",
+      "La distinction est purement phonétique, sans connotation politique"
+    ],
+    expl:"millî vient de l'arabe milla (communauté religieuse/nationale). ulusal a été créé par la TDK kémaliste pour couper ce lien avec la notion islamique de communauté. Le choix entre ces deux termes est aujourd'hui un marqueur sociolinguistique de positionnement idéologique identifiable immédiatement par un locuteur natif."
+  },
+  {
+    q:"Qu'est-ce que la Güneş-Dil Teorisi (1934-1936) et pourquoi est-elle importante linguistiquement ?",
+    c:"Théorie pseudo-scientifique affirmant que toutes les langues dérivent du turc primitif — abandonnée mais révélatrice des enjeux idéologiques de la réforme",
+    o:[
+      "Méthode d'enseignement du turc aux étrangers encore utilisée",
+      "Théorie pseudo-scientifique affirmant que toutes les langues dérivent du turc primitif — abandonnée mais révélatrice des enjeux idéologiques de la réforme",
+      "Système officiel de classification des dialectes régionaux turcs",
+      "Programme de purification lexicale qui a supprimé tous les emprunts arabes"
+    ],
+    expl:"La GDT était une tentative de justifier pseudo-scientifiquement la purification lexicale : si tous les mots viennent du turc, les emprunts arabes ne sont que des 'retours'. Abandonnée face à ses contradictions, elle révèle comment la linguistique peut être instrumentalisée pour des fins nationalistes."
+  },
+  {
+    q:"« Özgürlük » vs « Hürriyet » : lequel des deux apparaîtra dans un discours officiel de la présidence turque contemporaine (AKP) ?",
+    c:"Les deux coexistent selon le contexte — mais hürriyet est plus fréquent dans les discours à connotation islamique-nationale",
+    o:[
+      "Uniquement özgürlük (terme officiel exclusif)",
+      "Uniquement hürriyet (terme constitutionnel)",
+      "Les deux coexistent selon le contexte — mais hürriyet est plus fréquent dans les discours à connotation islamique-nationale",
+      "Aucun des deux — le terme officiel actuel est bambaşka"
+    ],
+    expl:"La réalité sociolinguistique est nuancée : les deux termes circulent, mais leur fréquence relative varie selon le positionnement politique. La presse laïque-kémaliste (Cumhuriyet) favorise özgürlük ; la presse pro-gouvernementale conservatrice (Sabah, A Haber) emploie plus souvent hürriyet. Observer cette variation est une compétence C2 authentique."
+  },
+];
+
+// ── TEST C2 QCM ────────────────────────────────────
+const QCM_TC2_1 = [
+  {
+    q:"Décodez le groupe nominal : « sanayileşme sürecinin toplumsal maliyetlerinin değerlendirilmesi ». Quel est le sens ?",
+    c:"L'évaluation des coûts sociaux du processus d'industrialisation",
+    o:[
+      "Les coûts industriels de l'évaluation sociale",
+      "L'évaluation des coûts sociaux du processus d'industrialisation",
+      "Le processus d'évaluation de l'industrialisation sociale",
+      "Les coûts du processus social industrialisé"
+    ],
+    expl:"Lecture de droite à gauche : değerlendirilmesi (l'évaluation) ← toplumsal maliyetlerinin (des coûts sociaux) ← sanayileşme sürecinin (du processus d'industrialisation). Trois génitifs en cascade."
+  },
+  {
+    q:"Quel terme soutenu (ottomanisant) équivaut à 'çünkü' ?",
+    c:"zira",
+    o:["yani","zira","ama","işte"],
+    expl:"zira (arabe) = car, parce que. Registre ottoman/conservateur/soutenu. çünkü est le terme courant öztürkçe. Le choix entre eux est un marqueur de registre et parfois de positionnement idéologique."
+  },
+  {
+    q:"« Mühim bir mesele! » — Reformulez en turc standard courant (öztürkçe).",
+    c:"Önemli bir sorun! / Önemli bir konu!",
+    o:[
+      "Mühimli bir mesele!",
+      "Önemli bir sorun! / Önemli bir konu!",
+      "Büyük bir şey!",
+      "Çok iyi bir şey!"
+    ],
+    expl:"mühim → önemli · mesele → sorun (problème) ou konu (sujet, question). Deux remplacements nécessaires. Sorun est plus approprié si 'mesele' implique un problème ; konu si c'est une question neutre."
+  },
+  {
+    q:"Un titre de presse porte : « Merkez Bankası faizi artırmış. » Quelle valeur a le -mış ici ?",
+    c:"Rapportatif journalistique : l'information n'est pas vérifiée en direct par le journaliste",
+    o:[
+      "Passé récent sans nuance particulière",
+      "Rapportatif journalistique : l'information n'est pas vérifiée en direct par le journaliste",
+      "Ironie : la banque n'a pas réellement augmenté les taux",
+      "Découverte étonnée du journaliste"
+    ],
+    expl:"En presse économique turque, le -mış signale que l'information provient d'une source (communiqué, agence) que le journaliste n'a pas vérifiée de première main. Équivalent exact du conditionnel journalistique français : 'la banque centrale aurait relevé ses taux'."
+  },
+  {
+    q:"Complétez correctement : « Başvurunun kabul edildiği ___, gerekli belgeler gönderilecektir. »",
+    c:"takdirde",
+    o:["için","takdirde","kadar","üzere"],
+    expl:"-dığı takdirde = dans le cas où (condition formelle). Construction : V-dık + iyelik + takdirde. Pour = için. Jusqu'à = kadar. Dans le but de = üzere. Seul takdirde exprime la condition formelle requise ici."
+  },
+  {
+    q:"Quel est l'effet stylistique de « koştu, koştu, koştu » dans un récit ?",
+    c:"Tekrir (répétition) : intensification et mímesis de la durée/urgence — différent de l'ikileme",
+    o:[
+      "Ikileme standard (doublement régulier)",
+      "Erreur stylistique à éviter en turc littéraire",
+      "Tekrir (répétition) : intensification et mímesis de la durée/urgence — différent de l'ikileme",
+      "Onomatopée verbale"
+    ],
+    expl:"L'ikileme double un même mot (yavaş yavaş). Le tekrir répète le même mot plusieurs fois de suite pour un effet d'insistance ou de durée. Ici triple répétition de koştu = la course est longue, épuisante, dramatique. Procédé consciemment stylistique chez Yaşar Kemal."
+  },
+];
+
+const VOCAB_C1 = [
+  {title:"Lexique abstrait et académique", words:[
+    {t:"söylem",p:"sö-lem",f:"discours (linguistique/politique)"},
+    {t:"kavram",p:"kav-ram",f:"concept, notion"},
+    {t:"bağlam",p:"bağ-lam",f:"contexte"},
+    {t:"olgu",p:"ol-gu",f:"fait, phénomène (objectif)"},
+    {t:"özne",p:"öz-né",f:"sujet (gram. et philos.)"},
+    {t:"nesne",p:"nes-né",f:"objet (gram. et philos.)"},
+    {t:"süreç",p:"sü-retch",f:"processus"},
+    {t:"dönüşüm",p:"dö-nü-chüm",f:"transformation, conversion"},
+    {t:"etkileşim",p:"et-ki-lé-chim",f:"interaction"},
+    {t:"çerçeve",p:"tcher-tché-vé",f:"cadre, cadre d'analyse"},
+    {t:"yansıma",p:"yan-sı-ma",f:"reflet, réflexion (abstrait)"},
+    {t:"boyut",p:"bo-yut",f:"dimension, aspect"},
+  ]},
+  {title:"Verbes de communication soutenu", words:[
+    {t:"öne sürmek",p:"ö-né sür-mek",f:"avancer (une thèse), alléguer"},
+    {t:"vurgulamak",p:"vur-gu-la-mak",f:"souligner, mettre en valeur"},
+    {t:"aktarmak",p:"ak-tar-mak",f:"transmettre, rapporter"},
+    {t:"belirtmek",p:"be-lirt-mek",f:"préciser, indiquer"},
+    {t:"savunmak",p:"sa-vun-mak",f:"défendre (une position)"},
+    {t:"irdelemek",p:"ir-dé-lé-mek",f:"analyser en profondeur, scruter"},
+    {t:"sorgulamak",p:"sor-gu-la-mak",f:"remettre en question, interroger"},
+    {t:"değerlendirmek",p:"dé-er-len-dir-mek",f:"évaluer, apprécier"},
+  ]},
+  {title:"Deyimler (expressions idiomatiques)", words:[
+    {t:"ağzı sıkı olmak",p:"a-zı sı-kı",f:"être discret, savoir garder un secret"},
+    {t:"tepesi atmak",p:"té-pé-si at-mak",f:"exploser de colère, sortir de ses gonds"},
+    {t:"kılı kırk yarmak",p:"kı-lı kırk yar-mak",f:"couper les cheveux en quatre, être pointilleux"},
+    {t:"gözden düşmek",p:"göz-den düch-mek",f:"perdre la faveur de quelqu'un"},
+    {t:"göze girmek",p:"gö-zé gir-mek",f:"se faire remarquer favorablement"},
+    {t:"ayakları yere basmamak",p:"a-yak-la-rı yé-ré",f:"être aux anges, ne plus se sentir de joie"},
+    {t:"dili tutulmak",p:"di-li tu-tul-mak",f:"rester sans voix, être abasourdi"},
+    {t:"kulak vermek",p:"ku-lak ver-mek",f:"prêter attention, écouter attentivement"},
+  ]},
+];
+
+const VOCAB_C2 = [
+  {title:"Lexique expert — sciences humaines", words:[
+    {t:"epistemoloji",p:"é-pis-té-mo-lo-ji",f:"épistémologie"},
+    {t:"paradigma",p:"pa-ra-dig-ma",f:"paradigme"},
+    {t:"metodoloji",p:"mé-to-do-lo-ji",f:"méthodologie"},
+    {t:"hipotez",p:"hi-po-téz",f:"hypothèse"},
+    {t:"analitik",p:"a-na-li-tik",f:"analytique"},
+    {t:"normatif",p:"nor-ma-tif",f:"normatif"},
+    {t:"ampirik",p:"am-pi-rik",f:"empirique"},
+    {t:"sentez",p:"sen-téz",f:"synthèse"},
+    {t:"tez",p:"téz",f:"thèse (argument + mémoire)"},
+    {t:"karşı tez / antitez",p:"kar-chı téz",f:"antithèse"},
+  ]},
+  {title:"Réforme linguistique — paires lexicales", words:[
+    {t:"uçak / tayyare",p:"u-tchak / tay-ya-ré",f:"avion (öztürkçe / ottoman)"},
+    {t:"yasa / kanun",p:"ya-sa / ka-nun",f:"loi (öztürkçe / arabe)"},
+    {t:"özgürlük / hürriyet",p:"öz-gür-lük / hür-ri-yet",f:"liberté (öztürkçe / arabe)"},
+    {t:"ulusal / millî",p:"u-lu-sal / mil-lî",f:"national (öztürkçe / arabe)"},
+    {t:"bilinç / şuur",p:"bi-linch / chu-ur",f:"conscience (öztürkçe / arabe)"},
+    {t:"önemli / mühim",p:"ö-nem-li / mü-him",f:"important (öztürkçe / arabe)"},
+    {t:"çünkü / zira",p:"tchün-kü / zi-ra",f:"car/parce que (öztürkçe / arabe)"},
+  ]},
+  {title:"Connecteurs C2 — argumentation soutenue", words:[
+    {t:"bu bağlamda",p:"bu bağ-lam-da",f:"dans ce contexte"},
+    {t:"söz konusu",p:"söz ko-nu-su",f:"en question, ledit/ladite"},
+    {t:"dolayısıyla",p:"do-la-yı-sıy-la",f:"par conséquent, donc"},
+    {t:"bu itibarla",p:"bu i-ti-bar-la",f:"à cet égard, de ce point de vue"},
+    {t:"nitekim",p:"ni-té-kim",f:"en effet, d'ailleurs (renforcement)"},
+    {t:"öte yandan",p:"ö-té yan-dan",f:"d'autre part, de l'autre côté"},
+    {t:"buna karşın",p:"bu-na kar-chın",f:"malgré cela, en dépit de"},
+    {t:"her ne kadar... olsa da",p:"her né ka-dar",f:"bien que... (concession)"},
+    {t:"dığı takdirde",p:"dı-ğı tak-dir-dé",f:"dans le cas où (condition formelle)"},
+    {t:"netice itibarıyla",p:"né-ti-cé i-ti-ba-rıy-la",f:"en définitive, au bout du compte"},
+  ]},
+];
+
+
 function buildAllNewCorr(){
   const MAP = [
     ['ca21e2',QCM_A21E2],['ca21e3',QCM_A21E3],['ca21e4',QCM_A21E4],['ca21e5',QCM_A21E5],
@@ -3365,6 +4983,25 @@ document.addEventListener('DOMContentLoaded',function(){
   updateProgress();
   initNav();
 });
+
+// ── Menu mobile ──────────────────────────────────────────
+function toggleSidebar(){
+  const sb=document.querySelector('.sidebar');
+  const ov=document.getElementById('sidebarOverlay');
+  const open=sb.classList.toggle('open');
+  ov.classList.toggle('open',open);
+  document.getElementById('menuBtn').innerHTML=open?'&#10005;':'&#9776;';
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.getElementById('menuBtn').innerHTML='&#9776;';
+}
+// Fermer le menu quand on clique un lien de la sidebar
+document.querySelectorAll('.sidebar nav a').forEach(a=>{
+  a.addEventListener('click',()=>{ if(window.innerWidth<768) closeSidebar(); });
+});
+
 </script>
 </body>
 </html>

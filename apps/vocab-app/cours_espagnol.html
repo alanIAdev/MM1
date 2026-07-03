@@ -107,6 +107,40 @@ tr:hover td{background:#fceaea}
 .fa-danger{color:#a02020;font-weight:700}
 .fa-correct{color:var(--green);font-weight:700}
 /* PRINT */
+
+/* === MOBILE === */
+.hamburger{
+  display:none;position:fixed;top:.75rem;left:.75rem;z-index:300;
+  background:var(--navy);color:#fff;border:none;border-radius:4px;
+  width:2.4rem;height:2.4rem;cursor:pointer;font-size:1.1rem;
+  align-items:center;justify-content:center;line-height:1;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:199;
+}
+@media(max-width:767px){
+  :root{--sidebar-w:256px}
+  .hamburger{display:flex}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .main{margin-left:0!important;padding:3.8rem 1.1rem 4rem}
+  .page-header{padding-top:.5rem}
+  table{font-size:.78rem}
+  table th,table td{padding:.3rem .45rem}
+  .opt{font-size:.82rem;padding:.35rem .6rem}
+  .fill-in{font-size:.88rem}
+  .module{padding:1.2rem 1rem}
+  .mod-head{flex-direction:column;gap:.25rem}
+  .actions{flex-wrap:wrap;gap:.4rem}
+  .btn{font-size:.78rem;padding:.35rem .7rem}
+}
+@media(min-width:768px){
+  .hamburger{display:none!important}
+}
+
 @media print{
   .sidebar,.print-btn,.actions,.star{display:none!important}
   .main{margin-left:0;padding:1cm 1.5cm;max-width:100%}
@@ -119,6 +153,8 @@ tr:hover td{background:#fceaea}
 </style>
 </head>
 <body>
+<button class="hamburger" id="menuBtn" aria-label="Menu" onclick="toggleSidebar()">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <div class="layout">
 
 <aside class="sidebar">
@@ -3111,6 +3147,24 @@ document.addEventListener('DOMContentLoaded',function(){
   updateProgress();
   initNav();
 });
+
+// ── Menu mobile ──────────────────────────────────────────
+function toggleSidebar(){
+  const sb=document.querySelector('.sidebar');
+  const ov=document.getElementById('sidebarOverlay');
+  const open=sb.classList.toggle('open');
+  ov.classList.toggle('open',open);
+  document.getElementById('menuBtn').innerHTML=open?'&#10005;':'&#9776;';
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.getElementById('menuBtn').innerHTML='&#9776;';
+}
+document.querySelectorAll('.sidebar nav a').forEach(a=>{
+  a.addEventListener('click',()=>{ if(window.innerWidth<768) closeSidebar(); });
+});
+
 </script>
 </body>
 </html>
