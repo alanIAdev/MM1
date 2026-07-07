@@ -1,52 +1,92 @@
+<!--
+  ============================================================
+  QUEST — Application de gestion de tâches "gamifiée"
+  ============================================================
+  Application mono-fichier (HTML + CSS + JS) qui fonctionne
+  entièrement côté client, sans serveur ni base de données :
+  - Les données (catégories, tâches, XP...) sont stockées dans
+    le localStorage du navigateur (voir fonctions load()/save()).
+  - L'app peut être "installée" comme une PWA (Progressive Web
+    App) grâce à un manifest et un service worker générés
+    dynamiquement en JavaScript (voir la fin du <script>).
+  - Concept : l'utilisateur crée des catégories (Sport, Travail...),
+    y ajoute des tâches récurrentes, et gagne de l'XP à chaque
+    tâche accomplie, ce qui fait monter le niveau de la catégorie.
+    Des "missions bonus" quotidiennes aléatoires ajoutent un
+    aspect ludique supplémentaire.
+  ============================================================
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<!-- Encodage des caractères -->
 <meta charset="UTF-8"/>
+<!-- Rend la page responsive sur mobile et empêche le zoom tactile (expérience type "app native") -->
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<!-- Autorise l'affichage en mode "application web" (sans barre d'adresse) sur Android -->
 <meta name="mobile-web-app-capable" content="yes"/>
+<!-- Nom de l'application utilisé par le système -->
 <meta name="application-name" content="Quest"/>
+<!-- Couleur de la barre de statut/thème du navigateur -->
 <meta name="theme-color" content="#0f0f1a"/>
+<!-- Lien vers le manifest PWA : son "href" sera rempli dynamiquement en JS (voir plus bas) -->
 <link rel="manifest" id="pwa-manifest"/>
+<!-- Équivalents Apple/iOS des balises PWA ci-dessus -->
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Quest"/>
+<!-- Icône utilisée quand l'app est ajoutée à l'écran d'accueil iOS : remplie dynamiquement en JS -->
 <link rel="apple-touch-icon" id="pwa-icon"/>
 <title>Quest</title>
 <style>
 /* ── RESET & BASE ─────────────────────────────────────────── */
+/* Reset global : supprime les marges/paddings par défaut, force le box-sizing
+   "border-box" (padding/bordure inclus dans la largeur) et enlève le halo bleu
+   au toucher sur mobile (-webkit-tap-highlight-color) */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+/* Empêche le scroll du body : c'est la div #content qui défilera, pas la page entière */
 html,body{height:100%;overflow:hidden}
 body{
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  background:#0f0f1a;
-  color:#e8e8f0;
-  max-width:430px;margin:0 auto;
+  background:#0f0f1a;              /* fond très sombre (thème "dark mode") */
+  color:#e8e8f0;                   /* texte clair */
+  max-width:430px;margin:0 auto;   /* contraint la largeur façon écran de smartphone, centré sur desktop */
   display:flex;flex-direction:column;height:100%;
 }
 input,select,button{font-family:inherit}
-input,select{outline:none;-webkit-appearance:none}
+input,select{outline:none;-webkit-appearance:none} /* retire le style natif du navigateur */
 button{cursor:pointer}
+/* Barre de défilement fine et discrète (Chrome/Safari) */
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#ffffff18;border-radius:4px}
-select option{background:#1e1e35;color:#e8e8f0}
-input[type=time]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.4)}
+select option{background:#1e1e35;color:#e8e8f0} /* les <option> gardent le thème sombre */
+input[type=time]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.4)} /* icône horloge blanche et discrète */
 
 /* ── PALETTE ──────────────────────────────────────────────── */
 /* Primary: violet-blue #7c6aff  Accent: cyan #00d4ff  Hot: #ff6b9d  XP: #ffd166 */
 
 /* ── ANIMATIONS ──────────────────────────────────────────── */
+/* fadeUp   : apparition en glissant vers le haut (utilisée par le toast et la bannière d'installation) */
 @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+/* popIn    : effet de "zoom avant" léger à l'ouverture (modales, popup bonus) */
 @keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+/* spin     : rotation continue (utilisée sur l'étoile de la popup bonus) */
 @keyframes spin{to{transform:rotate(360deg)}}
+/* shimmer  : pulsation d'opacité (effet "scintillement", défini mais non utilisé directement ci-dessous) */
 @keyframes shimmer{0%,100%{opacity:.7}50%{opacity:1}}
+/* slideIn  : légère translation verticale à l'affichage de chaque page/onglet */
 @keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── LAYOUT ──────────────────────────────────────────────── */
+/* #content = zone scrollable qui contient la page active (Dashboard, Tâches, etc.) ;
+   padding-bottom laisse de la place pour ne pas être caché par la barre de navigation fixe */
 #content{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:76px}
+/* .page = conteneur générique de chaque écran, avec petite animation d'entrée */
 .page{padding:16px 16px 0;animation:slideIn .18s ease}
 
 /* ── BOTTOM NAV ──────────────────────────────────────────── */
+/* Barre de navigation fixée en bas de l'écran (comme une app mobile), avec effet de flou (blur) derrière elle */
 nav{
   position:fixed;bottom:0;left:50%;transform:translateX(-50%);
   width:100%;max-width:430px;
@@ -57,6 +97,7 @@ nav{
   padding:8px 0 max(8px,env(safe-area-inset-bottom));
   z-index:100;
 }
+/* Chaque bouton de la nav : icône + libellé empilés, gris quand inactif */
 .nav-btn{
   background:transparent;border:none;
   color:rgba(255,255,255,.28);
@@ -65,20 +106,22 @@ nav{
   font-size:9px;letter-spacing:.3px;gap:3px;flex:1;
   transition:color .2s;
 }
-.nav-btn .ni{font-size:20px;line-height:1;transition:transform .2s}
-.nav-btn.active{color:#fff}
-.nav-btn.active .ni{transform:scale(1.15)}
-.nav-btn.active .nav-dot{display:block}
+.nav-btn .ni{font-size:20px;line-height:1;transition:transform .2s} /* icône du bouton (ni = "nav icon") */
+.nav-btn.active{color:#fff}                 /* onglet actif : texte/icône blancs */
+.nav-btn.active .ni{transform:scale(1.15)}  /* icône légèrement agrandie quand actif */
+.nav-btn.active .nav-dot{display:block}     /* petit point violet affiché sous l'onglet actif */
 .nav-dot{display:none;width:4px;height:4px;border-radius:50%;background:#7c6aff;margin:-2px auto 0}
 
 /* ── HEADER ──────────────────────────────────────────────── */
+/* En-tête de chaque page : titre à gauche, info/action à droite */
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding-top:4px}
+/* Logo "Quest" avec dégradé violet→cyan appliqué au texte (technique background-clip:text) */
 .logo{
   font-size:22px;font-weight:800;letter-spacing:.5px;
   background:linear-gradient(135deg,#7c6aff,#00d4ff);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.section-title{font-size:18px;font-weight:700;color:#fff}
+.section-title{font-size:18px;font-weight:700;color:#fff} /* titre de section (Tâches, Historique...) */
 .date-badge{
   font-size:11px;color:rgba(255,255,255,.4);
   background:rgba(255,255,255,.06);
@@ -86,6 +129,7 @@ nav{
 }
 
 /* ── CARDS ───────────────────────────────────────────────── */
+/* Bloc générique translucide utilisé partout dans l'app (encarts, sections) */
 .card{
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
@@ -98,6 +142,7 @@ nav{
 }
 
 /* ── STAT PILLS ──────────────────────────────────────────── */
+/* Grille de 4 statistiques (tâches, bonus, XP total, catégories) sur le dashboard */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
 .stat{
   background:rgba(255,255,255,.05);
@@ -105,10 +150,11 @@ nav{
   border-radius:14px;padding:10px 4px;
   display:flex;flex-direction:column;align-items:center;gap:3px;
 }
-.stat-val{font-size:17px;font-weight:700;color:#fff}
-.stat-lbl{font-size:8px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px}
+.stat-val{font-size:17px;font-weight:700;color:#fff}  /* la valeur chiffrée */
+.stat-lbl{font-size:8px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px} /* le libellé */
 
 /* ── CHARTS ──────────────────────────────────────────────── */
+/* Les deux graphiques radar (SVG) du dashboard, côte à côte */
 .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .chart-box{
   background:rgba(255,255,255,.04);
@@ -119,22 +165,25 @@ nav{
 .chart-title{font-size:9px;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:8px;text-align:center}
 
 /* ── LEVEL BARS ──────────────────────────────────────────── */
+/* Barres de progression d'XP par catégorie (dashboard) */
 .level-row{margin-bottom:11px}
 .level-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;align-items:center}
-.level-name{font-weight:600;color:#e8e8f0}
-.level-info{font-size:10px;color:rgba(255,255,255,.35)}
-.level-track{background:rgba(255,255,255,.07);border-radius:6px;height:6px;overflow:hidden}
-.level-fill{height:100%;border-radius:6px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.level-name{font-weight:600;color:#e8e8f0}          /* nom + icône de la catégorie */
+.level-info{font-size:10px;color:rgba(255,255,255,.35)} /* "LVL x · y/z XP" */
+.level-track{background:rgba(255,255,255,.07);border-radius:6px;height:6px;overflow:hidden} /* fond de la barre */
+.level-fill{height:100%;border-radius:6px;transition:width .5s cubic-bezier(.4,0,.2,1)} /* remplissage animé de la barre */
 
 /* ── TASK CARDS ──────────────────────────────────────────── */
+/* Carte représentant une tâche dans la liste (onglet "Tâches") */
 .task-card{
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
   border-radius:14px;padding:12px 14px;margin-bottom:8px;
   transition:opacity .2s;
 }
-.task-card.done-card{opacity:.4}
+.task-card.done-card{opacity:.4} /* tâche déjà complétée aujourd'hui : grisée */
 
+/* Bouton rond permettant de cocher/valider une tâche */
 .check-btn{
   width:32px;height:32px;border-radius:50%;border:2px solid rgba(124,106,255,.6);
   background:transparent;color:rgba(124,106,255,.8);
@@ -142,20 +191,21 @@ nav{
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
   transition:all .15s;
 }
-.check-btn:active{transform:scale(.9)}
-.check-btn.done{background:rgba(124,106,255,.2);border-color:rgba(124,106,255,.3);color:rgba(124,106,255,.5)}
-.task-title{font-size:14px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.task-meta{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;display:flex;align-items:center;gap:6px}
+.check-btn:active{transform:scale(.9)} /* petit effet d'enfoncement au clic/tap */
+.check-btn.done{background:rgba(124,106,255,.2);border-color:rgba(124,106,255,.3);color:rgba(124,106,255,.5)} /* état "déjà fait" */
+.task-title{font-size:14px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} /* titre tronqué avec "..." si trop long */
+.task-meta{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;display:flex;align-items:center;gap:6px} /* ligne fréquence + streak */
 .task-cat-pill{
   display:inline-flex;align-items:center;gap:3px;
   padding:2px 8px;border-radius:20px;font-size:9px;font-weight:600;
   background:rgba(255,255,255,.07);color:rgba(255,255,255,.45);
 }
-.streak-badge{color:#ff9500;font-size:10px}
-.edit-btn{background:transparent;border:none;color:rgba(255,255,255,.25);font-size:15px;padding:4px 5px;line-height:1}
-.delete-btn{background:transparent;border:none;color:rgba(255,255,255,.18);font-size:14px;padding:4px 5px;line-height:1}
+.streak-badge{color:#ff9500;font-size:10px} /* badge "🔥 X jours de suite" */
+.edit-btn{background:transparent;border:none;color:rgba(255,255,255,.25);font-size:15px;padding:4px 5px;line-height:1}   /* bouton crayon ✎ */
+.delete-btn{background:transparent;border:none;color:rgba(255,255,255,.18);font-size:14px;padding:4px 5px;line-height:1} /* bouton croix ✕ */
 
 /* ── BUTTONS ─────────────────────────────────────────────── */
+/* Bouton d'action principal (dégradé violet, avec ombre) */
 .btn-primary{
   background:linear-gradient(135deg,#7c6aff,#5a4fcf);
   color:#fff;border:none;border-radius:12px;
@@ -164,11 +214,13 @@ nav{
   transition:transform .12s,box-shadow .12s;
 }
 .btn-primary:active{transform:scale(.97);box-shadow:0 2px 8px rgba(124,106,255,.25)}
+/* Bouton secondaire discret (ex: "Annuler") */
 .btn-ghost{
   background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);
   border:1px solid rgba(255,255,255,.1);border-radius:12px;
   padding:10px 18px;font-size:13px;font-weight:500;
 }
+/* Bouton d'action destructive (ex: "Supprimer") en rouge */
 .btn-danger{
   background:rgba(255,77,77,.1);color:#ff6b6b;
   border:1px solid rgba(255,77,77,.2);border-radius:12px;
@@ -176,8 +228,9 @@ nav{
 }
 
 /* ── FILTERS ─────────────────────────────────────────────── */
+/* Rangée de filtres/pilules scrollable horizontalement (ex: "Aujourd'hui", "Toutes", catégories) */
 .filter-row{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px}
-.filter-row::-webkit-scrollbar{height:0}
+.filter-row::-webkit-scrollbar{height:0} /* cache la barre de scroll horizontale des filtres */
 .filter-btn{
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.08);
@@ -185,13 +238,14 @@ nav{
   border-radius:20px;padding:5px 14px;font-size:11px;font-weight:500;
   white-space:nowrap;transition:all .15s;
 }
-.filter-btn.active{
+.filter-btn.active{ /* filtre actuellement sélectionné : dégradé violet */
   background:linear-gradient(135deg,#7c6aff,#5a4fcf);
   color:#fff;border-color:transparent;
   box-shadow:0 2px 10px rgba(124,106,255,.35);
 }
 
 /* ── TOAST ───────────────────────────────────────────────── */
+/* Petite notification temporaire en haut de l'écran (ex: "Tâche accomplie !") */
 #toast{
   position:fixed;top:18px;left:50%;transform:translateX(-50%);
   background:rgba(30,30,53,.95);
@@ -203,13 +257,15 @@ nav{
   box-shadow:0 8px 32px rgba(0,0,0,.4);
   animation:fadeUp .22s ease;white-space:nowrap;gap:6px;
 }
-.xp-badge{
+.xp-badge{ /* petit badge jaune "+X XP" affiché dans le toast */
   background:linear-gradient(135deg,#ffd166,#ffb300);
   color:#000;padding:2px 8px;border-radius:20px;
   font-size:11px;font-weight:700;
 }
 
 /* ── OVERLAY / MODAL ─────────────────────────────────────── */
+/* Fond sombre flouté qui recouvre l'écran quand une fenêtre modale est ouverte
+   (création/édition de tâche ou de catégorie) */
 .overlay{
   position:fixed;inset:0;
   background:rgba(0,0,0,.7);
@@ -227,7 +283,7 @@ nav{
   animation:popIn .22s ease;
   max-height:90vh;overflow-y:auto;
 }
-.modal-handle{width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:0 auto 20px}
+.modal-handle{width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:0 auto 20px} /* petite "poignée" visuelle façon bottom-sheet mobile */
 .modal-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:18px;text-align:center}
 .form-label{font-size:10px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,.35);text-transform:uppercase;display:block;margin-bottom:8px;margin-top:14px}
 .form-input{
@@ -248,6 +304,7 @@ nav{
 }
 
 /* ── ICON GRID ───────────────────────────────────────────── */
+/* Grille d'emojis sélectionnables pour choisir l'icône d'une nouvelle catégorie */
 .icon-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
 .icon-btn{
   font-size:22px;
@@ -256,9 +313,10 @@ nav{
   border-radius:10px;padding:6px 8px;
   transition:all .12s;
 }
-.icon-btn.active{border-color:#7c6aff;background:rgba(124,106,255,.15);transform:scale(1.1)}
+.icon-btn.active{border-color:#7c6aff;background:rgba(124,106,255,.15);transform:scale(1.1)} /* icône actuellement choisie */
 
 /* ── FREQ CHIPS ──────────────────────────────────────────── */
+/* Boutons "chip" pour choisir la fréquence d'une tâche (1×/jour, 2×/semaine, etc.) */
 .freq-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
 .freq-btn{
   background:rgba(255,255,255,.06);
@@ -274,6 +332,7 @@ nav{
 }
 
 /* ── DAY BUTTONS ─────────────────────────────────────────── */
+/* Sélecteur des jours de la semaine (Dim, Lun, Mar...) pour les tâches à jours fixes */
 .day-wrap{display:flex;gap:5px;margin-bottom:6px}
 .day-btn{
   flex:1;
@@ -284,9 +343,10 @@ nav{
   font-size:10px;font-weight:500;text-align:center;
   transition:all .12s;
 }
-.day-btn.active{background:rgba(0,212,255,.15);border-color:#00d4ff;color:#00d4ff}
+.day-btn.active{background:rgba(0,212,255,.15);border-color:#00d4ff;color:#00d4ff} /* jour sélectionné, en cyan */
 
 /* ── FREQ HINT ───────────────────────────────────────────── */
+/* Encadré explicatif qui décrit la fréquence choisie (ex: "Chaque jour, 1 fois par jour") */
 .freq-hint{
   font-size:10px;color:rgba(255,255,255,.35);
   margin-bottom:4px;line-height:1.5;
@@ -297,6 +357,7 @@ nav{
 }
 
 /* ── BONUS BADGE ─────────────────────────────────────────── */
+/* Pastille numérotée (1, 2, 3 ou ✓) affichée devant chaque mission bonus */
 .bonus-badge{
   width:36px;height:36px;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
@@ -304,6 +365,7 @@ nav{
 }
 
 /* ── BONUS POPUP ─────────────────────────────────────────── */
+/* Popup plein écran affichée quand une mission bonus vient d'être validée */
 #bonus-popup{
   position:fixed;inset:0;
   background:rgba(0,0,0,.8);
@@ -344,9 +406,11 @@ nav{
 }
 
 /* ── CAT ROW ─────────────────────────────────────────────── */
+/* Ligne représentant une catégorie dans l'écran Réglages (icône + nom + niveau + suppression) */
 .cat-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 
 /* ── HISTORY TABLE ───────────────────────────────────────── */
+/* Tableau de l'onglet Historique : une ligne par tâche, une colonne par jour */
 .hist-scroll{overflow-x:auto;margin-bottom:12px;border-radius:12px}
 .hist-scroll::-webkit-scrollbar{height:3px}
 .hist-table{border-collapse:collapse;min-width:100%;font-size:10px}
@@ -372,7 +436,7 @@ nav{
 .hist-cell-na{color:rgba(255,255,255,.06);font-size:10px}
 .hist-th-today{color:#00d4ff !important;border-bottom:2px solid #00d4ff !important}
 .hist-td-today{background:rgba(0,212,255,.04) !important}
-.hist-cat-row td{
+.hist-cat-row td{ /* ligne d'en-tête de groupe affichant le nom de la catégorie dans le tableau */
   background:#111126 !important;
   color:rgba(255,255,255,.4) !important;
   font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
@@ -381,6 +445,7 @@ nav{
 }
 
 /* ── SETTINGS TIME INPUT ─────────────────────────────────── */
+/* Champ de sélection d'heure pour la notification quotidienne (écran Réglages) */
 .time-input{
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.1);
@@ -392,8 +457,21 @@ nav{
 </head>
 
 <body>
+<!--
+  Structure générale du <body> :
+  1. #content   : conteneur vide, rempli dynamiquement en JS par render() selon l'onglet actif
+  2. <nav>      : barre de navigation fixe avec les 5 onglets de l'app
+  3. #toast     : notification éphémère (invisible par défaut, affichée via showToast())
+  4. #bonus-popup : popup de félicitations affichée quand une mission bonus est validée
+  5. #modal     : fenêtre modale générique réutilisée pour créer/éditer une tâche ou une catégorie
+  Tout le contenu visible (texte, listes, formulaires) est généré par les fonctions
+  JavaScript de rendu (render(), renderDashboard(), renderTasks()...) plutôt qu'écrit
+  en dur ici : le HTML de départ n'est qu'une "coquille" vide.
+-->
 <div style="display:flex;flex-direction:column;height:100%">
+  <!-- Zone où s'affiche la page courante (remplie via el.innerHTML = ... dans render()) -->
   <div id="content"></div>
+  <!-- Barre de navigation : chaque bouton appelle switchTab('id') au clic pour changer d'écran -->
   <nav>
     <button class="nav-btn active" data-tab="dashboard" onclick="switchTab('dashboard')">
       <span class="ni">⬡</span><span>Tableau</span><span class="nav-dot"></span>
@@ -413,23 +491,26 @@ nav{
   </nav>
 </div>
 
-<!-- TOAST -->
+<!-- TOAST : notification texte temporaire, affichée/masquée par showToast() en JS -->
 <div id="toast"></div>
 
-<!-- BONUS POPUP -->
+<!-- BONUS POPUP : fenêtre de félicitations affichée par showBonusPopup()/nextBonusPopup() -->
 <div id="bonus-popup" style="display:none">
   <div class="bonus-inner">
     <div class="bonus-star">✦</div>
     <p class="bonus-tag">Mission Bonus</p>
     <p class="bonus-title">Accomplie !</p>
     <div class="bonus-divider"></div>
+    <!-- Le texte de la mission accomplie est injecté dynamiquement dans #bp-desc -->
     <p id="bp-desc" style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:14px;padding:0 6px"></p>
     <p class="bonus-xp">+100 XP</p>
     <button class="btn-primary" style="width:100%;padding:13px" onclick="closeBonusPopup()">Continuer →</button>
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL : fenêtre générique réutilisée pour "Nouvelle tâche", "Modifier tâche" et "Nouvelle catégorie".
+     Son contenu (#modal-inner) est entièrement généré par renderModal(). Un clic sur le fond
+     sombre (l'overlay) ferme la modale via handleOverlayClick(). -->
 <div id="modal" style="display:none" class="overlay" onclick="handleOverlayClick(event)">
   <div class="modal-box" id="modal-inner"></div>
 </div>
@@ -438,6 +519,8 @@ nav{
 // ══════════════════════════════════════════════════════
 // CONSTANTS
 // ══════════════════════════════════════════════════════
+// Catégories créées automatiquement au tout premier lancement de l'app
+// (si aucune catégorie n'est trouvée dans le localStorage).
 const DEFAULT_CATS=[
   {id:'cat_sport', name:'Sport',            icon:'🏋️',xp:0,color:'#ff6b9d'},
   {id:'cat_wisdom',name:'Wisdom',           icon:'📚',xp:0,color:'#7c6aff'},
@@ -459,6 +542,7 @@ const CAT_GRADIENTS=[
   'linear-gradient(135deg,#00d4ff,#7c6aff)',
 ];
 
+// Liste des fréquences possibles pour une tâche, avec leur libellé affiché
 const FREQS=[
   {id:'daily', label:'1×/jour'},
   {id:'twice', label:'2×/jour'},
@@ -466,33 +550,50 @@ const FREQS=[
   {id:'4week', label:'4×/semaine'},
   {id:'2week', label:'2×/semaine'},
   {id:'weekly',label:'1×/semaine'},
-  {id:'once',  label:'Ponctuel'},
+  {id:'once',  label:'Ponctuel'},   // tâche unique, disparaît une fois faite
 ];
-const DAY_NAMES=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
-const BONUS_XP=100,TASK_XP=50;
+const DAY_NAMES=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']; // abréviations des jours (index 0 = dimanche, comme Date.getDay())
+const BONUS_XP=100,TASK_XP=50; // XP gagné pour une mission bonus / pour une tâche complétée
 
+// Génère un identifiant unique court et aléatoire (utilisé pour les id de tâches/catégories/bonus)
 function uid(){return Math.random().toString(36).slice(2,9)}
+// Renvoie la date du jour au format "AAAA-MM-JJ" (clé utilisée dans tout le stockage)
 function today(){return new Date().toISOString().slice(0,10)}
+// Lit une clé du localStorage et la parse en JSON ; renvoie `def` si absente ou invalide
 function load(k,def){try{const v=JSON.parse(localStorage.getItem(k));return v!==null?v:def}catch{return def}}
+// Sauvegarde une valeur (sérialisée en JSON) dans le localStorage sous la clé `k`
 function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
 
+// État global de l'application, chargé au démarrage (voir bloc INIT en fin de script)
+// cats       : tableau des catégories {id,name,icon,xp,color}
+// tasks      : tableau des tâches {id,title,freq,catId,weekDays,completionLog,streak,lastDone,doneOnce}
+// bonus      : les 3 missions bonus du jour {id,key,desc,done}
+// notifTime  : heure de la notification quotidienne ("HH:MM")
+// currentTab : onglet actuellement affiché ('dashboard'|'tasks'|'history'|'bonus'|'settings')
 let cats,tasks,bonus,notifTime,currentTab;
 
 // ══════════════════════════════════════════════════════
 // FREQUENCY HELPERS
 // ══════════════════════════════════════════════════════
+// Retourne le libellé lisible correspondant à un id de fréquence
 function freqLabel(id){return FREQS.find(f=>f.id===id)?.label||id}
 
+// Calcule la date (lundi) du début de la semaine courante, au format "AAAA-MM-JJ"
+// (utile pour compter les complétions "par semaine")
 function getWeekStart(){
   const d=new Date(),day=d.getDay(),diff=d.getDate()-day+(day===0?-6:1);
   return new Date(new Date().setDate(diff)).toISOString().slice(0,10);
 }
 
+// Détermine si une tâche doit être proposée AUJOURD'HUI (utilisé pour le filtre "Aujourd'hui"
+// et pour savoir si on peut encore la cocher)
 function isTaskDueToday(t){
-  if(t.freq==='once') return !t.doneOnce;
-  if(t.freq==='daily'||t.freq==='twice') return true;
-  if(['2week','3week','4week'].includes(t.freq)) return true;
+  if(t.freq==='once') return !t.doneOnce;                       // tâche ponctuelle : due tant qu'elle n'a pas été faite
+  if(t.freq==='daily'||t.freq==='twice') return true;            // tâches quotidiennes : toujours dues
+  if(['2week','3week','4week'].includes(t.freq)) return true;    // quota hebdo libre : due tous les jours (l'utilisateur choisit quand la cocher)
   if(t.freq==='weekly'){
+    // Tâche hebdomadaire à jour fixe : due si c'est le jour choisi,
+    // ou si elle n'a pas encore été faite cette semaine (rattrapage)
     const dow=new Date().getDay(),chosen=(t.weekDays||[])[0];
     if(chosen===dow) return true;
     const ws=getWeekStart();
@@ -501,6 +602,7 @@ function isTaskDueToday(t){
   return true;
 }
 
+// Même logique que isTaskDueToday, mais pour une date arbitraire `ds` (utilisé par le tableau Historique)
 function isTaskDueOnDate(t,ds){
   const dow=new Date(ds+'T12:00:00').getDay();
   if(t.freq==='once') return true;
@@ -510,21 +612,28 @@ function isTaskDueOnDate(t,ds){
   return true;
 }
 
+// Nombre maximal de complétions autorisées par jour pour une fréquence donnée
+// (2 pour "2×/jour", 1 pour toutes les autres fréquences journalières)
 function maxComp(freq){return freq==='twice'?2:1}
+// Compte combien de fois une tâche a été complétée à une date précise
 function compOnDate(t,ds){return(t.completionLog||[]).filter(d=>d===ds).length}
+// Compte combien de fois une tâche a été complétée aujourd'hui
 function compToday(t){return compOnDate(t,today())}
 
+// Détermine si l'utilisateur PEUT ENCORE cocher cette tâche (quota non atteint)
 function canComplete(t){
-  if(t.freq==='once') return !t.doneOnce;
-  if(!isTaskDueToday(t)) return false;
+  if(t.freq==='once') return !t.doneOnce;              // ponctuelle : cochable une seule fois, jamais
+  if(!isTaskDueToday(t)) return false;                 // pas due aujourd'hui : non cochable
   if(['2week','3week','4week'].includes(t.freq)){
+    // Quota hebdomadaire libre : compare le nombre de complétions cette semaine au quota
     const quota={'2week':2,'3week':3,'4week':4}[t.freq];
     const ws=getWeekStart();
     return (t.completionLog||[]).filter(d=>d>=ws&&d<=today()).length<quota;
   }
-  return compToday(t)<maxComp(t.freq);
+  return compToday(t)<maxComp(t.freq); // sinon : compare les complétions du jour au max journalier
 }
 
+// Nombre de complétions réalisées cette semaine pour une tâche donnée
 function weeklyDoneCount(t){
   const ws=getWeekStart();
   return(t.completionLog||[]).filter(d=>d>=ws&&d<=today()).length;
@@ -533,7 +642,9 @@ function weeklyDoneCount(t){
 // ══════════════════════════════════════════════════════
 // LEVELS
 // ══════════════════════════════════════════════════════
+// XP nécessaire pour passer du niveau l au niveau l+1 (croît linéairement : 200, 400, 600...)
 function levelThreshold(l){return l*200}
+// Convertit un total d'XP en {niveau actuel, XP courant dans ce niveau, XP requis pour le niveau suivant}
 function calcLevel(xp){
   let lvl=1,rem=xp||0;
   while(rem>=levelThreshold(lvl)){rem-=levelThreshold(lvl);lvl++;}
@@ -543,6 +654,10 @@ function calcLevel(xp){
 // ══════════════════════════════════════════════════════
 // BONUS MISSIONS
 // ══════════════════════════════════════════════════════
+// Réservoir de toutes les missions bonus possibles. Chaque entrée a :
+// - key   : identifiant unique de la mission
+// - desc  : texte affiché à l'utilisateur
+// - check : fonction (tasks, cats) => bool qui teste si la mission est remplie
 const BONUS_POOL=[
   {key:'b_3cat',    desc:'Complète 3 tâches dans une même catégorie',        check:t=>Object.values(t.reduce((a,x)=>{if(compToday(x)>0)a[x.catId]=(a[x.catId]||0)+compToday(x);return a},{})).some(v=>v>=3)},
   {key:'b_all',     desc:"Termine toutes les tâches prévues aujourd'hui",    check:t=>t.filter(isTaskDueToday).length>0&&t.filter(isTaskDueToday).every(x=>!canComplete(x))},
@@ -552,14 +667,17 @@ const BONUS_POOL=[
   {key:'b_2cat2',   desc:'2 tâches complétées dans 2 catégories différentes',check:t=>Object.values(t.reduce((a,x)=>{if(compToday(x)>0)a[x.catId]=(a[x.catId]||0)+compToday(x);return a},{})).filter(v=>v>=2).length>=2},
 ];
 
+// Tire aléatoirement 3 missions bonus parmi le pool, pour la journée en cours
 function genBonus(){
   return[...BONUS_POOL].sort(()=>Math.random()-.5).slice(0,3).map(b=>({id:uid(),key:b.key,desc:b.desc,done:false}));
 }
+// Vérifie, après chaque action, si une mission bonus non encore validée vient d'être remplie.
+// Si oui : affiche la popup de félicitations, crédite l'XP bonus, et sauvegarde.
 function checkBonuses(){
   const map=Object.fromEntries(BONUS_POOL.map(b=>[b.key,b.check]));
   let changed=false;
   bonus=bonus.map(b=>{
-    if(b.done) return b;
+    if(b.done) return b; // déjà validée : on ne la retteste pas
     const fn=map[b.key];
     if(fn&&fn(tasks,cats)){changed=true;showBonusPopup(b);if(cats[0])grantXP(cats[0].id,BONUS_XP);return{...b,done:true};}
     return b;
@@ -570,14 +688,19 @@ function checkBonuses(){
 // ══════════════════════════════════════════════════════
 // ACTIONS
 // ══════════════════════════════════════════════════════
+// Ajoute de l'XP à une catégorie donnée et persiste le changement
 function grantXP(catId,amount){
   cats=cats.map(c=>c.id===catId?{...c,xp:(c.xp||0)+amount}:c);
   save('qst_cats',cats);
 }
+// Marque une tâche comme complétée : ajoute la date du jour au journal de complétions,
+// met à jour le "streak" (série de jours consécutifs), crédite l'XP à la catégorie,
+// affiche un toast de confirmation, puis vérifie les missions bonus.
 function completeTask(id){
   tasks=tasks.map(t=>{
     if(t.id!==id||!canComplete(t)) return t;
     const log=[...(t.completionLog||[]),today()];
+    // Le streak n'augmente qu'une fois par jour (pas à chaque complétion multiple le même jour)
     const streak=t.lastDone===today()?(t.streak||0):(t.streak||0)+1;
     return{...t,completionLog:log,lastDone:today(),streak,doneOnce:t.freq==='once'?true:t.doneOnce};
   });
@@ -585,29 +708,34 @@ function completeTask(id){
   if(t) grantXP(t.catId,TASK_XP);
   save('qst_tasks',tasks);
   showToast('Tâche accomplie !',TASK_XP);
-  setTimeout(checkBonuses,100);
+  setTimeout(checkBonuses,100); // léger délai pour laisser le state se stabiliser avant de vérifier les bonus
   render();
 }
+// Supprime définitivement une tâche
 function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);save('qst_tasks',tasks);showToast('Supprimée');render();}
+// Supprime définitivement une catégorie (ne supprime pas les tâches qui y étaient rattachées)
 function deleteCat(id){cats=cats.filter(c=>c.id!==id);save('qst_cats',cats);showToast('Catégorie supprimée');render();}
 
 // ══════════════════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════════════════
 let toastTimer;
+// Affiche un message temporaire en haut de l'écran (avec un badge d'XP optionnel), puis le masque après 2,3s
 function showToast(msg,xp=0){
   const el=document.getElementById('toast');
   el.innerHTML=msg+(xp>0?`<span class="xp-badge">+${xp} XP</span>`:'');
   el.style.display='flex';
-  clearTimeout(toastTimer);
+  clearTimeout(toastTimer); // annule le masquage précédent si un nouveau toast arrive entre-temps
   toastTimer=setTimeout(()=>el.style.display='none',2300);
 }
 
 // ══════════════════════════════════════════════════════
 // BONUS POPUP
 // ══════════════════════════════════════════════════════
+// File d'attente des popups bonus à afficher (au cas où plusieurs missions se valident en même temps)
 let bonusQueue=[],bonusShowing=false;
 function showBonusPopup(b){bonusQueue.push(b);if(!bonusShowing)nextBonusPopup();}
+// Affiche la prochaine popup en attente dans la file ; se vide toute seule si la file est épuisée
 function nextBonusPopup(){
   if(!bonusQueue.length){bonusShowing=false;return;}
   bonusShowing=true;
@@ -615,27 +743,38 @@ function nextBonusPopup(){
   document.getElementById('bp-desc').textContent=b.desc;
   document.getElementById('bonus-popup').style.display='flex';
 }
+// Ferme la popup actuelle et enchaîne sur la suivante (s'il y en a) après une courte pause
 function closeBonusPopup(){document.getElementById('bonus-popup').style.display='none';setTimeout(nextBonusPopup,200);}
 
 // ══════════════════════════════════════════════════════
 // RADAR SVG (updated colors)
 // ══════════════════════════════════════════════════════
+// Génère à la main (sans librairie) un graphique radar/toile d'araignée en SVG.
+// `items` : tableau de {name, value} avec value entre 0 et 1 (ex: % de tâches faites par catégorie,
+// ou niveau normalisé). `accent` : couleur de la ligne/points du polygone de données.
 function radarSVG(items,accent){
   const n=items.length;
+  // Un radar a besoin d'au moins 3 axes pour avoir du sens géométriquement
   if(n<3) return '<div style="color:rgba(255,255,255,.2);font-size:10px;text-align:center;padding:20px">3+ catégories</div>';
-  const cx=95,cy=95,r=65;
-  const a=i=>(Math.PI*2*i)/n-Math.PI/2;
-  const pt=(i,v)=>({x:cx+r*v*Math.cos(a(i)),y:cy+r*v*Math.sin(a(i))});
+  const cx=95,cy=95,r=65; // centre du cercle et rayon maximal du graphique
+  const a=i=>(Math.PI*2*i)/n-Math.PI/2; // angle (en radians) de l'axe i, réparti uniformément sur 360°
+  const pt=(i,v)=>({x:cx+r*v*Math.cos(a(i)),y:cy+r*v*Math.sin(a(i))}); // coordonnée d'un point à la valeur v (0-1) sur l'axe i
   const col=accent||'#7c6aff';
   let s=`<svg width="190" height="190" style="overflow:visible">`;
+  // Dessine les 4 "toiles" concentriques de fond (grille de repère à 25/50/75/100%)
   [.25,.5,.75,1].forEach(lv=>{
     s+=`<polygon points="${items.map((_,i)=>{const p=pt(i,lv);return p.x+','+p.y;}).join(' ')}" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>`;
   });
+  // Dessine les axes (lignes du centre vers chaque sommet)
   items.forEach((_,i)=>{const p=pt(i,1);s+=`<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="rgba(255,255,255,.06)" stroke-width="1"/>`;});
+  // Calcule les points réels du polygone de données à partir des valeurs de chaque catégorie
   const pts=items.map((c,i)=>{const p=pt(i,Math.min(c.value||0,1));return p.x+','+p.y;}).join(' ');
   s+=`<defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7c6aff" stop-opacity=".25"/><stop offset="100%" stop-color="#00d4ff" stop-opacity=".25"/></linearGradient></defs>`;
+  // Le polygone de données lui-même, rempli avec un dégradé semi-transparent
   s+=`<polygon points="${pts}" fill="url(#rg)" stroke="${col}" stroke-width="1.5"/>`;
+  // Un petit point (cercle) sur chaque sommet du polygone
   items.forEach((c,i)=>{const p=pt(i,Math.min(c.value||0,1));s+=`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${col}"/>`;});
+  // Les libellés (noms de catégorie, tronqués à 7 caractères) placés légèrement à l'extérieur du cercle (facteur 1.3)
   items.forEach((c,i)=>{const p=pt(i,1.3);s+=`<text x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="rgba(255,255,255,.5)" font-family="-apple-system,sans-serif">${c.name.slice(0,7)}</text>`;});
   s+='</svg>';
   return s;
@@ -644,6 +783,7 @@ function radarSVG(items,accent){
 // ══════════════════════════════════════════════════════
 // LEVEL BAR
 // ══════════════════════════════════════════════════════
+// Génère le HTML d'une barre de progression de niveau pour une catégorie donnée
 function levelBarHTML(cat,idx){
   const{level,cur,next}=calcLevel(cat.xp||0);
   const pct=Math.min((cur/next)*100,100);
@@ -662,11 +802,14 @@ function levelBarHTML(cat,idx){
 // ══════════════════════════════════════════════════════
 // TABS
 // ══════════════════════════════════════════════════════
+// Change l'onglet actif : met à jour l'état, l'affichage "active" des boutons de nav, puis redessine le contenu
 function switchTab(tab){
   currentTab=tab;
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   render();
 }
+// Fonction de rendu principale : régénère entièrement le HTML de #content
+// selon l'onglet actuellement sélectionné (pattern "re-render complet à chaque changement d'état")
 function render(){
   const el=document.getElementById('content');
   if(currentTab==='dashboard') el.innerHTML=renderDashboard();
@@ -679,14 +822,17 @@ function render(){
 // ══════════════════════════════════════════════════════
 // DASHBOARD
 // ══════════════════════════════════════════════════════
+// Construit le HTML de l'écran d'accueil : statistiques du jour, graphiques radar, barres d'XP
 function renderDashboard(){
-  const totalDue =tasks.filter(isTaskDueToday).length;
-  const totalDone=tasks.filter(t=>isTaskDueToday(t)&&!canComplete(t)).length;
-  const bonusDone=bonus.filter(b=>b.done).length;
-  const totalXP  =cats.reduce((s,c)=>s+(c.xp||0),0);
-  const pctDay   =totalDue?Math.round(totalDone/totalDue*100):0;
+  const totalDue =tasks.filter(isTaskDueToday).length;                              // nb de tâches dues aujourd'hui
+  const totalDone=tasks.filter(t=>isTaskDueToday(t)&&!canComplete(t)).length;        // nb de tâches dues déjà complétées (quota atteint)
+  const bonusDone=bonus.filter(b=>b.done).length;                                   // nb de missions bonus validées
+  const totalXP  =cats.reduce((s,c)=>s+(c.xp||0),0);                                 // somme de l'XP de toutes les catégories
+  const pctDay   =totalDue?Math.round(totalDone/totalDue*100):0;                    // % d'avancement du jour
 
+  // Données du 1er radar : taux de complétion du jour par catégorie
   const radarDay=cats.map(c=>{const due=tasks.filter(t=>t.catId===c.id&&isTaskDueToday(t));const done=due.filter(t=>!canComplete(t)).length;return{name:c.name,value:due.length?done/due.length:0};});
+  // Données du 2e radar : niveau de chaque catégorie, normalisé sur une échelle de 10 niveaux
   const radarLvl=cats.map(c=>{const{level}=calcLevel(c.xp||0);return{name:c.name,value:Math.min(level/10,1)};});
 
   const d=new Date();
@@ -756,9 +902,11 @@ function renderDashboard(){
 // ══════════════════════════════════════════════════════
 // TASKS
 // ══════════════════════════════════════════════════════
-let taskFilter='today';
+let taskFilter='today'; // filtre actif de l'onglet Tâches : 'today' | 'all' | un id de catégorie
 function setFilter(f){taskFilter=f;render();}
 
+// Détermine le texte affiché dans le bouton rond de complétion d'une tâche
+// (✓ si terminée, "x/y" pour les quotas multiples, ou ○ si pas encore faite)
 function taskCheckLabel(t){
   if(!canComplete(t)) return '✓';
   if(t.freq==='twice'){const c=compToday(t);return`${c}/2`;}
@@ -770,6 +918,7 @@ function taskCheckLabel(t){
   return '○';
 }
 
+// Construit le HTML d'une carte de tâche (bouton check, titre, fréquence, streak, éditer/supprimer)
 function taskCardHTML(t){
   const cat=cats.find(c=>c.id===t.catId);
   const catIdx=cats.findIndex(c=>c.id===t.catId);
@@ -793,6 +942,8 @@ function taskCardHTML(t){
   </div>`;
 }
 
+// Construit le HTML de l'en-tête de groupe affiché au-dessus des tâches d'une catégorie
+// (icône colorée, nom de la catégorie, nombre de tâches)
 function catHeaderHTML(cat,idx,count){
   const grad=CAT_GRADIENTS[idx%CAT_GRADIENTS.length];
   return`<div style="display:flex;align-items:center;gap:10px;margin:18px 0 8px;${idx===0?'margin-top:4px':''}">
@@ -805,12 +956,15 @@ function catHeaderHTML(cat,idx,count){
   </div>`;
 }
 
+// Construit le HTML complet de l'onglet "Tâches" : barre de filtres + liste (groupée par
+// catégorie pour "Aujourd'hui"/"Toutes", ou liste plate pour un filtre de catégorie précis)
 function renderTasks(){
-  const grouped = taskFilter==='today' || taskFilter==='all';
-  const baseList = taskFilter==='today' ? tasks.filter(isTaskDueToday)
-                 : taskFilter==='all'   ? tasks
-                 : tasks.filter(t=>t.catId===taskFilter);
+  const grouped = taskFilter==='today' || taskFilter==='all'; // faut-il grouper les tâches par catégorie ?
+  const baseList = taskFilter==='today' ? tasks.filter(isTaskDueToday)   // tâches dues aujourd'hui
+                 : taskFilter==='all'   ? tasks                          // toutes les tâches
+                 : tasks.filter(t=>t.catId===taskFilter);                // tâches d'une catégorie précise
 
+  // Génère les boutons de filtre : "Aujourd'hui", "Toutes", puis un bouton par catégorie
   const filterBtns=[
     {id:'today',label:"Aujourd'hui"},{id:'all',label:'Toutes'},
     ...cats.map(c=>({id:c.id,label:c.icon+' '+c.name.slice(0,8)}))
@@ -820,7 +974,7 @@ function renderTasks(){
   if(!baseList.length){
     content='<div style="color:rgba(255,255,255,.2);text-align:center;padding:48px;font-size:13px">Aucune tâche pour ce filtre</div>';
   } else if(grouped){
-    // Group by category, show header per category
+    // Groupe les tâches par catégorie, avec un en-tête au-dessus de chaque groupe
     cats.forEach((cat,idx)=>{
       const catTasks=baseList.filter(t=>t.catId===cat.id);
       if(!catTasks.length) return;
@@ -834,7 +988,8 @@ function renderTasks(){
       content+=unknownTasks.map(taskCardHTML).join('');
     }
   } else {
-    // Single-category filter: no header needed, show cat pill on each card
+    // Filtre sur une seule catégorie : pas besoin d'en-tête, on affiche plutôt
+    // une pastille de catégorie directement sur chaque carte de tâche
     content=baseList.map(t=>{
       const cat=cats.find(c=>c.id===t.catId);
       const catIdx=cats.findIndex(c=>c.id===t.catId);
@@ -873,54 +1028,65 @@ function renderTasks(){
 // ══════════════════════════════════════════════════════
 // HISTORY
 // ══════════════════════════════════════════════════════
-let histDays=14;
+let histDays=14; // nombre de jours affichés dans le tableau d'historique (7, 14 ou 30)
 function setHistDays(n){histDays=n;render();}
 
+// Génère un tableau de dates ("AAAA-MM-JJ") des n derniers jours, du plus ancien au plus récent
 function getDateRange(n){
   const dates=[];
   for(let i=n-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);dates.push(d.toISOString().slice(0,10));}
   return dates;
 }
+// Formate une date en "J/M" court pour les en-têtes de colonnes du tableau
 function shortDate(s){const d=new Date(s+'T12:00:00');return d.getDate()+'/'+(d.getMonth()+1);}
 
+// Construit le tableau HTML de l'historique : une colonne par jour, une ligne par tâche
+// (regroupées par catégorie), plus une ligne récapitulative d'XP gagné par jour
 function renderHistory(){
   const dates=getDateRange(histDays);
   const todayStr=today();
+  // Récupère aussi les anciennes dates de complétion antérieures à la période affichée,
+  // pour ne jamais "perdre" une complétion existante dans le tableau
   const allLogDates=new Set();
   tasks.forEach(t=>(t.completionLog||[]).forEach(d=>allLogDates.add(d)));
   const extraDates=[...allLogDates].filter(d=>d<dates[0]).sort();
   const allDates=[...extraDates,...dates];
 
+  // Construit la ligne d'en-tête du tableau (1 colonne "TÂCHE" + 1 colonne par date)
   let headCols=`<th style="position:sticky;left:0;background:#16162a;z-index:2;text-align:left;min-width:110px">TÂCHE</th>`;
   allDates.forEach(d=>{
     const isT=d===todayStr;
     headCols+=`<th class="${isT?'hist-th-today':''}" style="min-width:34px;${isT?'background:rgba(0,212,255,.05);':''}">${shortDate(d)}</th>`;
   });
 
+  // Construit le corps du tableau : un bloc par catégorie (ligne titre + une ligne par tâche)
   let tableBody='';
   cats.forEach(cat=>{
     const catTasks=tasks.filter(t=>t.catId===cat.id);
-    if(!catTasks.length) return;
+    if(!catTasks.length) return; // catégorie sans tâche : on ne l'affiche pas
     tableBody+=`<tr class="hist-cat-row"><td colspan="${allDates.length+1}">${cat.icon} ${escH(cat.name)}</td></tr>`;
     catTasks.forEach(t=>{
+      // Première cellule : titre de la tâche (tronqué), cliquable pour ouvrir l'édition
       let row=`<td title="${escH(t.title)}" style="cursor:pointer" onclick="openEditTask('${t.id}')">${escH(t.title.slice(0,12)+(t.title.length>12?'…':''))} <span style="opacity:.35;font-size:9px">✎</span></td>`;
+      // Une cellule par jour : affiche l'état de complétion pour cette tâche à cette date
       allDates.forEach(d=>{
         const isT=d===todayStr;
-        const due=isTaskDueOnDate(t,d);
-        const cnt=compOnDate(t,d);
+        const due=isTaskDueOnDate(t,d);   // la tâche était-elle prévue ce jour-là ?
+        const cnt=compOnDate(t,d);        // combien de fois a-t-elle été complétée ce jour-là ?
         const mx=maxComp(t.freq);
         const bg=isT?'background:rgba(0,212,255,.04);':'';
         let cell;
-        if(!due) cell=`<td class="hist-cell-na" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">·</td>`;
-        else if(cnt>=mx) cell=`<td class="hist-cell-done" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">✓</td>`;
-        else if(cnt>0) cell=`<td style="color:rgba(124,106,255,.6);font-size:10px;${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">½</td>`;
-        else cell=`<td class="hist-cell-miss" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">○</td>`;
+        if(!due) cell=`<td class="hist-cell-na" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">·</td>`;        // non prévue ce jour (N/A)
+        else if(cnt>=mx) cell=`<td class="hist-cell-done" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">✓</td>`; // quota du jour atteint
+        else if(cnt>0) cell=`<td style="color:rgba(124,106,255,.6);font-size:10px;${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">½</td>`;   // partiellement fait (ex: tâche "2×/jour" faite 1 fois)
+        else cell=`<td class="hist-cell-miss" style="${bg}cursor:pointer" onclick="toggleHistCell('${t.id}','${d}')">○</td>`;            // due mais pas faite (manquée)
         row+=cell;
       });
       tableBody+=`<tr>${row}</tr>`;
     });
   });
 
+  // Ligne récapitulative en bas du tableau : total d'XP gagné chaque jour, toutes tâches confondues
   let xpRow=`<td style="position:sticky;left:0;background:#111126;color:rgba(255,255,255,.3);font-size:9px;font-weight:600;letter-spacing:.5px;padding:8px 9px;text-transform:uppercase">XP Jour</td>`;
   allDates.forEach(d=>{
     const isT=d===todayStr;
@@ -936,7 +1102,7 @@ function renderHistory(){
       <span style="font-size:9px;color:rgba(255,255,255,.2);align-self:center">✓ fait &nbsp;○ manqué &nbsp;· N/A</span>
     </div>
     <div style="font-size:9px;color:rgba(124,106,255,.5);margin-bottom:8px;padding:6px 10px;background:rgba(124,106,255,.07);border-radius:8px;border:1px solid rgba(124,106,255,.12)">
-      ✎ Clique sur le nom d'une tâche pour la modifier · Clique sur une cellule pour ajouter/retirer une complétion
+      ✎ Clique sur le nom d'une tâche pour la modifier · Clique sur une cellule pour ajouter/retirer une complétion (à n'importe quelle date) · L'XP n'est attribué/retiré que pour une modification du jour même
     </div>
     <div class="hist-scroll">
       <table class="hist-table">
@@ -948,28 +1114,40 @@ function renderHistory(){
   </div>`;
 }
 
+// Permet de cocher/décocher manuellement une complétion depuis le tableau d'historique
+// (utile pour corriger une erreur ou rattraper une tâche oubliée un jour précédent)
+// Permet de cocher/décocher manuellement une complétion depuis le tableau d'historique,
+// pour N'IMPORTE QUELLE date (passée, présente). L'XP n'est cependant crédité/retiré
+// que si la date modifiée est celle d'AUJOURD'HUI : modifier un jour passé corrige
+// uniquement l'historique, sans impact sur l'XP ni sur le total de la catégorie.
 function toggleHistCell(taskId, dateStr){
   const t=tasks.find(x=>x.id===taskId);
   if(!t) return;
+  const isToday=dateStr===today();
   const log=[...(t.completionLog||[])];
   const idx=log.indexOf(dateStr);
+  let removed;
   if(idx>=0){
-    // Remove one occurrence
+    // Une complétion existe déjà à cette date : on la retire
     log.splice(idx,1);
-    showToast('Complétion retirée');
+    removed=true;
+    showToast(isToday?'Complétion retirée':'Historique corrigé (sans XP)');
   } else {
-    // Add one completion
+    // Pas de complétion à cette date : on en ajoute une
     log.push(dateStr);
-    // Recalculate streak
-    showToast('Complétion ajoutée',TASK_XP);
+    removed=false;
+    // (Le recalcul du streak n'est pas géré ici pour les modifications manuelles rétroactives)
+    showToast('Complétion ajoutée', isToday?TASK_XP:0);
   }
   tasks=tasks.map(x=>x.id===taskId?{...x,completionLog:log}:x);
-  // Recompute XP for cats (approximate: just add/remove TASK_XP)
-  const cat=cats.find(c=>c.id===t.catId);
-  if(cat){
-    const delta=idx>=0?-TASK_XP:TASK_XP;
-    cats=cats.map(c=>c.id===t.catId?{...c,xp:Math.max(0,(c.xp||0)+delta)}:c);
-    save('qst_cats',cats);
+  // L'XP de la catégorie n'est recalculé que pour une modification du jour même
+  if(isToday){
+    const cat=cats.find(c=>c.id===t.catId);
+    if(cat){
+      const delta=removed?-TASK_XP:TASK_XP;
+      cats=cats.map(c=>c.id===t.catId?{...c,xp:Math.max(0,(c.xp||0)+delta)}:c);
+      save('qst_cats',cats);
+    }
   }
   save('qst_tasks',tasks);
   render();
@@ -978,6 +1156,7 @@ function toggleHistCell(taskId, dateStr){
 // ══════════════════════════════════════════════════════
 // BONUS
 // ══════════════════════════════════════════════════════
+// Construit le HTML de l'onglet "Bonus" : les 3 missions du jour, chacune avec son état (en cours / validée)
 function renderBonus(){
   const bonusGrads=['linear-gradient(135deg,#7c6aff,#00d4ff)','linear-gradient(135deg,#ff6b9d,#c44dff)','linear-gradient(135deg,#ffd166,#ff9500)'];
   const cards=bonus.map((b,i)=>`
@@ -1016,6 +1195,8 @@ function renderBonus(){
 // ══════════════════════════════════════════════════════
 // SETTINGS
 // ══════════════════════════════════════════════════════
+// Construit le HTML de l'onglet "Réglages" : réglage de l'heure de notification,
+// gestion des catégories (liste + ajout + suppression), et pied de page "à propos"
 function renderSettings(){
   const catRows=cats.map((c,i)=>{
     const{level}=calcLevel(c.xp||0);
@@ -1056,6 +1237,7 @@ function renderSettings(){
   </div>`;
 }
 
+// Sauvegarde l'heure de notification choisie et demande la permission au navigateur d'afficher des notifications
 function scheduleNotif(){
   notifTime=document.getElementById('notif-input')?.value||notifTime;
   localStorage.setItem('qst_notif',notifTime);
@@ -1066,12 +1248,15 @@ function scheduleNotif(){
 // ══════════════════════════════════════════════════════
 // MODAL
 // ══════════════════════════════════════════════════════
-let modalType='task',editTaskId=null;
-let mTitle='',mCatId='',mFreq='daily',mWeekDays=[],mIcon='⚡';
+// État temporaire du formulaire actuellement ouvert dans la modale (tâche ou catégorie)
+let modalType='task',editTaskId=null;          // modalType: 'task' (création) | 'edit' | 'cat'
+let mTitle='',mCatId='',mFreq='daily',mWeekDays=[],mIcon='⚡'; // valeurs des champs du formulaire
 
+// Liste d'emojis proposés au choix pour l'icône d'une nouvelle catégorie
 const ICONS=['⚡','💪','📚','🎯','🎨','🏃','🧘','💼','🌱','🎮','🍎','✍️','🔬','🎵','❤️','💰','🧠','🏋️','🤝','📈'];
 
-// Preset tasks per default category ID
+// Suggestions de tâches "prêtes à l'emploi" proposées selon la catégorie par défaut choisie
+// (accélère la création de tâches pour un nouvel utilisateur)
 const PRESET_TASKS={
   cat_sport:[
     {title:'Séance de musculation',freq:'3week'},{title:'Cardio 30 min',freq:'daily'},
@@ -1109,29 +1294,39 @@ const PRESET_TASKS={
     {title:'Idée de revenus passifs',freq:'weekly'},{title:'Mettre à jour ses objectifs financiers',freq:'weekly'},
   ],
 };
-const DAY_COUNT={'2week':2,'3week':3,'4week':4,'weekly':1};
-const NEEDS_DAYS=new Set(['2week','3week','4week','weekly']);
+const DAY_COUNT={'2week':2,'3week':3,'4week':4,'weekly':1}; // nombre de jours à sélectionner selon la fréquence
+const NEEDS_DAYS=new Set(['2week','3week','4week','weekly']); // fréquences nécessitant un choix de jour(s)
 
+// Ferme la modale si l'utilisateur clique en dehors de la boîte (sur le fond sombre)
 function handleOverlayClick(e){if(e.target.id==='modal')closeModal();}
+// Ouvre la modale en mode création ('task' ou 'cat'), en réinitialisant tous les champs du formulaire
 function openModal(type){
   modalType=type;editTaskId=null;
   mTitle='';mCatId=cats[0]?.id||'';mFreq='daily';mWeekDays=[];mIcon='⚡';
   document.getElementById('modal').style.display='flex';renderModal();
 }
+// Ouvre la modale en mode édition, pré-remplie avec les valeurs de la tâche à modifier
 function openEditTask(id){
   const t=tasks.find(x=>x.id===id);if(!t) return;
   modalType='edit';editTaskId=id;
   mTitle=t.title;mCatId=t.catId;mFreq=t.freq;mWeekDays=[...(t.weekDays||[])];mIcon='⚡';
   document.getElementById('modal').style.display='flex';renderModal();
 }
+// Ferme la modale (sans sauvegarder)
 function closeModal(){document.getElementById('modal').style.display='none';}
 
+// Comme le formulaire est régénéré à chaque interaction (renderModal), on doit d'abord
+// relire les valeurs actuellement tapées dans le DOM avant de les écraser, pour ne rien perdre
 function syncFromDOM(){
   const ti=document.getElementById('m-title'),ci=document.getElementById('m-cat');
   if(ti) mTitle=ti.value;if(ci) mCatId=ci.value;
 }
+// Change la fréquence sélectionnée dans le formulaire et réinitialise les jours choisis
 function setMFreq(f){syncFromDOM();mFreq=f;mWeekDays=[];renderModal();}
+// Change l'icône sélectionnée pour une nouvelle catégorie
 function setMIcon(i){mIcon=i;renderModal();}
+// Ajoute/retire un jour de la sélection, en respectant le nombre maximal autorisé par la fréquence
+// (pour "weekly", un seul jour peut être choisi à la fois : le nouveau remplace l'ancien)
 function toggleMDay(d){
   syncFromDOM();
   if(mFreq==='weekly'){mWeekDays=[d];renderModal();return;}
@@ -1140,15 +1335,19 @@ function toggleMDay(d){
   renderModal();
 }
 
+// Pré-remplit le formulaire à partir d'une suggestion de tâche cliquée (titre + fréquence)
 function applyPreset(btn){
   syncFromDOM();
   const title=btn.dataset.title||'';
   const freq=btn.dataset.freq||'daily';
   mTitle=title;mFreq=freq;mWeekDays=[];
   renderModal();
+  // Après le re-rendu du formulaire, on réinjecte la valeur du champ titre
+  // (le renderModal() vide sinon le focus/valeur du champ texte)
   setTimeout(()=>{const ti=document.getElementById('m-title');if(ti)ti.value=title;},10);
 }
 
+// Retourne le texte d'aide expliquant la fréquence actuellement sélectionnée
 function freqHint(f){
   const hints={
     daily:'Chaque jour, 1 fois par jour.',
@@ -1162,25 +1361,34 @@ function freqHint(f){
   return hints[f]||'';
 }
 
+// Construit le HTML du formulaire affiché dans la modale, différent selon modalType :
+// - 'cat'        : formulaire de création de catégorie (icône + nom)
+// - 'task'/'edit': formulaire de tâche (titre, fréquence, jours si besoin, catégorie)
+// Ce formulaire est régénéré à chaque interaction pour refléter l'état courant (mFreq, mWeekDays...)
 function renderModal(){
   const isEdit=modalType==='edit',isCat=modalType==='cat';
   const needsDays=NEEDS_DAYS.has(mFreq);
   let html=`<div class="modal-handle"></div>`;
 
   if(isCat){
+    // Formulaire "Nouvelle catégorie" : grille d'icônes + champ nom
     html+=`<div class="modal-title">Nouvelle catégorie</div>
     <div class="form-label">Icône</div>
     <div class="icon-grid">${ICONS.map(ic=>`<button class="icon-btn${mIcon===ic?' active':''}" onclick="setMIcon('${ic}')">${ic}</button>`).join('')}</div>
     <div class="form-label">Nom</div>
     <input id="m-name" class="form-input" placeholder="Ex: Lecture, Sport..." autocomplete="off">`;
   } else {
+    // Formulaire "Nouvelle tâche" / "Modifier la tâche"
     const freqBtns=FREQS.map(f=>`<button class="freq-btn${mFreq===f.id?' active':''}" onclick="setMFreq('${f.id}')">${f.label}</button>`).join('');
     const hint=freqHint(mFreq);
+    // Sélecteur de jour(s) affiché seulement si la fréquence l'exige (2/3/4× semaine ou hebdomadaire)
     const daySection=needsDays?`
       <div class="form-label">${mFreq==='weekly'?'Jour de rappel':'Jours de rappel'} (${mWeekDays.length}/${DAY_COUNT[mFreq]||1})</div>
       <div class="day-wrap">${DAY_NAMES.map((d,i)=>`<button class="day-btn${mWeekDays.includes(i)?' active':''}" onclick="toggleMDay(${i})">${d}</button>`).join('')}</div>`:'';
     const catOpts=cats.map(c=>`<option value="${c.id}"${c.id===mCatId?' selected':''}>${c.icon} ${c.name}</option>`).join('');
-    // Preset suggestions for current category (safe string concat, no nested backticks)
+    // Suggestions rapides de tâches pour la catégorie sélectionnée (uniquement en mode création, pas en édition)
+    // Construction en concaténation de chaînes (et non en template literal) pour éviter les conflits
+    // avec les backticks imbriqués dans le reste du code.
     let presetHTML='';
     if(!isEdit){
       const presets=(PRESET_TASKS[mCatId]||[]);
@@ -1220,12 +1428,16 @@ function renderModal(){
   if(!isCat){const ti=document.getElementById('m-title');if(ti&&!mTitle)ti.focus();}
 }
 
+// Demande confirmation (boîte de dialogue native du navigateur) avant de supprimer une tâche depuis la modale d'édition
 function confirmDeleteTask(id){
   if(confirm('Supprimer cette tâche définitivement ?')){deleteTask(id);closeModal();}
 }
 
+// Valide le formulaire de la modale : crée ou met à jour une catégorie/tâche selon le contexte,
+// avec quelques validations (titre non vide, catégorie choisie, nombre de jours requis atteint)
 function submitModal(){
   if(modalType==='cat'){
+    // Création d'une catégorie
     const name=document.getElementById('m-name')?.value?.trim();
     if(!name){showToast('Entre un nom');return;}
     cats.push({id:uid(),name,icon:mIcon,xp:0,color:'#7c6aff'});
@@ -1239,39 +1451,49 @@ function submitModal(){
     showToast('Sélectionne '+(DAY_COUNT[mFreq]||1)+' jour(s)');return;
   }
   if(modalType==='edit'&&editTaskId){
+    // Mise à jour d'une tâche existante (le journal de complétions et le streak sont conservés)
     tasks=tasks.map(t=>t.id!==editTaskId?t:{...t,title,freq:mFreq,catId,weekDays:mWeekDays.slice()});
     save('qst_tasks',tasks);showToast('Modifiée !');
   } else {
+    // Création d'une nouvelle tâche
     tasks.push({id:uid(),title,freq:mFreq,catId,weekDays:mWeekDays.slice(),completionLog:[],streak:0,lastDone:null,doneOnce:false});
     save('qst_tasks',tasks);showToast('Tâche ajoutée !');
   }
   closeModal();render();
 }
 
+// Échappe les caractères HTML spéciaux (&,<,>,") pour éviter d'injecter du HTML/du script
+// à partir d'un texte saisi par l'utilisateur (titre de tâche, nom de catégorie...)
 function escH(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // ══════════════════════════════════════════════════════
 // INIT — after all functions/consts are defined
 // ══════════════════════════════════════════════════════
+// Chargement de l'état initial de l'application depuis le localStorage au démarrage
 cats=load('qst_cats',null);
-if(!cats||!cats.length) cats=DEFAULT_CATS.map(c=>({...c}));
+if(!cats||!cats.length) cats=DEFAULT_CATS.map(c=>({...c})); // 1er lancement : on installe les catégories par défaut
 tasks=load('qst_tasks',[]);
 notifTime=localStorage.getItem('qst_notif')||'09:00';
-currentTab='dashboard';
+currentTab='dashboard'; // onglet affiché au démarrage
 mCatId=cats[0]?.id||'';
 
+// Gestion des missions bonus quotidiennes : régénérées si on change de jour
 bonus=load('qst_bonus',null);
 const _bd=localStorage.getItem('qst_bonus_date');
 if(!bonus||_bd!==today()){bonus=genBonus();save('qst_bonus',bonus);localStorage.setItem('qst_bonus_date',today());}
 if(localStorage.getItem('qst_reset')!==today()){bonus=genBonus();save('qst_bonus',bonus);localStorage.setItem('qst_reset',today());}
 
+// Premier affichage de l'application
 render();
 
 // ══════════════════════════════════════════════════════
 // PWA — Manifest + Service Worker (inline, no server needed)
 // ══════════════════════════════════════════════════════
+// Toute cette section permet à l'app de fonctionner comme une PWA installable
+// SANS avoir besoin de fichiers séparés (manifest.json, sw.js) sur un serveur :
+// tout est généré dynamiquement en mémoire via des Blob/data URLs.
 
-// 1. Build SVG icon as data URL
+// 1. Construit une icône au format SVG encodée en data URL (dégradé violet→cyan + étoile)
 const ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="110" fill="#0f0f1a"/>
   <defs>
@@ -1285,10 +1507,11 @@ const ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 </svg>`;
 const iconDataURL = 'data:image/svg+xml;base64,' + btoa(ICON_SVG);
 
-// Set apple-touch-icon
+// Applique cette icône à la balise apple-touch-icon (icône sur écran d'accueil iOS)
 document.getElementById('pwa-icon').href = iconDataURL;
 
-// 2. Create manifest blob and inject
+// 2. Construit le manifest PWA (nom, icônes, couleurs, mode d'affichage) en mémoire,
+// puis le transforme en URL de Blob pour l'attacher au <link id="pwa-manifest">
 const manifest = {
   name: 'Quest — Gamified Tasks',
   short_name: 'Quest',
@@ -1307,7 +1530,9 @@ const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/jso
 const manifestURL = URL.createObjectURL(manifestBlob);
 document.getElementById('pwa-manifest').href = manifestURL;
 
-// 3. Register Service Worker (inline via blob URL)
+// 3. Enregistre un Service Worker (lui aussi généré en mémoire via un Blob, pas de fichier .js séparé)
+// Le service worker permet : le fonctionnement hors-ligne (cache des requêtes) et l'affichage
+// de notifications push/locales.
 if ('serviceWorker' in navigator) {
   const SW_CODE = `
 const CACHE = 'quest-v2';
@@ -1346,13 +1571,14 @@ self.addEventListener('push', e => {
   navigator.serviceWorker.register(swURL, {scope: './'})
     .then(reg => {
       console.log('[Quest] Service Worker enregistré', reg.scope);
-      // Schedule daily notification via periodic check
+      // Une fois le SW prêt, on lance la vérification périodique de la notification quotidienne
       scheduleDailyNotif(reg);
     })
     .catch(err => console.warn('[Quest] SW non supporté:', err));
 }
 
-// 4. Daily notification scheduler (checks every minute if it's time)
+// 4. Planificateur de notification quotidienne : vérifie toutes les 30s si l'heure programmée
+// (notifTime) est atteinte, et déclenche alors une notification via le service worker
 function scheduleDailyNotif(reg) {
   function checkTime() {
     if (!notifTime) return;
@@ -1361,7 +1587,7 @@ function scheduleDailyNotif(reg) {
     const target = new Date(now);
     target.setHours(h, m, 0, 0);
     const diff = Math.abs(now - target);
-    // Fire if within 60s of the target time, and not already fired today
+    // Ne se déclenche que si on est à moins de 60s de l'heure cible, et pas déjà déclenché aujourd'hui
     const lastFired = localStorage.getItem('qst_last_notif');
     const todayKey = today() + '_' + notifTime;
     if (diff < 60000 && lastFired !== todayKey && Notification.permission === 'granted') {
@@ -1379,15 +1605,15 @@ function scheduleDailyNotif(reg) {
     }
   }
   setInterval(checkTime, 30000);
-  checkTime();
+  checkTime(); // premier check immédiat au chargement
 }
 
-// 5. Prompt "Add to Home Screen" on Android (beforeinstallprompt)
+// 5. Propose l'ajout à l'écran d'accueil sur Android via l'événement natif "beforeinstallprompt"
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
+  e.preventDefault(); // empêche l'invite native automatique, pour l'afficher nous-mêmes plus tard
   deferredPrompt = e;
-  // Show install banner after 3s if not already installed
+  // Affiche notre propre bannière d'installation après 3s si l'app n'est pas déjà installée
   setTimeout(() => {
     if (deferredPrompt && !window.matchMedia('(display-mode: standalone)').matches) {
       showInstallBanner();
@@ -1395,6 +1621,7 @@ window.addEventListener('beforeinstallprompt', e => {
   }, 3000);
 });
 
+// Affiche une bannière flottante en bas de l'écran invitant à installer l'app
 function showInstallBanner() {
   if (document.getElementById('install-banner')) return;
   const banner = document.createElement('div');
@@ -1416,6 +1643,7 @@ function showInstallBanner() {
   document.body.appendChild(banner);
 }
 
+// Déclenche la vraie invite d'installation native du navigateur, suite au clic sur "Installer"
 function installApp() {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
@@ -1427,7 +1655,7 @@ function installApp() {
   });
 }
 
-// Hide banner if already running standalone
+// Si l'app tourne déjà en mode "standalone" (installée), on masque la bannière d'installation
 if (window.matchMedia('(display-mode: standalone)').matches) {
   window.addEventListener('load', () => {
     const b = document.getElementById('install-banner');
