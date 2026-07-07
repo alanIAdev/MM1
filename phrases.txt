@@ -1,0 +1,26 @@
+# Fichier des phrases du jour
+# Format : une phrase par ligne, texte et auteur séparés par un pipe "|"
+#   Texte de la citation|Nom de l'auteur
+# Les lignes vides et celles commençant par "#" sont ignorées.
+# Pour ajouter une phrase : ajoute simplement une nouvelle ligne.
+
+Le secret pour avancer, c'est de commencer.|Mark Twain
+La discipline est le pont entre les objectifs et les accomplissements.|Jim Rohn
+Nous sommes ce que nous faisons de façon répétée. L'excellence n'est donc pas un acte, mais une habitude.|Aristote
+Il n'est pas nécessaire d'être excellent pour commencer, mais il est nécessaire de commencer pour être excellent.|Zig Ziglar
+Le succès, c'est d'aller d'échec en échec sans perdre son enthousiasme.|Winston Churchill
+La vie, c'est comme une bicyclette : il faut avancer pour ne pas perdre l'équilibre.|Albert Einstein
+Tout ce que l'esprit peut concevoir et croire, il peut l'atteindre.|Napoleon Hill
+Votre temps est limité, ne le gâchez pas à vivre la vie de quelqu'un d'autre.|Steve Jobs
+Ce n'est pas parce que les choses sont difficiles que nous n'osons pas, c'est parce que nous n'osons pas qu'elles sont difficiles.|Sénèque
+Les grandes choses ne sont pas faites par impulsion, mais par une série de petites choses rassemblées.|Vincent van Gogh
+La persévérance est la mère de la bonne fortune.|Benjamin Disraeli
+Crois en toi-même et tout devient possible.|Anonyme
+Le changement est difficile au début, compliqué au milieu et magnifique à la fin.|Robin Sharma
+Chaque jour est une nouvelle chance de changer ta vie.|Anonyme
+Ce qui ne te tue pas te rend plus fort.|Friedrich Nietzsche
+La patience est amère, mais ses fruits sont doux.|Jean-Jacques Rousseau
+Agis comme si ce que tu fais faisait une différence. Ça en fait une.|William James
+Le meilleur moment pour planter un arbre, c'était il y a vingt ans. Le deuxième meilleur moment, c'est maintenant.|Proverbe chinois
+Tu n'as pas à être parfait pour commencer, mais tu dois commencer pour être parfait.|Anonyme
+Les limites, comme les peurs, ne sont souvent qu'une illusion.|Michael Jordan

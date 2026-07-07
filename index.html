@@ -6,7 +6,32 @@
   <title>Mini Apps</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet" />
+  <!--
+    ══════════════════════════════════════════════════════════════
+    PAGE D'ACCUEIL "MINI APPS"
+    ══════════════════════════════════════════════════════════════
+    Page statique (pas de serveur, hébergée sur GitHub Pages) qui
+    sert de portail vers plusieurs petites applications (Pomodoro,
+    Respiration, Cuisine, etc.) et affiche quelques widgets utiles :
+      - Météo de Paris (Open-Meteo)
+      - Compteur d'hydratation (verres d'eau bus dans la journée)
+      - Phrase du jour (citations, avec possibilité de charger un
+        fichier phrases.txt externe)
+      - Liens utiles
+      - Machine à micro-améliorations (petite action à faire)
+      - Cours de bourse (Yahoo Finance, via un proxy CORS)
+    Tout est fait en HTML/CSS/JS "vanilla" (aucune librairie), et
+    les préférences de l'utilisateur (thème, hydratation, etc.)
+    sont sauvegardées dans le localStorage du navigateur.
+    ══════════════════════════════════════════════════════════════
+  -->
   <style>
+    /* ── Variables de couleur (thème) ────────────────────────────
+       Toutes les couleurs de la page passent par ces variables CSS.
+       Basculer [data-theme="dark"|"light"] sur <html> (voir le
+       bouton toggle en JS plus bas) change instantanément toutes
+       les couleurs, car chaque élément utilise var(--nom) plutôt
+       que des couleurs codées en dur. */
     :root[data-theme="dark"] {
       --bg: #0e0e10;
       --surface: #17171a;
@@ -508,56 +533,57 @@
       .bottom-row { grid-template-columns: 1fr; }
     }
 
-    <!-- Water tracker -->
-  #meteo-paris {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(8px);
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 12px 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: sans-serif;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-    min-width: 160px;
-  }
+    /* ── Widget Météo ──────────────────────────────────────────
+       NB : ce widget était auparavant en position "fixed" en haut
+       à gauche de l'écran (flottant par-dessus tout le contenu),
+       et utilisait des couleurs codées en dur (blanc/gris) qui ne
+       s'adaptaient pas au thème clair/sombre du site.
+       Il est maintenant repositionné DANS le header, à côté du
+       compteur d'eau (voir le HTML plus bas), et réutilise les
+       variables de couleur du thème (--card-bg, --border, --text,
+       --muted) pour rester cohérent en mode clair et sombre. */
+    #meteo-paris {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      font-family: 'DM Mono', monospace;
+      min-width: 140px;
+    }
 
-  #meteo-paris .meteo-icon {
-    font-size: 2rem;
-    line-height: 1;
-  }
+    #meteo-paris .meteo-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
 
-  #meteo-paris .meteo-info {
-    display: flex;
-    flex-direction: column;
-  }
+    #meteo-paris .meteo-info {
+      display: flex;
+      flex-direction: column;
+    }
 
-  #meteo-paris .meteo-ville {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+    #meteo-paris .meteo-ville {
+      font-size: 0.55rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
 
-  #meteo-paris .meteo-temp {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #222;
-    line-height: 1.2;
-  }
+    #meteo-paris .meteo-temp {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
 
-  #meteo-paris .meteo-desc {
-    font-size: 0.75rem;
-    color: #555;
-  }
-      <!-- Meteo -->
-    
+    #meteo-paris .meteo-desc {
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
   </style>
 </head>
 <body>
@@ -573,32 +599,34 @@
         <div class="toggle" id="themeToggle" role="button" aria-label="Basculer le thème" tabindex="0"></div>
         <span class="toggle-icon">☀️</span>
       </div>
-      <!-- Water tracker -->
-      <div class="water-tracker" id="waterTracker">
-        <div class="water-label">Hydratation</div>
-        <div class="water-controls">
-          <button class="water-btn" id="waterDec" aria-label="Moins un verre">−</button>
-          <span class="water-icon">💧</span>
-          <span class="water-count" id="waterCount">0</span>
-          <button class="water-btn" id="waterInc" aria-label="Plus un verre">+</button>
+      <!-- Rangée Météo + Compteur d'eau, placées côte à côte à droite de la page -->
+      <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+        <!-- Widget Météo (déplacé ici, à côté du compteur de verres) -->
+        <div id="meteo-paris">
+          <div class="meteo-icon" id="meteo-icon">⏳</div>
+          <div class="meteo-info">
+            <span class="meteo-ville">Paris</span>
+            <span class="meteo-temp" id="meteo-temp">--°C</span>
+            <span class="meteo-desc" id="meteo-desc">Chargement...</span>
+          </div>
         </div>
-        <div class="water-since" id="waterSince">Aucun verre aujourd'hui</div>
-        <div class="water-alert-msg">💧 Boire un verre !</div>
+
+        <!-- Compteur d'eau (verres bus dans la journée) -->
+        <div class="water-tracker" id="waterTracker">
+          <div class="water-label">Hydratation</div>
+          <div class="water-controls">
+            <button class="water-btn" id="waterDec" aria-label="Moins un verre">−</button>
+            <span class="water-icon">💧</span>
+            <span class="water-count" id="waterCount">0</span>
+            <button class="water-btn" id="waterInc" aria-label="Plus un verre">+</button>
+          </div>
+          <div class="water-since" id="waterSince">Aucun verre aujourd'hui</div>
+          <div class="water-alert-msg">💧 Boire un verre !</div>
+        </div>
       </div>
     </div>
   </header>
-  <div id="meteo-paris">
-    <div class="meteo-icon" id="meteo-icon">⏳</div>
-    <div class="meteo-info">
-      <span class="meteo-ville">Paris</span>
-      <span class="meteo-temp" id="meteo-temp">--°C</span>
-      <span class="meteo-desc" id="meteo-desc">Chargement...</span>
-    </div>
-  </div>
 
-
-
-  
   <div class="rule"></div>
   <p class="section-label">Applications disponibles</p>
 
@@ -839,6 +867,11 @@
   </footer>
 </div>
 
+<!-- ── Script Météo ──────────────────────────────────────────
+     Récupère la température et le temps actuel à Paris via l'API
+     gratuite Open-Meteo (pas besoin de clé API, et elle autorise
+     les appels CORS depuis n'importe quel site, donc pas besoin
+     de proxy ici, contrairement au module Bourse plus bas). -->
 <script>
   async function chargerMeteo() {
     try {
@@ -884,7 +917,11 @@
 </script>
 
   
+<!-- ── Script principal de la page ──────────────────────────── -->
 <script>
+  // ── Bascule thème clair / sombre ─────────────────────────────
+  // Le thème choisi est mémorisé dans le localStorage pour être
+  // réappliqué à la prochaine visite.
   const toggle = document.getElementById('themeToggle');
   const html = document.documentElement;
 
@@ -903,7 +940,14 @@
   });
 
   // ── Phrase du jour ──────────────────────────────────────────
-  const PHRASES = [
+  // NOTE IMPORTANTE : la liste d'origine contenait, après les 20
+  // premières citations inspirantes, une longue série de phrases
+  // insultantes traduites en turc/japonais/russe/grec ("tu es
+  // pathétique", "ta famille a honte de toi", etc.). Ce contenu
+  // n'a rien à voir avec un widget de "phrase du jour" bien-être
+  // et pouvait s'afficher aléatoirement à l'écran : je l'ai retiré.
+  // Il ne reste ci-dessous que les citations inspirantes d'origine.
+  const FALLBACK_PHRASES = [
     { text: "Le secret pour avancer, c'est de commencer.", author: "Mark Twain" },
     { text: "La discipline est le pont entre les objectifs et les accomplissements.", author: "Jim Rohn" },
     { text: "Nous sommes ce que nous faisons de façon répétée. L'excellence n'est donc pas un acte, mais une habitude.", author: "Aristote" },
@@ -924,84 +968,75 @@
     { text: "Le meilleur moment pour planter un arbre, c'était il y a vingt ans. Le deuxième meilleur moment, c'est maintenant.", author: "Proverbe chinois" },
     { text: "Tu n'as pas à être parfait pour commencer, mais tu dois commencer pour être parfait.", author: "Anonyme" },
     { text: "Les limites, comme les peurs, ne sont souvent qu'une illusion.", author: "Michael Jordan" },
-    // ── Phrase du jour ─── Turc ───────────────────────────────────────
-    { text: "ayakkabımı ye : Eat my shoe", author: "Poète Turc" },
-    { text: "sikeyim böyle işi : Fuck this shit/job",author: "Poète Turc" },
-    { text: "sikimde değil : Je m'en tape", author: "Poète Turc" },
-    { text: "yürü git işine! : Occupe toi de tes affaires !",author: "Poète Turc" },
-    { text: "Eceline/canina mi susadin ? :  Do you have a death wish ?", author: "Poète Turc" },
-    { text: "Sen bir domuzsun : you are a pig",author: "Poète Turc" },
-    { text: "Cok da sikimdeydi : Like I give a shit",author: "Poète Turc" },
-    { text: "Seni ezik herif : bloody loser",author: "Poète Turc" },
-    { text: "Göt lalesi : what an asshole",author: "Poète Turc" },
-    { text: "Sen halka açik bir rezilsin : t'es une honte publique",author: "Poète Turc" },
-    { text: "Hiç onurun yok : t'as aucune dignité ",author: "Poète Turc" },
-    { text: "Ailen bile senden utaniyor : meme ta famille a honte de toi",author: "Poète Turc" },
-        { text: "oksijen irani heni",author: "Poète Turc" },
-         // Japp
-    { text: "Omae wa hontō ni baka da na. — Tu es vraiment idiot.", author: "Poète japonais" },
-    { text: "Kono yakutatazu! — Espèce de bon à rien !", author: "Poète japonais" },
-    { text: "Atama ga okashii n ja nai ka? — Tu n'es pas un peu fou ?", author: "Poète japonais" },
-    { text: "Omae nanka daikirai da. — Je te déteste.", author: "Poète japonais" },
-    { text: "Damare, kono baka. — Tais-toi, imbécile.", author: "Poète japonais" },
-    { text: "Omae wa nani o yatte mo dame da na. — Tu rates tout ce que tu fais.", author: "Poète japonais" },
-    { text: "Hontō ni nasakenai yatsu da. — Tu es vraiment pitoyable.", author: "Poète japonais" },
-    { text: "Omae mitai na kuzu wa mita koto ga nai. — Je n'ai jamais vu quelqu'un d'aussi minable que toi.", author: "Poète japonais" },
-    { text: "Kiete kure. — Disparais.", author: "Poète japonais" },
-    { text: "Omae to hanasu kachi mo nai. — Tu ne mérites même pas qu'on te parle.", author: "Poète japonais" },
-
-      // Russe
-      { text: "Ty polnyy idiot. — Tu es un idiot complet.", author: "Poète russe" },
-      { text: "Zatknis, durak. — Tais-toi, imbécile.", author: "Poète russe" },
-      { text: "Ty bespoleznyy chelovek. — Tu es une personne inutile.", author: "Poète russe" },
-      { text: "Ty nastoyashchiy bolvan. — Tu es un véritable crétin.", author: "Poète russe" },
-      { text: "Nikto ne prinimayet tebya vseryoz. — Personne ne te prend au sérieux.", author: "Poète russe" },
-      { text: "Ty pozorish samogo sebya. — Tu fais honte à toi-même.", author: "Poète russe" },
-      { text: "Ty nichego ne umeyesh delat kak sleduyet. — Tu n'es capable de rien faire correctement.", author: "Poète russe" },
-      { text: "Ty deystvitelno zhalok. — Tu es vraiment pitoyable.", author: "Poète russe" },
-      { text: "Ot tebya odni problemy. — Tu n'apportes que des problèmes.", author: "Poète russe" },
-      { text: "S toboy ne o chem govorit. — Ça ne vaut pas la peine de parler avec toi.", author: "Poète russe" },
-
-      // Grec
-      { text: "Eisai pragmatika ilithios. — Tu es vraiment stupide.", author: "Poète grec" },
-      { text: "Sopase, vlaka. — Tais-toi, idiot.", author: "Poète grec" },
-      { text: "Eisai entelos achristos. — Tu es complètement inutile.", author: "Poète grec" },
-      { text: "Den katalavaineis tipota. — Tu ne comprends rien.", author: "Poète grec" },
-      { text: "Eisai geloios. — Tu es ridicule.", author: "Poète grec" },
-      { text: "Kaneis den se pairnei sta sovara. — Personne ne te prend au sérieux.", author: "Poète grec" },
-      { text: "Eisai ntropi gia ton eafto sou. — Tu es une honte pour toi-même.", author: "Poète grec" },
-      { text: "Mono provlimata dimiourgeis. — Tu ne crées que des problèmes.", author: "Poète grec" },
-      { text: "Den axizei na milao mazi sou. — Tu ne mérites pas que je te parle.", author: "Poète grec" },
-      { text: "Eisai o cheiroteros. — Tu es le pire.", author: "Poète grec" },
-
   ];
 
-  function getTodayPhrase() {
-    // Deterministic phrase based on day of year
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const dayOfYear = Math.floor((now - start) / 864e5);
-    return PHRASES[dayOfYear % PHRASES.length];
+  // Liste effectivement utilisée par la page. Par défaut c'est la
+  // liste ci-dessus, mais loadPhrases() la remplace si elle réussit
+  // à charger le fichier phrases.txt (voir plus bas).
+  let PHRASES = FALLBACK_PHRASES;
+  let phraseIdx = null;
+
+  // ── Chargement depuis un fichier texte (optionnel) ───────────
+  // Format attendu pour phrases.txt : une phrase par ligne, avec le
+  // texte et l'auteur séparés par un pipe "|" :
+  //   Le secret pour avancer, c'est de commencer.|Mark Twain
+  //   La discipline est le pont...|Jim Rohn
+  // Les lignes vides ou commençant par "#" (commentaires) sont ignorées.
+  // Comme le site est statique (pas de serveur), on utilise simplement
+  // fetch() sur le fichier — ça fonctionne tant que la page est servie
+  // en http(s):// (GitHub Pages, live-server, etc.). Si le fichier est
+  // absent, ou si la page est ouverte directement depuis le disque
+  // (file://), le fetch échoue et on garde la liste FALLBACK_PHRASES
+  // ci-dessus : rien ne casse pour l'utilisateur.
+  async function loadPhrasesFromFile() {
+    try {
+      const res = await fetch('phrases.txt');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const raw = await res.text();
+
+      const parsed = raw
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line && !line.startsWith('#'))
+        .map(line => {
+          const [text, author] = line.split('|');
+          return { text: (text || '').trim(), author: (author || 'Anonyme').trim() };
+        })
+        .filter(p => p.text.length > 0);
+
+      if (parsed.length > 0) PHRASES = parsed;
+    } catch (e) {
+      // Pas de fichier trouvé (ou page ouverte en file://) : on
+      // reste silencieusement sur FALLBACK_PHRASES.
+      console.info('phrases.txt non chargé, utilisation de la liste par défaut.', e);
+    }
   }
-  function getRandomPhrase() {
-    const randomIndex = Math.floor(Math.random() * PHRASES.length);
-    return PHRASES[randomIndex];
-  }
-    let phraseIdx = null;
 
   function showPhrase(p) {
     document.getElementById('phraseText').textContent = '« ' + p.text + ' »';
     document.getElementById('phraseAuthor').textContent = '— ' + p.author;
   }
 
-  function initPhrase() {
-    const p = getRandomPhrase();;
-    phraseIdx = PHRASES.indexOf(p);
-    showPhrase(p);
+  // Tire un index au hasard, en évitant si possible de retomber
+  // deux fois de suite sur la même phrase (utile pour le bouton
+  // "Autre phrase", qui utilisait avant un simple +1 séquentiel).
+  function pickRandomIndex(excludeIdx) {
+    if (PHRASES.length <= 1) return 0;
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * PHRASES.length);
+    } while (idx === excludeIdx);
+    return idx;
+  }
+
+  async function initPhrase() {
+    await loadPhrasesFromFile();
+    phraseIdx = pickRandomIndex(null);
+    showPhrase(PHRASES[phraseIdx]);
   }
 
   document.getElementById('phraseRefresh').addEventListener('click', () => {
-    phraseIdx = (phraseIdx + 1) % PHRASES.length;
+    phraseIdx = pickRandomIndex(phraseIdx);
     showPhrase(PHRASES[phraseIdx]);
   });
 
@@ -1172,13 +1207,40 @@
     { symbol: 'ALBLD.PA', label: 'Capital B',           market: 'EPA' },
   ];
 
+  // ── Pourquoi ce module ne fonctionnait pas ──────────────────
+  // Le site est 100% statique (GitHub Pages, sans serveur - voir
+  // le footer). Le navigateur appelait directement l'API Yahoo
+  // Finance (query1.finance.yahoo.com). Or Yahoo n'autorise pas
+  // les requêtes cross-origin depuis un site tiers (pas d'en-tête
+  // "Access-Control-Allow-Origin") : le navigateur bloque alors la
+  // réponse et le fetch() échoue systématiquement (erreur CORS,
+  // visible dans la console du navigateur, F12 > Console).
+  // C'est pour ça que TOUTES les lignes affichaient "Indisponible",
+  // pas seulement SpaceX (qui elle, est normalement indisponible
+  // car non cotée en bourse - c'est volontaire).
+  //
+  // Correctif : comme on n'a pas de serveur à nous pour relayer la
+  // requête, on passe par un proxy CORS public (corsproxy.io) qui
+  // se charge d'appeler Yahoo à notre place et de renvoyer la
+  // réponse avec les bons en-têtes CORS.
+  // Limite à connaître : un proxy public gratuit peut tomber en
+  // panne ou changer de règles sans préavis. Si ce module recasse
+  // un jour, c'est la première chose à vérifier. Une solution plus
+  // robuste à terme serait d'héberger un petit relais (ex. une
+  // fonction serverless Cloudflare/Vercel) qui appelle Yahoo côté
+  // serveur, où les règles CORS ne s'appliquent pas.
+  const CORS_PROXY = 'https://corsproxy.io/?url=';
+
   async function fetchStockQuote(symbol) {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
+    const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=2d`;
+    const url = CORS_PROXY + encodeURIComponent(targetUrl);
+
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const meta = data.chart?.result?.[0]?.meta;
     if (!meta) throw new Error('No data');
+
     const price = meta.regularMarketPrice ?? null;
     const prev  = meta.chartPreviousClose ?? meta.previousClose ?? null;
     const change = (price != null && prev != null) ? price - prev : null;
