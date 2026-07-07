@@ -1,7 +1,7 @@
 # Fichier des phrases du jour
-# Format | une phrase par ligne, texte et auteur séparés par un pipe "|"
+# Format | une phrase par ligne, texte et auteur séparés par un pipe |
 # Texte de la citation|Nom de l'auteur
-# Les lignes vides et celles commençant par "#" sont ignorées.
+# Les lignes vides et celles commençant par # sont ignorées.
 # Pour ajouter une phrase | ajoute simplement une nouvelle ligne.
 
 Le secret pour avancer, c'est de commencer.|Mark Twain
@@ -24,46 +24,46 @@ Agis comme si ce que tu fais faisait une différence. Ça en fait une.|William J
 Le meilleur moment pour planter un arbre, c'était il y a vingt ans. Le deuxième meilleur moment, c'est maintenant.|Proverbe chinois
 Tu n'as pas à être parfait pour commencer, mais tu dois commencer pour être parfait.|Anonyme
 Les limites, comme les peurs, ne sont souvent qu'une illusion.|Michael Jordan
-ayakkabımı ye | Eat my shoe| "Poète Turc
-sikeyim böyle işi | Fuck this shit/job",author| "Poète Turc
-sikimde değil | Je m'en tape| "Poète Turc
-yürü git işine! | Occupe toi de tes affaires !",author| "Poète Turc
-Eceline/canina mi susadin ? |Do you have a death wish ?| "Poète Turc
-Sen bir domuzsun | you are a pig",author| "Poète Turc
-Cok da sikimdeydi | Like I give a shit",author| "Poète Turc
-Seni ezik herif | bloody loser",author| "Poète Turc
-Göt lalesi | what an asshole",author| "Poète Turc
-Sen halka açik bir rezilsin | t'es une honte publique",author| "Poète Turc
-Hiç onurun yok | t'as aucune dignité ",author| "Poète Turc
-Ailen bile senden utaniyor | meme ta famille a honte de toi",author| "Poète Turc
-oksijen irani heni",author| "Poète Turc
-Omae wa hontō ni baka da na. — Tu es vraiment idiot.| "Poète japonais
-Kono yakutatazu! — Espèce de bon à rien !| "Poète japonais
-Atama ga okashii n ja nai ka? — Tu n'es pas un peu fou ?| "Poète japonais
-Omae nanka daikirai da. — Je te déteste.| "Poète japonais
-Damare, kono baka. — Tais-toi, imbécile.| "Poète japonais
-Omae wa nani o yatte mo dame da na. — Tu rates tout ce que tu fais.| "Poète japonais
-Hontō ni nasakenai yatsu da. — Tu es vraiment pitoyable.| "Poète japonais
-Omae mitai na kuzu wa mita koto ga nai. — Je n'ai jamais vu quelqu'un d'aussi minable que toi.| "Poète japonais
-Kiete kure. — Disparais.| "Poète japonais
-Omae to hanasu kachi mo nai. — Tu ne mérites même pas qu'on te parle.| "Poète japonais
-Ty polnyy idiot. — Tu es un idiot complet.| "Poète russe
-Zatknis, durak. — Tais-toi, imbécile.| "Poète russe
-Ty bespoleznyy chelovek. — Tu es une personne inutile.| "Poète russe
-Ty nastoyashchiy bolvan. — Tu es un véritable crétin.| "Poète russe
-Nikto ne prinimayet tebya vseryoz. — Personne ne te prend au sérieux.| "Poète russe
-Ty pozorish samogo sebya. — Tu fais honte à toi-même.| "Poète russe
-Ty nichego ne umeyesh delat kak sleduyet. — Tu n'es capable de rien faire correctement.| "Poète russe
-Ty deystvitelno zhalok. — Tu es vraiment pitoyable.| "Poète russe
-Ot tebya odni problemy. — Tu n'apportes que des problèmes.| "Poète russe
-S toboy ne o chem govorit. — Ça ne vaut pas la peine de parler avec toi.| "Poète russe
-Eisai pragmatika ilithios. — Tu es vraiment stupide.| "Poète grec
-Sopase, vlaka. — Tais-toi, idiot.| "Poète grec
-Eisai entelos achristos. — Tu es complètement inutile.| "Poète grec
-Den katalavaineis tipota. — Tu ne comprends rien.| "Poète grec
-Eisai geloios. — Tu es ridicule.| "Poète grec
-Kaneis den se pairnei sta sovara. — Personne ne te prend au sérieux.| "Poète grec
-Eisai ntropi gia ton eafto sou. — Tu es une honte pour toi-même.| "Poète grec
-Mono provlimata dimiourgeis. — Tu ne crées que des problèmes.| "Poète grec
-Den axizei na milao mazi sou. — Tu ne mérites pas que je te parle.| "Poète grec
-Eisai o cheiroteros. — Tu es le pire.| "Poète grec
+ayakkabımı ye = Eat my shoe| Poète Turc
+sikeyim böyle işi = Fuck this shit/job| Poète Turc
+sikimde değil = Je m'en tape| Poète Turc
+yürü git işine! = Occupe toi de tes affaires !| Poète Turc
+Eceline/canina mi susadin ? =Do you have a death wish ?| Poète Turc
+Sen bir domuzsun = you are a pig| Poète Turc
+Cok da sikimdeydi = Like I give a shit| Poète Turc
+Seni ezik herif = bloody loser| Poète Turc
+Göt lalesi= what an asshole| Poète Turc
+Sen halka açik bir rezilsin = t'es une honte publique| Poète Turc
+Hiç onurun yok = t'as aucune dignité | Poète Turc
+Ailen bile senden utaniyor = meme ta famille a honte de toi| Poète Turc
+oksijen irani heni= Poète Turc
+Omae wa hontō ni baka da na. — Tu es vraiment idiot.| Poète japonais
+Kono yakutatazu! — Espèce de bon à rien !| Poète japonais
+Atama ga okashii n ja nai ka? — Tu n'es pas un peu fou ?| Poète japonais
+Omae nanka daikirai da. — Je te déteste.| Poète japonais
+Damare, kono baka. — Tais-toi, imbécile.| Poète japonais
+Omae wa nani o yatte mo dame da na. — Tu rates tout ce que tu fais.| Poète japonais
+Hontō ni nasakenai yatsu da. — Tu es vraiment pitoyable.| Poète japonais
+Omae mitai na kuzu wa mita koto ga nai. — Je n'ai jamais vu quelqu'un d'aussi minable que toi.| Poète japonais
+Kiete kure. — Disparais.| Poète japonais
+Omae to hanasu kachi mo nai. — Tu ne mérites même pas qu'on te parle.| Poète japonais
+Ty polnyy idiot. — Tu es un idiot complet.| Poète russe
+Zatknis, durak. — Tais-toi, imbécile.| Poète russe
+Ty bespoleznyy chelovek. — Tu es une personne inutile.| Poète russe
+Ty nastoyashchiy bolvan. — Tu es un véritable crétin.| Poète russe
+Nikto ne prinimayet tebya vseryoz. — Personne ne te prend au sérieux.| Poète russe
+Ty pozorish samogo sebya. — Tu fais honte à toi-même.| Poète russe
+Ty nichego ne umeyesh delat kak sleduyet. — Tu n'es capable de rien faire correctement.| Poète russe
+Ty deystvitelno zhalok. — Tu es vraiment pitoyable.| Poète russe
+Ot tebya odni problemy. — Tu n'apportes que des problèmes.| Poète russe
+S toboy ne o chem govorit. — Ça ne vaut pas la peine de parler avec toi.| Poète russe
+Eisai pragmatika ilithios. — Tu es vraiment stupide.| Poète grec
+Sopase, vlaka. — Tais-toi, idiot.| Poète grec
+Eisai entelos achristos. — Tu es complètement inutile.| Poète grec
+Den katalavaineis tipota. — Tu ne comprends rien.| Poète grec
+Eisai geloios. — Tu es ridicule.| Poète grec
+Kaneis den se pairnei sta sovara. — Personne ne te prend au sérieux.| Poète grec
+Eisai ntropi gia ton eafto sou. — Tu es une honte pour toi-même.| Poète grec
+Mono provlimata dimiourgeis. — Tu ne crées que des problèmes.| Poète grec
+Den axizei na milao mazi sou. — Tu ne mérites pas que je te parle.| Poète grec
+Eisai o cheiroteros. — Tu es le pire.| Poète grec
