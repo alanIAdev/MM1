@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flux — mon système GTD</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap');
+
+  :root {
+    --paper: #FAFAF9; --surface: #FFFFFF; --surface-2: #F4F4F5;
+    --ink: #18181B; --slate: #6B7280; --slate-light: #A1A1AA; --line: #E4E4E7;
+    --indigo: #4338CA; --indigo-dark: #362FA0; --indigo-light: #EEF2FF;
+    --amber: #B45309; --amber-light: #FEF3C7;
+    --teal: #0D9488; --teal-light: #CCFBF1;
+    --red: #B91C1C; --red-light: #FEE2E2;
+  }
+  body[data-theme="dark"] {
+    --paper: #121214; --surface: #1B1B1F; --surface-2: #232327;
+    --ink: #F2F2F3; --slate: #9C9CA3; --slate-light: #6B6B72; --line: #302F35;
+    --indigo: #6366F1; --indigo-dark: #7B7EF5; --indigo-light: #262A4A;
+    --amber: #E4A93A; --amber-light: #3A2E14;
+    --teal: #2DD4BF; --teal-light: #123632;
+    --red: #F87171; --red-light: #3B1818;
+  }
+  * , *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--paper); color: var(--ink); min-height: 100vh;
+    transition: background .2s ease, color .2s ease;
+  }
+  button, input, select { font-family: inherit; }
+  button { cursor: pointer; }
+  .gtd-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
+
+  .gtd-shell { max-width: 980px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  .gtd-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px; gap: 12px; flex-wrap: wrap; }
+  .gtd-title { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .gtd-save { font-size: 11px; color: var(--slate-light); display: flex; align-items: center; gap: 6px; }
+  .save-spinner { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--indigo); animation: gtd-spin .8s linear infinite; display: inline-block; }
+  @keyframes gtd-spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+
+  .gtd-theme-toggle {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 8px;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    color: var(--slate); font-size: 14px; transition: all .15s;
+  }
+  .gtd-theme-toggle:hover { border-color: var(--slate); color: var(--ink); }
+
+  .gtd-capturebar { display: flex; gap: 8px; margin-bottom: 26px; }
+  .gtd-capturebar input {
+    flex: 1; border: 1px solid var(--line); background: var(--surface);
+    border-radius: 10px; padding: 12px 14px; font-size: 14px; color: var(--ink); outline: none; transition: border-color .15s;
+  }
+  .gtd-capturebar input:focus { border-color: var(--indigo); }
+  .gtd-capturebar button {
+    background: var(--indigo); color: #fff; border: none; border-radius: 10px;
+    padding: 0 18px; font-size: 14px; font-weight: 600; transition: background .15s;
+  }
+  .gtd-capturebar button:hover { background: var(--indigo-dark); }
+
+  .gtd-rail { display: flex; align-items: center; margin-bottom: 30px; }
+  .gtd-node { display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; flex: 1; }
+  .gtd-node button { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+  .gtd-node-circle {
+    width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line);
+    display: flex; align-items: center; justify-content: center; background: var(--surface);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; color: var(--slate-light);
+    transition: all .18s; position: relative;
+  }
+  .gtd-node.active .gtd-node-circle { border-color: var(--indigo); background: var(--indigo); color: #fff; }
+  .gtd-node:not(.active) button:hover .gtd-node-circle { border-color: var(--slate); color: var(--ink); }
+  .gtd-node-label { font-size: 12px; font-weight: 500; color: var(--slate-light); }
+  .gtd-node.active .gtd-node-label { color: var(--ink); font-weight: 600; }
+  .gtd-connector { flex: 0.6; height: 1.5px; background: var(--line); margin-bottom: 24px; }
+  .gtd-badge {
+    position: absolute; top: -6px; right: -8px; background: var(--amber); color: #fff;
+    font-size: 10px; font-weight: 700; min-width: 16px; height: 16px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; padding: 0 4px;
+  }
+
+  .gtd-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .gtd-panel + .gtd-panel { margin-top: 16px; }
+  .gtd-section-title { font-size: 13px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 14px; }
+  .gtd-empty { color: var(--slate-light); font-size: 14px; padding: 24px 4px; text-align: center; }
+
+  .gtd-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px; background: var(--surface); }
+  .gtd-card + .gtd-card { margin-top: 10px; }
+
+  .gtd-btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 7px 13px; font-size: 13px; font-weight: 500; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; transition: all .12s; }
+  .gtd-btn:hover { border-color: var(--slate); background: var(--surface-2); }
+  .gtd-btn-primary { background: var(--indigo); border-color: var(--indigo); color: #fff; }
+  .gtd-btn-primary:hover { background: var(--indigo-dark); border-color: var(--indigo-dark); }
+  .gtd-btn-danger:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+  .gtd-btn-ghost { border-color: transparent; background: transparent; }
+  .gtd-btn-ghost:hover { background: var(--surface-2); }
+  .gtd-btn-sm { padding: 5px 10px; font-size: 12px; }
+  .gtd-btn[disabled] { opacity: .4; cursor: not-allowed; }
+
+  .gtd-chip { border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 500; background: var(--surface); color: var(--slate); display: inline-flex; align-items: center; gap: 5px; }
+  .gtd-chip.active { background: var(--indigo-light); border-color: var(--indigo); color: var(--indigo); }
+  .gtd-chip.count { font-family: 'JetBrains Mono', monospace; }
+
+  .gtd-input-line { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; font-size: 13px; outline: none; background: var(--surface); color: var(--ink); }
+  .gtd-input-line:focus { border-color: var(--indigo); }
+
+  .gtd-tag-actionable { background: var(--teal-light); color: var(--teal); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .gtd-tag-waiting { background: var(--amber-light); color: var(--amber); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+
+  .gtd-breadcrumb { font-size: 12px; color: var(--slate-light); margin-bottom: 6px; }
+
+  .gtd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .gtd-col-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; color: var(--ink); }
+  .gtd-col-title .n { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--slate-light); font-weight: 400; }
+
+  .gtd-tabs { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+
+  .gtd-focus-card { border: 1.5px solid var(--indigo); border-radius: 14px; padding: 26px; background: var(--indigo-light); }
+  .gtd-focus-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; margin: 4px 0 16px; }
+
+  .gtd-review-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--surface-2); font-size: 14px; cursor: pointer; }
+  .gtd-review-row:last-child { border-bottom: none; }
+  .gtd-review-row input { margin-top: 3px; }
+  .gtd-review-row.checked span { color: var(--slate-light); text-decoration: line-through; }
+
+  .gtd-stat { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+  .gtd-stat + .gtd-stat { margin-top: 8px; }
+  .gtd-stat b { font-family: 'JetBrains Mono', monospace; font-size: 15px; }
+  .gtd-stat.warn { border-color: #F3D9A0; background: var(--amber-light); }
+  body[data-theme="dark"] .gtd-stat.warn { border-color: #5A4522; }
+
+  @media (max-width: 640px) {
+    .gtd-node-label { display: none; }
+    .gtd-shell { padding: 18px 14px 60px; }
+  }
+</style>
+</head>
+<body data-theme="light">
+  <div class="gtd-shell">
+    <div class="gtd-header">
+      <div class="gtd-title gtd-display">Flux — mon système GTD</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="gtd-save" id="saveIndicator"></div>
+        <button class="gtd-theme-toggle" id="themeBtn" data-action="toggle-theme" title="Basculer le thème clair/sombre">☾</button>
+      </div>
+    </div>
+
+    <div class="gtd-capturebar">
+      <input id="captureInput" placeholder="Une idée, une tâche… tape-la et appuie sur Entrée" />
+      <button data-action="capture-add">+ Ajouter</button>
+    </div>
+
+    <div class="gtd-rail" id="rail"></div>
+    <div id="content"></div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "gtd_html_state_v1";
+  var DEFAULT_LISTS = ["Aujourd'hui", "Cette semaine", "En attente", "Projets", "Appels", "Courses", "Ordinateur", "Bureau"];
+  var STAGES = [
+    { key: "capture", num: 1, label: "Capturer" },
+    { key: "clarify", num: 2, label: "Clarifier" },
+    { key: "organize", num: 3, label: "Organiser" },
+    { key: "review", num: 4, label: "Réviser" },
+    { key: "execute", num: 5, label: "Exécuter" }
+  ];
+  var REVIEW_ITEMS = [
+    "Vider l'inbox : tout clarifier",
+    "Supprimer les tâches devenues inutiles",
+    "Vérifier que chaque projet a une prochaine action",
+    "Parcourir la liste « un jour / peut-être »",
+    "Mettre à jour les priorités de la semaine",
+    "Planifier les 7 prochains jours"
+  ];
+
+  var state = {
+    tasks: [], lists: DEFAULT_LISTS.slice(), focusId: null,
+    lastReviewAt: null, reviewChecked: {}, theme: "light",
+    stage: "capture", organizeTab: "lists", executeFilter: "Toutes"
+  };
+  var ui = { clarifyStep: {}, decomposeOpen: false };
+  var loaded = false;
+  var saveTimer = null;
+
+  function uid() { return Date.now() + "-" + Math.random().toString(36).slice(2, 9); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // ---------- persistence ----------
+  async function loadState() {
+    try {
+      var res = await window.storage.get(STORAGE_KEY, false);
+      if (res && res.value) {
+        var data = JSON.parse(res.value);
+        state.tasks = data.tasks || [];
+        state.lists = (data.lists && data.lists.length) ? data.lists : DEFAULT_LISTS.slice();
+        state.focusId = data.focusId || null;
+        state.lastReviewAt = data.lastReviewAt || null;
+        state.reviewChecked = data.reviewChecked || {};
+        state.theme = data.theme === "dark" ? "dark" : "light";
+      }
+    } catch (e) {
+      // pas encore de données : on garde les valeurs par défaut
+    }
+    loaded = true;
+    applyTheme();
+    renderAll();
+  }
+
+  function scheduleSave() {
+    if (!loaded) return;
+    setSaveIndicator("saving");
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async function () {
+      try {
+        var payload = {
+          tasks: state.tasks, lists: state.lists, focusId: state.focusId,
+          lastReviewAt: state.lastReviewAt, reviewChecked: state.reviewChecked, theme: state.theme
+        };
+        var res = await window.storage.set(STORAGE_KEY, JSON.stringify(payload), false);
+        setSaveIndicator(res ? "saved" : "error");
+      } catch (e) {
+        setSaveIndicator("error");
+      }
+    }, 450);
+  }
+
+  function setSaveIndicator(s) {
+    var el = document.getElementById("saveIndicator");
+    if (!el) return;
+    if (s === "saving") el.innerHTML = '<span class="save-spinner"></span> enregistrement…';
+    else if (s === "saved") el.textContent = "✓ enregistré";
+    else if (s === "error") el.innerHTML = '<span style="color:var(--red)">erreur de sauvegarde</span>';
+  }
+
+  function applyTheme() {
+    document.body.setAttribute("data-theme", state.theme);
+    var btn = document.getElementById("themeBtn");
+    if (btn) {
+      btn.textContent = state.theme === "light" ? "☾" : "☀";
+      btn.title = state.theme === "light" ? "Passer en mode sombre" : "Passer en mode clair";
+    }
+  }
+
+  // ---------- mutations ----------
+  function addTask(title) {
+    var t = (title || "").trim();
+    if (!t) return;
+    state.tasks.unshift({
+      id: uid(), title: t, createdAt: Date.now(), clarified: false, actionable: null,
+      disposition: null, list: null, isProject: false, parentId: null, completed: false, completedAt: null
+    });
+    scheduleSave(); renderAll();
+  }
+
+  function resolveNonActionable(id, disposition) {
+    if (disposition === "delete") {
+      state.tasks = state.tasks.filter(function (t) { return t.id !== id; });
+      if (state.focusId === id) state.focusId = null;
+    } else {
+      state.tasks = state.tasks.map(function (t) {
+        return t.id === id ? Object.assign({}, t, { clarified: true, actionable: false, disposition: disposition, list: null }) : t;
+      });
+    }
+    delete ui.clarifyStep[id];
+    scheduleSave(); renderAll();
+  }
+
+  function resolveActionable(id, title, list, isProject) {
+    state.tasks = state.tasks.map(function (t) {
+      if (t.id !== id) return t;
+      return Object.assign({}, t, {
+        clarified: true, actionable: true,
+        title: (title && title.trim()) || t.title,
+        list: list, isProject: !!isProject, disposition: null
+      });
+    });
+    delete ui.clarifyStep[id];
+    scheduleSave(); renderAll();
+  }
+
+  function restoreToInbox(id) {
+    state.tasks = state.tasks.map(function (t) {
+      return t.id === id ? Object.assign({}, t, { clarified: false, actionable: null, disposition: null, list: null, isProject: false }) : t;
+    });
+    scheduleSave(); renderAll();
+  }
+
+  function moveTask(id, list) {
+    state.tasks = state.tasks.map(function (t) { return t.id === id ? Object.assign({}, t, { list: list }) : t; });
+    scheduleSave(); renderAll();
+  }
+
+  function toggleComplete(id) {
+    state.tasks = state.tasks.map(function (t) {
+      if (t.id !== id) return t;
+      var next = !t.completed;
+      return Object.assign({}, t, { completed: next, completedAt: next ? Date.now() : null });
+    });
+    if (state.focusId === id) state.focusId = null;
+    scheduleSave(); renderAll();
+  }
+
+  function deleteTask(id) {
+    state.tasks = state.tasks.filter(function (t) { return t.id !== id; });
+    if (state.focusId === id) state.focusId = null;
+    scheduleSave(); renderAll();
+  }
+
+  function addList(name) {
+    var n = (name || "").trim();
+    if (!n || state.lists.indexOf(n) !== -1) return;
+    state.lists.push(n);
+    scheduleSave(); renderAll();
+  }
+
+  function addSubAction(parentId, title, list) {
+    var t = (title || "").trim();
+    if (!t) return;
+    state.tasks.unshift({
+      id: uid(), title: t, createdAt: Date.now(), clarified: true, actionable: true,
+      disposition: null, list: list, isProject: false, parentId: parentId, completed: false, completedAt: null
+    });
+    scheduleSave(); renderAll();
+  }
+
+  function breadcrumb(task) {
+    var chain = [], cur = task, guard = 0;
+    while (cur && cur.parentId && guard < 10) {
+      var parent = state.tasks.find(function (t) { return t.id === cur.parentId; });
+      if (!parent) break;
+      chain.unshift(parent.title);
+      cur = parent; guard++;
+    }
+    return chain;
+  }
+
+  // ---------- derived ----------
+  function getInbox() { return state.tasks.filter(function (t) { return !t.clarified; }); }
+  function getActionable() { return state.tasks.filter(function (t) { return t.clarified && t.actionable && !t.completed; }); }
+  function getProjects() { return getActionable().filter(function (t) { return t.isProject; }); }
+  function getSomeday() { return state.tasks.filter(function (t) { return t.clarified && t.actionable === false && t.disposition === "someday"; }); }
+  function getReference() { return state.tasks.filter(function (t) { return t.clarified && t.actionable === false && t.disposition === "reference"; }); }
+  function getArchived() { return state.tasks.filter(function (t) { return t.clarified && t.actionable === false && t.disposition === "archive"; }); }
+  function getProjectsWithoutNext() {
+    var act = getActionable();
+    return getProjects().filter(function (p) { return !act.some(function (a) { return a.parentId === p.id; }); });
+  }
+
+  // ---------- rendering ----------
+  function renderAll() {
+    document.getElementById("rail").innerHTML = renderRail();
+    document.getElementById("content").innerHTML = renderContent();
+  }
+
+  function renderRail() {
+    var inboxCount = getInbox().length;
+    return STAGES.map(function (s, i) {
+      var active = state.stage === s.key;
+      var badge = (s.key === "clarify" && inboxCount > 0) ? '<span class="gtd-badge">' + inboxCount + '</span>' : "";
+      var node = '<div class="gtd-node ' + (active ? "active" : "") + '">' +
+        '<button data-action="set-stage" data-stage="' + s.key + '">' +
+        '<div class="gtd-node-circle">' + s.num + badge + '</div>' +
+        '<div class="gtd-node-label">' + s.label + '</div></button></div>';
+      var connector = i < STAGES.length - 1 ? '<div class="gtd-connector"></div>' : "";
+      return node + connector;
+    }).join("");
+  }
+
+  function renderContent() {
+    switch (state.stage) {
+      case "capture": return renderCapture();
+      case "clarify": return renderClarify();
+      case "organize": return renderOrganize();
+      case "review": return renderReview();
+      case "execute": return renderExecute();
+      default: return "";
+    }
+  }
+
+  function renderCapture() {
+    var recent = state.tasks.slice(0, 8);
+    var unclarified = getInbox().length;
+    var html = '<div class="gtd-panel"><div class="gtd-section-title">Dernières captures</div>';
+    if (recent.length === 0) {
+      html += '<div class="gtd-empty">Rien capturé pour l\'instant. Écris ce qui te passe par la tête juste au-dessus — tu trieras plus tard.</div>';
+    }
+    recent.forEach(function (t) {
+      html += '<div class="gtd-card" style="display:flex;align-items:center;justify-content:space-between;">' +
+        '<span style="font-size:14px;">' + esc(t.title) + '</span>' +
+        (t.clarified ? '<span class="gtd-tag-actionable">classé</span>' : '<span class="gtd-tag-waiting">à clarifier</span>') +
+        '</div>';
+    });
+    if (unclarified > 0) {
+      html += '<div style="margin-top:16px;"><button class="gtd-btn gtd-btn-primary" data-action="set-stage" data-stage="clarify">Clarifier ' +
+        unclarified + ' élément' + (unclarified > 1 ? "s" : "") + ' →</button></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderClarify() {
+    var inbox = getInbox();
+    if (inbox.length === 0) {
+      return '<div class="gtd-panel"><div class="gtd-empty">Inbox vide. Rien à clarifier — file dans « Exécuter » ou capture une nouvelle idée.</div></div>';
+    }
+    var html = '<div class="gtd-panel"><div class="gtd-section-title">À clarifier (' + inbox.length + ')</div>';
+    inbox.forEach(function (t) {
+      var step = ui.clarifyStep[t.id] || "ask";
+      html += '<div class="gtd-card" data-task-id="' + t.id + '">' +
+        '<div style="font-size:14px;font-weight:500;margin-bottom:10px;">' + esc(t.title) + '</div>';
+
+      if (step === "ask") {
+        html += '<div style="font-size:12px;color:var(--slate);margin-bottom:8px;">Cette tâche demande-t-elle une action ?</div>' +
+          '<div style="display:flex;gap:8px;">' +
+          '<button class="gtd-btn gtd-btn-primary gtd-btn-sm" data-action="clarify-step" data-id="' + t.id + '" data-step="action">✓ Oui</button>' +
+          '<button class="gtd-btn gtd-btn-sm" data-action="clarify-step" data-id="' + t.id + '" data-step="non">✕ Non</button>' +
+          '</div>';
+      } else if (step === "non") {
+        html += '<div style="font-size:12px;color:var(--slate);margin-bottom:8px;">Pas d\'action requise. Que fait-on de cet élément ?</div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+          '<button class="gtd-btn gtd-btn-sm gtd-btn-danger" data-action="clarify-nonaction" data-id="' + t.id + '" data-disposition="delete">Supprimer</button>' +
+          '<button class="gtd-btn gtd-btn-sm" data-action="clarify-nonaction" data-id="' + t.id + '" data-disposition="archive">Archiver</button>' +
+          '<button class="gtd-btn gtd-btn-sm" data-action="clarify-nonaction" data-id="' + t.id + '" data-disposition="reference">Référence</button>' +
+          '<button class="gtd-btn gtd-btn-sm" data-action="clarify-nonaction" data-id="' + t.id + '" data-disposition="someday">Un jour peut-être</button>' +
+          '</div>' +
+          '<button class="gtd-btn gtd-btn-ghost gtd-btn-sm" style="margin-top:8px;" data-action="clarify-step" data-id="' + t.id + '" data-step="ask">← retour</button>';
+      } else if (step === "action") {
+        html += '<div style="font-size:12px;color:var(--slate);margin-bottom:6px;">Quelle est la prochaine action concrète ?</div>' +
+          '<input class="gtd-input-line clarify-title-input" value="' + esc(t.title) + '" style="margin-bottom:10px;" />' +
+          '<div style="font-size:12px;color:var(--slate);margin-bottom:6px;">Dans quelle liste ?</div>' +
+          '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">' +
+          state.lists.map(function (l, i) {
+            return '<button type="button" class="gtd-chip clarify-list-chip ' + (i === 0 ? "active" : "") + '" data-action="chip-select" data-list="' + esc(l) + '">' + esc(l) + '</button>';
+          }).join("") +
+          '</div>' +
+          '<label style="font-size:12px;color:var(--slate);display:flex;align-items:center;gap:6px;margin-bottom:12px;">' +
+          '<input type="checkbox" class="clarify-project-checkbox" /> C\'est un projet à plusieurs étapes</label>' +
+          '<div style="display:flex;gap:8px;">' +
+          '<button class="gtd-btn gtd-btn-primary gtd-btn-sm" data-action="clarify-validate" data-id="' + t.id + '">Valider</button>' +
+          '<button class="gtd-btn gtd-btn-ghost gtd-btn-sm" data-action="clarify-step" data-id="' + t.id + '" data-step="ask">← retour</button>' +
+          '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderOrganize() {
+    var actionable = getActionable();
+    var someday = getSomeday(), reference = getReference(), archived = getArchived();
+    var html = '<div class="gtd-panel"><div class="gtd-tabs">' +
+      '<button class="gtd-chip ' + (state.organizeTab === "lists" ? "active" : "") + '" data-action="set-organize-tab" data-tab="lists">Listes</button>' +
+      '<button class="gtd-chip ' + (state.organizeTab === "someday" ? "active" : "") + '" data-action="set-organize-tab" data-tab="someday">Un jour / peut-être <span class="gtd-chip count">' + someday.length + '</span></button>' +
+      '<button class="gtd-chip ' + (state.organizeTab === "reference" ? "active" : "") + '" data-action="set-organize-tab" data-tab="reference">Référence <span class="gtd-chip count">' + reference.length + '</span></button>' +
+      '<button class="gtd-chip ' + (state.organizeTab === "archive" ? "active" : "") + '" data-action="set-organize-tab" data-tab="archive">Archive <span class="gtd-chip count">' + archived.length + '</span></button>' +
+      '</div>';
+
+    if (state.organizeTab === "lists") {
+      html += '<div class="gtd-grid">';
+      state.lists.forEach(function (list) {
+        var items = actionable.filter(function (t) { return t.list === list; });
+        html += '<div><div class="gtd-col-title">' + esc(list) + ' <span class="n">' + items.length + '</span></div>';
+        if (items.length === 0) html += '<div class="gtd-empty" style="padding:10px 2px;font-size:13px;">Vide</div>';
+        items.forEach(function (t) {
+          var bc = breadcrumb(t);
+          html += '<div class="gtd-card">' +
+            (bc.length ? '<div class="gtd-breadcrumb">' + bc.map(esc).join(" › ") + ' ›</div>' : "") +
+            '<div style="font-size:13.5px;margin-bottom:8px;">' + esc(t.title) +
+            (t.isProject ? ' <span class="gtd-tag-actionable" style="margin-left:6px;">projet</span>' : "") + '</div>' +
+            '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">' +
+            '<select class="gtd-input-line move-select" style="width:auto;padding:5px 8px;font-size:12px;" data-id="' + t.id + '">' +
+            state.lists.map(function (l) { return '<option value="' + esc(l) + '" ' + (l === t.list ? "selected" : "") + '>' + esc(l) + '</option>'; }).join("") +
+            '</select>' +
+            '<button class="gtd-btn gtd-btn-ghost gtd-btn-sm" data-action="complete-task" data-id="' + t.id + '" title="Marquer terminé">✓</button>' +
+            '<button class="gtd-btn gtd-btn-ghost gtd-btn-sm gtd-btn-danger" data-action="delete-task" data-id="' + t.id + '" title="Supprimer">🗑</button>' +
+            '</div></div>';
+        });
+        html += '</div>';
+      });
+      html += '</div>' +
+        '<div style="margin-top:18px;display:flex;gap:8px;">' +
+        '<input class="gtd-input-line" id="newListInput" style="max-width:220px;" placeholder="Nouvelle liste…" />' +
+        '<button class="gtd-btn" data-action="add-list">+ Ajouter la liste</button></div>';
+    } else {
+      var map = { someday: someday, reference: reference, archive: archived };
+      var emptyMsg = { someday: "Aucun élément en attente d'un jour meilleur.", reference: "Aucune référence conservée.", archive: "Archive vide." };
+      var items = map[state.organizeTab];
+      if (items.length === 0) html += '<div class="gtd-empty">' + emptyMsg[state.organizeTab] + '</div>';
+      items.forEach(function (t) {
+        html += '<div class="gtd-card" style="display:flex;justify-content:space-between;align-items:center;">' +
+          '<span style="font-size:13.5px;">' + esc(t.title) + '</span>' +
+          '<div style="display:flex;gap:6px;">' +
+          '<button class="gtd-btn gtd-btn-sm" data-action="restore-task" data-id="' + t.id + '">↺ Reclarifier</button>' +
+          '<button class="gtd-btn gtd-btn-sm gtd-btn-danger" data-action="delete-task" data-id="' + t.id + '">🗑</button>' +
+          '</div></div>';
+      });
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function fmtDate(ts) {
+    if (!ts) return "jamais";
+    var days = Math.floor((Date.now() - ts) / 86400000);
+    if (days === 0) return "aujourd'hui";
+    if (days === 1) return "hier";
+    return "il y a " + days + " jours";
+  }
+
+  function renderReview() {
+    var inboxCount = getInbox().length;
+    var pwn = getProjectsWithoutNext();
+    var somedayCount = getSomeday().length;
+    var html = '<div class="gtd-panel"><div class="gtd-section-title">État du système</div>' +
+      '<div class="gtd-stat ' + (inboxCount > 0 ? "warn" : "") + '"><span>Éléments non clarifiés</span><b>' + inboxCount + '</b></div>' +
+      '<div class="gtd-stat ' + (pwn.length > 0 ? "warn" : "") + '"><span>Projets sans prochaine action</span><b>' + pwn.length + '</b></div>' +
+      '<div class="gtd-stat"><span>En attente (un jour / peut-être)</span><b>' + somedayCount + '</b></div>';
+    if (pwn.length > 0) {
+      html += '<div style="margin-top:12px;">';
+      pwn.forEach(function (p) {
+        html += '<div style="font-size:13px;color:var(--amber);margin-bottom:4px;">⚠ « ' + esc(p.title) + ' » n\'a pas de prochaine action</div>';
+      });
+      html += '</div>';
+    }
+    if (inboxCount > 0) {
+      html += '<button class="gtd-btn gtd-btn-sm" style="margin-top:12px;" data-action="set-stage" data-stage="clarify">Aller clarifier →</button>';
+    }
+    html += '</div><div class="gtd-panel"><div class="gtd-section-title">Revue hebdomadaire — dernière revue : ' + fmtDate(state.lastReviewAt) + '</div>';
+    var allChecked = REVIEW_ITEMS.every(function (_, i) { return !!state.reviewChecked[i]; });
+    REVIEW_ITEMS.forEach(function (label, i) {
+      var checked = !!state.reviewChecked[i];
+      html += '<label class="gtd-review-row ' + (checked ? "checked" : "") + '">' +
+        '<input type="checkbox" class="review-checkbox" data-index="' + i + '" ' + (checked ? "checked" : "") + ' />' +
+        '<span>' + esc(label) + '</span></label>';
+    });
+    html += '<button class="gtd-btn gtd-btn-primary" style="margin-top:16px;" data-action="finish-review" ' + (allChecked ? "" : "disabled") + '>✓ Marquer la revue comme terminée</button></div>';
+    return html;
+  }
+
+  function renderExecute() {
+    var actionable = getActionable();
+    var focusTask = state.tasks.find(function (t) { return t.id === state.focusId; });
+
+    if (focusTask) {
+      var bc = breadcrumb(focusTask);
+      var html = '<div class="gtd-panel"><div class="gtd-section-title">En cours d\'exécution</div>' +
+        '<div class="gtd-focus-card">' +
+        (bc.length ? '<div class="gtd-breadcrumb">' + bc.map(esc).join(" › ") + ' ›</div>' : "") +
+        '<div class="gtd-focus-title gtd-display">' + esc(focusTask.title) + '</div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+        '<button class="gtd-btn gtd-btn-primary" data-action="complete-task" data-id="' + focusTask.id + '">✓ Terminé</button>' +
+        '<select class="gtd-input-line focus-move-select" style="width:auto;" data-id="' + focusTask.id + '">' +
+        state.lists.map(function (l) { return '<option value="' + esc(l) + '" ' + (l === focusTask.list ? "selected" : "") + '>' + esc(l) + '</option>'; }).join("") +
+        '</select>' +
+        '<button class="gtd-btn" data-action="toggle-decompose">↳ Décomposer</button>' +
+        '<button class="gtd-btn gtd-btn-ghost" data-action="quit-focus">Quitter le focus</button>' +
+        '</div>';
+
+      if (ui.decomposeOpen) {
+        html += '<div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px;">' +
+          '<div style="font-size:12px;color:var(--slate);margin-bottom:6px;">Quelle est la prochaine sous-action concrète ?</div>' +
+          '<input class="gtd-input-line" id="subActionTitle" style="margin-bottom:8px;" placeholder="Ex. Comparer trois hôtels à Stockholm" />' +
+          '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">' +
+          state.lists.map(function (l, i) {
+            return '<button type="button" class="gtd-chip sub-list-chip ' + (i === 0 ? "active" : "") + '" data-action="chip-select" data-list="' + esc(l) + '">' + esc(l) + '</button>';
+          }).join("") +
+          '</div>' +
+          '<button class="gtd-btn gtd-btn-primary gtd-btn-sm" data-action="add-subaction" data-parent="' + focusTask.id + '">Créer la sous-action</button>' +
+          '</div>';
+      }
+      html += '</div></div>';
+      return html;
+    }
+
+    var html2 = '<div class="gtd-panel"><div class="gtd-section-title">Sur quoi travailler ?</div><div class="gtd-tabs">' +
+      '<button class="gtd-chip ' + (state.executeFilter === "Toutes" ? "active" : "") + '" data-action="set-execute-filter" data-filter="Toutes">Toutes</button>' +
+      state.lists.map(function (l) {
+        return '<button class="gtd-chip ' + (state.executeFilter === l ? "active" : "") + '" data-action="set-execute-filter" data-filter="' + esc(l) + '">' + esc(l) + '</button>';
+      }).join("") + '</div>';
+    var pool = state.executeFilter === "Toutes" ? actionable : actionable.filter(function (t) { return t.list === state.executeFilter; });
+    if (pool.length === 0) html2 += '<div class="gtd-empty">Rien à faire ici. Passe par « Clarifier » pour alimenter tes listes.</div>';
+    pool.forEach(function (t) {
+      var bc2 = breadcrumb(t);
+      html2 += '<div class="gtd-card" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">' +
+        '<div>' + (bc2.length ? '<div class="gtd-breadcrumb">' + bc2.map(esc).join(" › ") + '</div>' : "") +
+        '<span style="font-size:13.5px;">' + esc(t.title) + '</span></div>' +
+        '<button class="gtd-btn gtd-btn-sm gtd-btn-primary" data-action="set-focus" data-id="' + t.id + '">📌 Travailler sur ceci</button>' +
+        '</div>';
+    });
+    html2 += '</div>';
+    return html2;
+  }
+
+  // ---------- events ----------
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    var action = btn.dataset.action;
+    var id = btn.dataset.id;
+
+    switch (action) {
+      case "toggle-theme":
+        state.theme = state.theme === "light" ? "dark" : "light";
+        applyTheme(); scheduleSave();
+        break;
+      case "set-stage":
+        state.stage = btn.dataset.stage; renderAll();
+        break;
+      case "capture-add": {
+        var inp = document.getElementById("captureInput");
+        addTask(inp.value); inp.value = ""; inp.focus();
+        break;
+      }
+      case "clarify-step":
+        ui.clarifyStep[id] = btn.dataset.step; renderAll();
+        break;
+      case "clarify-nonaction":
+        resolveNonActionable(id, btn.dataset.disposition);
+        break;
+      case "clarify-validate": {
+        var card = btn.closest(".gtd-card");
+        var titleInp = card.querySelector(".clarify-title-input");
+        var activeChip = card.querySelector(".clarify-list-chip.active");
+        var listVal = activeChip ? activeChip.dataset.list : state.lists[0];
+        var isProject = card.querySelector(".clarify-project-checkbox").checked;
+        resolveActionable(id, titleInp.value, listVal, isProject);
+        break;
+      }
+      case "chip-select": {
+        var group = btn.parentElement;
+        group.querySelectorAll(".gtd-chip").forEach(function (c) { c.classList.remove("active"); });
+        btn.classList.add("active");
+        break;
+      }
+      case "set-organize-tab":
+        state.organizeTab = btn.dataset.tab; renderAll();
+        break;
+      case "complete-task":
+        toggleComplete(id);
+        break;
+      case "delete-task":
+        deleteTask(id);
+        break;
+      case "restore-task":
+        restoreToInbox(id);
+        break;
+      case "add-list": {
+        var listInp = document.getElementById("newListInput");
+        addList(listInp.value);
+        break;
+      }
+      case "finish-review":
+        state.lastReviewAt = Date.now(); state.reviewChecked = {};
+        scheduleSave(); renderAll();
+        break;
+      case "toggle-decompose":
+        ui.decomposeOpen = !ui.decomposeOpen; renderAll();
+        break;
+      case "quit-focus":
+        state.focusId = null; ui.decomposeOpen = false;
+        scheduleSave(); renderAll();
+        break;
+      case "set-focus":
+        state.focusId = id; ui.decomposeOpen = false;
+        scheduleSave(); renderAll();
+        break;
+      case "set-execute-filter":
+        state.executeFilter = btn.dataset.filter; renderAll();
+        break;
+      case "add-subaction": {
+        var parent = btn.dataset.parent;
+        var subTitleInp = document.getElementById("subActionTitle");
+        var activeSubChip = document.querySelector(".sub-list-chip.active");
+        var subListVal = activeSubChip ? activeSubChip.dataset.list : state.lists[0];
+        addSubAction(parent, subTitleInp ? subTitleInp.value : "", subListVal);
+        ui.decomposeOpen = false;
+        break;
+      }
+    }
+  });
+
+  document.addEventListener("change", function (e) {
+    if (e.target.matches(".move-select")) {
+      moveTask(e.target.dataset.id, e.target.value);
+    } else if (e.target.matches(".focus-move-select")) {
+      moveTask(e.target.dataset.id, e.target.value);
+    } else if (e.target.matches(".review-checkbox")) {
+      state.reviewChecked[e.target.dataset.index] = e.target.checked;
+      scheduleSave(); renderAll();
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter") return;
+    if (e.target.id === "captureInput") {
+      addTask(e.target.value); e.target.value = "";
+    } else if (e.target.id === "newListInput") {
+      addList(e.target.value);
+    }
+  });
+
+  loadState();
+})();
+</script>
+</body>
+</html>
