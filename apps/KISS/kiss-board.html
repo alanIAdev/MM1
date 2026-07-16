@@ -205,7 +205,8 @@
   .entry:active{ cursor:grabbing; }
   .entry.dragging{ opacity:0.4; }
   .entry.filtered-out{ display:none; }
-  .entry .grip{ color:var(--text-3); font-size:12px; padding-top:3px; user-select:none; }
+  .entry .grip{ color:var(--text-3); font-size:12px; padding-top:3px; user-select:none; cursor:grab; }
+  .entry .grip:active{ cursor:grabbing; }
   .check{
     width:18px; height:18px; border-radius:6px; border:1.5px solid var(--text-3); flex-shrink:0; margin-top:2px;
     display:flex; align-items:center; justify-content:center; background:transparent; transition:.18s var(--ease);
@@ -214,7 +215,13 @@
   .check.on::after{ content:"✓"; font-size:11px; color:#06170F; font-weight:800; }
 
   .entry-body{ flex:1; min-width:0; }
-  .entry-text{ font-size:13.5px; line-height:1.5; outline:none; word-break:break-word; color:var(--text); }
+  .entry-text{
+    font-size:13.5px; line-height:1.5; outline:none; word-break:break-word; color:var(--text);
+    cursor:text; -webkit-user-drag:none; user-select:text; border-radius:6px; padding:2px 4px; margin:-2px -4px;
+    transition:background .15s var(--ease), box-shadow .15s var(--ease);
+  }
+  .entry-text:hover{ background:rgba(255,255,255,0.03); }
+  .entry-text:focus{ background:rgba(255,255,255,0.05); box-shadow:0 0 0 2px rgba(61,220,132,0.25); }
   .entry.done .entry-text{ color:var(--text-3); text-decoration:line-through; }
   .tag-chip{
     display:inline-flex; align-items:center; gap:6px; margin-top:7px; font-size:10.5px; padding:3px 9px 3px 6px;
@@ -292,8 +299,8 @@
   .cal-day:hover{ border-color:var(--border-2); }
   .cal-day.today{ border-color:var(--accent-1); color:var(--text); font-weight:700; }
   .cal-day.future{ opacity:0.28; pointer-events:none; }
-  .cal-dots{ display:flex; gap:2.5px; margin-top:3px; height:4px; }
-  .cal-dots span{ width:3.5px; height:3.5px; border-radius:50%; }
+  .cal-dots{ display:flex; justify-content:center; margin-top:4px; height:5px; }
+  .cal-dots span{ width:5px; height:5px; border-radius:50%; }
   .cal-close{
     display:block; margin:18px auto 0; background:transparent; border:1px solid var(--border-2);
     color:var(--text-2); padding:9px 20px; border-radius:30px; font-size:12px; transition:border-color .2s var(--ease);
@@ -480,6 +487,41 @@
 
 <script>
 (function(){
+  // ---- Couche de stockage : utilise window.storage (Claude.ai) si présent,
+  // sinon repli automatique sur localStorage (fichier ouvert dans un navigateur classique) ----
+  const nativeStorageAvailable = (typeof window.storage !== "undefined" && window.storage && typeof window.storage.get === "function");
+  const LS_PREFIX = "kiss-board:";
+  const localStorageFallback = {
+    async get(key){
+      const raw = localStorage.getItem(LS_PREFIX+key);
+      if(raw===null){ const err = new Error("not found"); throw err; }
+      return {key, value: raw, shared:false};
+    },
+    async set(key, value){
+      localStorage.setItem(LS_PREFIX+key, value);
+      return {key, value, shared:false};
+    },
+    async delete(key){
+      localStorage.removeItem(LS_PREFIX+key);
+      return {key, deleted:true, shared:false};
+    },
+    async list(prefix){
+      const keys = [];
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(k && k.indexOf(LS_PREFIX)===0){
+          const real = k.slice(LS_PREFIX.length);
+          if(!prefix || real.indexOf(prefix)===0) keys.push(real);
+        }
+      }
+      return {keys, prefix, shared:false};
+    }
+  };
+  const storage = nativeStorageAvailable ? window.storage : localStorageFallback;
+  if(!nativeStorageAvailable){
+    console.warn("KISS: window.storage indisponible — utilisation de localStorage (sauvegarde locale à ce navigateur uniquement).");
+  }
+
   const BLOCKS = ["keep","improve","start","stop"];
   const BLOCK_LABELS = {keep:"Garder", improve:"Améliorer", start:"Démarrer", stop:"Arrêter"};
   const DEFAULT_SWATCHES = ["#3DDC84","#52E89A","#71F5B1","#B7C4BE","#7C8E87","#FFFFFF"];
@@ -513,25 +555,25 @@
 
   async function loadTags(){
     try{
-      const res = await window.storage.get("tags", false);
+      const res = await storage.get("tags", false);
       if(res && res.value){ tags = JSON.parse(res.value); }
-      else { tags = DEFAULT_TAGS.slice(); await window.storage.set("tags", JSON.stringify(tags), false); }
+      else { tags = DEFAULT_TAGS.slice(); await storage.set("tags", JSON.stringify(tags), false); }
     }catch(e){ tags = DEFAULT_TAGS.slice(); }
   }
   async function saveTags(){
-    try{ await window.storage.set("tags", JSON.stringify(tags), false); }catch(e){ console.error(e); }
+    try{ await storage.set("tags", JSON.stringify(tags), false); }catch(e){ console.error(e); }
   }
 
   async function loadDay(key){
     try{
-      const res = await window.storage.get("day:"+key, false);
+      const res = await storage.get("day:"+key, false);
       if(res && res.value){ dayData = JSON.parse(res.value); }
       else { dayData = emptyDay(); }
     }catch(e){ dayData = emptyDay(); }
   }
   async function saveDay(key){
     try{
-      await window.storage.set("day:"+key, JSON.stringify(dayData), false);
+      await storage.set("day:"+key, JSON.stringify(dayData), false);
       showSaved();
     }catch(e){ console.error("Erreur de sauvegarde", e); }
   }
@@ -583,7 +625,7 @@
   function renderEntry(block, item){
     const el = document.createElement("div");
     el.className = "entry" + (item.done ? " done" : "");
-    el.draggable = true;
+    el.draggable = false; // activé uniquement au clic sur la poignée, pour ne pas gêner l'édition du texte
     el.dataset.id = item.id;
     el.dataset.block = block;
 
@@ -592,11 +634,15 @@
       el.classList.add("dragging");
       e.dataTransfer.effectAllowed = "move";
     });
-    el.addEventListener("dragend", ()=> el.classList.remove("dragging"));
+    el.addEventListener("dragend", ()=>{ el.classList.remove("dragging"); el.draggable = false; });
 
     const grip = document.createElement("div");
     grip.className = "grip";
     grip.textContent = "⠿";
+    grip.title = "Glisser pour déplacer";
+    grip.addEventListener("mousedown", ()=>{ el.draggable = true; });
+    grip.addEventListener("touchstart", ()=>{ el.draggable = true; }, {passive:true});
+    document.addEventListener("mouseup", ()=>{ el.draggable = false; });
     el.appendChild(grip);
 
     const check = document.createElement("button");
@@ -874,7 +920,7 @@
 
   async function fetchDaysIndex(){
     try{
-      const res = await window.storage.list("day:", false);
+      const res = await storage.list("day:", false);
       const keys = (res && res.keys) ? res.keys : [];
       return keys.map(k=>k.replace("day:",""));
     }catch(e){ return []; }
@@ -915,7 +961,7 @@
       if(existingDays.includes(key)){
         const dots = document.createElement("div");
         dots.className = "cal-dots";
-        dots.innerHTML = `<span style="background:#3DDC84"></span><span style="background:#52E89A"></span><span style="background:#71F5B1"></span><span style="background:#7C8E87"></span>`;
+        dots.innerHTML = `<span style="background:#3DDC84"></span>`;
         cell.appendChild(dots);
       }
       cell.addEventListener("click", async ()=>{
