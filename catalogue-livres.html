@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  CATALOGUE DE LIVRES — Template autonome (1 seul fichier HTML)
+  ============================================================================
+
+  CE QUE FAIT CE FICHIER
+  -----------------------
+  - Il affiche une page "Catalogue" avec une carte par livre.
+  - Quand on clique sur une carte, on arrive sur une "Fiche détail" du livre,
+    organisée en deux onglets :
+      1) Vue d'ensemble  → les grandes idées du livre + top 3 actions
+      2) Chapitres       → un résumé + des actions (jusqu'à 5) par chapitre
+  - Chaque bloc de texte a un bouton "📋 Copier" pour le copier-coller
+    facilement ailleurs (notes, gestionnaire de tâches, etc.)
+
+  COMMENT UTILISER CE FICHIER
+  ----------------------------
+  1. Ouvrez-le simplement en double-cliquant dessus (aucun serveur requis).
+  2. Pour ajouter / modifier un livre : allez à la section
+     "1. DONNÉES — VOS LIVRES" plus bas dans le <script>, et suivez le
+     "GUIDE RAPIDE" qui s'y trouve.
+  3. Vous n'avez normalement RIEN à toucher dans le CSS ou dans les
+     fonctions JavaScript : tout le contenu vient des données que vous
+     remplissez.
+
+  STRUCTURE DU FICHIER (dans l'ordre)
+  ------------------------------------
+  - <head>  : polices + feuille de style (CSS), très commentée par section.
+  - <body>  : le squelette HTML minimal (deux "pages" : liste / détail).
+  - <script>: 
+      1. Les données (vos livres)
+      2. Des fonctions utilitaires (ex: copier dans le presse-papiers)
+      3. Le code qui construit la page "liste"
+      4. Le code qui construit la page "détail"
+      5. Le "routeur" qui décide quelle page afficher selon l'URL
+         (ex: #/livre/b1 affiche le détail du livre "b1")
+  ============================================================================
+-->
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogue de livres — Résumés &amp; actions</title>
+
+<!-- ==========================================================================
+     POLICES
+     - "Fraunces"      : police à fort caractère pour les titres (façon livre).
+     - "Source Serif 4": police de lecture agréable pour les résumés (corps).
+     - "IBM Plex Mono" : police "machine à écrire" pour les infos techniques
+                         (numéro de catalogue, étiquettes, boutons copier).
+     ========================================================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ==========================================================================
+     0. VARIABLES DE DESIGN (le "vocabulaire" de couleurs / polices du site)
+     Modifier une valeur ici change TOUT le site d'un coup.
+     ========================================================================== */
+  :root{
+    /* -- Fond général : un "rayonnage" vert sombre, façon bibliothèque -- */
+    --color-shelf:        #1F2A22;
+    --color-shelf-alt:     #26332A;
+
+    /* -- Les "fiches" (cartes / fiche détail) : papier crème -- */
+    --color-card:          #F1E8D6;
+    --color-card-soft:     #E9DFC7;
+
+    /* -- Encre / texte -- */
+    --color-ink:           #2B2419;
+    --color-ink-soft:      #6b5f45;
+    --color-cream-text:    #EDE6D6;
+
+    /* -- Accents -- */
+    --color-brass:         #C08A3E;  /* laiton : accent principal */
+    --color-brass-dark:    #8f632a;
+    --color-burgundy:      #7A2E2E;  /* tampon / alerte douce */
+
+    /* -- Typographie -- */
+    --font-display: 'Fraunces', serif;
+    --font-body:    'Source Serif 4', serif;
+    --font-mono:    'IBM Plex Mono', monospace;
+
+    /* -- Rayon d'arrondi commun -- */
+    --radius: 4px;
+  }
+
+  /* ==========================================================================
+     1. RESET DE BASE
+     Remet à zéro quelques comportements par défaut du navigateur.
+     ========================================================================== */
+  *, *::before, *::after{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--color-shelf);
+    color: var(--color-cream-text);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4{ font-family: var(--font-display); margin: 0; }
+  p{ margin: 0 0 0.8em 0; }
+  ul, ol{ margin: 0; padding-left: 1.2em; }
+  a{ color: inherit; text-decoration: none; }
+  button{ font-family: var(--font-mono); cursor: pointer; }
+
+  /* Accessibilité : contour visible au clavier */
+  :focus-visible{
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+
+  /* Respecter les préférences "moins d'animations" */
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; animation: none !important; }
+  }
+
+  /* ==========================================================================
+     2. STRUCTURE GÉNÉRALE / EN-TÊTE
+     ========================================================================== */
+  #app{ max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .page[hidden]{ display: none; }
+
+  .site-header{ margin-bottom: 36px; }
+  .site-header .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-brass);
+  }
+  .site-header h1{
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .site-header p.subtitle{
+    color: var(--color-cream-text);
+    opacity: 0.75;
+    max-width: 540px;
+    margin-top: 8px;
+  }
+
+  /* ==========================================================================
+     3. GRILLE + CARTES DE LA PAGE "CATALOGUE"
+     Chaque carte imite une fiche de bibliothèque perforée :
+     - un petit "trou" en haut (perforation)
+     - un numéro de catalogue façon machine à écrire
+     - une barre de couleur ("tranche du livre") qui code la catégorie
+     ========================================================================== */
+  .book-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .book-card{
+    position: relative;
+    display: block;
+    background: var(--color-card);
+    color: var(--color-ink);
+    border-radius: var(--radius);
+    padding: 26px 20px 18px;
+    border-left: 6px solid var(--spine-color, var(--color-brass));
+    box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 8px 18px rgba(0,0,0,0.25);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .book-card:hover, .book-card:focus-visible{
+    transform: translateY(-4px);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15), 0 14px 26px rgba(0,0,0,0.35);
+  }
+
+  /* La "perforation" : un petit cercle qui semble découpé dans le papier */
+  .punch-hole{
+    position: absolute;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--color-shelf);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+  }
+
+  .catalog-number{
+    position: absolute;
+    top: 12px; right: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-ink-soft);
+  }
+
+  .tag{
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+
+  .book-title{
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .book-author{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 12px;
+  }
+  .book-teaser{
+    font-size: 0.92rem;
+    color: var(--color-ink);
+    opacity: 0.85;
+  }
+
+  .card-footer{
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-ink-soft);
+    border-top: 1px dashed rgba(43,36,25,0.25);
+    padding-top: 10px;
+    margin-top: 8px;
+  }
+
+  /* ==========================================================================
+     4. PAGE "FICHE DÉTAIL"
+     ========================================================================== */
+  .back-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-brass);
+    margin-bottom: 26px;
+  }
+  .back-link:hover{ text-decoration: underline; }
+
+  .detail-header h1{
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 600;
+  }
+  .detail-header p{
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-brass);
+    margin-top: 6px;
+  }
+
+  /* -- Onglets façon "languettes de dossier" -- */
+  .tabs{
+    display: flex;
+    gap: 4px;
+    margin-top: 28px;
+  }
+  .tab-btn{
+    background: var(--color-shelf-alt);
+    color: var(--color-cream-text);
+    opacity: 0.6;
+    border: none;
+    padding: 10px 18px;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    border-radius: 6px 6px 0 0;
+  }
+  .tab-btn.active{
+    background: var(--color-card);
+    color: var(--color-ink);
+    opacity: 1;
+    font-weight: 600;
+  }
+
+  .tab-panel{
+    background: var(--color-card);
+    color: var(--color-ink);
+    border-radius: 0 6px 6px 6px;
+    padding: 28px 26px;
+  }
+
+  /* -- Un bloc de contenu générique (grandes idées, actions...) -- */
+  .content-block{ margin-bottom: 28px; }
+  .content-block:last-child{ margin-bottom: 0; }
+
+  .block-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .block-header h3, .block-header h4{ font-size: 1.02rem; }
+
+  .copy-btn{
+    background: transparent;
+    border: 1px solid var(--color-brass);
+    color: var(--color-brass-dark);
+    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .copy-btn:hover{ background: var(--color-brass); color: #fff; }
+  .copy-btn.copied{ background: #4b7a5b; border-color: #4b7a5b; color: #fff; }
+
+  .ideas-text{ font-size: 1rem; }
+
+  .action-list{ font-size: 0.96rem; }
+  .action-list li{ margin-bottom: 6px; }
+
+  /* -- Liste des chapitres en accordéon (balise native <details>) -- */
+  .chapter-item{
+    border-top: 1px dashed rgba(43,36,25,0.25);
+    padding: 14px 0;
+  }
+  .chapter-item:first-child{ border-top: none; padding-top: 0; }
+
+  .chapter-item summary{
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;               /* on masque la flèche par défaut */
+  }
+  .chapter-item summary::-webkit-details-marker{ display: none; }
+  .chapter-item summary::before{
+    content: "▸";
+    color: var(--color-brass);
+    transition: transform 0.15s ease;
+  }
+  .chapter-item[open] summary::before{ transform: rotate(90deg); }
+
+  .chapter-number{
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-ink-soft);
+    flex-shrink: 0;
+  }
+
+  .chapter-body{ padding: 14px 0 4px 26px; }
+  .chapter-body h4{ font-size: 0.9rem; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  /* ==========================================================================
+     5. RESPONSIVE (petits écrans)
+     ========================================================================== */
+  @media (max-width: 640px){
+    #app{ padding: 22px 16px 60px; }
+    .tabs{ flex-wrap: wrap; }
+    .chapter-body{ padding-left: 14px; }
+  }
+</style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- ======================================================================
+         PAGE 1 : LE CATALOGUE (liste des cartes)
+         ====================================================================== -->
+    <section id="page-list" class="page">
+      <header class="site-header">
+        <div class="eyebrow">Ma bibliothèque de résumés</div>
+        <h1>Catalogue de livres</h1>
+        <p class="subtitle">Cliquez sur une fiche pour ouvrir les grandes idées,
+          le résumé chapitre par chapitre, et les actions à mettre en œuvre.</p>
+      </header>
+
+      <!-- Les cartes sont générées automatiquement par JavaScript
+           à partir des données du tableau "books" (voir <script> plus bas).
+           Vous n'avez pas besoin d'écrire de HTML ici. -->
+      <div id="book-grid" class="book-grid"></div>
+    </section>
+
+    <!-- ======================================================================
+         PAGE 2 : LA FICHE DÉTAIL D'UN LIVRE
+         ====================================================================== -->
+    <section id="page-detail" class="page" hidden>
+
+      <a href="#/" class="back-link">← Retour au catalogue</a>
+
+      <header class="detail-header">
+        <h1 id="detail-title">Titre du livre</h1>
+        <p id="detail-author">Auteur</p>
+      </header>
+
+      <nav class="tabs">
+        <button type="button" class="tab-btn active" data-tab="overview">💡 Vue d'ensemble</button>
+        <button type="button" class="tab-btn" data-tab="chapters">📖 Chapitre par chapitre</button>
+      </nav>
+
+      <!-- Contenu de l'onglet "Vue d'ensemble" : rempli par JavaScript -->
+      <div id="tab-overview" class="tab-panel"></div>
+
+      <!-- Contenu de l'onglet "Chapitres" : rempli par JavaScript -->
+      <div id="tab-chapters" class="tab-panel" hidden></div>
+
+    </section>
+
+  </div>
+
+
+<script>
+/* ============================================================================
+   1. DONNÉES — VOS LIVRES
+   ============================================================================
+   C'est LA seule section que vous avez vraiment besoin de modifier.
+
+   GUIDE RAPIDE POUR AJOUTER UN LIVRE
+   -----------------------------------
+   1. Copiez un bloc "{ ... }" existant ci-dessous (par exemple celui de
+      "b1"), collez-le juste avant le "];" qui ferme le tableau "books".
+   2. Changez "id" pour une valeur unique (ex: "b4", "b5"...).
+   3. Remplissez chaque champ avec le contenu de votre livre.
+   4. Enregistrez le fichier et rafraîchissez la page dans le navigateur :
+      la nouvelle carte apparaît automatiquement dans le catalogue.
+
+   RAPPEL DES RÈGLES DE CONTENU
+   -----------------------------
+   - summary.topActions  → exactement 3 actions (les plus importantes du livre)
+   - chapters[].actions   → de 1 à 5 actions par chapitre
+   - "category" sert uniquement à choisir une couleur (voir CATEGORY_COLORS
+     un peu plus bas). Vous pouvez réutiliser une catégorie existante ou
+     en inventer une nouvelle.
+   ============================================================================ */
+
+  const books = [
+
+    // ------------------------------------------------------------------------
+    // LIVRE 1 — EXEMPLE
+    // ------------------------------------------------------------------------
+    {
+      id: "b1",                                   // identifiant unique (sans espace)
+      title: "Le Pouvoir des habitudes",           // titre
+      author: "James Clear",                       // auteur
+      year: 2018,                                  // année (facultatif)
+      category: "Développement personnel",         // sert à colorer la carte
+      teaser: "Comment des ajustements minuscules, répétés, finissent par transformer des résultats entiers.",
+
+      summary: {
+        // Le paragraphe des "grandes idées" : une vue d'ensemble du livre.
+        ideas: "L'idée centrale du livre est que les résultats qu'on obtient dans la vie sont surtout la conséquence de petites habitudes répétées, bien plus que de décisions ponctuelles spectaculaires. L'auteur propose de raisonner en systèmes plutôt qu'en objectifs : au lieu de se fixer un but, il vaut mieux construire un environnement et des routines qui rendent le bon comportement facile et automatique. Chaque habitude est décrite comme une boucle en quatre temps (signal, envie, réponse, récompense), et changer une habitude consiste à agir sur l'un de ces quatre maillons.",
+
+        // Exactement 3 actions : les plus importantes à retenir du livre entier.
+        topActions: [
+          "Rendre visible le signal déclencheur de la bonne habitude (ex : préparer ses affaires de sport la veille).",
+          "Réduire au minimum les frictions pour démarrer la bonne habitude (règle des deux minutes).",
+          "Suivre visuellement sa régularité (ex : cocher un calendrier) pour renforcer la motivation."
+        ]
+      },
+
+      // Un résumé + des actions PAR CHAPITRE (1 à 5 actions par chapitre).
+      chapters: [
+        {
+          title: "La surprenante puissance des petites habitudes",
+          summary: "Ce chapitre pose l'idée que des progrès de 1% par jour, cumulés, produisent des changements considérables sur le long terme. L'auteur insiste sur le fait que les résultats sont souvent invisibles au début, ce qui décourage beaucoup de gens avant que les effets ne deviennent visibles.",
+          actions: [
+            "Choisir UNE habitude à améliorer plutôt que plusieurs en même temps.",
+            "Accepter que les premiers résultats seront invisibles pendant plusieurs semaines."
+          ]
+        },
+        {
+          title: "Comment vos habitudes façonnent votre identité",
+          summary: "L'auteur distingue les changements de résultats, de processus et d'identité. Il défend l'idée que les habitudes les plus durables sont celles qui s'appuient sur l'image qu'on a de soi-même, et non uniquement sur un objectif extérieur.",
+          actions: [
+            "Reformuler ses objectifs en termes d'identité (« je suis quelqu'un qui... » plutôt que « je veux... »).",
+            "Choisir de petites preuves quotidiennes de cette identité (ex : une page lue = « je suis un lecteur »)."
+          ]
+        },
+        {
+          title: "Comment se former une bonne habitude en quatre étapes simples",
+          summary: "Ce chapitre détaille la boucle signal → envie → réponse → récompense, et explique comment agir sur chacune de ces étapes pour installer une nouvelle habitude durablement.",
+          actions: [
+            "Rendre le signal évident (ex : poser le livre sur l'oreiller).",
+            "Rendre l'action attirante en l'associant à quelque chose d'agréable.",
+            "Rendre la récompense immédiate, même petite, pour renforcer la boucle."
+          ]
+        }
+      ]
+    },
+
+    // ------------------------------------------------------------------------
+    // LIVRE 2 — EXEMPLE
+    // ------------------------------------------------------------------------
+    {
+      id: "b2",
+      title: "Sapiens",
+      author: "Yuval Noah Harari",
+      year: 2015,
+      category: "Histoire",
+      teaser: "Une traversée de l'histoire de l'espèce humaine, des origines à aujourd'hui, à travers trois grandes révolutions.",
+
+      summary: {
+        ideas: "Le livre retrace l'histoire de l'humanité à travers trois grandes révolutions : cognitive, agricole et scientifique. L'auteur défend l'idée que la spécificité de notre espèce n'est pas seulement l'intelligence individuelle, mais la capacité à croire collectivement à des « fictions » partagées (monnaie, nations, religions, entreprises), ce qui permet une coopération à très grande échelle entre inconnus. Cette capacité explique, selon lui, la domination de l'espèce humaine sur les autres espèces et sur son environnement.",
+        topActions: [
+          "Identifier les « fictions collectives » (institutions, croyances) qui structurent son propre environnement professionnel ou social.",
+          "Questionner si une organisation ou une règle est « naturelle » ou simplement une construction culturelle datée.",
+          "Prendre du recul sur les évolutions technologiques actuelles en les replaçant dans une échelle de temps longue."
+        ]
+      },
+
+      chapters: [
+        {
+          title: "La révolution cognitive",
+          summary: "Ce chapitre explique comment l'apparition du langage et de la pensée symbolique a permis à Homo sapiens de coopérer en grand nombre autour de mythes communs, un avantage décisif face aux autres espèces humaines.",
+          actions: [
+            "Repérer un exemple de « mythe partagé » qui structure une équipe ou une communauté dont on fait partie."
+          ]
+        },
+        {
+          title: "La révolution agricole",
+          summary: "L'auteur présente le passage à l'agriculture comme un marché en demi-teinte : plus de nourriture disponible globalement, mais des conditions de vie souvent plus dures pour l'individu, et l'apparition de hiérarchies sociales plus marquées.",
+          actions: [
+            "Réfléchir à un choix personnel « qui semble un progrès » mais qui a aussi un coût caché.",
+            "Noter les hiérarchies implicites présentes dans son propre environnement de travail."
+          ]
+        },
+        {
+          title: "L'unification de l'humanité",
+          summary: "Ce chapitre montre comment l'argent, les empires et les religions ont progressivement rapproché des groupes humains isolés, créant des réseaux d'échange et de coopération toujours plus vastes.",
+          actions: [
+            "Identifier les « ponts » (langue commune, monnaie, plateforme) qui permettent de collaborer avec des inconnus dans son quotidien."
+          ]
+        }
+      ]
+    },
+
+    // ------------------------------------------------------------------------
+    // LIVRE 3 — EXEMPLE
+    // ------------------------------------------------------------------------
+    {
+      id: "b3",
+      title: "Deep Work",
+      author: "Cal Newport",
+      year: 2016,
+      category: "Productivité",
+      teaser: "Pourquoi la capacité à se concentrer sans distraction devient une compétence rare et précieuse.",
+
+      summary: {
+        ideas: "L'auteur défend l'idée que la capacité à se concentrer intensément et sans distraction sur une tâche exigeante (le « travail profond ») est de plus en plus rare, alors même qu'elle devient de plus en plus valorisée dans une économie saturée d'informations. À l'inverse, le « travail superficiel » (emails, réunions, notifications) donne une impression d'occupation sans produire de valeur durable. Le livre propose des règles concrètes pour protéger des plages de concentration dans un quotidien fragmenté.",
+        topActions: [
+          "Bloquer dans son agenda des plages fixes et protégées de travail profond, sans notifications.",
+          "Définir à l'avance une règle claire d'usage des réseaux sociaux et des outils de messagerie.",
+          "Terminer chaque journée de travail par un « rituel de clôture » qui signale explicitement la fin du travail."
+        ]
+      },
+
+      chapters: [
+        {
+          title: "Le travail profond est précieux",
+          summary: "Ce chapitre argumente que dans une économie de la connaissance, la valeur créée dépend de la capacité à apprendre vite des compétences complexes et à produire à un niveau élevé, ce qui nécessite une concentration soutenue.",
+          actions: [
+            "Lister les tâches de sa semaine qui exigent réellement une concentration profonde.",
+            "Estimer le temps réellement passé en concentration ininterrompue sur une semaine type."
+          ]
+        },
+        {
+          title: "Le travail profond est rare",
+          summary: "L'auteur explique comment la culture de la disponibilité permanente (open space, messageries instantanées) a normalisé l'interruption constante, rendant le travail profond de plus en plus difficile à pratiquer.",
+          actions: [
+            "Identifier ses trois plus grandes sources d'interruption récurrentes.",
+            "Tester une plage de 90 minutes sans notification ni messagerie ouverte."
+          ]
+        },
+        {
+          title: "Devenez un adepte du travail profond",
+          summary: "Ce chapitre propose plusieurs approches concrètes (rituels, règles, planification) pour intégrer durablement des sessions de concentration profonde dans un emploi du temps chargé.",
+          actions: [
+            "Choisir un rituel de démarrage (lieu, horaire, durée) pour ses sessions de concentration.",
+            "Planifier à l'avance, chaque dimanche soir, les plages de travail profond de la semaine suivante."
+          ]
+        }
+      ]
+    }
+
+    /* ------------------------------------------------------------------------
+       MODÈLE VIERGE — décommentez et complétez pour ajouter un livre.
+       (sélectionnez le bloc ci-dessous, enlevez les "/*" et "*​/" autour,
+        puis remplissez les champs)
+    ------------------------------------------------------------------------
+
+    ,{
+      id: "b4",
+      title: "",
+      author: "",
+      year: null,
+      category: "",
+      teaser: "",
+      summary: {
+        ideas: "",
+        topActions: ["", "", ""]
+      },
+      chapters: [
+        {
+          title: "",
+          summary: "",
+          actions: [""]
+        }
+      ]
+    }
+
+    ------------------------------------------------------------------------ */
+  ];
+
+
+  /* ============================================================================
+     Couleurs par catégorie (utilisées pour la barre colorée des cartes et
+     l'étiquette). Ajoutez une ligne si vous inventez une nouvelle catégorie.
+     ============================================================================ */
+  const CATEGORY_COLORS = {
+    "Développement personnel": "#7A2E2E",
+    "Histoire":                "#3E6B58",
+    "Productivité":            "#C08A3E",
+    "Business":                "#3E5C76",
+    "default":                 "#8f632a"
+  };
+
+
+/* ============================================================================
+   2. FONCTIONS UTILITAIRES
+   ============================================================================ */
+
+  /**
+   * Copie un texte dans le presse-papiers, et affiche un petit retour visuel
+   * sur le bouton cliqué ("✓ Copié").
+   * Utilise l'API moderne du navigateur si disponible (nécessite https ou
+   * localhost), sinon bascule automatiquement sur une méthode de secours
+   * qui fonctionne aussi quand le fichier est ouvert directement (file://).
+   */
+  function copyToClipboard(text, btnEl){
+    function showFeedback(success){
+      const original = btnEl.textContent;
+      btnEl.textContent = success ? "✓ Copié" : "Échec de la copie";
+      btnEl.classList.toggle("copied", success);
+      setTimeout(() => {
+        btnEl.textContent = original;
+        btnEl.classList.remove("copied");
+      }, 1500);
+    }
+
+    function fallbackCopy(){
+      // Méthode de secours : on crée un champ de texte invisible,
+      // on sélectionne son contenu, puis on utilise la commande
+      // "copier" historique du navigateur.
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try{
+        document.execCommand("copy");
+        showFeedback(true);
+      }catch(err){
+        showFeedback(false);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(
+        () => showFeedback(true),
+        () => fallbackCopy()
+      );
+    } else {
+      fallbackCopy();
+    }
+  }
+
+
+/* ============================================================================
+   3. RENDU DE LA PAGE "CATALOGUE" (liste de cartes)
+   ============================================================================ */
+
+  function renderBookList(){
+    const grid = document.getElementById("book-grid");
+    grid.innerHTML = ""; // on repart d'une grille vide
+
+    books.forEach((book, index) => {
+      const spineColor = CATEGORY_COLORS[book.category] || CATEGORY_COLORS.default;
+
+      // On construit la carte comme un lien <a> : cliquer dessus change
+      // simplement l'URL (le "#/livre/xxx"), ce qui déclenche le routeur.
+      const card = document.createElement("a");
+      card.href = `#/livre/${book.id}`;
+      card.className = "book-card";
+      card.style.setProperty("--spine-color", spineColor);
+
+      // Numéro de catalogue façon "N° 001", basé sur la position dans la liste.
+      const catalogNumber = String(index + 1).padStart(3, "0");
+
+      card.innerHTML = `
+        <span class="punch-hole" aria-hidden="true"></span>
+        <span class="catalog-number">N° ${catalogNumber}</span>
+        <span class="tag" style="background:${spineColor}">${book.category}</span>
+        <h2 class="book-title">${book.title}</h2>
+        <p class="book-author">${book.author}${book.year ? " · " + book.year : ""}</p>
+        <p class="book-teaser">${book.teaser}</p>
+        <div class="card-footer">
+          <span>${book.chapters.length} chapitre${book.chapters.length > 1 ? "s" : ""}</span>
+          <span>🎯 ${book.summary.topActions.length} actions clés</span>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+  }
+
+
+/* ============================================================================
+   4. RENDU DE LA PAGE "FICHE DÉTAIL"
+   ============================================================================ */
+
+  function renderBookDetail(book){
+    // -- En-tête de la fiche --
+    document.getElementById("detail-title").textContent = book.title;
+    document.getElementById("detail-author").textContent =
+      `${book.author}${book.year ? " · " + book.year : ""}`;
+
+    renderOverviewTab(book);
+    renderChaptersTab(book);
+
+    // On revient toujours sur l'onglet "Vue d'ensemble" quand on ouvre une fiche.
+    switchTab("overview");
+  }
+
+  /** Construit le contenu de l'onglet "Vue d'ensemble". */
+  function renderOverviewTab(book){
+    const container = document.getElementById("tab-overview");
+
+    container.innerHTML = `
+      <div class="content-block">
+        <div class="block-header">
+          <h3>💡 Les grandes idées</h3>
+          <button type="button" class="copy-btn" data-action="copy-ideas">📋 Copier</button>
+        </div>
+        <p class="ideas-text">${book.summary.ideas}</p>
+      </div>
+
+      <div class="content-block">
+        <div class="block-header">
+          <h3>🎯 Top 3 actions à mettre en œuvre</h3>
+          <button type="button" class="copy-btn" data-action="copy-top-actions">📋 Copier la liste</button>
+        </div>
+        <ol class="action-list">
+          ${book.summary.topActions.map(action => `<li>${action}</li>`).join("")}
+        </ol>
+      </div>
+    `;
+
+    // Bouton "copier les grandes idées"
+    container.querySelector('[data-action="copy-ideas"]').addEventListener("click", (event) => {
+      copyToClipboard(book.summary.ideas, event.currentTarget);
+    });
+
+    // Bouton "copier le top 3 des actions" (formaté en liste numérotée simple)
+    container.querySelector('[data-action="copy-top-actions"]').addEventListener("click", (event) => {
+      const text = book.summary.topActions
+        .map((action, i) => `${i + 1}. ${action}`)
+        .join("\n");
+      copyToClipboard(text, event.currentTarget);
+    });
+  }
+
+  /** Construit le contenu de l'onglet "Chapitre par chapitre". */
+  function renderChaptersTab(book){
+    const container = document.getElementById("tab-chapters");
+
+    container.innerHTML = book.chapters.map((chapter, index) => `
+      <details class="chapter-item">
+        <summary>
+          <span class="chapter-number">Chap. ${index + 1}</span>
+          <span class="chapter-title">${chapter.title}</span>
+        </summary>
+        <div class="chapter-body">
+          <div class="block-header">
+            <h4>Résumé</h4>
+            <button type="button" class="copy-btn" data-copy-summary="${index}">📋 Copier</button>
+          </div>
+          <p>${chapter.summary}</p>
+
+          <div class="block-header">
+            <h4>Actions</h4>
+            <button type="button" class="copy-btn" data-copy-actions="${index}">📋 Copier</button>
+          </div>
+          <ul class="action-list">
+            ${chapter.actions.map(action => `<li>${action}</li>`).join("")}
+          </ul>
+        </div>
+      </details>
+    `).join("");
+
+    // On attache les boutons "copier" de chaque chapitre après avoir
+    // injecté le HTML (sinon les boutons n'existent pas encore dans la page).
+    book.chapters.forEach((chapter, index) => {
+      container.querySelector(`[data-copy-summary="${index}"]`).addEventListener("click", (event) => {
+        copyToClipboard(chapter.summary, event.currentTarget);
+      });
+      container.querySelector(`[data-copy-actions="${index}"]`).addEventListener("click", (event) => {
+        const text = chapter.actions.map((action, i) => `${i + 1}. ${action}`).join("\n");
+        copyToClipboard(text, event.currentTarget);
+      });
+    });
+  }
+
+  /** Bascule visuellement entre l'onglet "overview" et l'onglet "chapters". */
+  function switchTab(tabName){
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+    document.getElementById("tab-overview").hidden = tabName !== "overview";
+    document.getElementById("tab-chapters").hidden = tabName !== "chapters";
+  }
+
+  // Clic sur les boutons d'onglets
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+
+/* ============================================================================
+   5. ROUTAGE — décide quelle "page" afficher selon l'URL (#...)
+   ============================================================================
+   On utilise le "hash" de l'URL (la partie après le #) pour savoir si on
+   doit afficher le catalogue ou la fiche d'un livre précis.
+   Exemple : ouvrir "...#/livre/b2" affiche directement la fiche de "b2".
+   Cela permet aussi d'utiliser le bouton "Précédent" du navigateur.
+   ============================================================================ */
+
+  function showPage(pageName){
+    document.getElementById("page-list").hidden   = pageName !== "list";
+    document.getElementById("page-detail").hidden = pageName !== "detail";
+    window.scrollTo(0, 0);
+  }
+
+  function router(){
+    const hash = window.location.hash; // ex : "#/livre/b1"
+    const match = hash.match(/^#\/livre\/(.+)$/);
+
+    if (match){
+      const bookId = decodeURIComponent(match[1]);
+      const book = books.find(b => b.id === bookId);
+      if (book){
+        showPage("detail");
+        renderBookDetail(book);
+        return;
+      }
+    }
+
+    // Par défaut (ou si le livre demandé n'existe pas) : on affiche la liste.
+    showPage("list");
+  }
+
+  // On réagit à chaque changement d'URL (clic sur une carte, bouton retour...)
+  window.addEventListener("hashchange", router);
+
+  // Au premier chargement de la page : on construit la liste, puis on
+  // regarde l'URL actuelle pour savoir quelle page afficher.
+  window.addEventListener("DOMContentLoaded", () => {
+    renderBookList();
+    router();
+  });
+
+</script>
+</body>
+</html>
