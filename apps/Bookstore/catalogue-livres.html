@@ -7,19 +7,24 @@
   CE QUE FAIT CE FICHIER
   -----------------------
   - Il affiche une page "Catalogue" avec une carte par livre.
-  - Quand on clique sur une carte, on arrive sur une "Fiche détail" du livre,
-    organisée en deux onglets :
-      1) Vue d'ensemble  → les grandes idées du livre + top 3 actions
-      2) Chapitres       → un résumé + des actions (jusqu'à 5) par chapitre
+  - Quand on clique sur une carte, on arrive sur une "Fiche détail" du livre :
+    une page unique et continue, avec un sommaire cliquable sur le côté qui
+    ancre vers la vue d'ensemble et vers chaque chapitre. Pas de limite au
+    nombre de chapitres : ajoutez-en autant que le livre en compte.
   - Chaque bloc de texte a un bouton "📋 Copier" pour le copier-coller
     facilement ailleurs (notes, gestionnaire de tâches, etc.)
+  - Un bouton en haut à droite bascule entre un thème sombre (par défaut)
+    et un thème clair "papier". Ce choix n'est PAS mémorisé d'une visite à
+    l'autre (pas de stockage local) : au rechargement, on repart du thème
+    sombre.
 
   COMMENT UTILISER CE FICHIER
   ----------------------------
   1. Ouvrez-le simplement en double-cliquant dessus (aucun serveur requis).
   2. Pour ajouter / modifier un livre : allez à la section
      "1. DONNÉES — VOS LIVRES" plus bas dans le <script>, et suivez le
-     "GUIDE RAPIDE" qui s'y trouve.
+     "GUIDE RAPIDE" qui s'y trouve. Un livre peut avoir autant de chapitres
+     que nécessaire (1, 3, 8, 15... il n'y a aucune limite technique).
   3. Vous n'avez normalement RIEN à toucher dans le CSS ou dans les
      fonctions JavaScript : tout le contenu vient des données que vous
      remplissez.
@@ -28,11 +33,12 @@
   ------------------------------------
   - <head>  : polices + feuille de style (CSS), très commentée par section.
   - <body>  : le squelette HTML minimal (deux "pages" : liste / détail).
-  - <script>: 
+  - <script>:
       1. Les données (vos livres)
-      2. Des fonctions utilitaires (ex: copier dans le presse-papiers)
+      2. Des fonctions utilitaires (ex: copier dans le presse-papiers,
+         gestion du thème clair/sombre)
       3. Le code qui construit la page "liste"
-      4. Le code qui construit la page "détail"
+      4. Le code qui construit la page "détail" (sommaire + sections)
       5. Le "routeur" qui décide quelle page afficher selon l'URL
          (ex: #/livre/b1 affiche le détail du livre "b1")
   ============================================================================
@@ -45,46 +51,66 @@
 
 <!-- ==========================================================================
      POLICES
-     - "Fraunces"      : police à fort caractère pour les titres (façon livre).
-     - "Source Serif 4": police de lecture agréable pour les résumés (corps).
-     - "IBM Plex Mono" : police "machine à écrire" pour les infos techniques
-                         (numéro de catalogue, étiquettes, boutons copier).
+     - "Fraunces"   : police à fort caractère pour les titres (façon livre).
+     - "Public Sans": police humaniste, très lisible à l'écran, pour tout
+                      le texte de lecture (résumés, idées, actions).
+     - "IBM Plex Mono": police "machine à écrire" pour les infos techniques
+                        (numéro de catalogue, étiquettes, boutons copier).
      ========================================================================== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
   /* ==========================================================================
      0. VARIABLES DE DESIGN (le "vocabulaire" de couleurs / polices du site)
      Modifier une valeur ici change TOUT le site d'un coup.
+
+     Il y a DEUX jeux de couleurs :
+     - :root                    → thème sombre (par défaut à l'ouverture)
+     - [data-theme="light"]     → thème clair "papier", activé par le
+                                   bouton en haut à droite de la page
      ========================================================================== */
   :root{
-    /* -- Fond général : un "rayonnage" vert sombre, façon bibliothèque -- */
-    --color-shelf:        #1F2A22;
-    --color-shelf-alt:     #26332A;
+    /* -- Fond général et surfaces (cartes, fiche détail) -- */
+    --color-bg:            #14171A;
+    --color-surface:       #1E2225;
+    --color-surface-soft:  #262B2E;
 
-    /* -- Les "fiches" (cartes / fiche détail) : papier crème -- */
-    --color-card:          #F1E8D6;
-    --color-card-soft:     #E9DFC7;
+    /* -- Texte -- */
+    --color-text:          #EDEAE3;
+    --color-text-muted:    #A6A29A;
 
-    /* -- Encre / texte -- */
-    --color-ink:           #2B2419;
-    --color-ink-soft:      #6b5f45;
-    --color-cream-text:    #EDE6D6;
+    /* -- Accent (laiton) -- */
+    --color-accent:        #C9A15A;
+    --color-accent-strong: #E4C079;
 
-    /* -- Accents -- */
-    --color-brass:         #C08A3E;  /* laiton : accent principal */
-    --color-brass-dark:    #8f632a;
-    --color-burgundy:      #7A2E2E;  /* tampon / alerte douce */
+    /* -- Bordures / séparateurs -- */
+    --color-border:        rgba(255,255,255,0.10);
+
+    /* -- Ombre des cartes -- */
+    --shadow-card: 0 1px 0 rgba(0,0,0,0.4), 0 10px 24px rgba(0,0,0,0.35);
 
     /* -- Typographie -- */
     --font-display: 'Fraunces', serif;
-    --font-body:    'Source Serif 4', serif;
+    --font-body:    'Public Sans', system-ui, sans-serif;
     --font-mono:    'IBM Plex Mono', monospace;
 
     /* -- Rayon d'arrondi commun -- */
-    --radius: 4px;
+    --radius: 6px;
+  }
+
+  /* -- Thème clair "papier", activé quand <html data-theme="light"> -- */
+  [data-theme="light"]{
+    --color-bg:            #F4EEDD;
+    --color-surface:       #FFFDF6;
+    --color-surface-soft:  #FBF4E1;
+    --color-text:          #2B2419;
+    --color-text-muted:    #6b5f45;
+    --color-accent:        #A8712E;
+    --color-accent-strong: #7A4F1E;
+    --color-border:        rgba(43,36,25,0.14);
+    --shadow-card: 0 1px 0 rgba(0,0,0,0.06), 0 8px 18px rgba(43,36,25,0.14);
   }
 
   /* ==========================================================================
@@ -93,12 +119,14 @@
      ========================================================================== */
   *, *::before, *::after{ box-sizing: border-box; }
   html, body{ margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
   body{
-    background: var(--color-shelf);
-    color: var(--color-cream-text);
+    background: var(--color-bg);
+    color: var(--color-text);
     font-family: var(--font-body);
     line-height: 1.55;
     min-height: 100vh;
+    transition: background 0.2s ease, color 0.2s ease;
   }
   h1, h2, h3, h4{ font-family: var(--font-display); margin: 0; }
   p{ margin: 0 0 0.8em 0; }
@@ -108,29 +136,49 @@
 
   /* Accessibilité : contour visible au clavier */
   :focus-visible{
-    outline: 2px solid var(--color-brass);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 
   /* Respecter les préférences "moins d'animations" */
   @media (prefers-reduced-motion: reduce){
     *{ transition: none !important; animation: none !important; }
+    html{ scroll-behavior: auto; }
   }
 
   /* ==========================================================================
-     2. STRUCTURE GÉNÉRALE / EN-TÊTE
+     2. STRUCTURE GÉNÉRALE / EN-TÊTE / BOUTON DE THÈME
      ========================================================================== */
-  #app{ max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+  #app{ max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; position: relative; }
 
   .page[hidden]{ display: none; }
 
-  .site-header{ margin-bottom: 36px; }
+  .theme-toggle{
+    position: fixed;
+    top: 18px; right: 18px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    box-shadow: var(--shadow-card);
+  }
+  .theme-toggle:hover{ border-color: var(--color-accent); }
+  .theme-toggle .icon{ font-size: 0.9rem; }
+
+  .site-header{ margin-bottom: 36px; padding-right: 120px; }
   .site-header .eyebrow{
     font-family: var(--font-mono);
     font-size: 0.75rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-brass);
+    color: var(--color-accent);
   }
   .site-header h1{
     font-size: clamp(2rem, 5vw, 2.8rem);
@@ -138,10 +186,10 @@
     margin-top: 6px;
   }
   .site-header p.subtitle{
-    color: var(--color-cream-text);
-    opacity: 0.75;
-    max-width: 540px;
+    color: var(--color-text-muted);
+    max-width: 560px;
     margin-top: 8px;
+    font-size: 1.02rem;
   }
 
   /* ==========================================================================
@@ -153,24 +201,24 @@
      ========================================================================== */
   .book-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
   }
 
   .book-card{
     position: relative;
     display: block;
-    background: var(--color-card);
-    color: var(--color-ink);
+    background: var(--color-surface);
+    color: var(--color-text);
     border-radius: var(--radius);
     padding: 26px 20px 18px;
-    border-left: 6px solid var(--spine-color, var(--color-brass));
-    box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 8px 18px rgba(0,0,0,0.25);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    border-left: 6px solid var(--spine-color, var(--color-accent));
+    box-shadow: var(--shadow-card);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   }
   .book-card:hover, .book-card:focus-visible{
-    transform: translateY(-4px);
-    box-shadow: 0 4px 0 rgba(0,0,0,0.15), 0 14px 26px rgba(0,0,0,0.35);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card), 0 0 0 1px var(--color-border);
   }
 
   /* La "perforation" : un petit cercle qui semble découpé dans le papier */
@@ -180,8 +228,8 @@
     transform: translateX(-50%);
     width: 10px; height: 10px;
     border-radius: 50%;
-    background: var(--color-shelf);
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+    background: var(--color-bg);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
   }
 
   .catalog-number{
@@ -189,7 +237,7 @@
     top: 12px; right: 16px;
     font-family: var(--font-mono);
     font-size: 0.7rem;
-    color: var(--color-ink-soft);
+    color: var(--color-text-muted);
   }
 
   .tag{
@@ -213,15 +261,14 @@
   .book-author{
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    color: var(--color-ink-soft);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.03em;
     margin-bottom: 12px;
   }
   .book-teaser{
     font-size: 0.92rem;
-    color: var(--color-ink);
-    opacity: 0.85;
+    color: var(--color-text-muted);
   }
 
   .card-footer{
@@ -229,8 +276,8 @@
     justify-content: space-between;
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--color-ink-soft);
-    border-top: 1px dashed rgba(43,36,25,0.25);
+    color: var(--color-text-muted);
+    border-top: 1px dashed var(--color-border);
     padding-top: 10px;
     margin-top: 8px;
   }
@@ -244,54 +291,96 @@
     gap: 6px;
     font-family: var(--font-mono);
     font-size: 0.82rem;
-    color: var(--color-brass);
+    color: var(--color-accent);
     margin-bottom: 26px;
   }
   .back-link:hover{ text-decoration: underline; }
 
+  .detail-header{ padding-right: 120px; }
   .detail-header h1{
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
     font-weight: 600;
   }
   .detail-header p{
     font-family: var(--font-mono);
     font-size: 0.85rem;
-    color: var(--color-brass);
-    margin-top: 6px;
+    color: var(--color-accent);
+    margin-top: 8px;
   }
 
-  /* -- Onglets façon "languettes de dossier" -- */
-  .tabs{
+  /* -- Mise en page à deux colonnes : sommaire (gauche) + contenu (droite) -- */
+  .detail-layout{
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: 32px;
+  }
+
+  .detail-toc{
+    position: sticky;
+    top: 24px;
     display: flex;
-    gap: 4px;
-    margin-top: 28px;
+    flex-direction: column;
+    gap: 2px;
+    border-left: 2px solid var(--color-border);
+    padding-left: 16px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
   }
-  .tab-btn{
-    background: var(--color-shelf-alt);
-    color: var(--color-cream-text);
-    opacity: 0.6;
-    border: none;
-    padding: 10px 18px;
-    font-size: 0.82rem;
-    letter-spacing: 0.02em;
-    border-radius: 6px 6px 0 0;
+  .detail-toc .toc-label{
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
   }
-  .tab-btn.active{
-    background: var(--color-card);
-    color: var(--color-ink);
-    opacity: 1;
+  .toc-link{
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    padding: 6px 0 6px 14px;
+    margin-left: -16px;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .toc-link:hover{ color: var(--color-text); }
+  .toc-link.active{
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
     font-weight: 600;
   }
 
-  .tab-panel{
-    background: var(--color-card);
-    color: var(--color-ink);
-    border-radius: 0 6px 6px 6px;
-    padding: 28px 26px;
+  .detail-content{ min-width: 0; }
+
+  /* -- Une section de contenu : la vue d'ensemble, ou un chapitre -- */
+  .content-section{
+    margin-bottom: 56px;
+    scroll-margin-top: 24px; /* pour que l'ancrage ne colle pas en haut de l'écran */
+  }
+  .content-section:last-child{ margin-bottom: 0; }
+
+  .content-section h2{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .chapter-number{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-accent);
+    flex-shrink: 0;
   }
 
   /* -- Un bloc de contenu générique (grandes idées, actions...) -- */
-  .content-block{ margin-bottom: 28px; }
+  .content-block{ margin-bottom: 26px; }
   .content-block:last-child{ margin-bottom: 0; }
 
   .block-header{
@@ -301,66 +390,74 @@
     gap: 12px;
     margin-bottom: 10px;
   }
-  .block-header h3, .block-header h4{ font-size: 1.02rem; }
+  .block-header h3, .block-header h4{
+    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
 
   .copy-btn{
     background: transparent;
-    border: 1px solid var(--color-brass);
-    color: var(--color-brass-dark);
+    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
     font-size: 0.7rem;
     padding: 5px 10px;
     border-radius: 20px;
     white-space: nowrap;
     transition: background 0.15s ease, color 0.15s ease;
   }
-  .copy-btn:hover{ background: var(--color-brass); color: #fff; }
+  .copy-btn:hover{ background: var(--color-accent); color: var(--color-bg); }
   .copy-btn.copied{ background: #4b7a5b; border-color: #4b7a5b; color: #fff; }
 
-  .ideas-text{ font-size: 1rem; }
-
-  .action-list{ font-size: 0.96rem; }
-  .action-list li{ margin-bottom: 6px; }
-
-  /* -- Liste des chapitres en accordéon (balise native <details>) -- */
-  .chapter-item{
-    border-top: 1px dashed rgba(43,36,25,0.25);
-    padding: 14px 0;
-  }
-  .chapter-item:first-child{ border-top: none; padding-top: 0; }
-
-  .chapter-item summary{
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    list-style: none;               /* on masque la flèche par défaut */
-  }
-  .chapter-item summary::-webkit-details-marker{ display: none; }
-  .chapter-item summary::before{
-    content: "▸";
-    color: var(--color-brass);
-    transition: transform 0.15s ease;
-  }
-  .chapter-item[open] summary::before{ transform: rotate(90deg); }
-
-  .chapter-number{
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-ink-soft);
-    flex-shrink: 0;
+  /* -- Texte "de lecture" : largeur de ligne et interligne pensés pour lire
+        confortablement des paragraphes (≈65-70 caractères par ligne) -- */
+  .prose{
+    max-width: 68ch;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    color: var(--color-text);
   }
 
-  .chapter-body{ padding: 14px 0 4px 26px; }
-  .chapter-body h4{ font-size: 0.9rem; color: var(--color-ink-soft); text-transform: uppercase; letter-spacing: 0.03em; }
+  .action-list{ font-size: 1rem; max-width: 68ch; line-height: 1.6; }
+  .action-list li{ margin-bottom: 8px; }
+  .action-list li:last-child{ margin-bottom: 0; }
 
   /* ==========================================================================
      5. RESPONSIVE (petits écrans)
      ========================================================================== */
+  @media (max-width: 900px){
+    .detail-layout{ grid-template-columns: 1fr; gap: 8px; }
+    .detail-toc{
+      position: static;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      border-left: none;
+      padding-left: 0;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 16px;
+      margin-bottom: 8px;
+      max-height: none;
+      overflow: visible;
+    }
+    .detail-toc .toc-label{ width: 100%; margin-bottom: 2px; }
+    .toc-link{
+      margin-left: 0;
+      padding: 4px 0;
+      border-left: none;
+      border-bottom: 2px solid transparent;
+    }
+    .toc-link.active{ border-left: none; border-bottom-color: var(--color-accent); }
+  }
+
   @media (max-width: 640px){
     #app{ padding: 22px 16px 60px; }
-    .tabs{ flex-wrap: wrap; }
-    .chapter-body{ padding-left: 14px; }
+    .site-header, .detail-header{ padding-right: 0; }
+    .theme-toggle{ padding: 8px 10px; }
+    .theme-toggle .label{ display: none; }
   }
 </style>
 </head>
@@ -368,6 +465,13 @@
 <body>
 
   <div id="app">
+
+    <!-- Bouton de bascule thème sombre / thème clair. Le texte et l'icône
+         sont mis à jour par JavaScript (fonction applyTheme). -->
+    <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Changer de thème">
+      <span class="icon" id="theme-toggle-icon">☀️</span>
+      <span class="label" id="theme-toggle-label">Mode clair</span>
+    </button>
 
     <!-- ======================================================================
          PAGE 1 : LE CATALOGUE (liste des cartes)
@@ -388,6 +492,8 @@
 
     <!-- ======================================================================
          PAGE 2 : LA FICHE DÉTAIL D'UN LIVRE
+         Page unique et continue : vue d'ensemble + tous les chapitres,
+         avec un sommaire ancré sur le côté (rempli par JavaScript).
          ====================================================================== -->
     <section id="page-detail" class="page" hidden>
 
@@ -398,16 +504,16 @@
         <p id="detail-author">Auteur</p>
       </header>
 
-      <nav class="tabs">
-        <button type="button" class="tab-btn active" data-tab="overview">💡 Vue d'ensemble</button>
-        <button type="button" class="tab-btn" data-tab="chapters">📖 Chapitre par chapitre</button>
-      </nav>
-
-      <!-- Contenu de l'onglet "Vue d'ensemble" : rempli par JavaScript -->
-      <div id="tab-overview" class="tab-panel"></div>
-
-      <!-- Contenu de l'onglet "Chapitres" : rempli par JavaScript -->
-      <div id="tab-chapters" class="tab-panel" hidden></div>
+      <div class="detail-layout">
+        <nav class="detail-toc" id="detail-toc" aria-label="Sommaire du livre">
+          <!-- Rempli par JavaScript : un lien vers la vue d'ensemble,
+               puis un lien par chapitre. -->
+        </nav>
+        <div class="detail-content" id="detail-content">
+          <!-- Rempli par JavaScript : la section "vue d'ensemble",
+               puis une section par chapitre. -->
+        </div>
+      </div>
 
     </section>
 
@@ -424,15 +530,17 @@
    -----------------------------------
    1. Copiez un bloc "{ ... }" existant ci-dessous (par exemple celui de
       "b1"), collez-le juste avant le "];" qui ferme le tableau "books".
-   2. Changez "id" pour une valeur unique (ex: "b4", "b5"...).
+   2. Changez "id" pour une valeur unique (ex: "b6", "b7"...).
    3. Remplissez chaque champ avec le contenu de votre livre.
    4. Enregistrez le fichier et rafraîchissez la page dans le navigateur :
       la nouvelle carte apparaît automatiquement dans le catalogue.
 
    RAPPEL DES RÈGLES DE CONTENU
    -----------------------------
-   - summary.topActions  → exactement 3 actions (les plus importantes du livre)
-   - chapters[].actions   → de 1 à 5 actions par chapitre
+   - summary.topActions   → exactement 3 actions (les plus importantes du livre)
+   - chapters[].actions    → autant d'actions que pertinent (1 à 5 conseillé)
+   - chapters              → AUCUNE limite de nombre : mettez autant de
+     chapitres que le livre en compte réellement (1 seul comme 20).
    - "category" sert uniquement à choisir une couleur (voir CATEGORY_COLORS
      un peu plus bas). Vous pouvez réutiliser une catégorie existante ou
      en inventer une nouvelle.
@@ -441,7 +549,7 @@
   const books = [
 
     // ------------------------------------------------------------------------
-    // LIVRE 1 — EXEMPLE
+    // LIVRE 1
     // ------------------------------------------------------------------------
     {
       id: "b1",                                   // identifiant unique (sans espace)
@@ -463,7 +571,7 @@
         ]
       },
 
-      // Un résumé + des actions PAR CHAPITRE (1 à 5 actions par chapitre).
+      // Un résumé + des actions PAR CHAPITRE (autant de chapitres que nécessaire).
       chapters: [
         {
           title: "La surprenante puissance des petites habitudes",
@@ -494,7 +602,7 @@
     },
 
     // ------------------------------------------------------------------------
-    // LIVRE 2 — EXEMPLE
+    // LIVRE 2
     // ------------------------------------------------------------------------
     {
       id: "b2",
@@ -540,7 +648,7 @@
     },
 
     // ------------------------------------------------------------------------
-    // LIVRE 3 — EXEMPLE
+    // LIVRE 3
     // ------------------------------------------------------------------------
     {
       id: "b3",
@@ -548,10 +656,10 @@
       author: "Cal Newport",
       year: 2016,
       category: "Productivité",
-      teaser: "Pourquoi la capacité à se concentrer sans distraction devient une compétence rare et précieuse.",
+      teaser: "Pourquoi la capacité à se concentrer sans distraction, sur des tâches exigeantes, devient une compétence rare et précieuse.",
 
       summary: {
-        ideas: "L'auteur défend l'idée que la capacité à se concentrer intensément et sans distraction sur une tâche exigeante (le « travail profond ») est de plus en plus rare, alors même qu'elle devient de plus en plus valorisée dans une économie saturée d'informations. À l'inverse, le « travail superficiel » (emails, réunions, notifications) donne une impression d'occupation sans produire de valeur durable. Le livre propose des règles concrètes pour protéger des plages de concentration dans un quotidien fragmenté.",
+        ideas: "L'auteur défend l'idée que la capacité à se concentrer intensément et sans distraction sur une tâche exigeante (le « travail profond ») est de plus en plus rare, alors même qu'elle devient de plus en plus valorisée dans une économie saturée d'informations. À l'inverse, le « travail superficiel » (emails, réunions, notifications) donne une impression d'occupation sans produire de valeur durable. Le livre est organisé en deux temps : pourquoi le travail profond compte (Partie 1), puis quatre règles concrètes pour l'intégrer dans un quotidien fragmenté (Partie 2).",
         topActions: [
           "Bloquer dans son agenda des plages fixes et protégées de travail profond, sans notifications.",
           "Définir à l'avance une règle claire d'usage des réseaux sociaux et des outils de messagerie.",
@@ -561,27 +669,210 @@
 
       chapters: [
         {
-          title: "Le travail profond est précieux",
-          summary: "Ce chapitre argumente que dans une économie de la connaissance, la valeur créée dépend de la capacité à apprendre vite des compétences complexes et à produire à un niveau élevé, ce qui nécessite une concentration soutenue.",
+          title: "Le travail profond a de la valeur",
+          summary: "Ce chapitre pose que, dans une économie de la connaissance en mutation rapide, deux compétences deviennent décisives : la capacité à apprendre vite des sujets complexes, et celle à produire à un niveau d'excellence. Newport soutient que ces deux compétences reposent toutes deux sur une aptitude à se concentrer intensément, sans quoi elles restent hors de portée.",
           actions: [
-            "Lister les tâches de sa semaine qui exigent réellement une concentration profonde.",
-            "Estimer le temps réellement passé en concentration ininterrompue sur une semaine type."
+            "Lister les tâches de sa semaine qui exigent réellement une concentration profonde plutôt qu'une simple exécution.",
+            "Identifier une compétence complexe qu'il faudrait apprendre pour rester pertinent dans son domaine."
           ]
         },
         {
           title: "Le travail profond est rare",
-          summary: "L'auteur explique comment la culture de la disponibilité permanente (open space, messageries instantanées) a normalisé l'interruption constante, rendant le travail profond de plus en plus difficile à pratiquer.",
+          summary: "L'auteur explique comment la culture de la disponibilité permanente (open space, messageries instantanées, réunions à répétition) a normalisé l'interruption constante, rendant le travail profond de plus en plus difficile à pratiquer, alors même qu'il reste peu valorisé et peu mesuré par les organisations.",
           actions: [
-            "Identifier ses trois plus grandes sources d'interruption récurrentes.",
-            "Tester une plage de 90 minutes sans notification ni messagerie ouverte."
+            "Identifier ses trois plus grandes sources d'interruption récurrentes au travail.",
+            "Estimer, sur une semaine type, le temps réellement passé en concentration ininterrompue."
           ]
         },
         {
-          title: "Devenez un adepte du travail profond",
-          summary: "Ce chapitre propose plusieurs approches concrètes (rituels, règles, planification) pour intégrer durablement des sessions de concentration profonde dans un emploi du temps chargé.",
+          title: "Le travail profond est porteur de sens",
+          summary: "Ce chapitre relie la concentration profonde à un sentiment d'accomplissement et de sens au travail, en s'appuyant notamment sur les travaux sur le « flow » : un état d'absorption complète dans une tâche exigeante procure une satisfaction que le travail superficiel ne peut pas offrir.",
           actions: [
-            "Choisir un rituel de démarrage (lieu, horaire, durée) pour ses sessions de concentration.",
-            "Planifier à l'avance, chaque dimanche soir, les plages de travail profond de la semaine suivante."
+            "Repérer un moment récent de concentration intense et noter ce qui l'a rendu possible.",
+            "Choisir une tâche exigeante de la semaine et la traiter comme un artisanat à soigner plutôt qu'une corvée à expédier."
+          ]
+        },
+        {
+          title: "Règle n° 1 — Travailler en profondeur",
+          summary: "Newport propose plusieurs philosophies pour intégrer le travail profond dans un emploi du temps (monastique, bimodale, rythmique, journalistique), ainsi que des rituels de démarrage (lieu, durée, règles) pour entrer plus vite en concentration.",
+          actions: [
+            "Choisir une philosophie d'intégration du travail profond adaptée à ses contraintes (ex : rythmique = même créneau chaque jour).",
+            "Définir un rituel de démarrage fixe : lieu, durée, et ce qui est interdit pendant la session.",
+            "Planifier, chaque dimanche soir, les plages de travail profond de la semaine suivante."
+          ]
+        },
+        {
+          title: "Règle n° 2 — Apprivoiser l'ennui",
+          summary: "Ce chapitre défend l'idée que la capacité à se concentrer se muscle comme un métier ; s'habituer à occuper son esprit avec de petites distractions en permanence (téléphone dans les moments d'attente) affaiblit cette capacité, même pendant les sessions de travail profond prévues.",
+          actions: [
+            "Programmer volontairement des moments d'ennui (file d'attente, transport) sans sortir son téléphone.",
+            "Prévoir à l'avance des pauses planifiées loin des écrans plutôt que des pauses impulsives déclenchées par l'envie de se distraire."
+          ]
+        },
+        {
+          title: "Règle n° 3 — Quitter les réseaux sociaux",
+          summary: "Newport invite à évaluer chaque outil numérique selon ses bénéfices réels plutôt que ses avantages hypothétiques, et propose un test d'un mois sans un outil donné pour juger objectivement de son utilité avant de décider de le réintégrer ou non.",
+          actions: [
+            "Choisir un réseau social ou une application et le désinstaller pendant 30 jours pour tester son impact réel.",
+            "À la fin du test, décider consciemment de réintégrer l'outil ou non, en fonction des bénéfices constatés."
+          ]
+        },
+        {
+          title: "Règle n° 4 — Vider les tâches superficielles",
+          summary: "Ce dernier chapitre propose de fixer des limites explicites au travail superficiel (emails, réunions, tâches administratives) : estimer à l'avance le temps qu'on lui accorde, se fixer une heure de fin de journée stricte, et communiquer plus difficilement joignable pour protéger les plages profondes.",
+          actions: [
+            "Estimer, pour chaque tâche superficielle récurrente, le temps qu'on est prêt à lui consacrer avant de la faire.",
+            "Fixer une heure de fin de journée de travail stricte et s'y tenir pour forcer la priorisation.",
+            "Mettre en place un rituel de clôture qui signale explicitement la fin de la journée de travail."
+          ]
+        }
+      ]
+    },
+
+    // ------------------------------------------------------------------------
+    // LIVRE 4
+    // ------------------------------------------------------------------------
+    {
+      id: "b4",
+      title: "Les 7 habitudes des gens efficaces",
+      author: "Stephen R. Covey",
+      year: 1989,
+      category: "Développement personnel",
+      teaser: "Un cadre en sept habitudes, de l'autonomie personnelle à la coopération, pour bâtir une efficacité durable fondée sur le caractère plutôt que sur les techniques.",
+
+      summary: {
+        ideas: "Covey distingue l'« éthique de la personnalité », qui mise sur des techniques superficielles de communication ou d'image, de l'« éthique du caractère », qui repose sur des principes durables comme l'intégrité, l'humilité ou le courage. Il organise ses sept habitudes en une progression : la « victoire privée » (habitudes 1 à 3) fait passer de la dépendance à l'indépendance, la « victoire publique » (habitudes 4 à 6) fait passer de l'indépendance à l'interdépendance, et le renouvellement (habitude 7) entretient l'ensemble dans la durée. Le fil conducteur est la maturité : assumer la responsabilité de ses choix, savoir où l'on va, agir selon ses priorités, chercher des solutions mutuellement bénéfiques, comprendre avant d'être compris, et créer ensemble mieux que seul.",
+        topActions: [
+          "Face à un problème, distinguer ce qui relève de son cercle d'influence de ce qui n'en relève pas, et concentrer son énergie sur le premier.",
+          "Rédiger un court énoncé de mission personnelle qui explicite ses valeurs et le type de personne qu'on veut être.",
+          "Planifier sa semaine en partant des activités importantes mais non urgentes, avant de caser le reste."
+        ]
+      },
+
+      chapters: [
+        {
+          title: "Les paradigmes et les principes",
+          summary: "Ce chapitre pose les fondations du livre : Covey distingue l'« éthique de la personnalité », centrée sur des techniques de communication ou d'image, de l'« éthique du caractère », centrée sur des principes durables comme l'intégrité ou l'humilité. Il défend l'idée qu'un changement durable commence toujours de l'intérieur, en travaillant sur ses propres paradigmes avant de chercher à changer les autres ou les circonstances.",
+          actions: [
+            "Identifier une situation récente où l'on a cherché à changer le comportement d'autrui avant d'interroger son propre regard sur la situation.",
+            "Lister trois principes (et non techniques) que l'on veut incarner davantage."
+          ]
+        },
+        {
+          title: "Habitude 1 — Être proactif",
+          summary: "Covey oppose les personnes proactives, qui agissent selon leurs valeurs, aux personnes réactives, qui réagissent aux circonstances et aux émotions du moment. Il introduit le concept de « cercle d'influence » (ce sur quoi on a prise), à distinguer du « cercle de préoccupation » (tout ce qui nous inquiète), et invite à concentrer son énergie sur le premier pour l'élargir progressivement.",
+          actions: [
+            "Repérer, pendant une journée, le nombre de fois où l'on utilise un langage réactif (« je n'ai pas le choix », « il me rend fou ») et le reformuler en langage proactif.",
+            "Dresser la liste de ses préoccupations actuelles et cocher celles qui relèvent réellement de son cercle d'influence.",
+            "Choisir une seule action, dans son cercle d'influence, à mener cette semaine."
+          ]
+        },
+        {
+          title: "Habitude 2 — Commencer avec la fin en tête",
+          summary: "Cette habitude invite à clarifier sa destination avant d'agir, en s'appuyant sur l'exercice mental d'imaginer le discours de ses propres funérailles pour identifier ce qui compte vraiment. Covey propose de rédiger un énoncé de mission personnelle, une sorte de constitution individuelle qui sert de référence stable pour les décisions futures.",
+          actions: [
+            "Rédiger un premier jet d'énoncé de mission personnelle (quelques phrases suffisent).",
+            "Identifier les rôles de vie importants (professionnel, familial, personnel) que la mission doit couvrir."
+          ]
+        },
+        {
+          title: "Habitude 3 — Donner la priorité aux priorités",
+          summary: "Covey présente la matrice des quatre quadrants urgent/important et montre que l'efficacité durable vient du temps passé dans le quadrant 2 : les activités importantes mais non urgentes (préparation, relations, prévention), trop souvent sacrifiées au profit de l'urgence.",
+          actions: [
+            "Classer ses tâches de la semaine dans les quatre quadrants urgent/important.",
+            "Bloquer dans son agenda un créneau fixe et récurrent pour une activité importante mais non urgente.",
+            "Identifier une tâche à déléguer ou à abandonner pour libérer du temps pour le quadrant 2."
+          ]
+        },
+        {
+          title: "Habitude 4 — Penser gagnant-gagnant",
+          summary: "Ce chapitre présente le gagnant-gagnant comme un état d'esprit de coopération où l'on cherche des solutions mutuellement bénéfiques, à distinguer d'autres postures comme gagnant-perdant ou perdant-gagnant. Covey insiste sur le fait que cette posture suppose une certaine abondance psychologique : croire qu'il existe assez de réussite pour tout le monde.",
+          actions: [
+            "Avant une négociation ou un désaccord, formuler explicitement ce que « gagner » signifie pour l'autre partie.",
+            "Repérer une relation où l'on adopte un réflexe gagnant-perdant, et envisager une alternative gagnant-gagnant."
+          ]
+        },
+        {
+          title: "Habitude 5 — Chercher d'abord à comprendre, ensuite à être compris",
+          summary: "Covey décrit l'écoute empathique — écouter pour comprendre réellement le point de vue et les émotions de l'autre, plutôt que pour préparer sa propre réponse — comme la clé d'une communication efficace. Il oppose cette écoute aux réflexes habituels d'évaluer, sonder, conseiller ou interpréter trop vite.",
+          actions: [
+            "Dans la prochaine conversation difficile, reformuler ce que l'autre vient de dire avant de donner son propre avis.",
+            "Observer, pendant un échange, sa propre tendance à préparer sa réponse plutôt qu'à écouter."
+          ]
+        },
+        {
+          title: "Habitude 6 — Créer une synergie",
+          summary: "La synergie consiste à valoriser les différences pour produire, à plusieurs, des solutions meilleures que celles que chacun aurait trouvées seul. Ce chapitre s'appuie sur les habitudes 4 et 5 : c'est la confiance et l'écoute mutuelle qui rendent la synergie possible.",
+          actions: [
+            "Face à un désaccord d'équipe, chercher explicitement une « troisième voie » plutôt qu'un compromis.",
+            "Solliciter un point de vue très différent du sien avant de trancher une décision importante."
+          ]
+        },
+        {
+          title: "Habitude 7 — Aiguiser la scie",
+          summary: "Cette dernière habitude porte sur le renouvellement régulier de quatre dimensions de soi : physique, mentale, sociale-affective et spirituelle. Covey la présente comme la condition qui permet de maintenir les six autres habitudes dans la durée, sous peine d'épuisement.",
+          actions: [
+            "Choisir une action concrète de renouvellement pour chacune des quatre dimensions (physique, mentale, sociale, spirituelle).",
+            "Bloquer un créneau hebdomadaire non négociable dédié à l'une de ces dimensions."
+          ]
+        }
+      ]
+    },
+
+    // ------------------------------------------------------------------------
+    // LIVRE 5
+    // ------------------------------------------------------------------------
+    {
+      id: "b5",
+      title: "Comment se faire des amis",
+      author: "Dale Carnegie",
+      year: 1936,
+      category: "Communication",
+      teaser: "Un manuel intemporel de relations humaines : comment susciter la sympathie, convaincre sans provoquer de résistance, et faire évoluer les autres sans les vexer.",
+
+      summary: {
+        ideas: "Carnegie part du principe que la critique directe braque les gens et change rarement leur comportement, alors que l'appréciation sincère et l'intérêt réel porté à autrui ouvrent la voie à la coopération. Le livre est organisé en quatre parties progressives : gérer les gens sans provoquer de ressentiment, susciter la sympathie, faire adopter son point de vue sans confrontation, et enfin faire évoluer le comportement d'autrui en préservant la relation. L'ensemble repose sur une idée simple mais exigeante : traiter chacun comme la personne la plus importante du moment, avec une attention et une reconnaissance authentiques.",
+        topActions: [
+          "Remplacer la critique par une observation factuelle et une reconnaissance sincère de ce qui fonctionne déjà avant d'aborder ce qui doit changer.",
+          "Retenir et utiliser le prénom des personnes rencontrées, et poser des questions sur leurs centres d'intérêt plutôt que de parler de soi.",
+          "Avant de convaincre quelqu'un, chercher un point d'accord initial et le formuler en premier."
+        ]
+      },
+
+      chapters: [
+        {
+          title: "Partie 1 — Les techniques fondamentales pour traiter avec les gens",
+          summary: "Cette partie pose trois principes de base : ne pas critiquer, condamner ou se plaindre, car cela met les gens sur la défensive sans changer leur comportement ; donner une appréciation honnête et sincère plutôt que de la flatterie ; et susciter chez l'autre un désir sincère d'agir plutôt que d'exiger.",
+          actions: [
+            "Avant de faire une remarque négative, chercher d'abord un élément positif et sincère à souligner.",
+            "Reformuler une demande en expliquant ce que l'autre personne y gagne, plutôt qu'en imposant ce que l'on veut."
+          ]
+        },
+        {
+          title: "Partie 2 — Six façons de se faire apprécier",
+          summary: "Carnegie détaille six comportements simples pour susciter la sympathie : s'intéresser sincèrement aux autres, sourire, retenir et utiliser le prénom des gens, être un bon auditeur qui encourage l'autre à parler de lui, parler en fonction des centres d'intérêt de l'interlocuteur, et le faire se sentir important, sincèrement.",
+          actions: [
+            "Poser au moins deux questions ouvertes sur l'interlocuteur avant de parler de soi lors du prochain échange.",
+            "S'entraîner à retenir le prénom d'une nouvelle personne en le répétant dès la présentation.",
+            "Repérer un centre d'intérêt réel de son interlocuteur et l'utiliser comme point d'entrée dans la conversation."
+          ]
+        },
+        {
+          title: "Partie 3 — Amener les autres à penser comme vous",
+          summary: "Cette partie développe douze principes pour convaincre sans provoquer de résistance : éviter l'argumentation frontale, ne jamais dire directement à quelqu'un qu'il a tort, reconnaître rapidement ses propres erreurs, commencer un échange de façon amicale, chercher un premier accord, laisser l'autre parler davantage, lui laisser l'impression que l'idée vient de lui, voir sincèrement les choses de son point de vue, être sympathique à ses désirs, faire appel à des motifs nobles, dramatiser ses idées, et lancer un défi.",
+          actions: [
+            "Avant un désaccord, chercher explicitement un premier point sur lequel on peut être d'accord.",
+            "Reformuler le point de vue de l'autre à voix haute avant d'exposer le sien.",
+            "Présenter une idée comme une question plutôt qu'une affirmation, pour laisser à l'autre la sensation d'y contribuer."
+          ]
+        },
+        {
+          title: "Partie 4 — Faire évoluer les autres sans les offenser",
+          summary: "La dernière partie, centrée sur le rôle de leader, présente neuf principes pour faire changer le comportement d'autrui en préservant la relation : commencer par un compliment sincère, signaler les erreurs indirectement, parler de ses propres erreurs avant de critiquer celles des autres, poser des questions plutôt que donner des ordres, permettre à l'autre de sauver la face, souligner chaque progrès même minime, donner à l'autre une réputation à défendre, minimiser la difficulté du changement, et rendre l'autre content de faire ce qu'on lui propose.",
+          actions: [
+            "Avant de signaler une erreur, commencer par un point positif sincère et concret.",
+            "Remplacer un ordre direct par une question (« et si on essayait... ? »).",
+            "Formuler la difficulté à venir comme facile à surmonter plutôt qu'insurmontable."
           ]
         }
       ]
@@ -594,7 +885,7 @@
     ------------------------------------------------------------------------
 
     ,{
-      id: "b4",
+      id: "b6",
       title: "",
       author: "",
       year: null,
@@ -626,6 +917,7 @@
     "Histoire":                "#3E6B58",
     "Productivité":            "#C08A3E",
     "Business":                "#3E5C76",
+    "Communication":           "#5B4B8A",
     "default":                 "#8f632a"
   };
 
@@ -682,6 +974,30 @@
     }
   }
 
+  /**
+   * Gestion du thème clair / sombre.
+   * Le choix vit uniquement en mémoire JavaScript (pas de stockage local) :
+   * à chaque ouverture du fichier, on repart du thème sombre par défaut.
+   */
+  let currentTheme = "dark";
+
+  function applyTheme(theme){
+    currentTheme = theme;
+    if (theme === "light"){
+      document.documentElement.setAttribute("data-theme", "light");
+      document.getElementById("theme-toggle-icon").textContent = "🌙";
+      document.getElementById("theme-toggle-label").textContent = "Mode sombre";
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      document.getElementById("theme-toggle-icon").textContent = "☀️";
+      document.getElementById("theme-toggle-label").textContent = "Mode clair";
+    }
+  }
+
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    applyTheme(currentTheme === "dark" ? "light" : "dark");
+  });
+
 
 /* ============================================================================
    3. RENDU DE LA PAGE "CATALOGUE" (liste de cartes)
@@ -724,7 +1040,12 @@
 
 /* ============================================================================
    4. RENDU DE LA PAGE "FICHE DÉTAIL"
+   Page unique et continue : vue d'ensemble + tous les chapitres, avec un
+   sommaire ancré sur le côté qui fait défiler la page (sans changer l'URL,
+   pour ne pas perturber le routeur).
    ============================================================================ */
+
+  let sectionObserver = null; // IntersectionObserver actif sur la fiche courante
 
   function renderBookDetail(book){
     // -- En-tête de la fiche --
@@ -732,68 +1053,55 @@
     document.getElementById("detail-author").textContent =
       `${book.author}${book.year ? " · " + book.year : ""}`;
 
-    renderOverviewTab(book);
-    renderChaptersTab(book);
+    renderDetailContent(book);
+    renderDetailToc(book);
+    setupScrollSpy();
 
-    // On revient toujours sur l'onglet "Vue d'ensemble" quand on ouvre une fiche.
-    switchTab("overview");
+    // On revient toujours en haut de la fiche quand on l'ouvre.
+    document.getElementById("detail-content").scrollTop = 0;
   }
 
-  /** Construit le contenu de l'onglet "Vue d'ensemble". */
-  function renderOverviewTab(book){
-    const container = document.getElementById("tab-overview");
+  /** Construit toutes les sections de contenu : vue d'ensemble + chapitres. */
+  function renderDetailContent(book){
+    const container = document.getElementById("detail-content");
 
-    container.innerHTML = `
-      <div class="content-block">
-        <div class="block-header">
-          <h3>💡 Les grandes idées</h3>
-          <button type="button" class="copy-btn" data-action="copy-ideas">📋 Copier</button>
-        </div>
-        <p class="ideas-text">${book.summary.ideas}</p>
-      </div>
+    const overviewHtml = `
+      <section class="content-section" id="section-overview">
+        <h2>💡 Vue d'ensemble</h2>
 
-      <div class="content-block">
-        <div class="block-header">
-          <h3>🎯 Top 3 actions à mettre en œuvre</h3>
-          <button type="button" class="copy-btn" data-action="copy-top-actions">📋 Copier la liste</button>
+        <div class="content-block">
+          <div class="block-header">
+            <h3>Les grandes idées</h3>
+            <button type="button" class="copy-btn" data-action="copy-ideas">📋 Copier</button>
+          </div>
+          <p class="prose ideas-text">${book.summary.ideas}</p>
         </div>
-        <ol class="action-list">
-          ${book.summary.topActions.map(action => `<li>${action}</li>`).join("")}
-        </ol>
-      </div>
+
+        <div class="content-block">
+          <div class="block-header">
+            <h3>🎯 Top 3 actions à mettre en œuvre</h3>
+            <button type="button" class="copy-btn" data-action="copy-top-actions">📋 Copier la liste</button>
+          </div>
+          <ol class="action-list">
+            ${book.summary.topActions.map(action => `<li>${action}</li>`).join("")}
+          </ol>
+        </div>
+      </section>
     `;
 
-    // Bouton "copier les grandes idées"
-    container.querySelector('[data-action="copy-ideas"]').addEventListener("click", (event) => {
-      copyToClipboard(book.summary.ideas, event.currentTarget);
-    });
+    const chaptersHtml = book.chapters.map((chapter, index) => `
+      <section class="content-section chapter-section" id="section-chapter-${index}">
+        <h2><span class="chapter-number">Chap. ${index + 1}</span> ${chapter.title}</h2>
 
-    // Bouton "copier le top 3 des actions" (formaté en liste numérotée simple)
-    container.querySelector('[data-action="copy-top-actions"]').addEventListener("click", (event) => {
-      const text = book.summary.topActions
-        .map((action, i) => `${i + 1}. ${action}`)
-        .join("\n");
-      copyToClipboard(text, event.currentTarget);
-    });
-  }
-
-  /** Construit le contenu de l'onglet "Chapitre par chapitre". */
-  function renderChaptersTab(book){
-    const container = document.getElementById("tab-chapters");
-
-    container.innerHTML = book.chapters.map((chapter, index) => `
-      <details class="chapter-item">
-        <summary>
-          <span class="chapter-number">Chap. ${index + 1}</span>
-          <span class="chapter-title">${chapter.title}</span>
-        </summary>
-        <div class="chapter-body">
+        <div class="content-block">
           <div class="block-header">
             <h4>Résumé</h4>
             <button type="button" class="copy-btn" data-copy-summary="${index}">📋 Copier</button>
           </div>
-          <p>${chapter.summary}</p>
+          <p class="prose">${chapter.summary}</p>
+        </div>
 
+        <div class="content-block">
           <div class="block-header">
             <h4>Actions</h4>
             <button type="button" class="copy-btn" data-copy-actions="${index}">📋 Copier</button>
@@ -802,11 +1110,23 @@
             ${chapter.actions.map(action => `<li>${action}</li>`).join("")}
           </ul>
         </div>
-      </details>
+      </section>
     `).join("");
 
-    // On attache les boutons "copier" de chaque chapitre après avoir
-    // injecté le HTML (sinon les boutons n'existent pas encore dans la page).
+    container.innerHTML = overviewHtml + chaptersHtml;
+
+    // -- Boutons "copier" de la vue d'ensemble --
+    container.querySelector('[data-action="copy-ideas"]').addEventListener("click", (event) => {
+      copyToClipboard(book.summary.ideas, event.currentTarget);
+    });
+    container.querySelector('[data-action="copy-top-actions"]').addEventListener("click", (event) => {
+      const text = book.summary.topActions
+        .map((action, i) => `${i + 1}. ${action}`)
+        .join("\n");
+      copyToClipboard(text, event.currentTarget);
+    });
+
+    // -- Boutons "copier" de chaque chapitre --
     book.chapters.forEach((chapter, index) => {
       container.querySelector(`[data-copy-summary="${index}"]`).addEventListener("click", (event) => {
         copyToClipboard(chapter.summary, event.currentTarget);
@@ -818,19 +1138,57 @@
     });
   }
 
-  /** Bascule visuellement entre l'onglet "overview" et l'onglet "chapters". */
-  function switchTab(tabName){
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.tab === tabName);
+  /** Construit le sommaire cliquable (vue d'ensemble + un lien par chapitre). */
+  function renderDetailToc(book){
+    const toc = document.getElementById("detail-toc");
+
+    const overviewLink = `<a href="#section-overview" class="toc-link" data-target="section-overview">Vue d'ensemble</a>`;
+    const chapterLinks = book.chapters.map((chapter, index) =>
+      `<a href="#section-chapter-${index}" class="toc-link" data-target="section-chapter-${index}">${index + 1}. ${chapter.title}</a>`
+    ).join("");
+
+    toc.innerHTML = `<span class="toc-label">Sommaire</span>${overviewLink}${chapterLinks}`;
+
+    // On intercepte le clic pour faire défiler la page vers la section
+    // SANS modifier le hash de l'URL (qui sert au routeur pour savoir
+    // quel livre afficher : on ne veut pas le perturber).
+    toc.querySelectorAll(".toc-link").forEach(link => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const target = document.getElementById(link.dataset.target);
+        if (target){
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
     });
-    document.getElementById("tab-overview").hidden = tabName !== "overview";
-    document.getElementById("tab-chapters").hidden = tabName !== "chapters";
   }
 
-  // Clic sur les boutons d'onglets
-  document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-  });
+  /**
+   * Met en surbrillance, dans le sommaire, le lien correspondant à la
+   * section actuellement visible à l'écran pendant que l'utilisateur lit.
+   */
+  function setupScrollSpy(){
+    if (sectionObserver){
+      sectionObserver.disconnect();
+    }
+
+    const sections = document.querySelectorAll("#detail-content .content-section");
+    const tocLinks = document.querySelectorAll("#detail-toc .toc-link");
+
+    if (!sections.length) return;
+
+    sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          tocLinks.forEach(link => {
+            link.classList.toggle("active", link.dataset.target === entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: "-15% 0px -70% 0px", threshold: 0 });
+
+    sections.forEach(section => sectionObserver.observe(section));
+  }
 
 
 /* ============================================================================
@@ -840,6 +1198,8 @@
    doit afficher le catalogue ou la fiche d'un livre précis.
    Exemple : ouvrir "...#/livre/b2" affiche directement la fiche de "b2".
    Cela permet aussi d'utiliser le bouton "Précédent" du navigateur.
+   Important : les liens du sommaire (#section-overview, #section-chapitre-N)
+   n'utilisent PAS ce mécanisme — voir renderDetailToc plus haut.
    ============================================================================ */
 
   function showPage(pageName){
